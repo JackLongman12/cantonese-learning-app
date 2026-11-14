@@ -10,6 +10,7 @@ The owner has approved downloading existing material instead of building from sc
 |---|---|---|
 | Unihan | `https://www.unicode.org/Public/UCD/latest/ucd/Unihan.zip` | per-character readings, variants, third voter for Jyutping |
 | Make Me a Hanzi | `https://raw.githubusercontent.com/skishore/makemeahanzi/master/dictionary.txt` | phonetic/semantic components → `char_info`, `family` |
+| LXGW WenKai TC (OFL) | `github.com/google/fonts` `ofl/lxgwwenkaitc` | headings only. **Subset** to Latin + 蛋小鴨天鵝讀 (25 MB -> 200 KB) with fonttools `pyftsubset`; full files kept in `data/fonts-full/` (git-ignored). Add characters to the subset before using the brush font on new Chinese text. |
 | Noto Sans HK / SC | `github.com/google/fonts` `ofl/notosanshk`, `ofl/notosanssc` (OFL) | bundled fonts in `app/assets/fonts/` |
 | `edge-tts` (pip) | Microsoft Edge read-aloud endpoint, no key, unofficial | zh-HK / zh-CN neural voices for pre-generated audio until an Azure key exists |
 | ToJyutping, pycantonese, pypinyin, jieba, opencc (pip) | PyPI | annotation |

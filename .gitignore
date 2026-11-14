@@ -45,3 +45,4 @@ content/readings.lock.json.tmp
 
 # downloaded speech models (hundreds of MB)
 data/models/
+data/fonts-full/

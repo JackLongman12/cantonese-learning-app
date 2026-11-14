@@ -22,3 +22,10 @@ subprojects {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
+
+// Release lint of third-party plugin modules (image_picker) crashes the Android lint worker
+// on this toolchain; skip the plugin "lintVital" tasks. The app's own code is checked by
+// `flutter analyze`.
+subprojects {
+    tasks.matching { it.name.startsWith("lintVital") }.configureEach { enabled = false }
+}
