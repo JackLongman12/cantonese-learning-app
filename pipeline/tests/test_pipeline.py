@@ -120,7 +120,7 @@ def test_build_writes_aligned_tokens_and_items(tmp_path):
     (tmp_path / "c").mkdir()
     root = _tree(tmp_path / "c", GOOD)
     out = tmp_path / "out" / "content.db"
-    r = build(root, out, raw_root=tmp_path / "noraw")
+    r = build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False)
     assert r.sentences == 2 and any("reference data missing" in w for w in r.warnings)
     db = sqlite3.connect(out)
     toks = db.execute(
@@ -132,7 +132,7 @@ def test_build_writes_aligned_tokens_and_items(tmp_path):
     assert db.execute("SELECT COUNT(*) FROM item WHERE kind='word' AND key='唔該'").fetchone()[0]
     pair = db.execute("SELECT pair_id FROM sentence WHERE lang='cmn'").fetchone()[0]
     assert pair == "sent-test-001"
-    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "1"
+    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "2"
 
 
 def test_flags_reach_review_queue_until_fixed(tmp_path):
@@ -142,7 +142,7 @@ def test_flags_reach_review_queue_until_fixed(tmp_path):
         "- {id: sent-test-001, yue: 要搭幾號巴士, en: Which bus, register: spoken}\n",
     )
     out = tmp_path / "out" / "content.db"
-    r = build(root, out, raw_root=tmp_path / "noraw")
+    r = build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False)
     assert r.flags and "搭" in (out.parent / "review_queue.md").read_text("utf-8")
 
     (root / "scenarios" / "a.yaml").write_text(
@@ -150,7 +150,7 @@ def test_flags_reach_review_queue_until_fixed(tmp_path):
         "  - {id: sent-test-001, yue: 要搭幾號巴士, en: Which bus, register: spoken, fix_yue: {搭: daap3}}\n",
         "utf-8",
     )
-    assert not build(root, out, raw_root=tmp_path / "noraw").flags
+    assert not build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False).flags
 
 
 def test_reviewed_readings_are_locked_against_drift(tmp_path):
@@ -158,7 +158,7 @@ def test_reviewed_readings_are_locked_against_drift(tmp_path):
     line = "- {id: sent-test-001, yue: 要搭幾號巴士, en: Which bus, register: spoken, reviewed: true%s}\n"
     root = _tree(tmp_path / "c", line % ", fix_yue: {搭: daap3}")
     out = tmp_path / "out" / "content.db"
-    build(root, out, raw_root=tmp_path / "noraw")
+    build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False)
     lock = json.loads((root / "readings.lock.json").read_text("utf-8"))
     assert lock["sent-test-001:yue"]["readings"] == ["jiu3", "daap3", "gei2", "hou6", "baa1", "si2"]
 
@@ -168,5 +168,17 @@ def test_reviewed_readings_are_locked_against_drift(tmp_path):
         "utf-8",
     )
     with pytest.raises(ContentError) as e:
-        build(root, out, raw_root=tmp_path / "noraw")
+        build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False)
     assert "reviewed readings changed" in str(e.value)
+
+
+def test_lexicon_keeps_only_words_that_differ_from_char_defaults():
+    from duk.lexicon import yue_lexicon
+
+    chars, words = yue_lexicon({"搭": ["daap3"], "銀行": ["ngan4", "hong4"]})
+    assert chars["行"][1] > 1  # 行 is ambiguous
+    assert chars["搭"][0] == "daap3"  # owner override wins
+    assert words["銀行"] == "ngan4 hong4"
+    # a word read exactly as its characters' defaults is not stored
+    assert all(w for w in words if len(w) > 1)
+    assert "你好" not in words or words["你好"] != " ".join(chars[c][0] for c in "你好")

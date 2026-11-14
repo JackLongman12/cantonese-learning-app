@@ -47,3 +47,8 @@ kotlin {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // ML Kit's Chinese text model (traditional and simplified), used by the photo reader
+    implementation("com.google.mlkit:text-recognition-chinese:16.0.1")
+}

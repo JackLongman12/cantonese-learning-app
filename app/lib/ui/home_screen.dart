@@ -9,6 +9,7 @@ import '../data/content_db.dart';
 import '../engine/item_state.dart';
 import 'logo.dart';
 import 'mascot.dart';
+import 'paste_reader_screen.dart';
 import 'reader_screen.dart';
 import 'ruby_text.dart';
 import 'theme.dart';
@@ -140,6 +141,41 @@ class _HomeScreenState extends State<HomeScreen> {
                     mode: 'daily',
                     count: 15,
                     maxNew: 8,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Card(
+                  margin: EdgeInsets.zero,
+                  child: ListTile(
+                    key: const ValueKey('open-free-reader'),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 6,
+                    ),
+                    leading: CircleAvatar(
+                      backgroundColor: theme.colorScheme.secondaryContainer,
+                      foregroundColor: theme.colorScheme.onSecondaryContainer,
+                      child: const Icon(Icons.document_scanner_rounded),
+                    ),
+                    title: Text(
+                      'Read anything',
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    subtitle: const Text(
+                      'Paste or photograph a menu, sign or message. '
+                      "Readings only over what you don't know yet.",
+                    ),
+                    trailing: const Icon(Icons.chevron_right_rounded),
+                    onTap: () async {
+                      _s.logger.log('nav.screen', {'screen': 'free_reader'});
+                      await Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) =>
+                              PasteReaderScreen(services: _s, lang: _lang),
+                        ),
+                      );
+                      if (mounted) setState(() {});
+                    },
                   ),
                 ),
                 const SizedBox(height: 12),

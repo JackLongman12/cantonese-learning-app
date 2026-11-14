@@ -22,7 +22,7 @@ from .annotate import FLAG, HAN, Annotation, annotate
 from .content import Content, ContentError, load_content
 from .reference import load_reference
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2  # 2: lex_char / lex_word for on-device annotation
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -62,6 +62,12 @@ CREATE TABLE char_info(
   phonetic TEXT, semantic TEXT, definition TEXT);
 CREATE TABLE family(component TEXT NOT NULL, member TEXT NOT NULL,
   PRIMARY KEY(component, member)) WITHOUT ROWID;
+CREATE TABLE lex_char(
+  lang TEXT NOT NULL, char TEXT NOT NULL, reading TEXT NOT NULL, n_readings INTEGER NOT NULL,
+  PRIMARY KEY(lang, char)) WITHOUT ROWID;
+CREATE TABLE lex_word(
+  lang TEXT NOT NULL, word TEXT NOT NULL, reading TEXT NOT NULL,
+  PRIMARY KEY(lang, word)) WITHOUT ROWID;
 CREATE TABLE audio(
   hash TEXT PRIMARY KEY, lang TEXT NOT NULL, voice TEXT NOT NULL, rate TEXT NOT NULL,
   text TEXT NOT NULL, path TEXT NOT NULL);
@@ -96,6 +102,7 @@ def build(
     review_path: Path | None = None,
     raw_root: Path = paths.RAW,
     content: Content | None = None,
+    with_lexicon: bool = True,
 ) -> BuildResult:
     content = content or load_content(content_root)
     lock_path = lock_path or content_root / "readings.lock.json"
@@ -239,6 +246,20 @@ def build(
     else:
         db.executemany("INSERT INTO char_info VALUES(?,?,?,?,?,?,?,?)", ref.char_rows())
         db.executemany("INSERT INTO family VALUES(?,?)", ref.family_rows())
+
+    if with_lexicon:
+        from .lexicon import cmn_lexicon, yue_lexicon
+
+        for lang, make in (("yue", yue_lexicon), ("cmn", cmn_lexicon)):
+            chars, words = make(content.overrides.get(lang, {}))
+            db.executemany(
+                "INSERT INTO lex_char VALUES(?,?,?,?)",
+                ((lang, c, r, n) for c, (r, n) in chars.items()),
+            )
+            db.executemany(
+                "INSERT INTO lex_word VALUES(?,?,?)", ((lang, w, r) for w, r in words.items())
+            )
+            result.warnings.append(f"lexicon {lang}: {len(chars)} chars, {len(words)} words")
 
     if problems:
         db.close()

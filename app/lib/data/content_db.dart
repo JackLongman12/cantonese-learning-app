@@ -3,6 +3,7 @@ library;
 
 import 'package:sqlite3/sqlite3.dart';
 
+import '../engine/annotator.dart';
 import '../engine/planner.dart';
 
 class TokenRow {
@@ -93,6 +94,30 @@ class ContentDb {
         r['n'] as int,
       ),
   ];
+
+  final Map<String, Annotator> _annotators = {};
+
+  /// Reading lookup for arbitrary text (paste, OCR). Loaded once per language.
+  Annotator annotator(String lang) => _annotators.putIfAbsent(lang, () {
+    final chars = {
+      for (final r in _db.select(
+        'SELECT char, reading, n_readings FROM lex_char WHERE lang = ?',
+        [lang],
+      ))
+        r['char'] as String: LexChar(
+          r['reading'] as String,
+          r['n_readings'] as int,
+        ),
+    };
+    final words = {
+      for (final r in _db.select(
+        'SELECT word, reading FROM lex_word WHERE lang = ?',
+        [lang],
+      ))
+        r['word'] as String: r['reading'] as String,
+    };
+    return Annotator(chars: chars, words: words);
+  });
 
   /// Character-reading items per scenario, for progress bars.
   Map<String, Set<String>> charItemsByScenario(String lang) {
