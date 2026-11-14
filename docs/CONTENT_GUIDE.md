@@ -46,7 +46,6 @@ content/
 ```yaml
 - id: sent-mo-transport-014
   yue: 唔該，去關閘要搭幾號巴士？
-  cmn: 请问，去关闸要坐几路公交车？        # optional parallel line; becomes its own sentence with a shared pair_id
   en: Excuse me, which bus goes to the Border Gate?
   register: spoken
   region: macau
@@ -83,8 +82,8 @@ Conversation lines are excluded from the sentence planner and read in order in t
 
 ## Story
 
-`content/stories/*.yaml`: `id`, `lang` (yue|cmn), `level` (1-3), `title`, optional `pair`
-(links a Cantonese story to its Mandarin retelling), and `lines: [[text, english], ...]`.
+`content/stories/*.yaml`: `id`, `lang` (yue), `level` (1-3), `title`, and
+`lines: [[text, english], ...]`. Cantonese only: `cmn` text is rejected by validation (Mandarin dropped 2026-11-15).
 Lines become ordered sentences under the hidden `scn-stories` scenario.
 
 ## Place

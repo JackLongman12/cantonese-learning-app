@@ -31,7 +31,6 @@ void main() {
 
   setUpAll(() async {
     await loadFont('NotoSansHK', 'assets/fonts/NotoSansHK.ttf');
-    await loadFont('NotoSansSC', 'assets/fonts/NotoSansSC.ttf');
     final kai = FontLoader('LXGWWenKaiTC');
     for (final f in ['Regular', 'Bold']) {
       kai.addFont(

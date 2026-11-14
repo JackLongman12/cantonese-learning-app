@@ -1,5 +1,7 @@
 # Design spec
 
+> **2026-11-15: Cantonese only.** The owner dropped the Mandarin track. Mentions of Mandarin, Pinyin or `cmn` below are historical.
+
 Working title: **Duk6** (讀, "to read"). Rename freely.
 
 ## 1. Who it is for and what it must do
@@ -36,7 +38,7 @@ One user (the owner). Personal, non-commercial.
 | `place` | id | 議事亭前地 |
 | `card` | (item, template) | place × "PT→ZH" direction |
 
-`lang` is `yue` (Cantonese, Traditional, HK variant glyphs) or `cmn` (Mandarin, Simplified). The same character has independent state per language.
+`lang` is always `yue` (Cantonese, Traditional, HK variant glyphs). The Mandarin track (`cmn`) was dropped by the owner on 2026-11-15; the tag stays because it is part of permanent item IDs.
 
 Item IDs are **stable forever**. Content updates may add or retire items but never reuse or renumber an ID, so progress never detaches.
 
@@ -192,13 +194,13 @@ If an event older than one already applied arrives (merged from another device),
 ## 5. Text handling rules (easy to get wrong)
 
 1. **Readings are stored per character as an array, never as one string.** Ruby alignment is by index. Non-CJK runs ("MOP", "3A") are single tokens with an optional spoken reading.
-2. **Glyph variants.** Chinese fonts unify code points across regions. Bundle **Noto Sans HK** (yue) and **Noto Sans SC** (cmn) and set the text locale (`zh-HK` / `zh-CN`) on every Chinese `Text`, or characters render in the wrong regional form.
+2. **Glyph variants.** Chinese fonts unify code points across regions. Bundle **Noto Sans HK** and set the text locale `zh-HK` on every Chinese `Text`, or characters render in the wrong regional form.
 3. **Normalisation.** Canonical Traditional form = OpenCC HK standard. Keep an alias table for common written-Cantonese variants (俾/畀, 嚟/黎, 啲/D, 裏/裡) so lookup and progress hit one item.
 4. **Polyphones.** Cantonese readings need two independent sources (ToJyutping, pycantonese) to agree; Unihan confirms a lone source and picks the default while a disagreement waits in `build/review_queue.md`. Curated word overrides live in `content/overrides/readings.yaml`. Two sources can agree on a formal reading where speech differs (聲 sing1/seng1), so the owner's ear remains the final check.
 5. **Colloquial vs literary readings** (聽 teng1/ting1, 平 peng4/ping4) are separate `char_reading` items, tagged.
 6. **Place-name readings** override dictionary defaults (涌 cung1 in HK place names; 氹 tam5).
-7. **Display form.** Cantonese is shown as Jyutping (`hong4`). Mandarin is shown as Hanyu Pinyin with tone marks (`háng`); it is only *stored* numbered (`hang2`) so item ids stay plain ASCII (`engine/reading_format.dart`).
-7a. **Mandarin tone sandhi:** store citation tones; optionally display sandhi for 不/一/third-tone as a setting.
+7. **Display form.** Readings are shown as Jyutping (`hong4`) (`engine/reading_format.dart`).
+7a. (Mandarin tone sandhi: no longer relevant; Mandarin was dropped.)
 8. **Registers:** every sentence is tagged `spoken` (written Cantonese) or `written` (standard written Chinese read in Cantonese). Both are taught.
 9. **Lazy sounds** (n→l, dropped ng-) are accepted in read-aloud checks and noted, not marked wrong.
 

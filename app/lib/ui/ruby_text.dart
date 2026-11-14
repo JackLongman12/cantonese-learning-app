@@ -49,10 +49,8 @@ class RubyToken {
 /// shared code point is drawn (docs/DESIGN.md section 5, rule 2).
 TextStyle chineseStyle(String lang, {required double fontSize, Color? color}) =>
     TextStyle(
-      fontFamily: lang == 'cmn' ? 'NotoSansSC' : 'NotoSansHK',
-      locale: lang == 'cmn'
-          ? const Locale('zh', 'CN')
-          : const Locale('zh', 'HK'),
+      fontFamily: 'NotoSansHK',
+      locale: const Locale('zh', 'HK'),
       fontSize: fontSize,
       height: 1.15,
       color: color,
@@ -68,6 +66,7 @@ class RubyText extends StatelessWidget {
     this.fontSize = 34,
     this.onReveal,
     this.onLookup,
+    this.onSpeak,
   });
 
   final List<RubyToken> tokens;
@@ -79,6 +78,10 @@ class RubyText extends StatelessWidget {
 
   /// Long-press: look the word up (meaning, save to My words). Falls back to reveal.
   final void Function(int index)? onLookup;
+
+  /// Tap: say the word this character belongs to. A hidden reading is revealed too
+  /// (hearing it gives the reading away, so it counts like a reveal).
+  final void Function(int index)? onSpeak;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +135,7 @@ class RubyText extends StatelessWidget {
                 style: TextStyle(
                   // Same family as the characters: it carries Latin glyphs too, so readings
                   // look identical on every platform.
-                  fontFamily: lang == 'cmn' ? 'NotoSansSC' : 'NotoSansHK',
+                  fontFamily: 'NotoSansHK',
                   fontSize: rubySize,
                   color: rubyColor,
                   height: 1.2,
@@ -170,12 +173,20 @@ class RubyText extends StatelessWidget {
           ],
         ),
       );
-      if (!canLongPress || (onReveal == null && onLookup == null)) {
+      final hidden =
+          t.isHan &&
+          t.reading != null &&
+          !t.revealed &&
+          t.level != ScaffoldLevel.full;
+      if (!canLongPress ||
+          (onReveal == null && onLookup == null && onSpeak == null)) {
         return column;
       }
       return Semantics(
         label: t.surface,
-        hint: canTap
+        hint: onSpeak != null
+            ? 'Tap to hear it, long-press for the meaning'
+            : canTap
             ? 'Tap to show the reading'
             : onLookup != null
             ? 'Long-press for the meaning'
@@ -183,8 +194,17 @@ class RubyText extends StatelessWidget {
         child: GestureDetector(
           key: ValueKey('cell-$i'),
           behavior: HitTestBehavior.opaque,
-          onTap: canTap && onReveal != null ? () => onReveal!(i) : null,
-          onLongPress: () => (onLookup ?? onReveal)!(i),
+          onTap: onSpeak != null && t.isHan
+              ? () {
+                  if (hidden) onReveal?.call(i);
+                  onSpeak!(i);
+                }
+              : canTap && onReveal != null
+              ? () => onReveal!(i)
+              : null,
+          onLongPress: onLookup != null || onReveal != null
+              ? () => (onLookup ?? onReveal)!(i)
+              : null,
           child: column,
         ),
       );

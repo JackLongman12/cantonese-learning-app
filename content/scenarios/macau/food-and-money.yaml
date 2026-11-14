@@ -40,7 +40,6 @@ sentences:
 
   - id: sent-mo-food-005
     yue: 呢個幾多錢呀？
-    cmn: 这个多少钱？
     en: How much is this?
     register: spoken
     tags: [paying, asking]

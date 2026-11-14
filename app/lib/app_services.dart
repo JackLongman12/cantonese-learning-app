@@ -15,6 +15,7 @@ import 'platform/sfx.dart';
 import 'platform/share_inbox.dart';
 import 'platform/updater.dart';
 import 'platform/speech.dart';
+import 'platform/word_voice.dart';
 
 /// Plays a bundled clip. Implemented outside the engine so tests need no audio device.
 typedef PlayAudio = Future<void> Function(String assetRelativePath);
@@ -36,6 +37,7 @@ class AppServices {
     this.updater,
     this.reminders,
     this.sfx,
+    this.voice,
     this.signals = const SignalPolicy(),
     this.planner = const Planner(),
   }) : prefs = prefs ?? Prefs.memory(),
@@ -64,6 +66,20 @@ class AppServices {
 
   /// Daily reminder (Android; null in tests).
   final Reminders? reminders;
+
+  /// Device text-to-speech for single words (null in tests).
+  final WordVoice? voice;
+
+  /// Says a word: the recorded clip when there is one (card names, sentences),
+  /// otherwise the device's Cantonese voice. False if neither is available.
+  Future<bool> sayWord(String text, String lang) async {
+    final path = content.audioPath(lang, text);
+    if (path != null) {
+      await playAudio(path);
+      return true;
+    }
+    return await voice?.say(text) ?? false;
+  }
 
   /// UI sounds (null in tests).
   final SoundEffects? sfx;

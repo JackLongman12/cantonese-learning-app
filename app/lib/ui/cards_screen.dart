@@ -339,6 +339,14 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                                   ),
                               ],
                               onReveal: _flipped ? null : _reveal,
+                              onSpeak: (i) => _flipped
+                                  ? _play()
+                                  : sayOrExplain(
+                                      context,
+                                      _s,
+                                      _card.tokens[i].surface,
+                                      'yue',
+                                    ),
                             ),
                           ),
                         ),

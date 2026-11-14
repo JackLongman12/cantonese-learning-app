@@ -134,15 +134,14 @@ class ContentDb {
 
   String get contentVersion => meta('content_version');
 
-  /// Dictionary entries written exactly [text] (Traditional for yue, Simplified for
-  /// cmn). Cantonese-specific meanings (CC-Canto) come first. Empty on old databases.
+  /// Dictionary entries written exactly [text] (Traditional).
+  /// Cantonese meanings (CC-Canto) come first. Empty on old databases.
   List<DictEntry> lookup(String text, String lang) {
     try {
-      final col = lang == 'cmn' ? 'simp' : 'trad';
       return [
         for (final r in _db.select(
           'SELECT trad, simp, pinyin, jyutping, en, source FROM dict_entry '
-          "WHERE $col = ? ORDER BY source = 'cccanto' DESC, rowid LIMIT 8",
+          "WHERE trad = ? ORDER BY source = 'cccanto' DESC, rowid LIMIT 8",
           [text],
         ))
           DictEntry(
@@ -336,14 +335,6 @@ class ContentDb {
         pair: r['pair_id'] as String?,
       ),
   ];
-
-  /// The other-language version of a story, if there is one.
-  DialogueRow? storyPair(String pairId, String lang) {
-    for (final s in stories(lang)) {
-      if (s.pair == pairId) return s;
-    }
-    return null;
-  }
 
   /// The lines of one conversation, in speaking order.
   List<SentenceRow> dialogueLines(String dialogueId, String lang) =>

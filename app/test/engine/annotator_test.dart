@@ -57,9 +57,6 @@ void main() {
     expect(r('我去銀行'), 'ngo5 heoi3 ngan4 hong4');
     expect(r('唔該，埋單。'), 'm4 goi1 · maai4 daan1 ·');
     expect(r('呢個幾多錢呀？'), 'ni1 go3 gei2 do1 cin2 aa3 ·');
-    final cmn = db.annotator('cmn');
-    expect(cmn.annotate('银行').map((x) => x.reading).join(' '), 'yin2 hang2');
-    expect(cmn.annotate('音乐').map((x) => x.reading).join(' '), 'yin1 yue4');
 
     // every sentence: device readings match pipeline readings for most characters
     var same = 0, total = 0;

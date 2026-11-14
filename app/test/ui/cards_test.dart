@@ -20,10 +20,16 @@ void main() {
     final db = ContentDb.open(dbPath);
     addTearDown(db.close);
     final decks = db.decks();
-    expect(decks.map((d) => d.id), containsAll(['mo-streets', 'mo-lrt', 'hk-mtr', 'hk-streets']));
+    expect(
+      decks.map((d) => d.id),
+      containsAll(['mo-streets', 'mo-lrt', 'hk-mtr', 'hk-streets']),
+    );
     final streets = db.cards('mo-streets');
     expect(streets.length, greaterThan(100));
-    expect(streets.where((c) => c.alt.isNotEmpty).length, greaterThan(90 * streets.length ~/ 100));
+    expect(
+      streets.where((c) => c.alt.isNotEmpty).length,
+      greaterThan(90 * streets.length ~/ 100),
+    );
     for (final c in streets.take(50)) {
       expect(c.tokens.map((t) => t.surface).join(), c.zh);
     }
@@ -52,7 +58,9 @@ void main() {
     );
     final deck = db.decks().firstWhere((d) => d.id == 'hk-mtr');
     await t.pumpWidget(
-      MaterialApp(home: CardSessionScreen(services: services, deck: deck)),
+      MaterialApp(
+        home: CardSessionScreen(services: services, deck: deck),
+      ),
     );
     await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('flip')));
@@ -60,9 +68,21 @@ void main() {
     expect(find.byKey(const ValueKey('card-alt')), findsOneWidget);
     await t.tap(find.byKey(const ValueKey('got-it')));
     await t.pumpAndSettle();
-    final reviews = store.events.where((e) => e.type == 'review.applied').toList();
-    expect(reviews.any((e) => (e.payload['item_id']! as String).startsWith('card:hk-mtr:')), isTrue);
-    expect(reviews.any((e) => (e.payload['item_id']! as String).startsWith('cr:yue:')), isTrue);
+    final reviews = store.events
+        .where((e) => e.type == 'review.applied')
+        .toList();
+    expect(
+      reviews.any(
+        (e) => (e.payload['item_id']! as String).startsWith('card:hk-mtr:'),
+      ),
+      isTrue,
+    );
+    expect(
+      reviews.any(
+        (e) => (e.payload['item_id']! as String).startsWith('cr:yue:'),
+      ),
+      isTrue,
+    );
     final cardId = reviews.last.payload['item_id']! as String;
     expect(services.learner.stateOf(cardId).isNew, isFalse);
   }, skip: !hasDb);

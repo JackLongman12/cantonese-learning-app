@@ -42,7 +42,7 @@ class Reference:
         """Context-free first-listed reading per character, in pipeline notation."""
         if lang == "yue":
             return {c: r.yue[0] for c, r in self.chars.items() if r.yue}
-        return {}  # Unihan kMandarin uses tone marks; pypinyin already covers Mandarin
+        return {}  # Cantonese only
 
     def family_rows(self):
         seen = set()

@@ -36,7 +36,6 @@ List<RubyToken> toks(
 void main() {
   testWidgets('ruby rendering', (t) async {
     await loadFont('NotoSansHK', 'assets/fonts/NotoSansHK.ttf');
-    await loadFont('NotoSansSC', 'assets/fonts/NotoSansSC.ttf');
     await t.binding.setSurfaceSize(const Size(560, 620));
     addTearDown(() => t.binding.setSurfaceSize(null));
     const full = [ScaffoldLevel.full];
@@ -91,25 +90,6 @@ void main() {
                       ScaffoldLevel.full,
                     ],
                   ),
-                ),
-                RubyText(
-                  lang: 'cmn',
-                  tokens: toks('请问，去关闸要坐几路公交车？', [
-                    'qing3',
-                    'wen4',
-                    null,
-                    'qu4',
-                    'guan1',
-                    'zha2',
-                    'yao4',
-                    'zuo4',
-                    'ji3',
-                    'lu4',
-                    'gong1',
-                    'jiao1',
-                    'che1',
-                    null,
-                  ], full),
                 ),
               ],
             ),

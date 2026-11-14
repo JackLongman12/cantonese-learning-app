@@ -19,7 +19,7 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("--only", nargs="*", help="source names, e.g. osm_macau osm_hk")
     a = sub.add_parser("annotate", help="show readings for a piece of text")
     a.add_argument("text")
-    a.add_argument("--lang", choices=["yue", "cmn"], default="yue")
+    a.add_argument("--lang", choices=["yue"], default="yue")
     sub.add_parser("validate", help="check the YAML content tree")
     sub.add_parser("build", help="build build/content.db and the review queue")
     t = sub.add_parser("tts", help="synthesise audio for every sentence in content.db")

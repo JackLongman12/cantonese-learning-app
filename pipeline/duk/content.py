@@ -101,7 +101,7 @@ def _load(path: Path):
 def _fix(raw: dict) -> dict[str, dict[str, str]]:
     return {
         lang: {str(k): str(v) for k, v in raw[f"fix_{lang}"].items()}
-        for lang in ("yue", "cmn")
+        for lang in ("yue",)
         if raw.get(f"fix_{lang}")
     }
 
@@ -142,8 +142,9 @@ def load_content(root: Path) -> Content:
             if raw.get("retired") or not claim(raw.get("id"), path):
                 continue
             sid = raw["id"]
-            text = {lang: raw[lang].strip() for lang in ("yue", "cmn") if raw.get(lang)}
-            need(bool(text), f"{sid}: needs yue and/or cmn text")
+            need(not raw.get("cmn"), f"{sid}: Mandarin was dropped; remove the cmn text")
+            text = {"yue": raw["yue"].strip()} if raw.get("yue") else {}
+            need(bool(text), f"{sid}: needs yue text")
             need(bool(raw.get("en")), f"{sid}: en required")
             need(raw.get("register") in REGISTERS, f"{sid}: register must be spoken|written")
             region = raw.get("region", sc.get("region"))
@@ -197,7 +198,7 @@ def load_content(root: Path) -> Content:
                     problems.append(f"{dlg['id']} line {n}: expected [speaker, text, english]")
                     continue
                 speaker, text, en = (str(x) for x in line)
-                lang = "cmn" if dlg.get("lang") == "cmn" else "yue"
+                lang = "yue"
                 line_id = f"{dlg['id']}-{n:02d}"
                 if not claim(line_id, path):
                     continue
@@ -229,7 +230,7 @@ def load_content(root: Path) -> Content:
             if not claim(st.get("id"), path):
                 continue
             lang = st.get("lang", "yue")
-            need(lang in ("yue", "cmn"), f"{st['id']}: lang must be yue or cmn")
+            need(lang == "yue", f"{st['id']}: stories are Cantonese only (lang: yue)")
             need(bool(st.get("title")), f"{st['id']}: title required")
             lines = st.get("lines") or []
             need(len(lines) >= 3, f"{st['id']}: a story needs at least three lines")
@@ -316,7 +317,7 @@ def load_content(root: Path) -> Content:
             f"{p.id}: unknown example sentence {p.example}",
         )
 
-    overrides: dict[str, dict[str, list[str]]] = {"yue": {}, "cmn": {}}
+    overrides: dict[str, dict[str, list[str]]] = {"yue": {}}
     ov_path = root / "overrides" / "readings.yaml"
     if ov_path.exists():
         doc = _load(ov_path)

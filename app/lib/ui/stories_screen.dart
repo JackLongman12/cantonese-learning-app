@@ -76,7 +76,6 @@ class _StoriesScreenState extends State<StoriesScreen> {
           (best, st) =>
               best == null || coverage[st.id]! > coverage[best.id]! ? st : best,
         );
-    final other = widget.lang == 'yue' ? 'cmn' : 'yue';
     return Scaffold(
       appBar: AppBar(title: const Text('Stories')),
       body: SafeArea(
@@ -148,27 +147,6 @@ class _StoriesScreenState extends State<StoriesScreen> {
                                 color: scheme.onSurfaceVariant,
                               ),
                             ),
-                            if (st.pair != null &&
-                                _s.content.storyPair(st.pair!, other) != null)
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: TextButton.icon(
-                                  key: ValueKey('pair-${st.id}'),
-                                  onPressed: () => _open(
-                                    _s.content.storyPair(st.pair!, other)!,
-                                    other,
-                                  ),
-                                  icon: const Icon(
-                                    Icons.translate_rounded,
-                                    size: 18,
-                                  ),
-                                  label: Text(
-                                    other == 'cmn'
-                                        ? 'Same story in Mandarin'
-                                        : 'Same story in Cantonese',
-                                  ),
-                                ),
-                              ),
                           ],
                         ),
                       ),

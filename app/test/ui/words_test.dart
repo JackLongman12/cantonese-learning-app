@@ -24,7 +24,6 @@ void main() {
     expect(found.first.start, 3);
     expect(found.first.end, 5);
     expect(found.first.entries.first.en.toLowerCase(), contains('bank'));
-    expect(db.lookup('银行', 'cmn'), isNotEmpty);
   }, skip: hasDb ? false : 'run the pipeline first');
 
   testWidgets('save a word from a sentence; it shows in My words', (t) async {

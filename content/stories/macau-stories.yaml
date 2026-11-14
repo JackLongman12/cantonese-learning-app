@@ -1,10 +1,8 @@
 # Graded stories: short, everyday Macau life, mostly characters met in the topics.
 # level 1 = very easy, 2 = easy, 3 = more written-style characters.
-# `pair` links a Cantonese story to its Mandarin retelling ("Mandarin through Cantonese").
 # Drafted by an LLM; reviewed: false until the owner approves them.
 stories:
   - id: sty-breakfast-yue
-    pair: sty-breakfast
     lang: yue
     level: 1
     title: "Breakfast downstairs"
@@ -20,25 +18,7 @@ stories:
       - ["我俾咗五十蚊，佢找返兩蚊俾我。", "I gave fifty and got two back."]
       - ["今日開始得好好。", "A good start to the day."]
 
-  - id: sty-breakfast-cmn
-    pair: sty-breakfast
-    lang: cmn
-    level: 1
-    title: "Breakfast downstairs (Mandarin)"
-    lines:
-      - ["今天我很早起床。", "I got up very early today."]
-      - ["我去楼下的茶餐厅吃早餐。", "I went to the cha chaan teng downstairs for breakfast."]
-      - ["服务员问我吃什么。", "The waiter asked what I'd have."]
-      - ["我点了一份套餐和一杯冰奶茶。", "I ordered a set meal and an iced milk tea."]
-      - ["等了五分钟，饭菜就来了。", "After five minutes the food arrived."]
-      - ["奶茶很香，吐司也很好吃。", "The milk tea smelled great and the toast was delicious."]
-      - ["吃完以后，我谢谢服务员，然后买单。", "When I'd finished, I thanked the waiter and paid."]
-      - ["一共四十八块。", "Forty-eight altogether."]
-      - ["我给了五十块，他找了我两块。", "I gave fifty and got two back."]
-      - ["今天开了个好头。", "A good start to the day."]
-
   - id: sty-wrong-bus-yue
-    pair: sty-wrong-bus
     lang: yue
     level: 1
     title: "The wrong bus"
@@ -52,22 +32,6 @@ stories:
       - ["司機叫我過對面轉車。", "The driver told me to cross over and change buses."]
       - ["最後我遲咗半個鐘先到。", "In the end I arrived half an hour late."]
       - ["朋友笑住話：「唔緊要，我都啱啱到。」", "My friend laughed: \"No worries, I just got here too.\""]
-
-  - id: sty-wrong-bus-cmn
-    pair: sty-wrong-bus
-    lang: cmn
-    level: 1
-    title: "The wrong bus (Mandarin)"
-    lines:
-      - ["今天我要去氹仔见朋友。", "Today I was going to Taipa to meet a friend."]
-      - ["我在新马路坐公交车。", "I caught a bus on San Ma Lo."]
-      - ["坐了十分钟，我觉得不对劲。", "After ten minutes I felt something was off."]
-      - ["窗外不是大桥，是关闸！", "Outside the window wasn't the bridge, it was the Border Gate!"]
-      - ["原来我坐错车了。", "It turned out I'd taken the wrong bus."]
-      - ["我马上下车，问司机怎么去氹仔。", "I got off at once and asked the driver how to get to Taipa."]
-      - ["司机让我到对面换车。", "The driver told me to cross over and change buses."]
-      - ["最后我迟到了半个小时。", "In the end I arrived half an hour late."]
-      - ["朋友笑着说：“没关系，我也刚到。”", "My friend laughed: \"No worries, I just got here too.\""]
 
   - id: sty-typhoon-yue
     lang: yue

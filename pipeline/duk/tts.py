@@ -19,7 +19,6 @@ from . import paths
 
 VOICES = {
     "yue": ["zh-HK-HiuMaanNeural", "zh-HK-WanLungNeural"],
-    "cmn": ["zh-CN-XiaoxiaoNeural", "zh-CN-YunxiNeural"],
 }
 RATES = {"normal": "+0%", "slow": "-25%"}
 

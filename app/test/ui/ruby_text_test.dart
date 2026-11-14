@@ -96,20 +96,10 @@ void main() {
     expect(rubyAt(t, 0), 'haang4');
   });
 
-  testWidgets('language picks the regional font and locale', (t) async {
-    await t.pumpWidget(
-      host(
-        const RubyText(
-          lang: 'cmn',
-          tokens: [RubyToken(surface: '发', kind: 'han', reading: 'fa1')],
-        ),
-      ),
-    );
-    expect(rubyAt(t, 0), 'fā'); // Mandarin is shown as tone-marked Pinyin
-    final style = t.widget<Text>(find.text('发')).style!;
-    expect(style.fontFamily, 'NotoSansSC');
-    expect(style.locale, const Locale('zh', 'CN'));
-    expect(chineseStyle('yue', fontSize: 10).locale, const Locale('zh', 'HK'));
+  test('Chinese text uses the Hong Kong font and locale', () {
+    final style = chineseStyle('yue', fontSize: 10);
+    expect(style.fontFamily, 'NotoSansHK');
+    expect(style.locale, const Locale('zh', 'HK'));
   });
 
   testWidgets(

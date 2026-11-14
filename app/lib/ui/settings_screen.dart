@@ -117,29 +117,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 section('Reading'),
                 ListTile(
-                  title: const Text('Language'),
-                  trailing: SegmentedButton<String>(
-                    key: const ValueKey('set-lang'),
-                    showSelectedIcon: false,
-                    segments: [
-                      const ButtonSegment(value: 'yue', label: Text('粵語')),
-                      ButtonSegment(
-                        value: 'cmn',
-                        label: Text(
-                          '普通话',
-                          style: chineseStyle('cmn', fontSize: 14),
-                        ),
-                      ),
-                    ],
-                    selected: {p.lang},
-                    onSelectionChanged: (v) {
-                      final from = p.lang;
-                      p.lang = v.first;
-                      _changed('lang', from, v.first);
-                    },
-                  ),
-                ),
-                ListTile(
                   title: const Text('Jyutping help'),
                   subtitle: const Text(
                     'How quickly readings fade as you learn',

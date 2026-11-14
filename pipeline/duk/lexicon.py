@@ -56,37 +56,6 @@ def yue_lexicon(
     return _finish(chars, words, overrides)
 
 
-def cmn_lexicon(
-    overrides: dict[str, list[str]],
-) -> tuple[dict[str, tuple[str, int]], dict[str, str]]:
-    import json
-    from pathlib import Path
-
-    import pypinyin
-    from pypinyin import Style, pinyin
-
-    root = Path(pypinyin.__file__).parent
-    chars: dict[str, tuple[str, int]] = {}
-    for cp, _marked in json.loads((root / "pinyin_dict.json").read_text("utf-8")).items():
-        ch = chr(int(cp))
-        if not is_han(ch):
-            continue
-        opts = pinyin(ch, style=Style.TONE3, heteronym=True, neutral_tone_with_five=True)[0]
-        opts = [o for o in opts if valid_reading("cmn", o)]
-        if opts:
-            chars[ch] = (opts[0], len(opts))
-    words: dict[str, list[str]] = {}
-    for phrase in json.loads((root / "phrases_dict.json").read_text("utf-8")):
-        if not (1 < len(phrase) <= MAX_WORD and all(is_han(c) for c in phrase)):
-            continue
-        if all(chars.get(c, ("", 1))[1] == 1 for c in phrase):
-            continue  # nothing ambiguous inside: per-character defaults are already right
-        r = [x[0] for x in pinyin(phrase, style=Style.TONE3, neutral_tone_with_five=True)]
-        if len(r) == len(phrase) and all(valid_reading("cmn", x) for x in r):
-            words[phrase] = r
-    return _finish(chars, words, overrides)
-
-
 def _finish(
     chars: dict[str, tuple[str, int]],
     words: dict[str, list[str]],

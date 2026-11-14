@@ -255,10 +255,3 @@ yue:
   電話卡: [din6, waa2, kaat1]
   增值卡: [zang1, zik6, kaat1]
   會員卡: [wui2, jyun4, kaat1]
-cmn:
-  # common function-word readings (exceptions like 了解 liao3, 着急 zhao2 need word entries)
-  了: [le5]
-  和: [he2]
-  给: [gei3]
-  着: [zhe5]
-  前地: [qian2, di4]

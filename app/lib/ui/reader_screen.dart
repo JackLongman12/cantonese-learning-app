@@ -392,6 +392,25 @@ class _ReaderScreenState extends State<ReaderScreen> {
     });
   }
 
+  /// Says the dictionary word around token [i] (or the character alone).
+  Future<void> _speakWord(int i) async {
+    final s = _sentence;
+    final pos = tokenOffsets(s.tokens)[i];
+    final found = _s.content.wordsAt(s.text, pos, widget.lang);
+    final word = found.isEmpty
+        ? s.tokens[i].surface
+        : s.text.substring(found.first.start, found.first.end);
+    _s.logger.log('item.audio', {
+      'exposure_id': _exposureId,
+      'scope': 'word',
+      'rate': 'normal',
+      'text': word,
+    });
+    if (!await _s.sayWord(word, widget.lang) && mounted) {
+      _toast(noVoiceMessage);
+    }
+  }
+
   /// Token indexes that fall inside a saved word ("My words").
   Set<int> _savedTokens(SentenceRow s) {
     final ranges = _s.words.highlights(widget.lang, s.text);
@@ -584,6 +603,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         child: RubyText(
                           lang: widget.lang,
                           onReveal: _reveal,
+                          onSpeak: _speakWord,
                           onLookup: (i) {
                             _reveal(i);
                             showWordLookup(
@@ -913,7 +933,6 @@ class _HelpSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cmn = lang == 'cmn';
     Widget row(
       String example,
       String label,
@@ -940,10 +959,7 @@ class _HelpSheet extends StatelessWidget {
                       ),
                     ),
                   ),
-                  child: Text(
-                    cmn ? '行' : '行',
-                    style: chineseStyle(lang, fontSize: 30),
-                  ),
+                  child: Text('行', style: chineseStyle(lang, fontSize: 30)),
                 ),
               ],
             ),
@@ -972,13 +988,9 @@ class _HelpSheet extends StatelessWidget {
               style: theme.textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
+            row('haang4', 'New', 'The full reading is shown. Just read along.'),
             row(
-              cmn ? 'xíng' : 'haang4',
-              'New',
-              'The full reading is shown. Just read along.',
-            ),
-            row(
-              cmn ? 'ˊ' : '4',
+              '4',
               'Learning',
               'Only the tone is shown. Tap if you need the rest.',
             ),

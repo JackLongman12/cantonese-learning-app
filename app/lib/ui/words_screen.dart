@@ -128,13 +128,8 @@ class _WordsScreenState extends State<WordsScreen> {
             for (final e in results.take(5))
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: Text(
-                  _lang == 'cmn' ? e.simp : e.trad,
-                  style: chineseStyle(_lang, fontSize: 22),
-                ),
-                subtitle: Text(
-                  '${showReading(_lang, _lang == 'cmn' ? e.pinyin : (e.jyutping.isEmpty ? e.pinyin : e.jyutping))}\n${e.en}',
-                ),
+                title: Text(e.trad, style: chineseStyle(_lang, fontSize: 22)),
+                subtitle: Text('${showReading(_lang, e.jyutping)}\n${e.en}'),
                 isThreeLine: true,
               ),
             if (query.isNotEmpty && results.isEmpty)
@@ -199,9 +194,14 @@ class _WordsScreenState extends State<WordsScreen> {
                               crossAxisAlignment: WrapCrossAlignment.end,
                               spacing: 10,
                               children: [
-                                Text(
-                                  w.text,
-                                  style: chineseStyle(_lang, fontSize: 26),
+                                InkWell(
+                                  key: ValueKey('say-${w.text}'),
+                                  onTap: () =>
+                                      sayOrExplain(context, _s, w.text, _lang),
+                                  child: Text(
+                                    w.text,
+                                    style: chineseStyle(_lang, fontSize: 26),
+                                  ),
                                 ),
                                 if (w.reading != null)
                                   Padding(

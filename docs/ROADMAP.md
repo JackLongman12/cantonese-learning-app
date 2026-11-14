@@ -2,7 +2,7 @@
 
 Work top to bottom. Do not start a phase until the previous phase's "Done when" list is met. Tick boxes as tasks land and keep the **Status** line current.
 
-**Status (2026-11-15):** App is named **DuckLearn**; Android arm64 is the release target (Windows releases paused, macOS later). Home has bottom tabs: Today, Topics (with flashcard decks of real Macau/HK names from OpenStreetMap), Stories, Words ("My words": long-press any character for dictionary meanings from CC-Canto/CC-CEDICT and save it with its sentence), Read (paste/share). Thirteen 100-sentence Macau topics, 65 conversations, 6 stories. Sentences auto-play on open; read-aloud stops when you finish and shows a sound-accuracy percent; soft synthesised UI sounds; settings screen; daily reminder; home-screen widget; auto-update from public GitHub Releases. HK topics and owner review of LLM-written content are the biggest content gaps.
+**Status (2026-11-15):** App is named **DuckLearn**; **Cantonese only** (Mandarin dropped); Android arm64 is the release target (Windows releases paused, macOS later). Home has bottom tabs: Today, Topics (with flashcard decks of real Macau/HK names from OpenStreetMap), Stories, Words ("My words": long-press any character for dictionary meanings from CC-Canto/CC-CEDICT and save it with its sentence), Read (paste/share). Thirteen 100-sentence Macau topics, 65 conversations, 6 stories. Sentences auto-play on open; read-aloud stops when you finish and shows a sound-accuracy percent; soft synthesised UI sounds; settings screen; daily reminder; home-screen widget; auto-update from public GitHub Releases. HK topics and owner review of LLM-written content are the biggest content gaps.
 
 ## Product principle: serve the unmet need, not a Duolingo copy
 
@@ -21,8 +21,8 @@ feature is judged against these gaps; anything that is only engagement mechanics
    only the characters *you* don't know yet; what you look up feeds back into what you study.
    Built-in OCR was removed (2026-11-15): Lens / Live Text / Pleco recognise text better, so
    DuckLearn receives text from them instead (Android Share and text-selection menu).
-5. **Two languages, one character memory.** Cantonese/Traditional and Mandarin/Simplified tracks
-   share the learner model, with differences (讀/读, 搭/坐) shown side by side.
+5. **Cantonese only.** Mandarin was dropped (owner, 2026-11-15): other apps already serve it,
+   and every hour spent there is an hour not spent on the Cantonese gap.
 
 The duck mascot is branding and gentle feedback only: no XP, no hearts, no streak guilt.
 
@@ -97,7 +97,7 @@ Goal: prove the three risky things (readings, audio, ruby rendering) on 20 sente
 - [ ] 1.6 Placement test (yue first).
 - [ ] 1.7 Pipeline: validate → annotate → build → TTS → bundle works. Still to do: ASR back-check of audio, TTS-only substitutions, Azure engine, one-command wrapper.
 - [ ] 1.8 Content: **≥ 100 sentences per topic** (owner requirement), with variations grouped by `pattern`. See the topic table below.
-### Topic table (each needs ≥ 100 sentences; Mandarin pairs where useful)
+### Topic table (each needs ≥ 100 sentences)
 
 | Topic | File | Sentences | Owner-reviewed |
 |---|---|---|---|
@@ -116,7 +116,6 @@ Goal: prove the three risky things (readings, audio, ruby rendering) on 20 sente
 | Getting around Hong Kong (MTR, minibus, Octopus) | to write | 0 | 0 |
 | Hong Kong daily life (茶餐廳, shopping, districts) | to write | 0 | 0 |
 | Numbers, time, dates and prices | `scenarios/macau/numbers-and-time.yaml` | 100 | 0 |
-| Mandarin essentials (Simplified; mainland trips, Zhuhai) | to write | 0 | 0 |
 
 Write one topic at a time: draft → `duk build` → clear the review queue → print readings and
 check them by eye → `duk tts` → `duk bundle`. The owner then confirms wording by ear.
@@ -126,13 +125,13 @@ check them by eye → `duk tts` → `duk bundle`. The owner then confirms wordin
 
 **Done when:** owner uses it daily for a week; ruby visibly fades on mastered characters; rebuild-from-log reproduces state exactly.
 
-## Phase 2 — Breadth: cards, places, Mandarin, updates
+## Phase 2 — Breadth: cards, places, updates
 
 - [ ] 2.1 Place import from open data (Macau first), `content/places/`, special-reading overrides. (Names now come from OSM for decks; coordinates/districts not yet.)
 - [x] 2.2 Flashcards (first version): decks of real names from OpenStreetMap (Macau streets with Portuguese, Macau LRT, HK MTR, HK streets with English). Each card is its own FSRS item (`card:<deck>:<zh>`) and also grades its characters. Street-ending hints ("大馬路 is usually Avenida") are counted from the map data. Still to do: templates beyond read-the-sign (listening, Portuguese → Chinese), menu/sign decks.
 - [ ] 2.3 Map mode with offline tiles for Macau and HK.
 - [ ] 2.4 Scenario browser and trip mode (`goal.set`).
-- [ ] 2.5 Mandarin track: Simplified sentences, Pinyin, parallel view with difference highlighting; Mandarin placement.
+- [x] ~~2.5 Mandarin track~~ **Dropped by the owner (2026-11-15):** Mandarin reading is well served by other apps; DuckLearn is Cantonese only. Mandarin content, Pinyin display, the language switch, Noto Sans SC and the pypinyin/jieba dependencies were removed.
 - [x] 2.6 Releases: `tool/release.sh` builds signed Android APKs + Windows zip on the dev PC and publishes a GitHub Release (CI signing was not set up: the key stays on the PC). macOS later.
 - [x] 2.7 Auto-update on launch (Android + Windows), from public GitHub Releases. Content packs separate from the app: not yet.
 - [ ] 2.8 Error diagnosis and targeted drills (DESIGN §2.6).
@@ -189,7 +188,7 @@ dropped (arm64 only).
 
 ## Learning techniques (2026-11-15)
 
-Built: graded stories (6 Cantonese, 2 with Mandarin retellings; content/stories/), sorted by
+Built: graded stories (6 Cantonese; content/stories/; the 2 Mandarin retellings were removed with the Mandarin track), sorted by
 how much the learner can already read with a "Good next read"; read-along (audio plays as each
 line appears); shadowing (native line, then recording starts); sound families (phonetic
 components from Make Me a Hanzi, with same-sound / tone-only / different marks); spoken vs

@@ -31,12 +31,10 @@ void main() {
         'lang': 'yue',
         'en': 'the bill',
       }, minute: 2),
-      ev('word.save', {'text': '银行', 'lang': 'cmn'}, minute: 3),
       ev('word.remove', {'text': '埋單', 'lang': 'yue'}, minute: 4),
     ]);
     expect(book.words('yue').map((w) => w.text), ['銀行']);
     expect(book.words('yue').single.context, '行路去銀行');
-    expect(book.contains('cmn', '银行'), isTrue);
     expect(book.contains('yue', '埋單'), isFalse);
   });
 
@@ -57,6 +55,5 @@ void main() {
       ev('word.save', {'text': '行路', 'lang': 'yue'}),
     ]);
     expect(book.highlights('yue', '行路去銀行'), [(0, 2), (3, 5)]);
-    expect(book.highlights('cmn', '行路去銀行'), isEmpty);
   });
 }

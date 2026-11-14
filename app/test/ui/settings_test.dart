@@ -43,9 +43,7 @@ void main() {
     await t.pump();
     expect(prefs.helpShift, 1);
     expect(s.scaffold.shift, 1);
-    await t.tap(find.text('普通话'));
-    await t.pump();
-    expect(prefs.lang, 'cmn');
+    expect(find.text('普通话'), findsNothing); // Cantonese only
     await t.tap(find.byKey(const ValueKey('set-read-along')));
     await t.pump();
     expect(prefs.readAlong, isTrue);

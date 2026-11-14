@@ -37,6 +37,29 @@ String? rangeReading(List<TokenRow> tokens, int start, int end) {
   return parts.isEmpty ? null : parts.join(' ');
 }
 
+const noVoiceMessage =
+    'No Cantonese voice on this device. Install "Cantonese (Hong Kong)" '
+    'under Settings > Text-to-speech (Speech services by Google).';
+
+/// Says [word]; shows how to install a voice when none is available.
+Future<void> sayOrExplain(
+  BuildContext context,
+  AppServices s,
+  String word,
+  String lang,
+) async {
+  if (!await s.sayWord(word, lang) && context.mounted) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text(noVoiceMessage),
+        ),
+      );
+  }
+}
+
 String showReading(String lang, String reading) =>
     reading.split(' ').map((r) => displayReading(lang, r)).join(' ');
 
@@ -140,15 +163,14 @@ class _WordLookupSheetState extends State<WordLookupSheet> {
                 word: widget.sentence.text.substring(f.start, f.end),
                 reading:
                     rangeReading(widget.sentence.tokens, f.start, f.end) ??
-                    (lang == 'cmn'
-                        ? f.entries.first.pinyin
-                        : f.entries.first.jyutping),
+                    f.entries.first.jyutping,
                 entries: f.entries,
                 saved: _s.words.contains(
                   lang,
                   widget.sentence.text.substring(f.start, f.end),
                 ),
                 onToggle: (word, reading, en) => _toggle(word, reading, en),
+                onSpeak: (word) => sayOrExplain(context, _s, word, lang),
               ),
               const SizedBox(height: 10),
             ],
@@ -181,6 +203,7 @@ class _WordCard extends StatelessWidget {
     required this.entries,
     required this.saved,
     required this.onToggle,
+    required this.onSpeak,
   });
   final String lang;
   final String word;
@@ -188,6 +211,7 @@ class _WordCard extends StatelessWidget {
   final List<DictEntry> entries;
   final bool saved;
   final void Function(String word, String? reading, String en) onToggle;
+  final void Function(String word) onSpeak;
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +230,18 @@ class _WordCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(word, style: chineseStyle(lang, fontSize: 28)),
+                  InkWell(
+                    key: ValueKey('say-$word'),
+                    onTap: () => onSpeak(word),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(word, style: chineseStyle(lang, fontSize: 28)),
+                        const SizedBox(width: 8),
+                        Icon(Icons.volume_up_rounded, color: scheme.primary),
+                      ],
+                    ),
+                  ),
                   if (reading.isNotEmpty)
                     Text(
                       showReading(lang, reading),

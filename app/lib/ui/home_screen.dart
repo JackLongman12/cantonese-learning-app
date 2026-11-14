@@ -464,12 +464,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
         const SizedBox(height: 12),
         if (scenarios.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24),
-            child: Text(
-              'No ${_lang == 'cmn' ? 'Mandarin' : 'Cantonese'} content yet.',
-              textAlign: TextAlign.center,
-            ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 24),
+            child: Text('No content yet.', textAlign: TextAlign.center),
           ),
         for (final sc in scenarios)
           _TopicTile(
@@ -574,31 +571,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             setState(() => _lang = _s.prefs.lang);
           },
           icon: const Icon(Icons.settings_rounded),
-        ),
-        SegmentedButton<String>(
-          showSelectedIcon: false,
-          style: const ButtonStyle(
-            visualDensity: VisualDensity.compact,
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          ),
-          segments: [
-            const ButtonSegment(value: 'yue', label: Text('粵語')),
-            ButtonSegment(
-              value: 'cmn',
-              // simplified glyphs need the SC font
-              label: Text('普通话', style: chineseStyle('cmn', fontSize: 14)),
-            ),
-          ],
-          selected: {_lang},
-          onSelectionChanged: (v) {
-            _s.logger.log('settings.change', {
-              'key': 'lang',
-              'from': _lang,
-              'to': v.first,
-            });
-            _s.prefs.lang = v.first;
-            setState(() => _lang = v.first);
-          },
         ),
       ],
     );

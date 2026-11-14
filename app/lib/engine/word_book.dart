@@ -17,12 +17,12 @@ class SavedWord {
     this.contextEn,
   });
 
-  /// The word as written (Traditional for yue, Simplified for cmn).
+  /// The word as written (Traditional).
   final String text;
   final String lang;
   final DateTime savedAt;
 
-  /// Space-separated Jyutping or Pinyin, as shown when it was saved.
+  /// Space-separated Jyutping, as shown when it was saved.
   final String? reading;
 
   /// Dictionary meaning at the time of saving.

@@ -10,9 +10,7 @@ requires-python = ">=3.11"
 dependencies = [
   "ToJyutping>=3.2",
   "pycantonese>=5.0",
-  "pypinyin>=0.55",
   "opencc>=1.1",
-  "jieba>=0.42",
   "pyyaml>=6",
   "requests>=2.31",
   "edge-tts>=6.1",

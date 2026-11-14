@@ -21,14 +21,12 @@ void main() {
     addTearDown(() => dir.deleteSync(recursive: true));
     final f = File('${dir.path}/prefs.json');
     Prefs(f)
-      ..lang = 'cmn'
       ..sessionLength = 30
-      ..setLastTopic('cmn', 'scn-x');
+      ..setLastTopic('yue', 'scn-x');
     final again = Prefs(f);
-    expect(again.lang, 'cmn');
+    expect(again.lang, 'yue');
     expect(again.sessionLength, 30);
-    expect(again.lastTopic('cmn'), 'scn-x');
-    expect(again.lastTopic('yue'), isNull);
+    expect(again.lastTopic('yue'), 'scn-x');
     f.writeAsStringSync('{broken');
     expect(Prefs(f).lang, 'yue');
   });

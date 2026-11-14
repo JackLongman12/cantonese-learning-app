@@ -17,6 +17,7 @@ import 'events/event_store.dart';
 import 'platform/reminders.dart';
 import 'platform/sfx.dart';
 import 'platform/speech.dart';
+import 'platform/word_voice.dart';
 import 'platform/updater.dart';
 import 'ui/home_screen.dart';
 import 'ui/theme.dart';
@@ -91,6 +92,7 @@ Future<AppServices> _bootstrap() async {
     prefs: Prefs(File(p.join(support.path, 'prefs.json'))),
     updater: Updater(),
     sfx: SoundEffects(),
+    voice: WordVoice(),
     reminders: Platform.isAndroid ? Reminders() : null,
     speech: (Platform.isAndroid || Platform.isWindows || Platform.isMacOS)
         ? SpeechEngine(modelDir)

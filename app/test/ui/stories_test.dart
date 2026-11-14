@@ -35,13 +35,13 @@ void main() {
     );
   }
 
-  test('stories are kept apart from topics and paired across languages', () {
+  test('stories are kept apart from topics and Cantonese only', () {
     final db = ContentDb.open(dbPath);
     addTearDown(db.close);
     final yue = db.stories('yue');
     expect(yue.length, greaterThanOrEqualTo(6));
     expect(yue.first.level, 1);
-    expect(db.storyPair('sty-breakfast', 'cmn')?.id, 'sty-breakfast-cmn');
+    expect(db.stories('cmn'), isEmpty);
     expect(
       db
           .scenarios('yue')

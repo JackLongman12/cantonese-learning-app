@@ -1,9 +1,9 @@
-﻿# DuckLearn: Cantonese + Mandarin reading app
+﻿# DuckLearn: Cantonese reading app
 
 The user-facing name is **DuckLearn**; the Dart package and internal ids stay `duk`.
 Read the "Product principle" section of `docs/ROADMAP.md` before adding features.
 
-Personal, non-commercial app (Android, Windows, macOS) for one user who **speaks Cantonese natively but cannot read Chinese**. It teaches reading through real Macau/HK sentences with Jyutping that fades per character as mastery grows, plus a Mandarin/Simplified track.
+Personal, non-commercial app (Android, Windows, macOS) for one user who **speaks Cantonese natively but cannot read Chinese**. It teaches reading through real Macau/HK sentences with Jyutping that fades per character as mastery grows. **Cantonese only:** the owner dropped the Mandarin track on 2026-11-15 (the market already covers Mandarin). Do not add Mandarin back without asking.
 
 ## Read first
 
@@ -29,7 +29,7 @@ Personal, non-commercial app (Android, Windows, macOS) for one user who **speaks
 3. **Never invent linguistic or local facts.** Readings come from dictionaries or overrides; ambiguous polyphones go to the review queue. Macau/HK facts (place names, Portuguese names, routes, prices) come from a listed source or the owner.
 4. **The owner is the authority on Cantonese.** LLM-written content is `source: llm`, `reviewed: false` until they approve it.
 5. **Readings are arrays aligned to tokens**, never one string.
-6. **Set locale and font on all Chinese text** (`zh-HK` + Noto Sans HK for Cantonese, `zh-CN` + Noto Sans SC for Mandarin).
+6. **Set locale and font on all Chinese text** (`zh-HK` + Noto Sans HK). The internal language tag stays `yue`: it is part of permanent item IDs (`cr:yue:…`).
 7. **IDs are permanent.** Never renumber or reuse content or item IDs.
 8. **Secrets** live in `secrets.json` (git-ignored). Never commit keys, never compile them into release builds, never print them.
 9. `content.db` and audio are build outputs. Edit YAML, not the database.

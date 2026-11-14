@@ -59,15 +59,9 @@ def test_override_longest_match():
     assert ann.tokens[0].reading == "daap3" and ann.tokens[0].status == OVERRIDE
 
 
-def test_cmn_citation_tones_for_yi_and_bu():
-    ann = annotate("一个不对", "cmn")
-    assert ann.readings[0] == "yi1" and ann.readings[2] == "bu4"
-
-
-def test_cmn_lone_polyphone_flagged():
-    ann = annotate("这条路很长", "cmn")
-    assert ann.tokens[-1].status == FLAG
-    assert {"chang2", "zhang3"} <= set(ann.tokens[-1].candidates)
+def test_mandarin_is_gone():
+    with pytest.raises(ValueError):
+        annotate("你好", "cmn")
 
 
 def test_words_are_token_spans():
@@ -94,7 +88,6 @@ def _tree(tmp_path, sentences: str, places: str = "places: []", overrides: str =
 GOOD = """
 - id: sent-test-001
   yue: 唔該，埋單。
-  cmn: 请结账。
   en: The bill, please.
   register: spoken
 """
@@ -121,7 +114,7 @@ def test_build_writes_aligned_tokens_and_items(tmp_path):
     root = _tree(tmp_path / "c", GOOD)
     out = tmp_path / "out" / "content.db"
     r = build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False)
-    assert r.sentences == 2 and any("reference data missing" in w for w in r.warnings)
+    assert r.sentences == 1 and any("reference data missing" in w for w in r.warnings)
     db = sqlite3.connect(out)
     toks = db.execute(
         "SELECT surface, reading, item_id FROM token WHERE sentence_id=? ORDER BY idx",
@@ -130,8 +123,7 @@ def test_build_writes_aligned_tokens_and_items(tmp_path):
     assert "".join(t[0] for t in toks) == "唔該，埋單。"
     assert toks[0] == ("唔", "m4", "cr:yue:唔:m4") and toks[2][1] is None
     assert db.execute("SELECT COUNT(*) FROM item WHERE kind='word' AND key='唔該'").fetchone()[0]
-    pair = db.execute("SELECT pair_id FROM sentence WHERE lang='cmn'").fetchone()[0]
-    assert pair == "sent-test-001"
+    assert db.execute("SELECT COUNT(*) FROM sentence WHERE lang!='yue'").fetchone()[0] == 0
     assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "6"
 
 

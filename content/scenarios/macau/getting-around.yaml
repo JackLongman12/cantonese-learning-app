@@ -11,7 +11,6 @@ defaults: {register: spoken, source: llm}
 sentences:
   - id: sent-mo-around-001
     yue: 唔該，去關閘要搭幾號巴士？
-    cmn: 请问，去关闸要坐几路公交车？
     en: Excuse me, which bus goes to the Border Gate?
     register: spoken
     tags: [bus, asking]
@@ -66,7 +65,6 @@ sentences:
 
   - id: sent-mo-around-008
     yue: 我住喺氹仔。
-    cmn: 我住在氹仔。
     en: I live in Taipa.
     register: spoken
     tags: [self]
@@ -75,7 +73,6 @@ sentences:
 
   - id: sent-mo-around-009
     yue: 請問洗手間喺邊度？
-    cmn: 请问洗手间在哪里？
     en: Excuse me, where is the toilet?
     register: spoken
     tags: [asking]

@@ -10,6 +10,7 @@ import '../engine/annotator.dart';
 import '../engine/scaffold.dart';
 import 'mascot.dart';
 import 'ruby_text.dart';
+import 'word_sheet.dart';
 
 class PasteReaderScreen extends StatefulWidget {
   const PasteReaderScreen({
@@ -188,9 +189,9 @@ class _PasteReaderScreenState extends State<PasteReaderScreen> {
           minLines: 5,
           maxLines: 12,
           style: chineseStyle(widget.lang, fontSize: 20),
-          decoration: InputDecoration(
-            hintText: widget.lang == 'cmn' ? '粘贴中文…' : '貼上中文…',
-            border: const OutlineInputBorder(),
+          decoration: const InputDecoration(
+            hintText: '貼上中文…',
+            border: OutlineInputBorder(),
           ),
         ),
         const SizedBox(height: 12),
@@ -287,6 +288,27 @@ class _PasteReaderScreenState extends State<PasteReaderScreen> {
                         lang: widget.lang,
                         fontSize: 28,
                         onReveal: (k) => _reveal(line[k]),
+                        onSpeak: (k) {
+                          final text = line
+                              .map((i) => _tokens[i].surface)
+                              .join();
+                          var pos = 0;
+                          for (var j = 0; j < k; j++) {
+                            pos += _tokens[line[j]].surface.length;
+                          }
+                          final found = _s.content.wordsAt(
+                            text,
+                            pos,
+                            widget.lang,
+                          );
+                          final word = found.isEmpty
+                              ? _tokens[line[k]].surface
+                              : text.substring(
+                                  found.first.start,
+                                  found.first.end,
+                                );
+                          sayOrExplain(context, _s, word, widget.lang);
+                        },
                         tokens: [
                           for (final i in line)
                             RubyToken(

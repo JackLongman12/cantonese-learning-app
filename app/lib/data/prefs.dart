@@ -25,8 +25,8 @@ class Prefs {
   final File? file;
   final Map<String, Object?> _data = {};
 
-  String get lang => _data['lang'] as String? ?? 'yue';
-  set lang(String v) => _set('lang', v);
+  /// Cantonese only (the Mandarin track was dropped, 2026-11-15).
+  String get lang => 'yue';
 
   /// Sentences per daily session.
   int get sessionLength => (_data['session_length'] as num?)?.toInt() ?? 15;

@@ -140,7 +140,7 @@ def build(
     db.executescript(SCHEMA)
 
     ref = load_reference(raw_root)
-    priors = {lang: ref.prior(lang) if ref else {} for lang in ("yue", "cmn")}
+    priors = {"yue": ref.prior("yue") if ref else {}}
 
     for sc in content.scenarios:
         db.execute(
@@ -234,7 +234,7 @@ def build(
     for p in content.places:
         readings: dict[str, list[str | None]] = {}
         flagged = False
-        for lang, text in (("yue", p.zh), ("cmn", _to_simplified(p.zh))):
+        for lang, text in (("yue", p.zh),):
             try:
                 ann = annotate(
                     text,
@@ -317,9 +317,9 @@ def build(
         db.executemany("INSERT INTO family VALUES(?,?)", ref.family_rows())
 
     if with_lexicon:
-        from .lexicon import cmn_lexicon, yue_lexicon
+        from .lexicon import yue_lexicon
 
-        for lang, make in (("yue", yue_lexicon), ("cmn", cmn_lexicon)):
+        for lang, make in (("yue", yue_lexicon),):
             chars, words = make(content.overrides.get(lang, {}))
             db.executemany(
                 "INSERT INTO lex_char VALUES(?,?,?,?)",
@@ -374,18 +374,12 @@ def build(
     return result
 
 
-def _to_simplified(text: str) -> str:
-    import opencc
-
-    return opencc.OpenCC("hk2s").convert(text)
-
-
 def _write_review_queue(path: Path, result: BuildResult) -> None:
     lines = [
         "# Review queue",
         "",
         "Readings the pipeline could not settle on its own. Say the line aloud, pick the",
-        "reading you actually use, then pin it with `fix_yue:` / `fix_cmn:` on the entry",
+        "reading you actually use, then pin it with `fix_yue:` on the entry",
         "(or a word in `content/overrides/readings.yaml` if it applies everywhere).",
         "",
         f"Open items: {sum(len(a.flags) for _, _, a in result.flags)}",

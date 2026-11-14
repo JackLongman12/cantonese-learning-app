@@ -86,7 +86,7 @@ class SpeechEngine {
         model: so.OfflineModelConfig(
           senseVoice: so.OfflineSenseVoiceModelConfig(
             model: p.join(modelDir.path, 'model.int8.onnx'),
-            language: lang == 'cmn' ? 'zh' : 'yue',
+            language: 'yue',
           ),
           tokens: p.join(modelDir.path, 'tokens.txt'),
           numThreads: 2,

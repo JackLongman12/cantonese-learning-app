@@ -3,18 +3,17 @@
 Design rules (docs/DESIGN.md section 5):
 - Readings are an array aligned to tokens, never one string.
 - Nothing ambiguous is guessed silently. Cantonese readings need two independent
-  sources to agree; Mandarin polyphones standing alone are flagged. Flags end up in
-  the review queue for the owner, who knows how the sentence sounds.
-- Mandarin stores citation tones (一 yi1, 不 bu4); sandhi is a display concern.
+  sources to agree. Flags end up in the review queue for the owner, who knows how the
+  sentence sounds.
+- Cantonese only: the Mandarin track was dropped (owner, 2026-11-15).
 """
 
 from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from functools import lru_cache
 
-LANGS = ("yue", "cmn")
+LANGS = ("yue",)
 
 # Token kinds
 HAN, LATIN, PUNCT, SPACE = "han", "latin", "punct", "space"
@@ -28,13 +27,6 @@ NONE = "none"  # token has no reading (punctuation, Latin, space)
 
 _SYLLABLE_YUE = re.compile(r"[a-z]+[1-6]")
 _VALID_YUE = re.compile(r"^(?:[a-z]{1,6})[1-6]$")
-_VALID_CMN = re.compile(r"^[a-zü]{1,6}[1-5]$")
-
-# Mandarin characters whose reading commonly depends on the word they are in.
-# A member that stands alone as a word is flagged for review.
-CMN_POLYPHONES = frozenset(
-    "长行乐重还得地着了都为好少种觉便数空朝调干发只背处藏传当倒分给号和会假间将教结尽看落没难强切曲散省似相兴应载中转率差"
-)
 
 
 def is_han(ch: str) -> bool:
@@ -49,7 +41,7 @@ def is_han(ch: str) -> bool:
 
 
 def valid_reading(lang: str, reading: str) -> bool:
-    return bool((_VALID_YUE if lang == "yue" else _VALID_CMN).match(reading))
+    return lang == "yue" and bool(_VALID_YUE.match(reading))
 
 
 @dataclass
@@ -167,41 +159,6 @@ def _yue_source_b(text: str) -> tuple[list[str | None], list[tuple[int, int]]]:
     return per_char, spans
 
 
-def _cmn_sentence(text: str) -> list[str | None]:
-    from pypinyin import Style, pinyin
-
-    out = pinyin(
-        text,
-        style=Style.TONE3,
-        heteronym=False,
-        neutral_tone_with_five=True,
-        errors=lambda run: [""] * len(run),
-    )
-    flat = [x[0] or None for x in out]
-    return flat if len(flat) == len(text) else [None] * len(text)
-
-
-@lru_cache(maxsize=8192)
-def _cmn_candidates(ch: str) -> tuple[str, ...]:
-    from pypinyin import Style, pinyin
-
-    out = pinyin(ch, style=Style.TONE3, heteronym=True, neutral_tone_with_five=True)
-    return tuple(r for r in out[0] if valid_reading("cmn", r)) if out else ()
-
-
-def _cmn_words(text: str) -> list[tuple[int, int]]:
-    import jieba
-
-    spans, pos = [], 0
-    for w in jieba.cut(text, HMM=False):
-        spans.append((pos, pos + len(w)))
-        pos += len(w)
-    return spans
-
-
-_CMN_CITATION = {"一": "yi1", "不": "bu4"}
-
-
 # --------------------------------------------------------------------------- annotate
 
 
@@ -260,19 +217,8 @@ def annotate(
     tokens = tokenize(text)
     by_start = {t.start: i for i, t in enumerate(tokens)}
 
-    if lang == "yue":
-        a, cands = _yue_source_a(text)
-        b, spans = _yue_source_b(text)
-    else:
-        a = _cmn_sentence(text)
-        spans = _cmn_words(text)
-        cands = [list(_cmn_candidates(ch)) if is_han(ch) else [] for ch in text]
-        # second opinion: each segmented word read on its own
-        b = [None] * len(text)
-        for s, e in spans:
-            for k, r in enumerate(_cmn_sentence(text[s:e])):
-                b[s + k] = r
-    single_char_words = {s for s, e in spans if e - s == 1} if lang == "cmn" else set()
+    a, cands = _yue_source_a(text)
+    b, spans = _yue_source_b(text)
 
     for t in tokens:
         if t.kind != HAN:
@@ -280,16 +226,12 @@ def annotate(
         i = t.start
         ra, rb = a[i], b[i]
         rc = (prior or {}).get(t.surface)
-        if lang == "cmn" and t.surface in _CMN_CITATION:
-            ra = rb = _CMN_CITATION[t.surface]
         t.candidates = [c for c in cands[i] if c]
         for r in (ra, rb):
             if r and r not in t.candidates:
                 t.candidates.append(r)
         if ra and rb and ra == rb:
             t.reading, t.status = ra, OK
-            if lang == "cmn" and i in single_char_words and t.surface in CMN_POLYPHONES:
-                t.status, t.note = FLAG, "polyphone standing alone"
         elif ra and rb:
             t.reading, t.status = (rb if rc == rb else ra), FLAG
             t.note = f"sources disagree: {ra} / {rb}"
