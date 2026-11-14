@@ -223,7 +223,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
     try {
       await _s.playAudio(path);
     } on Object catch (e) {
-      if (mounted) _toast('Could not play audio: $e');
+      // automatic playback fails quietly; a tap on Listen says what went wrong
+      if (mounted && !auto) _toast('Could not play audio: $e');
     }
   }
 

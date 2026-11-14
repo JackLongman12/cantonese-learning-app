@@ -60,7 +60,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final info = await u.check();
     if (!mounted) return;
     if (info == null) {
-      setState(() => _updateStatus = 'You have the latest version.');
+      setState(
+        () => _updateStatus = u.lastError == null
+            ? 'You have the latest version.'
+            : "Couldn't check: ${u.lastError}",
+      );
     } else {
       setState(() => _updateStatus = null);
       await runUpdate(context, _s, info);

@@ -40,11 +40,12 @@ Personal, non-commercial app (Android, Windows, macOS) for one user who **speaks
 - Dev machine: Windows 11, PowerShell, RTX 4060 Laptop (8 GB), Python 3.11, Git, Node, `gh` logged in.
 - Installed: Flutter 3.50 / Dart 3.14 at `C:\src\flutter`; Visual Studio 2022 Build Tools (C++); Microsoft OpenJDK 17 at `C:\Program Files\Microsoft\jdk-17.0.21.21-hotspot`; Android SDK at `C:\Android\Sdk` (platform 36, build-tools 37). Flutter is configured to use both. Not installed: Android Studio, an emulator image, Ollama.
 - macOS cannot be built locally; use GitHub Actions `macos-latest`.
+- Windows builds need `nuget.exe` on PATH (flutter_tts's Windows plugin fetches CppWinRT with it). Not installed yet; only matters when Windows releases resume or for `integration_test -d windows`.
 - The project path contains spaces (`CLAUDE PROJECT\cantonese learning app`); quote paths in every command and script.
 
 ## Releases and auto-update
 
-`bash tool/release.sh` builds Android (arm64 + arm32 APKs) and Windows (zip), tags `b<commits>`
+`bash tool/release.sh` builds Android (arm64 + arm32 APKs) and Windows (zip), tags `b<2000 + commits>` (the arm64 versionCode that `--split-per-abi` gives Android; installed apps compare against it)
 and publishes a GitHub Release. Installed apps check `releases/latest` on launch and offer the
 update (Android: system installer; Windows: files swapped, app restarted). Release APKs are
 signed with the key in `%USERPROFILE%\.ducklearn\` (outside the repo; the owner must back it

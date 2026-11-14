@@ -43,4 +43,27 @@ void main() {
       isNull,
     );
   });
+
+  test(
+    'tags use the Android versionCode, so installed split builds see updates',
+    () {
+      const apk = 'DuckLearn-android-arm64.apk';
+    // build 21 installs as versionCode 2021 (arm64 split); release b2022 is newer
+      expect(normaliseBuild(2021), 2021);
+      expect(
+        normaliseBuild(21),
+        2021,
+      ); // plain build numbers (Windows) line up too
+      final r = release('b2022', [apk]);
+      expect(
+        parseRelease(r, currentBuild: normaliseBuild(2021), asset: apk)?.build,
+        2022,
+      );
+      // the old scheme's tag (b21) is correctly not newer than 2021
+      expect(
+        parseRelease(release('b21', [apk]), currentBuild: 2021, asset: apk),
+        isNull,
+      );
+    },
+  );
 }

@@ -20,7 +20,10 @@ git push -q origin HEAD
 
 BUILD=$(git rev-list --count HEAD)
 NAME="0.$BUILD.0"  # Windows needs three-part versions
-TAG="b$BUILD"
+# --split-per-abi makes Android's versionCode 2000 + build for arm64 (abi code 2 x 1000).
+# Installed apps compare the tag with that versionCode, so the tag uses it too.
+CODE=$((2000 + BUILD))
+TAG="b$CODE"
 if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
   echo "$TAG already released; commit something new first." >&2
   exit 1

@@ -1,11 +1,13 @@
 /// Auto-update from GitHub Releases (public repo, no token needed).
 ///
-/// Releases are tagged `b<build number>` and carry assets named
+/// Releases are tagged `b<Android versionCode>` (2000 + build: `--split-per-abi` adds
+/// 2000 for arm64) and carry assets named
 ///   DuckLearn-android-arm64.apk (and DuckLearn-windows-x64.zip once Windows releases resume)
 /// (see tool/release.sh). The app compares the release's build number with its own and,
 /// if newer, downloads the right asset and hands it to the platform installer.
 library;
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -30,6 +32,9 @@ class UpdateInfo {
   final int assetSize;
   final String notes;
 }
+
+/// Android split builds report 2000 + build (arm64); plain build numbers are shifted to match.
+int normaliseBuild(int n) => n >= 1000 ? n : 2000 + n;
 
 /// Which release asset this device needs, or null where updates aren't supported.
 String? assetNameFor({required String os, required String dartVersion}) {
@@ -69,8 +74,16 @@ class Updater {
 
   int? _currentBuild;
 
-  Future<int> currentBuild() async => _currentBuild ??=
-      int.tryParse((await PackageInfo.fromPlatform()).buildNumber) ?? 0;
+  /// Why the last [check] found nothing, when it was not "up to date".
+  String? lastError;
+
+  /// Comparable with release tags: Android reports the arm64 versionCode (2000 + build);
+  /// other platforms report the plain build number, so it is shifted the same way.
+  Future<int> currentBuild() async {
+    if (_currentBuild != null) return _currentBuild!;
+    final n = int.tryParse((await PackageInfo.fromPlatform()).buildNumber) ?? 0;
+    return _currentBuild = normaliseBuild(n);
+  }
 
   /// Null when up to date, unsupported, offline, or a local dev build (build number 1).
   Future<UpdateInfo?> check() async {
@@ -78,9 +91,10 @@ class Updater {
       os: Platform.operatingSystem,
       dartVersion: Platform.version,
     );
+    lastError = null;
     if (asset == null) return null;
     final current = await currentBuild();
-    if (current <= 1) {
+    if (current <= 2001) {
       return null; // `flutter run` builds: never nag during development
     }
     try {
@@ -89,17 +103,26 @@ class Updater {
             Uri.parse(
               'https://api.github.com/repos/$githubRepo/releases/latest',
             ),
-            headers: {'Accept': 'application/vnd.github+json'},
+            headers: {
+              'Accept': 'application/vnd.github+json',
+              'User-Agent': 'DuckLearn',
+            },
           )
-          .timeout(const Duration(seconds: 10));
-      if (r.statusCode != 200) return null;
+          .timeout(const Duration(seconds: 20));
+      if (r.statusCode != 200) {
+        lastError = 'GitHub answered ${r.statusCode}';
+        return null;
+      }
       return parseRelease(
         (jsonDecode(r.body) as Map).cast<String, Object?>(),
         currentBuild: current,
         asset: asset,
       );
-    } on Object {
-      return null; // offline etc.: try again next launch
+    } on Object catch (e) {
+      lastError = e is TimeoutException
+          ? 'No answer from GitHub (offline?)'
+          : '$e';
+      return null; // try again next launch
     }
   }
 
