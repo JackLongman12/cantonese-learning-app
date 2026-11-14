@@ -64,6 +64,15 @@ def main(argv: list[str] | None = None) -> int:
             return 1 if failed else 0
         elif args.cmd == "bundle":
             import shutil
+            import sqlite3
+
+            with sqlite3.connect(paths.CONTENT_DB) as check:
+                n_audio = check.execute("SELECT COUNT(*) FROM audio").fetchone()[0]
+            if n_audio == 0:
+                print(
+                    "content.db has no audio rows: run `duk tts` after `duk build`", file=sys.stderr
+                )
+                return 1
 
             dest = paths.ROOT / "app" / "assets" / "content"
             (dest / "audio").mkdir(parents=True, exist_ok=True)
