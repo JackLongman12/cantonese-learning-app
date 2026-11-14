@@ -1,0 +1,46 @@
+# Conversations: variations of the situation, read turn by turn.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-mo-food-and-money
+dialogues:
+  - id: dlg-mo-food-01
+    title: "Ordering breakfast at a cha chaan teng"
+    lines:
+      - ["伙計", "食咩呀？", "What will you have?"]
+      - ["你", "一個常餐，凍奶茶少甜。", "A set breakfast, iced milk tea with less sugar."]
+      - ["伙計", "麵定通粉？", "Noodles or macaroni?"]
+      - ["你", "通粉，唔該。", "Macaroni, please."]
+      - ["伙計", "蛋要煎定炒？", "Fried or scrambled eggs?"]
+      - ["你", "要煎蛋。", "Fried, please."]
+  - id: dlg-mo-food-02
+    title: "Splitting the bill"
+    lines:
+      - ["你", "唔該，埋單。", "The bill, please."]
+      - ["伙計", "一共三百二十蚊。", "Three hundred and twenty altogether."]
+      - ["朋友", "我哋分開俾得唔得？", "Can we pay separately?"]
+      - ["伙計", "得，你哋去收銀度俾啦。", "Sure, pay at the cashier."]
+      - ["你", "好，唔該。", "OK, thanks."]
+  - id: dlg-mo-food-03
+    title: "Asking for the house speciality"
+    lines:
+      - ["你", "呢度有咩招牌菜？", "What's the house speciality here?"]
+      - ["伙計", "葡國雞同馬介休都好多人叫。", "Lots of people order the Portuguese chicken and the bacalhau."]
+      - ["你", "葡國雞辣唔辣㗎？", "Is the Portuguese chicken spicy?"]
+      - ["伙計", "少少辣，唔算好辣。", "A little, not very."]
+      - ["你", "噉要一份葡國雞，再加兩碗白飯。", "Then one Portuguese chicken and two bowls of rice."]
+  - id: dlg-mo-food-04
+    title: "Sharing a table for dim sum"
+    lines:
+      - ["伙計", "幾多位？", "How many?"]
+      - ["你", "兩位，有冇位？", "Two. Any seats?"]
+      - ["伙計", "要搭枱，得唔得？", "You'll have to share a table, is that OK?"]
+      - ["你", "冇問題。", "No problem."]
+      - ["伙計", "飲咩茶？", "What tea?"]
+      - ["你", "一壺普洱，唔該。", "A pot of pu'er, please."]
+  - id: dlg-mo-food-05
+    title: "The wrong dish arrives"
+    lines:
+      - ["你", "唔好意思，呢碟唔係我哋叫嘅。", "Sorry, this isn't what we ordered."]
+      - ["伙計", "哦，你哋叫咗咩？", "Oh, what did you order?"]
+      - ["你", "我哋叫乾炒牛河，唔係炒飯。", "We ordered dry-fried beef ho fun, not fried rice."]
+      - ["伙計", "對唔住，我即刻同你換。", "Sorry, I'll change it right away."]
+      - ["你", "唔緊要，唔該。", "No worries, thanks."]

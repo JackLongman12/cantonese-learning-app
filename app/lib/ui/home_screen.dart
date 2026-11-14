@@ -11,6 +11,7 @@ import 'logo.dart';
 import 'mascot.dart';
 import 'paste_reader_screen.dart';
 import 'reader_screen.dart';
+import 'topic_screen.dart';
 import 'ruby_text.dart';
 import 'theme.dart';
 
@@ -221,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text('Topics', style: theme.textTheme.titleMedium),
                 const SizedBox(height: 4),
                 Text(
-                  'Pick a situation to practise. Characters you meet anywhere count everywhere.',
+                  'Each topic has sentences and conversations. Characters you meet anywhere count everywhere.',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -242,12 +243,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     met: (itemsByScenario[sc.id] ?? const {})
                         .where((id) => !_s.learner.stateOf(id).isNew)
                         .length,
-                    onTap: () => _open(
-                      title: sc.title,
-                      sentences: _s.content.sentences(sc.id, _lang),
-                      mode: 'topic',
-                      scenarioId: sc.id,
-                    ),
+                    onTap: () async {
+                      _s.logger.log('nav.screen', {
+                        'screen': 'topic',
+                        'scenario_id': sc.id,
+                      });
+                      await Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => TopicScreen(
+                            services: _s,
+                            scenario: sc,
+                            lang: _lang,
+                          ),
+                        ),
+                      );
+                      if (mounted) setState(() {});
+                    },
                   ),
               ],
             ),

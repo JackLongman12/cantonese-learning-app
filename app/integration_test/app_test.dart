@@ -61,6 +61,8 @@ void main() {
       ),
     );
     await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('practise')));
+    await t.pumpAndSettle();
     expect(find.byKey(const ValueKey('ruby-0')), findsOneWidget);
 
     await t.tap(find.text('Listen'));

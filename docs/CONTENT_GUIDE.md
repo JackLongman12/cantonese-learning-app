@@ -61,6 +61,26 @@ content/
 
 Dialogues are a list of sentences sharing `dialogue: <id>` with `speaker:` and `turn:`.
 
+## Conversation
+
+`content/dialogues/<topic>.yaml`, **at least 5 per topic**, each a different way the same
+situation can go (the bus does / doesn't go there, the dish is wrong, no appointment, ...).
+The learner is always the speaker `你`; other speakers are named by role (司機, 伙計, 醫生).
+
+```yaml
+scenario: scn-mo-getting-around
+dialogues:
+  - id: dlg-mo-around-02
+    title: "On the wrong bus"
+    lines:
+      - ["你", "司機，呢架車去唔去氹仔碼頭？", "Driver, does this bus go to the Taipa ferry terminal?"]
+      - ["司機", "唔去喎，你搭錯車喇。", "No, you're on the wrong bus."]
+```
+
+Each line becomes a sentence `<dialogue id>-NN` (register spoken, `source: llm`) with
+`dialogue`, `speaker` and `turn` set, so readings, review queue, audio and fading all apply.
+Conversation lines are excluded from the sentence planner and read in order in the app.
+
 ## Place
 
 ```yaml

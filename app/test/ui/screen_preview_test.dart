@@ -108,6 +108,8 @@ void main() {
         ),
       );
       await t.pumpAndSettle();
+      await t.tap(find.byKey(const ValueKey('practise')));
+      await t.pumpAndSettle();
       await shot('reader_new');
       while (find.byKey(const ValueKey('next')).evaluate().isNotEmpty) {
         now = now.add(const Duration(seconds: 6));
@@ -133,4 +135,37 @@ void main() {
       await shot('help');
     }, skip: !hasDb);
   }
+
+  testWidgets('preview conversation', (t) async {
+    await t.binding.setSurfaceSize(const Size(400, 860));
+    addTearDown(() => t.binding.setSurfaceSize(null));
+    var now = DateTime.utc(2026, 11, 15, 9);
+    final s = await services(() => now);
+    await t.pumpWidget(DukApp(services: s));
+    await t.pumpAndSettle();
+    final topic = find.ancestor(
+      of: find.text('Eating out and paying'),
+      matching: find.byType(InkWell),
+    );
+    await t.scrollUntilVisible(find.text('Eating out and paying'), 200);
+    await t.ensureVisible(topic);
+    await t.pumpAndSettle();
+    await t.tap(topic);
+    await t.pumpAndSettle();
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('goldens/preview_phone_topic.png'),
+    );
+    await t.tap(find.byKey(const ValueKey('dlg-dlg-mo-food-01')));
+    await t.pumpAndSettle();
+    for (var i = 0; i < 3; i++) {
+      now = now.add(const Duration(seconds: 6));
+      await t.tap(find.byKey(const ValueKey('next')));
+      await t.pumpAndSettle();
+    }
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('goldens/preview_phone_conversation.png'),
+    );
+  }, skip: !hasDb);
 }

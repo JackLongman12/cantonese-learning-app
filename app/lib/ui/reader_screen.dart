@@ -29,6 +29,7 @@ class ReaderScreen extends StatefulWidget {
     this.scenarioId,
     this.count,
     this.maxNew = 12,
+    this.conversation = false,
   });
 
   final AppServices services;
@@ -43,6 +44,9 @@ class ReaderScreen extends StatefulWidget {
   /// Sentences in the session (null = as many as the planner finds useful).
   final int? count;
   final int maxNew;
+
+  /// Read [sentences] in the given order as a conversation (no planner).
+  final bool conversation;
 
   @override
   State<ReaderScreen> createState() => _ReaderScreenState();
@@ -78,17 +82,21 @@ class _ReaderScreenState extends State<ReaderScreen> {
   @override
   void initState() {
     super.initState();
-    final picks = _s.planner.plan(
-      candidates: [for (final s in widget.sentences) s.toCandidate()],
-      learner: _s.learner,
-      now: _s.logger.now(),
-      count: widget.count ?? widget.sentences.length,
-      maxNew: widget.maxNew,
-    );
-    final byId = {for (final s in widget.sentences) s.id: s};
-    _queue = [for (final p in picks) byId[p.candidate.id]!];
-    for (final p in picks) {
-      _why[p.candidate.id] = p.reasons;
+    if (widget.conversation) {
+      _queue = [...widget.sentences];
+    } else {
+      final picks = _s.planner.plan(
+        candidates: [for (final s in widget.sentences) s.toCandidate()],
+        learner: _s.learner,
+        now: _s.logger.now(),
+        count: widget.count ?? widget.sentences.length,
+        maxNew: widget.maxNew,
+      );
+      final byId = {for (final s in widget.sentences) s.id: s};
+      _queue = [for (final p in picks) byId[p.candidate.id]!];
+      for (final p in picks) {
+        _why[p.candidate.id] = p.reasons;
+      }
     }
     _s.logger.log('session.start', {
       'mode': widget.mode,
@@ -124,6 +132,9 @@ class _ReaderScreenState extends State<ReaderScreen> {
       'pos_in_session': _index,
     });
   }
+
+  /// In conversations the learner is 你; everyone else is the other side.
+  bool _isLearner(SentenceRow r) => r.speaker == '你';
 
   String get _exposureId => '${_s.logger.sessionId}-$_exposure';
 
@@ -429,6 +440,24 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         ],
                       ],
                     ),
+                    if (widget.conversation) ...[
+                      for (var k = 0; k < _index; k++)
+                        _Bubble(
+                          line: _queue[k],
+                          lang: widget.lang,
+                          mine: _isLearner(_queue[k]),
+                        ),
+                      const SizedBox(height: 4),
+                      Align(
+                        alignment: _isLearner(s)
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: _SpeakerLabel(
+                          name: _isLearner(s) ? 'You' : (s.speaker ?? ''),
+                          zh: s.speaker ?? '',
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 12),
                     Card(
                       margin: EdgeInsets.zero,
@@ -1111,6 +1140,70 @@ class _ModelDownloadDialogState extends State<_ModelDownloadDialog> {
           child: Text(_error == null ? 'Download' : 'Try again'),
         ),
       ],
+    );
+  }
+}
+
+class _SpeakerLabel extends StatelessWidget {
+  const _SpeakerLabel({required this.name, required this.zh});
+  final String name;
+  final String zh;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: Text(
+        name == 'You' ? 'You (你)' : zh,
+        style: theme.textTheme.labelMedium?.copyWith(
+          color: theme.colorScheme.primary,
+        ),
+      ),
+    );
+  }
+}
+
+/// An earlier line of the conversation: plain text (it has been read already),
+/// learner on the right, the other speaker on the left.
+class _Bubble extends StatelessWidget {
+  const _Bubble({required this.line, required this.lang, required this.mine});
+  final SentenceRow line;
+  final String lang;
+  final bool mine;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Align(
+      alignment: mine ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.only(top: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        constraints: const BoxConstraints(maxWidth: 520),
+        decoration: BoxDecoration(
+          color: mine ? scheme.primaryContainer : scheme.surfaceContainerHigh,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(14),
+            topRight: const Radius.circular(14),
+            bottomLeft: Radius.circular(mine ? 14 : 4),
+            bottomRight: Radius.circular(mine ? 4 : 14),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: mine
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
+          children: [
+            if (!mine && (line.speaker ?? '').isNotEmpty)
+              Text(
+                line.speaker!,
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+            Text(line.text, style: chineseStyle(lang, fontSize: 18)),
+          ],
+        ),
+      ),
     );
   }
 }

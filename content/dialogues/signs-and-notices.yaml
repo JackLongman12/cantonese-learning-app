@@ -1,0 +1,33 @@
+# Conversations: variations of the situation, read turn by turn.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-mo-signs
+dialogues:
+  - id: dlg-mo-sign-01
+    title: "The lift is out of service"
+    lines:
+      - ["朋友", "嗰度寫咩呀？", "What does that say?"]
+      - ["你", "寫住「暫停服務」。", "It says \"Out of service\"."]
+      - ["朋友", "噉我哋行樓梯啦。", "Then let's take the stairs."]
+  - id: dlg-mo-sign-02
+    title: "No smoking here"
+    lines:
+      - ["你", "呢度寫住「禁止吸煙」，唔可以喺度食煙。", "It says \"No smoking\" here, you can't smoke."]
+      - ["朋友", "唔好意思，我出去食。", "Sorry, I'll go outside."]
+  - id: dlg-mo-sign-03
+    title: "A shop closed for the day"
+    lines:
+      - ["朋友", "間舖點解冇開？", "Why isn't the shop open?"]
+      - ["你", "門口貼住「東主有事，暫停營業」。", "There's a notice on the door: \"Temporarily closed for personal reasons\"."]
+      - ["朋友", "噉聽日再嚟。", "Then we'll come back tomorrow."]
+  - id: dlg-mo-sign-04
+    title: "Finding the exit"
+    lines:
+      - ["你", "唔該，出口喺邊？", "Excuse me, where's the exit?"]
+      - ["保安", "跟住綠色「出口」嘅牌行。", "Follow the green \"Exit\" signs."]
+      - ["你", "唔該。", "Thanks."]
+  - id: dlg-mo-sign-05
+    title: "Where to park"
+    lines:
+      - ["朋友", "呢度可唔可以泊車？", "Can we park here?"]
+      - ["你", "寫住「禁止泊車」喎。", "It says \"No parking\"."]
+      - ["朋友", "噉去停車場啦。", "Then let's go to the car park."]

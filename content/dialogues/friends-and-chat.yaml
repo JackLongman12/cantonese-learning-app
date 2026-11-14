@@ -1,0 +1,42 @@
+# Conversations: variations of the situation, read turn by turn.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-mo-chat
+dialogues:
+  - id: dlg-mo-chat-01
+    title: "Bumping into an old friend"
+    lines:
+      - ["朋友", "喂！好耐冇見！", "Hey! Long time no see!"]
+      - ["你", "係呀，你最近點呀？", "Yeah, how have you been?"]
+      - ["朋友", "幾好，啱啱轉咗工。", "Pretty good, I just changed jobs."]
+      - ["你", "咁好？做邊行？", "Nice! What line of work?"]
+      - ["朋友", "喺酒店做，你呢？", "At a hotel. And you?"]
+      - ["你", "都係咁，得閒出嚟食飯。", "Same as ever. Let's get a meal when you're free."]
+  - id: dlg-mo-chat-02
+    title: "Making weekend plans"
+    lines:
+      - ["你", "星期六得唔得閒？", "Are you free on Saturday?"]
+      - ["朋友", "得閒呀，做咩？", "Yes, why?"]
+      - ["你", "一齊去打邊爐好唔好？", "How about hotpot together?"]
+      - ["朋友", "好呀！幾點？", "Sure! What time?"]
+      - ["你", "七點喺議事亭前地等。", "Meet at Senado Square at seven."]
+  - id: dlg-mo-chat-03
+    title: "Running late"
+    lines:
+      - ["朋友", "你到咗未呀？", "Are you here yet?"]
+      - ["你", "對唔住，塞車，仲要十分鐘。", "Sorry, traffic, another ten minutes."]
+      - ["朋友", "唔緊要，我喺門口等你。", "No worries, I'll wait for you at the entrance."]
+      - ["你", "好，就快到。", "OK, almost there."]
+  - id: dlg-mo-chat-04
+    title: "A birthday present"
+    lines:
+      - ["你", "生日快樂！", "Happy birthday!"]
+      - ["朋友", "多謝！你記得㗎？", "Thanks! You remembered?"]
+      - ["你", "梗係記得啦，送份禮物俾你。", "Of course I did. Here's a present for you."]
+      - ["朋友", "嘩，好靚呀，唔該晒！", "Wow, it's lovely, thanks so much!"]
+  - id: dlg-mo-chat-05
+    title: "Being introduced"
+    lines:
+      - ["朋友", "介紹下，呢個係我同事阿明。", "Let me introduce you, this is my colleague Ah Ming."]
+      - ["阿明", "你好，好高興識你。", "Hi, nice to meet you."]
+      - ["你", "你好，我都係。你係邊度人？", "Hi, nice to meet you too. Where are you from?"]
+      - ["阿明", "我喺澳門出世，不過喺香港讀書。", "I was born in Macau, but I studied in Hong Kong."]

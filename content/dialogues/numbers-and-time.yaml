@@ -1,0 +1,39 @@
+# Conversations: variations of the situation, read turn by turn.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-mo-numbers
+dialogues:
+  - id: dlg-mo-num-01
+    title: "Asking the time"
+    lines:
+      - ["你", "唔該，而家幾點？", "Excuse me, what time is it?"]
+      - ["路人", "三點三個字。", "Three fifteen."]
+      - ["你", "唔該，我趕住去開會。", "Thanks, I'm rushing to a meeting."]
+  - id: dlg-mo-num-02
+    title: "Swapping phone numbers"
+    lines:
+      - ["朋友", "你電話幾多號？", "What's your number?"]
+      - ["你", "六二三四，五六七八。", "Six two three four, five six seven eight."]
+      - ["朋友", "等陣，我記低先。", "Hang on, let me write it down."]
+      - ["朋友", "六二三四，五六七八，啱唔啱？", "Six two three four, five six seven eight, right?"]
+      - ["你", "啱。", "Right."]
+  - id: dlg-mo-num-03
+    title: "Booking for a date"
+    lines:
+      - ["你", "我想訂下個禮拜五嘅枱。", "I'd like to book a table for next Friday."]
+      - ["職員", "幾號呀？", "What date?"]
+      - ["你", "二十號，夜晚七點半，四位。", "The twentieth, seven thirty in the evening, four people."]
+      - ["職員", "好，搞掂。", "OK, done."]
+  - id: dlg-mo-num-04
+    title: "Getting change"
+    lines:
+      - ["店員", "一共四十八蚊半。", "Forty-eight fifty altogether."]
+      - ["你", "俾你五十蚊。", "Here's fifty."]
+      - ["店員", "找返你蚊半。", "Here's a dollar fifty change."]
+      - ["你", "唔該。", "Thanks."]
+  - id: dlg-mo-num-05
+    title: "Guessing ages"
+    lines:
+      - ["朋友", "你幾多歲？", "How old are you?"]
+      - ["你", "二十八歲，你呢？", "Twenty-eight, and you?"]
+      - ["朋友", "我大你兩年。", "I'm two years older than you."]
+      - ["你", "睇唔出喎！", "I'd never have guessed!"]

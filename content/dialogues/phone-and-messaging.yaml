@@ -1,0 +1,37 @@
+# Conversations: variations of the situation, read turn by turn.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-mo-messaging
+dialogues:
+  - id: dlg-mo-msg-01
+    title: "Plans for tonight"
+    lines:
+      - ["朋友", "喺度？", "You there?"]
+      - ["你", "喺度，咩事？", "Yep, what's up?"]
+      - ["朋友", "今晚得唔得閒？", "Free tonight?"]
+      - ["你", "得，去邊？", "Yes, where to?"]
+      - ["朋友", "食火鍋，七點。", "Hotpot, seven o'clock."]
+  - id: dlg-mo-msg-02
+    title: "Sharing the address"
+    lines:
+      - ["你", "我send咗地址俾你。", "I've sent you the address."]
+      - ["朋友", "收到，你幾耐到？", "Got it, how long till you get there?"]
+      - ["你", "我就快到。", "I'm almost there."]
+  - id: dlg-mo-msg-03
+    title: "A missed call"
+    lines:
+      - ["朋友", "頭先打俾你，你冇聽。", "I called you just now and you didn't answer."]
+      - ["你", "對唔住，開緊會。有咩事？", "Sorry, I was in a meeting. What's up?"]
+      - ["朋友", "想問你聽日去唔去行山。", "I wanted to ask if you're going hiking tomorrow."]
+      - ["你", "去呀，幾點？", "Yes, what time?"]
+  - id: dlg-mo-msg-04
+    title: "Starting a group chat"
+    lines:
+      - ["你", "我開咗個group，大家喺度傾。", "I've started a group, let's all chat there."]
+      - ["朋友", "好呀，拉埋阿明入嚟。", "Great, add Ah Ming too."]
+      - ["你", "搞掂。", "Done."]
+  - id: dlg-mo-msg-05
+    title: "Paying back for dinner"
+    lines:
+      - ["朋友", "上次食飯一人三百。", "Last dinner was three hundred each."]
+      - ["你", "我而家轉數俾你。", "I'll transfer it to you now."]
+      - ["朋友", "收到，唔該。", "Got it, thanks."]

@@ -2,7 +2,7 @@
 
 Work top to bottom. Do not start a phase until the previous phase's "Done when" list is met. Tick boxes as tasks land and keep the **Status** line current.
 
-**Status (2026-11-15):** App is named **DuckLearn**. Phase 0 mostly done and the core of Phase 1 exists. Pipeline, engine, event log, ruby reader and thirteen 100-sentence topics (all the Macau topics; Hong Kong and Mandarin topics still to write) are built and tested. UI redesigned (home with daily session, per-topic progress, reader with hints, help sheet, summary; ink/cinnabar/rice-paper theme; duck mascot and icon). Toolchain installed; the app runs on Windows with audio and the Android APK builds. Not yet installed on a phone. Pushed to the private repo `JackLongman12/cantonese-learning-app`; the CI workflow has not been confirmed green yet.
+**Status (2026-11-15):** App is named **DuckLearn**. Phase 0 mostly done and the core of Phase 1 exists. Pipeline, engine, event log, ruby reader and thirteen 100-sentence topics (all the Macau topics; Hong Kong and Mandarin topics still to write) are built and tested. 65 conversations (5 per Macau topic) read as chat bubbles; Read anything (paste/photo); on-device read-aloud check. UI redesigned (home with daily session, per-topic progress, reader with hints, help sheet, summary; ink/cinnabar/rice-paper theme; duck mascot and icon). Toolchain installed; the app runs on Windows with audio and the Android APK builds. Not yet installed on a phone. Pushed to the private repo `JackLongman12/cantonese-learning-app`; the CI workflow has not been confirmed green yet.
 
 ## Product principle: serve the unmet need, not a Duolingo copy
 

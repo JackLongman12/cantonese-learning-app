@@ -132,7 +132,7 @@ def test_build_writes_aligned_tokens_and_items(tmp_path):
     assert db.execute("SELECT COUNT(*) FROM item WHERE kind='word' AND key='唔該'").fetchone()[0]
     pair = db.execute("SELECT pair_id FROM sentence WHERE lang='cmn'").fetchone()[0]
     assert pair == "sent-test-001"
-    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "2"
+    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "3"
 
 
 def test_flags_reach_review_queue_until_fixed(tmp_path):
@@ -182,3 +182,24 @@ def test_lexicon_keeps_only_words_that_differ_from_char_defaults():
     # a word read exactly as its characters' defaults is not stored
     assert all(w for w in words if len(w) > 1)
     assert "你好" not in words or words["你好"] != " ".join(chars[c][0] for c in "你好")
+
+
+def test_dialogues_become_ordered_sentences(tmp_path):
+    (tmp_path / "c").mkdir()
+    root = _tree(tmp_path / "c", GOOD)
+    (root / "dialogues").mkdir()
+    (root / "dialogues" / "d.yaml").write_text(
+        "scenario: scn-test-a\ndialogues:\n"
+        "  - id: dlg-test-01\n    title: Paying\n    lines:\n"
+        '      - ["你", "唔該，埋單。", "The bill, please."]\n'
+        '      - ["伙計", "一共一百蚊。", "A hundred altogether."]\n',
+        "utf-8",
+    )
+    out = tmp_path / "out" / "content.db"
+    build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False)
+    db = sqlite3.connect(out)
+    assert db.execute("SELECT title, lines FROM dialogue").fetchone() == ("Paying", 2)
+    rows = db.execute(
+        "SELECT id, speaker, turn FROM sentence WHERE dialogue = 'dlg-test-01' ORDER BY turn"
+    ).fetchall()
+    assert rows == [("dlg-test-01-01:yue", "你", 1), ("dlg-test-01-02:yue", "伙計", 2)]

@@ -1,0 +1,44 @@
+# Conversations: variations of the situation, read turn by turn.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-mo-shopping
+dialogues:
+  - id: dlg-mo-shop-01
+    title: "Bargaining for fish at the market"
+    lines:
+      - ["你", "老闆，呢條魚幾錢？", "How much is this fish?"]
+      - ["檔主", "一百二一斤。", "A hundred and twenty a catty."]
+      - ["你", "咁貴㗎？平啲得唔得？", "That expensive? Can you do it cheaper?"]
+      - ["檔主", "今朝先到嘅，好新鮮㗎。算你一百蚊啦。", "It only arrived this morning, very fresh. I'll do it for a hundred."]
+      - ["你", "好，幫我劏埋佢。", "OK, please gut it for me too."]
+  - id: dlg-mo-shop-02
+    title: "Trying on clothes"
+    lines:
+      - ["店員", "想搵啲咩呀？", "What are you looking for?"]
+      - ["你", "我想試下呢件衫。", "I'd like to try this top."]
+      - ["店員", "你著咩碼？", "What size are you?"]
+      - ["你", "中碼，有冇其他顏色？", "Medium. Any other colours?"]
+      - ["店員", "仲有黑色同白色。", "There's also black and white."]
+  - id: dlg-mo-shop-03
+    title: "Exchanging shoes"
+    lines:
+      - ["你", "我尋日買咗呢對鞋，想換過對。", "I bought these shoes yesterday and want to exchange them."]
+      - ["店員", "有冇帶收據？", "Did you bring the receipt?"]
+      - ["你", "有，喺度。", "Yes, here."]
+      - ["店員", "想換咩碼？", "What size do you want?"]
+      - ["你", "大一個碼，唔該。", "One size up, please."]
+  - id: dlg-mo-shop-04
+    title: "Cold medicine at the pharmacy"
+    lines:
+      - ["你", "我有啲感冒，有咩藥好？", "I've got a bit of a cold, what's good for it?"]
+      - ["店員", "有冇發燒？", "Any fever?"]
+      - ["你", "冇發燒，淨係喉嚨痛同流鼻水。", "No fever, just a sore throat and runny nose."]
+      - ["店員", "呢隻一日食三次，飯後食。", "Take this three times a day after meals."]
+      - ["你", "好，要一盒。", "OK, one box."]
+  - id: dlg-mo-shop-05
+    title: "Collecting a parcel"
+    lines:
+      - ["你", "你好，我想拎包裹。", "Hello, I'd like to collect a parcel."]
+      - ["職員", "有冇取件碼？", "Do you have the pickup code?"]
+      - ["你", "有，係八三二五。", "Yes, it's 8325."]
+      - ["職員", "唔該出示身份證。", "Please show your ID card."]
+      - ["你", "喺度，唔該。", "Here you are, thanks."]

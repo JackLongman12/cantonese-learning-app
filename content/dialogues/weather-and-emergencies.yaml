@@ -1,0 +1,41 @@
+# Conversations: variations of the situation, read turn by turn.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-mo-weather
+dialogues:
+  - id: dlg-mo-wx-01
+    title: "A typhoon is coming"
+    lines:
+      - ["同事", "聽講就嚟掛八號風球。", "I hear they're about to raise signal 8."]
+      - ["你", "真㗎？幾點掛？", "Really? When?"]
+      - ["同事", "新聞話大概晏晝。", "The news says around midday."]
+      - ["你", "噉我哋要早啲走。", "Then we should leave early."]
+      - ["同事", "係呀，記得買定啲嘢食。", "Yes, remember to stock up on food."]
+  - id: dlg-mo-wx-02
+    title: "Caught in the rain"
+    lines:
+      - ["你", "出面落緊大雨，你有冇帶遮？", "It's pouring outside, did you bring an umbrella?"]
+      - ["朋友", "冇呀，點算好？", "No, what do I do?"]
+      - ["你", "我哋一齊用我把遮啦。", "Let's share my umbrella."]
+      - ["朋友", "好呀，唔該晒。", "Great, thanks a lot."]
+  - id: dlg-mo-wx-03
+    title: "Reporting a lost phone"
+    lines:
+      - ["你", "你好，我唔見咗部電話。", "Hello, I've lost my phone."]
+      - ["警員", "喺邊度唔見㗎？", "Where did you lose it?"]
+      - ["你", "應該喺巴士上面。", "Probably on the bus."]
+      - ["警員", "填咗呢張表先，有消息會通知你。", "Fill in this form first, we'll let you know if anything turns up."]
+      - ["你", "好，唔該。", "OK, thanks."]
+  - id: dlg-mo-wx-04
+    title: "A power cut at home"
+    lines:
+      - ["室友", "停電呀！", "The power's out!"]
+      - ["你", "你有冇電筒？", "Do you have a torch?"]
+      - ["室友", "喺櫃桶度，我去搵。", "It's in the drawer, I'll get it."]
+      - ["你", "我打去管理處問下。", "I'll call the management office and ask."]
+  - id: dlg-mo-wx-05
+    title: "The fire alarm goes off"
+    lines:
+      - ["保安", "火警鐘響咗，唔該大家行樓梯落去。", "The fire alarm is going off, everyone please take the stairs down."]
+      - ["你", "有冇事㗎？", "Is something wrong?"]
+      - ["保安", "未知，安全啲先。", "We don't know yet, better safe than sorry."]
+      - ["你", "明白，唔用電梯。", "Understood, no lifts."]

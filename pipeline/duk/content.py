@@ -72,11 +72,21 @@ class Place:
 
 
 @dataclass
+@dataclass
+class Dialogue:
+    id: str
+    scenario: str
+    title: str
+    lines: int
+
+
+@dataclass
 class Content:
     scenarios: list[Scenario]
     sentences: list[Sentence]
     places: list[Place]
     overrides: dict[str, dict[str, list[str]]]  # lang -> word -> readings
+    dialogues: list[Dialogue] = field(default_factory=list)
 
 
 def _load(path: Path):
@@ -160,6 +170,50 @@ def load_content(root: Path) -> Content:
                 )
             )
 
+    # Conversations: content/dialogues/*.yaml. Each line becomes a sentence carrying its
+    # dialogue id, speaker and turn, so it is annotated, voiced and reviewed like any other.
+    dialogues: list[Dialogue] = []
+    scenario_region = {sc.id: sc.region for sc in scenarios}
+    for path in (
+        sorted((root / "dialogues").rglob("*.yaml")) if (root / "dialogues").exists() else []
+    ):
+        doc = _load(path)
+        sid = doc.get("scenario")
+        if sid not in scenario_region:
+            problems.append(f"{path.name}: unknown scenario {sid!r}")
+            continue
+        for dlg in doc.get("dialogues") or []:
+            if not claim(dlg.get("id"), path):
+                continue
+            lines = dlg.get("lines") or []
+            need(bool(dlg.get("title")), f"{dlg['id']}: title required")
+            need(len(lines) >= 2, f"{dlg['id']}: a conversation needs at least two lines")
+            for n, line in enumerate(lines, 1):
+                if not (isinstance(line, list) and len(line) == 3 and all(line)):
+                    problems.append(f"{dlg['id']} line {n}: expected [speaker, text, english]")
+                    continue
+                speaker, text, en = (str(x) for x in line)
+                lang = "cmn" if dlg.get("lang") == "cmn" else "yue"
+                line_id = f"{dlg['id']}-{n:02d}"
+                if not claim(line_id, path):
+                    continue
+                sentences.append(
+                    Sentence(
+                        id=line_id,
+                        scenario=sid,
+                        text={lang: text.strip()},
+                        en=en,
+                        register="spoken",
+                        region=scenario_region[sid],
+                        source="llm",
+                        reviewed=bool(dlg.get("reviewed", False)),
+                        dialogue=dlg["id"],
+                        speaker=speaker,
+                        turn=n,
+                    )
+                )
+            dialogues.append(Dialogue(dlg["id"], sid, str(dlg.get("title", "")), len(lines)))
+
     places: list[Place] = []
     for path in sorted((root / "places").rglob("*.yaml")):
         for raw in _load(path).get("places") or []:
@@ -222,4 +276,4 @@ def load_content(root: Path) -> Content:
 
     if problems:
         raise ContentError(problems)
-    return Content(scenarios, sentences, places, overrides)
+    return Content(scenarios, sentences, places, overrides, dialogues)

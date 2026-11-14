@@ -10,6 +10,7 @@ import 'package:duk/engine/scaffold.dart';
 import 'package:duk/events/event_logger.dart';
 import 'package:duk/events/event_store.dart';
 import 'package:duk/ui/home_screen.dart';
+import 'package:duk/ui/reader_screen.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -86,6 +87,8 @@ void main() {
       ),
     );
     await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('practise')));
+    await t.pumpAndSettle();
 
     // First pass: everything is new, so readings are shown in full.
     final shown = store.events.lastWhere((e) => e.type == 'item.shown');
@@ -108,6 +111,9 @@ void main() {
     // the session ends on a summary screen
     expect(find.byKey(const ValueKey('done')), findsOneWidget);
     await t.tap(find.byKey(const ValueKey('done')));
+    await t.pumpAndSettle();
+    // back from the topic page to home
+    await t.pageBack();
     await t.pumpAndSettle();
     final introduced = {
       for (final e in store.events.where((e) => e.type == 'review.applied'))
@@ -166,6 +172,8 @@ void main() {
       ),
     );
     await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('practise')));
+    await t.pumpAndSettle();
     final again = store.events.lastWhere((e) => e.type == 'item.shown');
     final ids = (again.payload['item_ids']! as List).cast<String>();
     final levels = (again.payload['scaffold']! as List).cast<String>();
@@ -183,4 +191,58 @@ void main() {
       before,
     );
   }, skip: !hasDb);
+
+  testWidgets(
+    'a conversation is read in order with earlier lines kept as bubbles',
+    (t) async {
+      await t.binding.setSurfaceSize(const Size(500, 900));
+      addTearDown(() => t.binding.setSurfaceSize(null));
+      final db = ContentDb.open(dbPath);
+      addTearDown(db.close);
+      final memory = Memory();
+      final store = MemoryEventStore();
+      final services = AppServices(
+        content: db,
+        memory: memory,
+        learner: LearnerModel(memory),
+        logger: EventLogger(
+          store: store,
+          deviceId: 'test',
+          deviceKind: 'windows',
+          appVersion: 'test',
+          contentVersion: db.contentVersion,
+        ),
+        playAudio: (_) async {},
+      );
+      final dialogues = db.dialogues('scn-mo-getting-around', 'yue');
+      expect(dialogues.length, greaterThanOrEqualTo(5));
+      final lines = db.dialogueLines(dialogues.first.id, 'yue');
+      expect(lines.map((l) => l.turn), [
+        for (var i = 1; i <= lines.length; i++) i,
+      ]);
+      await t.pumpWidget(
+        MaterialApp(
+          home: ReaderScreen(
+            services: services,
+            title: dialogues.first.title,
+            sentences: lines,
+            lang: 'yue',
+            conversation: true,
+          ),
+        ),
+      );
+      await t.tap(find.byKey(const ValueKey('next')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const ValueKey('next')));
+      await t.pumpAndSettle();
+      // the first two lines now show as plain bubbles above the third
+      expect(find.text(lines[0].text), findsOneWidget);
+      expect(find.text(lines[1].text), findsOneWidget);
+      final shown = store.events
+          .where((e) => e.type == 'item.shown')
+          .map((e) => e.payload['sentence_id']);
+      expect(shown, [lines[0].id, lines[1].id, lines[2].id]);
+    },
+    skip: !hasDb,
+  );
 }

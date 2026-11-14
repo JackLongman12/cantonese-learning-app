@@ -1,0 +1,40 @@
+# Conversations: variations of the situation, read turn by turn.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-mo-tourism
+dialogues:
+  - id: dlg-mo-tour-01
+    title: "Checking in"
+    lines:
+      - ["職員", "歡迎，請問有冇預約？", "Welcome, do you have a reservation?"]
+      - ["你", "有，我姓陳，訂咗兩晚。", "Yes, the name is Chan, for two nights."]
+      - ["職員", "唔該出示證件。", "Please show your ID."]
+      - ["你", "喺度。", "Here you are."]
+      - ["職員", "你間房喺十樓，早餐七點開始。", "Your room is on the tenth floor, breakfast starts at seven."]
+  - id: dlg-mo-tour-02
+    title: "Asking what to see"
+    lines:
+      - ["你", "附近有咩好玩？", "What's fun to do around here?"]
+      - ["職員", "可以去大三巴同議事亭前地，行路十分鐘。", "You can visit the Ruins of St. Paul's and Senado Square, ten minutes on foot."]
+      - ["你", "有冇好嘢食推介？", "Any good food you'd recommend?"]
+      - ["職員", "官也街有好多手信同小食。", "Rua do Cunha has lots of souvenirs and snacks."]
+  - id: dlg-mo-tour-03
+    title: "Checking out"
+    lines:
+      - ["你", "我想退房。", "I'd like to check out."]
+      - ["職員", "有冇用過迷你吧？", "Did you use the minibar?"]
+      - ["你", "冇。", "No."]
+      - ["職員", "好，多謝你，歡迎再嚟。", "All done, thank you, please come again."]
+  - id: dlg-mo-tour-04
+    title: "A look inside a casino"
+    lines:
+      - ["朋友", "一齊入去賭場睇下？", "Shall we take a look inside the casino?"]
+      - ["你", "我淨係睇，唔賭錢。", "I'll just look, I won't gamble."]
+      - ["朋友", "我都係玩少少。", "I'll only play a little too."]
+      - ["你", "唔好輸咁多呀。", "Don't lose too much."]
+  - id: dlg-mo-tour-05
+    title: "Asking a stranger for a photo"
+    lines:
+      - ["你", "唔好意思，可唔可以幫我哋影張相？", "Excuse me, could you take a photo of us?"]
+      - ["遊客", "冇問題，一、二、三！", "No problem, one, two, three!"]
+      - ["你", "唔該晒！", "Thanks so much!"]
+      - ["遊客", "唔使客氣。", "You're welcome."]

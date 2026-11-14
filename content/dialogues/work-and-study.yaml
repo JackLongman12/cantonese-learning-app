@@ -1,0 +1,42 @@
+# Conversations: variations of the situation, read turn by turn.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-mo-work
+dialogues:
+  - id: dlg-mo-work-01
+    title: "A job interview"
+    lines:
+      - ["經理", "你點解想做呢份工？", "Why do you want this job?"]
+      - ["你", "我鍾意同人溝通，又想學多啲嘢。", "I like working with people, and I want to learn more."]
+      - ["經理", "可唔可以輪班？", "Can you work shifts?"]
+      - ["你", "冇問題。", "No problem."]
+      - ["經理", "好，我哋下個禮拜通知你。", "Good, we'll let you know next week."]
+  - id: dlg-mo-work-02
+    title: "Asking for leave"
+    lines:
+      - ["你", "經理，我下個月想請三日假。", "I'd like to take three days off next month."]
+      - ["經理", "邊幾日？", "Which days?"]
+      - ["你", "十號到十二號。", "The tenth to the twelfth."]
+      - ["經理", "得，記得交假紙。", "Fine, remember to hand in the leave form."]
+  - id: dlg-mo-work-03
+    title: "Before a meeting"
+    lines:
+      - ["同事", "三點開會，你記唔記得？", "Meeting at three, did you remember?"]
+      - ["你", "記得，喺邊間房？", "Yes, which room?"]
+      - ["同事", "二樓會議室。", "The meeting room on the second floor."]
+      - ["你", "好，我帶埋份報告。", "OK, I'll bring the report."]
+  - id: dlg-mo-work-04
+    title: "Exam tomorrow"
+    lines:
+      - ["同學", "聽日考試，你溫咗書未？", "Exam tomorrow, have you revised?"]
+      - ["你", "溫咗少少，好驚呀。", "A little, I'm so nervous."]
+      - ["同學", "一齊去圖書館溫啦。", "Let's revise at the library together."]
+      - ["你", "好呀，幾點？", "Sure, what time?"]
+      - ["同學", "食完晏晝就去。", "Right after lunch."]
+  - id: dlg-mo-work-05
+    title: "Why learn to read"
+    lines:
+      - ["朋友", "你識講廣東話，點解要學中文字？", "You speak Cantonese, why learn to read Chinese?"]
+      - ["你", "我識講，但係好多字唔識讀。", "I can speak, but I can't read a lot of characters."]
+      - ["朋友", "噉你點學？", "So how do you learn?"]
+      - ["你", "每日讀幾句，慢慢就識。", "I read a few sentences every day and pick it up bit by bit."]
+      - ["朋友", "好呀，加油！", "Great, keep it up!"]

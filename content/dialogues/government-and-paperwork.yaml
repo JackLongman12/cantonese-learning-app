@@ -1,0 +1,40 @@
+# Conversations: variations of the situation, read turn by turn.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-mo-gov
+dialogues:
+  - id: dlg-mo-gov-01
+    title: "Opening a bank account"
+    lines:
+      - ["職員", "有咩可以幫到你？", "How can I help you?"]
+      - ["你", "我想開戶口。", "I'd like to open an account."]
+      - ["職員", "有冇帶身份證同住址證明？", "Did you bring your ID card and proof of address?"]
+      - ["你", "有，兩樣都帶咗。", "Yes, I brought both."]
+      - ["職員", "好，唔該填呢份表。", "Good, please fill in this form."]
+  - id: dlg-mo-gov-02
+    title: "Sending a letter"
+    lines:
+      - ["你", "我想寄呢封信去香港。", "I'd like to send this letter to Hong Kong."]
+      - ["職員", "寄平郵定掛號？", "Ordinary or registered mail?"]
+      - ["你", "掛號，幾時寄到？", "Registered. When will it arrive?"]
+      - ["職員", "大概兩三日。", "About two or three days."]
+  - id: dlg-mo-gov-03
+    title: "Taking a queue number"
+    lines:
+      - ["你", "唔該，喺邊度攞籌？", "Excuse me, where do I take a number?"]
+      - ["職員", "嗰部機度，揀二號服務。", "At that machine, choose service two."]
+      - ["你", "而家等緊幾多個？", "How many are waiting now?"]
+      - ["職員", "大概十幾個。", "About a dozen or so."]
+  - id: dlg-mo-gov-04
+    title: "Help with a form"
+    lines:
+      - ["你", "唔好意思，呢格點填？", "Sorry, how do I fill in this box?"]
+      - ["職員", "呢度寫你嘅英文名。", "Write your English name here."]
+      - ["你", "使唔使簽名？", "Do I need to sign?"]
+      - ["職員", "要，喺最底簽。", "Yes, sign at the bottom."]
+  - id: dlg-mo-gov-05
+    title: "A lost bank card"
+    lines:
+      - ["你", "我張銀行卡唔見咗。", "I've lost my bank card."]
+      - ["職員", "我幫你即刻停咗佢。", "I'll cancel it for you right away."]
+      - ["你", "幾時可以攞新卡？", "When can I get a new card?"]
+      - ["職員", "大概一個禮拜，會寄去你屋企。", "In about a week, it'll be posted to your home."]

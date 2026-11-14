@@ -1,0 +1,46 @@
+# Conversations: variations of the situation, read turn by turn.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-mo-getting-around
+dialogues:
+  - id: dlg-mo-around-01
+    title: "Which bus goes to the Border Gate"
+    lines:
+      - ["你", "唔該，請問去關閘搭邊架巴士？", "Excuse me, which bus goes to the Border Gate?"]
+      - ["路人", "喺對面搭，有幾架都去。", "Catch it across the road, a few of them go there."]
+      - ["你", "要等耐唔耐㗎？", "Is the wait long?"]
+      - ["路人", "唔使，好密車嘅。", "No, they come often."]
+      - ["你", "好，唔該晒。", "Great, thanks a lot."]
+      - ["路人", "唔使客氣。", "You're welcome."]
+  - id: dlg-mo-around-02
+    title: "On the wrong bus"
+    lines:
+      - ["你", "司機，呢架車去唔去氹仔碼頭？", "Driver, does this bus go to the Taipa ferry terminal?"]
+      - ["司機", "唔去喎，你搭錯車喇。", "No, you're on the wrong bus."]
+      - ["你", "噉我喺邊度落車好？", "So where should I get off?"]
+      - ["司機", "下個站落，過對面轉車啦。", "Get off at the next stop and change on the other side."]
+      - ["你", "明白，唔該你。", "Got it, thank you."]
+  - id: dlg-mo-around-03
+    title: "Taxi in a hurry"
+    lines:
+      - ["司機", "去邊度呀？", "Where to?"]
+      - ["你", "唔該，去氹仔碼頭。", "The Taipa ferry terminal, please."]
+      - ["司機", "好。", "OK."]
+      - ["你", "我趕船，可唔可以快啲？", "I'm rushing for a ferry, could you go a bit faster?"]
+      - ["司機", "而家塞車，盡量啦。", "There's traffic now, I'll do my best."]
+      - ["你", "唔該晒，喺門口放低我就得。", "Thanks, just drop me at the entrance."]
+  - id: dlg-mo-around-04
+    title: "Lost, asking a shopkeeper"
+    lines:
+      - ["你", "唔好意思，我蕩失路，議事亭前地點行？", "Sorry, I'm lost. How do I get to Senado Square?"]
+      - ["店員", "你一直行，見到紅綠燈轉左。", "Go straight, turn left at the traffic lights."]
+      - ["你", "遠唔遠㗎？", "Is it far?"]
+      - ["店員", "唔遠，行五分鐘左右。", "Not far, about a five-minute walk."]
+      - ["你", "唔該晒！", "Thanks so much!"]
+  - id: dlg-mo-around-05
+    title: "A long queue at the border"
+    lines:
+      - ["朋友", "今日關閘好多人，排咗半個鐘都未到。", "The Border Gate is packed today, half an hour and we're still not through."]
+      - ["你", "不如試下自助過關？", "How about trying the self-service channel?"]
+      - ["朋友", "我冇登記喎。", "I haven't registered for it."]
+      - ["你", "噉我哋慢慢排啦，過咗關先食嘢。", "Then let's just queue, and eat once we're across."]
+      - ["朋友", "好呀，我好肚餓。", "OK, I'm starving."]

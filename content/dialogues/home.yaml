@@ -1,0 +1,42 @@
+# Conversations: variations of the situation, read turn by turn.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-mo-home
+dialogues:
+  - id: dlg-mo-home-01
+    title: "Viewing a flat"
+    lines:
+      - ["你", "呢個單位幾錢租？", "How much is the rent for this flat?"]
+      - ["經紀", "一萬二一個月，包管理費。", "Twelve thousand a month, management fee included."]
+      - ["你", "要俾幾多個月按金？", "How many months' deposit?"]
+      - ["經紀", "兩個月按金，一個月上期。", "Two months' deposit and one month in advance."]
+      - ["你", "我想諗下先，聽日覆你。", "Let me think about it, I'll get back to you tomorrow."]
+  - id: dlg-mo-home-02
+    title: "The air conditioning is broken"
+    lines:
+      - ["你", "業主，冷氣壞咗，唔凍。", "The air con is broken, it isn't cooling."]
+      - ["業主", "幾時開始㗎？", "Since when?"]
+      - ["你", "由前日開始。", "Since the day before yesterday."]
+      - ["業主", "我聽日叫師傅上嚟睇。", "I'll get a repairman to come up tomorrow."]
+      - ["你", "好，唔該你。", "OK, thank you."]
+  - id: dlg-mo-home-03
+    title: "Asking the neighbours to keep it down"
+    lines:
+      - ["你", "唔好意思，夜晚可唔可以細聲啲？", "Sorry, could you keep it down at night?"]
+      - ["鄰居", "吵到你咩？對唔住。", "Were we disturbing you? Sorry."]
+      - ["你", "唔緊要，我聽日要早起身。", "It's OK, I have to get up early tomorrow."]
+      - ["鄰居", "明白，我哋會注意。", "Understood, we'll be careful."]
+  - id: dlg-mo-home-04
+    title: "A delivery at the door"
+    lines:
+      - ["速遞員", "你好，有你嘅速遞。", "Hello, there's a delivery for you."]
+      - ["你", "唔該，使唔使簽名？", "Thanks, do I need to sign?"]
+      - ["速遞員", "要，喺度簽。", "Yes, sign here."]
+      - ["你", "好，多謝。", "OK, thanks."]
+  - id: dlg-mo-home-05
+    title: "Sharing chores with a flatmate"
+    lines:
+      - ["室友", "今晚邊個煮飯？", "Who's cooking tonight?"]
+      - ["你", "我煮，你洗碗啦。", "I'll cook, you wash up."]
+      - ["室友", "好，使唔使買餸？", "OK, do we need to buy groceries?"]
+      - ["你", "雪櫃仲有啲菜同雞蛋。", "There are still some vegetables and eggs in the fridge."]
+      - ["室友", "噉我去買啲生果。", "Then I'll go and buy some fruit."]

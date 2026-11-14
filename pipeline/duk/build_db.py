@@ -22,7 +22,7 @@ from .annotate import FLAG, HAN, Annotation, annotate
 from .content import Content, ContentError, load_content
 from .reference import load_reference
 
-SCHEMA_VERSION = 2  # 2: lex_char / lex_word for on-device annotation
+SCHEMA_VERSION = 3  # 2: lex_char / lex_word; 3: dialogue
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -68,6 +68,9 @@ CREATE TABLE lex_char(
 CREATE TABLE lex_word(
   lang TEXT NOT NULL, word TEXT NOT NULL, reading TEXT NOT NULL,
   PRIMARY KEY(lang, word)) WITHOUT ROWID;
+CREATE TABLE dialogue(
+  id TEXT PRIMARY KEY, scenario_id TEXT NOT NULL REFERENCES scenario(id), title TEXT NOT NULL,
+  lines INTEGER NOT NULL);
 CREATE TABLE audio(
   hash TEXT PRIMARY KEY, lang TEXT NOT NULL, voice TEXT NOT NULL, rate TEXT NOT NULL,
   text TEXT NOT NULL, path TEXT NOT NULL);
@@ -126,6 +129,9 @@ def build(
             "INSERT INTO scenario VALUES(?,?,?,?)",
             (sc.id, sc.title, sc.region, json.dumps(sc.tags, ensure_ascii=False)),
         )
+
+    for d in content.dialogues:
+        db.execute("INSERT INTO dialogue VALUES(?,?,?,?)", (d.id, d.scenario, d.title, d.lines))
 
     item_rows: dict[str, tuple[str, str, str, str | None]] = {}
     item_count: Counter[str] = Counter()

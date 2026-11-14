@@ -1,0 +1,44 @@
+# Conversations: variations of the situation, read turn by turn.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-mo-health
+dialogues:
+  - id: dlg-mo-health-01
+    title: "Walking in at a clinic"
+    lines:
+      - ["姑娘", "有冇預約？", "Do you have an appointment?"]
+      - ["你", "冇，可唔可以即日睇？", "No, can I be seen today?"]
+      - ["姑娘", "要等大概一個鐘。", "You'll wait about an hour."]
+      - ["你", "得，我等。", "That's fine, I'll wait."]
+      - ["姑娘", "唔該填咗呢張表先。", "Please fill in this form first."]
+  - id: dlg-mo-health-02
+    title: "Seeing the doctor"
+    lines:
+      - ["醫生", "邊度唔舒服？", "What's wrong?"]
+      - ["你", "喉嚨好痛，仲有啲發燒。", "My throat really hurts and I have a bit of a fever."]
+      - ["醫生", "幾時開始㗎？", "When did it start?"]
+      - ["你", "由尋日晚開始。", "Since last night."]
+      - ["醫生", "我開啲藥俾你，記得多啲休息。", "I'll give you some medicine. Remember to rest."]
+  - id: dlg-mo-health-03
+    title: "Calling in sick"
+    lines:
+      - ["你", "老細，我今日唔舒服，想請病假。", "Boss, I'm not well today, I'd like to take sick leave."]
+      - ["老細", "有冇睇醫生？", "Have you seen a doctor?"]
+      - ["你", "等陣去，會攞病假紙。", "I'm going soon, I'll get a sick note."]
+      - ["老細", "好，好好休息。", "OK, get some rest."]
+      - ["你", "唔該你。", "Thank you."]
+  - id: dlg-mo-health-04
+    title: "Someone faints in the street"
+    lines:
+      - ["你", "救命！呢度有人暈低咗！", "Help! Someone's fainted here!"]
+      - ["路人", "快啲叫白車！", "Call an ambulance, quick!"]
+      - ["你", "我打咗喇，佢哋就嚟到。", "I've called, they're almost here."]
+      - ["路人", "唔好郁佢，等救護員嚟。", "Don't move them, wait for the paramedics."]
+  - id: dlg-mo-health-05
+    title: "Booking a dental cleaning"
+    lines:
+      - ["你", "你好，我想約洗牙。", "Hello, I'd like to book a teeth cleaning."]
+      - ["職員", "星期三下晝三點得唔得？", "Is Wednesday at three in the afternoon OK?"]
+      - ["你", "得，冇問題。", "Yes, no problem."]
+      - ["職員", "請問貴姓？", "May I have your surname?"]
+      - ["你", "我姓陳。", "It's Chan."]
+      - ["職員", "好，到時見。", "OK, see you then."]

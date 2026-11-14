@@ -34,6 +34,9 @@ class SentenceRow {
     required this.reviewed,
     required this.tokens,
     this.pattern,
+    this.dialogue,
+    this.speaker,
+    this.turn,
   });
 
   final String id;
@@ -48,6 +51,11 @@ class SentenceRow {
   final List<TokenRow> tokens;
   final String? pattern;
 
+  /// Set on conversation lines.
+  final String? dialogue;
+  final String? speaker;
+  final int? turn;
+
   Set<String> get itemIds => {
     for (final t in tokens)
       if (t.itemId != null) t.itemId!,
@@ -55,6 +63,13 @@ class SentenceRow {
 
   Candidate toCandidate() =>
       Candidate(id: id, itemIds: itemIds, region: region, pattern: pattern);
+}
+
+class DialogueRow {
+  const DialogueRow(this.id, this.title, this.lines);
+  final String id;
+  final String title;
+  final int lines;
 }
 
 class ScenarioRow {
@@ -83,7 +98,8 @@ class ContentDb {
   List<ScenarioRow> scenarios(String lang) => [
     for (final r in _db.select(
       'SELECT s.id, s.title, s.region, '
-      '(SELECT COUNT(*) FROM sentence x WHERE x.scenario_id = s.id AND x.lang = ?) AS n '
+      '(SELECT COUNT(*) FROM sentence x WHERE x.scenario_id = s.id AND x.lang = ? '
+      'AND x.dialogue IS NULL) AS n '
       'FROM scenario s ORDER BY s.region = \'macau\' DESC, s.title',
       [lang],
     ))
@@ -158,11 +174,29 @@ class ContentDb {
   }
 
   /// Every sentence of a language, for mixed review sessions.
+  /// Conversation lines are excluded: they are read in order, as conversations.
   List<SentenceRow> allSentences(String lang) =>
-      _sentences('s.lang = ?', [lang]);
+      _sentences('s.lang = ? AND s.dialogue IS NULL', [lang]);
 
-  List<SentenceRow> sentences(String scenarioId, String lang) =>
-      _sentences('s.scenario_id = ? AND s.lang = ?', [scenarioId, lang]);
+  List<SentenceRow> sentences(String scenarioId, String lang) => _sentences(
+    's.scenario_id = ? AND s.lang = ? AND s.dialogue IS NULL',
+    [scenarioId, lang],
+  );
+
+  List<DialogueRow> dialogues(String scenarioId, String lang) => [
+    for (final r in _db.select(
+      'SELECT d.id, d.title, COUNT(s.id) AS n FROM dialogue d '
+      'JOIN sentence s ON s.dialogue = d.id AND s.lang = ? '
+      'WHERE d.scenario_id = ? GROUP BY d.id ORDER BY d.id',
+      [lang, scenarioId],
+    ))
+      DialogueRow(r['id'] as String, r['title'] as String, r['n'] as int),
+  ];
+
+  /// The lines of one conversation, in speaking order.
+  List<SentenceRow> dialogueLines(String dialogueId, String lang) =>
+      _sentences('s.dialogue = ? AND s.lang = ?', [dialogueId, lang])
+        ..sort((a, b) => (a.turn ?? 0).compareTo(b.turn ?? 0));
 
   List<SentenceRow> _sentences(String where, List<Object?> args) {
     final tokens = <String, List<TokenRow>>{};
@@ -187,7 +221,8 @@ class ContentDb {
     return [
       for (final r in _db.select(
         'SELECT s.id, s.pair_id, s.lang, s.text, s.en, s.register, s.region, s.notes, '
-        's.reviewed, s.pattern FROM sentence s WHERE $where ORDER BY s.id',
+        's.reviewed, s.pattern, s.dialogue, s.speaker, s.turn '
+        'FROM sentence s WHERE $where ORDER BY s.id',
         args,
       ))
         SentenceRow(
@@ -202,6 +237,9 @@ class ContentDb {
           reviewed: (r['reviewed'] as int) != 0,
           tokens: tokens[r['id'] as String] ?? const [],
           pattern: r['pattern'] as String?,
+          dialogue: r['dialogue'] as String?,
+          speaker: r['speaker'] as String?,
+          turn: r['turn'] as int?,
         ),
     ];
   }
