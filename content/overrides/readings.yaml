@@ -155,6 +155,22 @@ yue:
   返: [faan1]
   日假: [jat6, gaa3]
   呢單: [ni1, daan1]
+  # numbers and signs topics
+  八樓: [baat3, lau2]
+  二樓: [ji6, lau2]
+  第三行: [dai6, saam1, hong4]
+  平咗: [peng4, zo2]
+  # 請 on signs and in formal requests is cing2; "to treat / ask for leave" words
+  # above (請你, 我請, 請病假 ...) keep ceng2 because longer matches win
+  請: [cing2]
+  處: [cyu3]
+  處理: [cyu5, lei5]
+  車輛: [ce1, loeng6]
+  認領: [jing6, ling5]
+  予: [jyu5]
+  數下: [sou2, haa5]
+  請人: [ceng2, jan4]
+  後上: [hau6, soeng5]
   單位: [daan1, wai2]
   幾多樓: [gei2, do1, lau2]
   十二樓: [sap6, ji6, lau2]

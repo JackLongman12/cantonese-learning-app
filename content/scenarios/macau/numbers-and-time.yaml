@@ -1,0 +1,112 @@
+# Drafted by an LLM. Every line stays reviewed: false until the owner has read it aloud
+# and confirmed both the wording and the readings in build/review_queue.md.
+scenario:
+  id: scn-mo-numbers
+  title: Numbers, time and prices
+  region: macau
+  tags: [numbers, time]
+
+defaults: {register: spoken, source: llm}
+
+# `pattern` groups variations of one sentence frame so the planner spreads them out.
+sentences:
+  - {id: sent-mo-num-001, yue: 而家幾點？, en: "What time is it now?", pattern: time, region: both}
+  - {id: sent-mo-num-002, yue: 三點半。, en: "Half past three.", pattern: time, region: both}
+  - {id: sent-mo-num-003, yue: 差唔多五點。, en: "Almost five o'clock.", pattern: time, region: both}
+  - {id: sent-mo-num-004, yue: 九點踏正。, en: "Nine o'clock on the dot.", pattern: time, region: both}
+  - {id: sent-mo-num-005, yue: 十點三個字。, en: "Ten fifteen.", pattern: time, region: both}
+  - {id: sent-mo-num-006, yue: 七點九。, en: "Seven forty-five.", pattern: time, region: both}
+  - {id: sent-mo-num-007, yue: 十二點十分。, en: "Twelve ten.", pattern: time, region: both}
+  - {id: sent-mo-num-008, yue: 朝早八點。, en: "Eight in the morning.", pattern: time, region: both}
+  - {id: sent-mo-num-009, yue: 晏晝兩點。, en: "Two in the afternoon.", pattern: time, region: both}
+  - {id: sent-mo-num-010, yue: 夜晚十一點。, en: "Eleven at night.", pattern: time, region: both}
+  - {id: sent-mo-num-011, yue: 凌晨三點。, en: "Three in the early morning.", pattern: time, region: both}
+  - {id: sent-mo-num-012, yue: 今日幾號？, en: "What's the date today?", pattern: date, region: both}
+  - {id: sent-mo-num-013, yue: 今日十五號。, en: "Today is the fifteenth.", pattern: date, region: both}
+  - {id: sent-mo-num-014, yue: 今日星期幾？, en: "What day is it today?", pattern: date, region: both}
+  - {id: sent-mo-num-015, yue: 今日禮拜五。, en: "Today is Friday.", pattern: date, region: both}
+  - {id: sent-mo-num-016, yue: 聽日禮拜六。, en: "Tomorrow is Saturday.", pattern: date, region: both}
+  - {id: sent-mo-num-017, yue: 尋日係禮拜四。, en: "Yesterday was Thursday.", pattern: date, region: both}
+  - {id: sent-mo-num-018, yue: 後日見。, en: "See you the day after tomorrow.", pattern: date, region: both}
+  - {id: sent-mo-num-019, yue: 前日我去咗香港。, en: "I went to Hong Kong the day before yesterday.", pattern: date}
+  - {id: sent-mo-num-020, yue: 下個禮拜。, en: "Next week.", pattern: date, region: both}
+  - {id: sent-mo-num-021, yue: 上個月。, en: "Last month.", pattern: date, region: both}
+  - {id: sent-mo-num-022, yue: 出年。, en: "Next year.", pattern: date, region: both}
+  - {id: sent-mo-num-023, yue: 舊年。, en: "Last year.", pattern: date, region: both}
+  - {id: sent-mo-num-024, yue: 十二月二十五號。, en: "The twenty-fifth of December.", pattern: date, region: both}
+  - {id: sent-mo-num-025, yue: 你幾時生日？, en: "When's your birthday?", pattern: date, region: both}
+  - {id: sent-mo-num-026, yue: 我三月生日。, en: "My birthday is in March.", pattern: date, region: both}
+  - {id: sent-mo-num-027, yue: 一個鐘頭。, en: "One hour.", pattern: duration, region: both}
+  - {id: sent-mo-num-028, yue: 半個鐘。, en: "Half an hour.", pattern: duration, region: both}
+  - {id: sent-mo-num-029, yue: 等多十分鐘。, en: "Wait ten more minutes.", pattern: duration, region: both}
+  - {id: sent-mo-num-030, yue: 兩日一夜。, en: "Two days and one night.", pattern: duration, region: both}
+  - {id: sent-mo-num-031, yue: 三個禮拜。, en: "Three weeks.", pattern: duration, region: both}
+  - {id: sent-mo-num-032, yue: 要幾耐都唔知。, en: "No idea how long it'll take.", pattern: duration, region: both}
+  - {id: sent-mo-num-033, yue: 一蚊。, en: "One dollar.", pattern: price, region: both}
+  - {id: sent-mo-num-034, yue: 五蚊半。, en: "Five fifty.", pattern: price, region: both}
+  - {id: sent-mo-num-035, yue: 十二蚊。, en: "Twelve dollars.", pattern: price, region: both}
+  - {id: sent-mo-num-036, yue: 三十八蚊。, en: "Thirty-eight dollars.", pattern: price, region: both}
+  - {id: sent-mo-num-037, yue: 一百蚊。, en: "A hundred dollars.", pattern: price, region: both}
+  - {id: sent-mo-num-038, yue: 一百五。, en: "A hundred and fifty.", pattern: price, region: both}
+  - {id: sent-mo-num-039, yue: 二百五十蚊。, en: "Two hundred and fifty dollars.", pattern: price, region: both}
+  - {id: sent-mo-num-040, yue: 一千蚊。, en: "A thousand dollars.", pattern: price, region: both}
+  - {id: sent-mo-num-041, yue: 一萬蚊。, en: "Ten thousand dollars.", pattern: price, region: both}
+  - {id: sent-mo-num-042, yue: 三千八百蚊一個月。, en: "Three thousand eight hundred a month.", pattern: price, region: both}
+  - {id: sent-mo-num-043, yue: 找返你兩蚊。, en: "Here's two dollars change.", pattern: price, region: both}
+  - {id: sent-mo-num-044, yue: 一個二。, en: "A dollar twenty.", pattern: price, region: both}
+  - {id: sent-mo-num-045, yue: 三個半。, en: "Three fifty.", pattern: price, region: both}
+  - {id: sent-mo-num-046, yue: 五毫子。, en: "Fifty cents.", pattern: price, region: both}
+  - {id: sent-mo-num-047, yue: 我個電話係六二三四五六七八。, en: "My number is 6234 5678.", pattern: phone, region: both}
+  - {id: sent-mo-num-048, yue: 房號係三零八。, en: "The room number is 308.", pattern: number, region: both}
+  - {id: sent-mo-num-049, yue: 我住十八樓B座。, en: "I live on the 18th floor, block B.", pattern: number, region: both}
+  - {id: sent-mo-num-050, yue: 第一。, en: "First.", pattern: order, region: both}
+  - {id: sent-mo-num-051, yue: 第二次。, en: "The second time.", pattern: order, region: both}
+  - {id: sent-mo-num-052, yue: 最後一個。, en: "The last one.", pattern: order, region: both}
+  - {id: sent-mo-num-053, yue: 一半。, en: "Half.", pattern: amount, region: both}
+  - {id: sent-mo-num-054, yue: 三分之一。, en: "One third.", pattern: amount, region: both}
+  - {id: sent-mo-num-055, yue: 九折。, en: "10% off.", pattern: amount, region: both}
+  - {id: sent-mo-num-056, yue: 一打雞蛋。, en: "A dozen eggs.", pattern: amount, region: both}
+  - {id: sent-mo-num-057, yue: 一斤。, en: "One catty.", pattern: amount, region: both}
+  - {id: sent-mo-num-058, yue: 兩斤半。, en: "Two and a half catties.", pattern: amount, region: both}
+  - {id: sent-mo-num-059, yue: 一公斤。, en: "One kilogram.", pattern: amount, region: both}
+  - {id: sent-mo-num-060, yue: 五百克。, en: "Five hundred grams.", pattern: amount, region: both}
+  - {id: sent-mo-num-061, yue: 三十度。, en: "Thirty degrees.", pattern: amount, region: both}
+  - {id: sent-mo-num-062, yue: 一米七。, en: "One metre seventy.", pattern: amount, region: both}
+  - {id: sent-mo-num-063, yue: 你幾多歲？, en: "How old are you?", pattern: age, region: both}
+  - {id: sent-mo-num-064, yue: 我二十八歲。, en: "I'm twenty-eight.", pattern: age, region: both}
+  - {id: sent-mo-num-065, yue: 佢三十幾歲。, en: "They're in their thirties.", pattern: age, region: both}
+  - {id: sent-mo-num-066, yue: 幾多位？, en: "How many people?", pattern: count, region: both}
+  - {id: sent-mo-num-067, yue: 五個人。, en: "Five people.", pattern: count, region: both}
+  - {id: sent-mo-num-068, yue: 兩個。, en: "Two of them.", pattern: count, region: both}
+  - {id: sent-mo-num-069, yue: 好多。, en: "Lots.", pattern: count, region: both}
+  - {id: sent-mo-num-070, yue: 少少。, en: "A little.", pattern: count, region: both}
+  - {id: sent-mo-num-071, yue: 一啲都冇。, en: "None at all.", pattern: count, region: both}
+  - {id: sent-mo-num-072, yue: 全部。, en: "All of them.", pattern: count, region: both}
+  - {id: sent-mo-num-073, yue: 每日。, en: "Every day.", pattern: freq, region: both}
+  - {id: sent-mo-num-074, yue: 一個禮拜兩次。, en: "Twice a week.", pattern: freq, region: both}
+  - {id: sent-mo-num-075, yue: 間中。, en: "Occasionally.", pattern: freq, region: both}
+  - {id: sent-mo-num-076, yue: 我成日都去。, en: "I go all the time.", pattern: freq, region: both}
+  - {id: sent-mo-num-077, yue: 從來都冇。, en: "Never.", pattern: freq, region: both}
+  - {id: sent-mo-num-078, yue: 早啲。, en: "Earlier.", pattern: time, region: both}
+  - {id: sent-mo-num-079, yue: 遲啲。, en: "Later.", pattern: time, region: both}
+  - {id: sent-mo-num-080, yue: 啱啱。, en: "Just now.", pattern: time, region: both}
+  - {id: sent-mo-num-081, yue: 頭先。, en: "A moment ago.", pattern: time, region: both}
+  - {id: sent-mo-num-082, yue: 而家。, en: "Now.", pattern: time, region: both}
+  - {id: sent-mo-num-083, yue: 一陣間。, en: "In a moment.", pattern: time, region: both}
+  - {id: sent-mo-num-084, yue: 即刻。, en: "Right away.", pattern: time, region: both}
+  - {id: sent-mo-num-085, yue: 準時。, en: "On time.", pattern: time, region: both}
+  - {id: sent-mo-num-086, yue: 遲咗十分鐘。, en: "Ten minutes late.", pattern: time, region: both}
+  - {id: sent-mo-num-087, yue: 早到咗。, en: "Arrived early.", pattern: time, region: both}
+  - {id: sent-mo-num-088, yue: 幾點開門？, en: "What time do you open?", pattern: hours, region: both}
+  - {id: sent-mo-num-089, yue: 朝早十點開到夜晚十點。, en: "Open from ten in the morning to ten at night.", pattern: hours, region: both}
+  - {id: sent-mo-num-090, yue: 星期一休息。, en: "Closed on Mondays.", pattern: hours, region: both}
+  - {id: sent-mo-num-091, yue: 公眾假期照常營業。, en: "Open as usual on public holidays.", pattern: hours, region: both}
+  - {id: sent-mo-num-092, yue: 第三行。, en: "The third row.", pattern: order, region: both}
+  - {id: sent-mo-num-093, yue: 單數定雙數？, en: "Odd or even?", pattern: number, region: both}
+  - {id: sent-mo-num-094, yue: 加埋一共五百。, en: "Five hundred altogether.", pattern: price, region: both}
+  - {id: sent-mo-num-095, yue: 減咗一百。, en: "A hundred off.", pattern: price, region: both}
+  - {id: sent-mo-num-096, yue: 貴咗二十蚊。, en: "Twenty dollars more expensive.", pattern: price, region: both}
+  - {id: sent-mo-num-097, yue: 平咗一半。, en: "Half price.", pattern: price, region: both}
+  - {id: sent-mo-num-098, yue: 一人一半。, en: "Half each.", pattern: price, region: both}
+  - {id: sent-mo-num-099, yue: 每人一百二。, en: "A hundred and twenty each.", pattern: price, region: both}
+  - {id: sent-mo-num-100, yue: 數下有幾多。, en: "Count how many there are.", pattern: count, region: both}

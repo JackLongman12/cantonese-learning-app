@@ -2,7 +2,7 @@
 
 Work top to bottom. Do not start a phase until the previous phase's "Done when" list is met. Tick boxes as tasks land and keep the **Status** line current.
 
-**Status (2026-11-15):** Phase 0 mostly done and the core of Phase 1 exists. Pipeline, engine, event log, ruby reader and nine 100-sentence topics (transport, food and money, shopping, health, home, friends and chat, weather and emergencies, paperwork, work and study) are built and tested (15 pipeline tests, 30 app tests, Windows integration test). Toolchain installed; the app runs on Windows with audio and the Android APK builds. Not yet installed on a phone. Pushed to the private repo `JackLongman12/cantonese-learning-app`; the CI workflow has not been confirmed green yet.
+**Status (2026-11-15):** Phase 0 mostly done and the core of Phase 1 exists. Pipeline, engine, event log, ruby reader and eleven 100-sentence topics (transport, food and money, shopping, health, home, friends and chat, weather and emergencies, paperwork, work and study, numbers and time, signs and notices) are built and tested (15 pipeline tests, 30 app tests, Windows integration test). Toolchain installed; the app runs on Windows with audio and the Android APK builds. Not yet installed on a phone. Pushed to the private repo `JackLongman12/cantonese-learning-app`; the CI workflow has not been confirmed green yet.
 
 ## Needed from the owner (ask once, early; do not block on optional ones)
 
@@ -61,11 +61,11 @@ Goal: prove the three risky things (readings, audio, ruby rendering) on 20 sente
 | Friends, family, small talk and slang | `scenarios/macau/friends-and-chat.yaml` | 100 | 0 |
 | Phone, messaging and written Cantonese (chat style) | to write | 0 | 0 |
 | Weather and emergencies (typhoon, rainstorm, police, fire) | `scenarios/macau/weather-and-emergencies.yaml` | 100 | 0 |
-| Signs and notices (written register) | to write | 0 | 0 |
+| Signs and notices (written register) | `scenarios/macau/signs-and-notices.yaml` | 100 | 0 |
 | Casinos, hotels and tourism spots in Macau | to write | 0 | 0 |
 | Getting around Hong Kong (MTR, minibus, Octopus) | to write | 0 | 0 |
 | Hong Kong daily life (茶餐廳, shopping, districts) | to write | 0 | 0 |
-| Numbers, time, dates and prices | to write | 0 | 0 |
+| Numbers, time, dates and prices | `scenarios/macau/numbers-and-time.yaml` | 100 | 0 |
 | Mandarin essentials (Simplified; mainland trips, Zhuhai) | to write | 0 | 0 |
 
 Write one topic at a time: draft → `duk build` → clear the review queue → print readings and

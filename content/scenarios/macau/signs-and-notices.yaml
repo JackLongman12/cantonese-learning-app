@@ -1,0 +1,113 @@
+# Drafted by an LLM. Every line stays reviewed: false until the owner has read it aloud
+# and confirmed both the wording and the readings in build/review_queue.md.
+scenario:
+  id: scn-mo-signs
+  title: Signs and notices
+  region: macau
+  tags: [signs, written]
+
+# Signs use standard written Chinese, read aloud in Cantonese.
+defaults: {register: written, source: llm}
+
+# `pattern` groups variations of one sentence frame so the planner spreads them out.
+sentences:
+  - {id: sent-mo-sign-001, yue: 出口, en: "Exit", pattern: direction, region: both}
+  - {id: sent-mo-sign-002, yue: 入口, en: "Entrance", pattern: direction, region: both}
+  - {id: sent-mo-sign-003, yue: 推, en: "Push", pattern: door, region: both}
+  - {id: sent-mo-sign-004, yue: 拉, en: "Pull", pattern: door, region: both}
+  - {id: sent-mo-sign-005, yue: 男廁, en: "Men's toilet", pattern: toilet, region: both}
+  - {id: sent-mo-sign-006, yue: 女廁, en: "Women's toilet", pattern: toilet, region: both}
+  - {id: sent-mo-sign-007, yue: 洗手間, en: "Toilets", pattern: toilet, region: both}
+  - {id: sent-mo-sign-008, yue: 禁止吸煙, en: "No smoking", pattern: prohibit, region: both}
+  - {id: sent-mo-sign-009, yue: 禁止飲食, en: "No eating or drinking", pattern: prohibit, region: both}
+  - {id: sent-mo-sign-010, yue: 禁止拍照, en: "No photography", pattern: prohibit, region: both}
+  - {id: sent-mo-sign-011, yue: 禁止泊車, en: "No parking", pattern: prohibit, region: both}
+  - {id: sent-mo-sign-012, yue: 請勿觸摸, en: "Please do not touch", pattern: please, region: both}
+  - {id: sent-mo-sign-013, yue: 請勿餵飼動物, en: "Please do not feed the animals", pattern: please, region: both}
+  - {id: sent-mo-sign-014, yue: 請排隊, en: "Please queue", pattern: please, region: both}
+  - {id: sent-mo-sign-015, yue: 請保持安靜, en: "Please keep quiet", pattern: please, region: both}
+  - {id: sent-mo-sign-016, yue: 請保持清潔, en: "Please keep this place clean", pattern: please, region: both}
+  - {id: sent-mo-sign-017, yue: 請關門, en: "Please close the door", pattern: please, region: both}
+  - {id: sent-mo-sign-018, yue: 請小心梯級, en: "Mind the step", pattern: caution, region: both}
+  - {id: sent-mo-sign-019, yue: 小心碰頭, en: "Mind your head", pattern: caution, region: both}
+  - {id: sent-mo-sign-020, yue: 小心車輛, en: "Watch out for vehicles", pattern: caution, region: both}
+  - {id: sent-mo-sign-021, yue: 油漆未乾, en: "Wet paint", pattern: caution, region: both}
+  - {id: sent-mo-sign-022, yue: 暫停服務, en: "Out of service", pattern: service, region: both}
+  - {id: sent-mo-sign-023, yue: 維修中, en: "Under maintenance", pattern: service, region: both}
+  - {id: sent-mo-sign-024, yue: 施工中, en: "Works in progress", pattern: service, region: both}
+  - {id: sent-mo-sign-025, yue: 閒人免進, en: "No unauthorised entry", pattern: prohibit, region: both}
+  - {id: sent-mo-sign-026, yue: 員工專用, en: "Staff only", pattern: prohibit, region: both}
+  - {id: sent-mo-sign-027, yue: 私人地方, en: "Private property", pattern: prohibit, region: both}
+  - {id: sent-mo-sign-028, yue: 緊急出口, en: "Emergency exit", pattern: direction, region: both}
+  - {id: sent-mo-sign-029, yue: 走火通道, en: "Fire escape", pattern: direction, region: both}
+  - {id: sent-mo-sign-030, yue: 滅火筒, en: "Fire extinguisher", pattern: safety, region: both}
+  - {id: sent-mo-sign-031, yue: 火警時請勿使用升降機, en: "Do not use the lift in case of fire", pattern: safety, region: both}
+  - {id: sent-mo-sign-032, yue: 升降機, en: "Lift", pattern: building, region: both}
+  - {id: sent-mo-sign-033, yue: 扶手電梯, en: "Escalator", pattern: building, region: both}
+  - {id: sent-mo-sign-034, yue: 請緊握扶手, en: "Please hold the handrail", pattern: please, region: both}
+  - {id: sent-mo-sign-035, yue: 營業中, en: "Open", pattern: shop, region: both}
+  - {id: sent-mo-sign-036, yue: 今日休息, en: "Closed today", pattern: shop, region: both}
+  - {id: sent-mo-sign-037, yue: 營業時間, en: "Opening hours", pattern: shop, region: both}
+  - {id: sent-mo-sign-038, yue: 本店不設找贖, en: "No change given", pattern: shop, region: both}
+  - {id: sent-mo-sign-039, yue: 只收現金, en: "Cash only", pattern: shop, region: both}
+  - {id: sent-mo-sign-040, yue: 接受信用卡, en: "Credit cards accepted", pattern: shop, region: both}
+  - {id: sent-mo-sign-041, yue: 大減價, en: "Big sale", pattern: shop, region: both}
+  - {id: sent-mo-sign-042, yue: 全場半價, en: "Everything half price", pattern: shop, region: both}
+  - {id: sent-mo-sign-043, yue: 清貨, en: "Clearance", pattern: shop, region: both}
+  - {id: sent-mo-sign-044, yue: 新貨到, en: "New stock arrived", pattern: shop, region: both}
+  - {id: sent-mo-sign-045, yue: 售完, en: "Sold out", pattern: shop, region: both}
+  - {id: sent-mo-sign-046, yue: 招聘, en: "Now hiring", pattern: notice, region: both}
+  - {id: sent-mo-sign-047, yue: 請人, en: "Staff wanted", pattern: notice, region: both}
+  - {id: sent-mo-sign-048, yue: 吉舖招租, en: "Shop for rent", pattern: notice, region: both}
+  - {id: sent-mo-sign-049, yue: 單位出租, en: "Flat for rent", pattern: notice, region: both}
+  - {id: sent-mo-sign-050, yue: 請按門鐘, en: "Please ring the bell", pattern: please, region: both}
+  - {id: sent-mo-sign-051, yue: 請出示證件, en: "Please show your ID", pattern: please, region: both}
+  - {id: sent-mo-sign-052, yue: 請戴口罩, en: "Please wear a mask", pattern: please, region: both}
+  - {id: sent-mo-sign-053, yue: 請先付款, en: "Please pay first", pattern: please, region: both}
+  - {id: sent-mo-sign-054, yue: 自助服務, en: "Self-service", pattern: service, region: both}
+  - {id: sent-mo-sign-055, yue: 取票處, en: "Ticket collection", pattern: counter, region: both}
+  - {id: sent-mo-sign-056, yue: 售票處, en: "Ticket office", pattern: counter, region: both}
+  - {id: sent-mo-sign-057, yue: 詢問處, en: "Information desk", pattern: counter, region: both}
+  - {id: sent-mo-sign-058, yue: 候車處, en: "Waiting area", pattern: transport, region: both}
+  - {id: sent-mo-sign-059, yue: 的士站, en: "Taxi stand", pattern: transport, region: both}
+  - {id: sent-mo-sign-060, yue: 落客區, en: "Drop-off area", pattern: transport, region: both}
+  - {id: sent-mo-sign-061, yue: 停車場, en: "Car park", pattern: transport, region: both}
+  - {id: sent-mo-sign-062, yue: 單程路, en: "One-way street", pattern: road, region: both}
+  - {id: sent-mo-sign-063, yue: 前面有學校, en: "School ahead", pattern: road, region: both}
+  - {id: sent-mo-sign-064, yue: 慢駛, en: "Slow", pattern: road, region: both}
+  - {id: sent-mo-sign-065, yue: 停, en: "Stop", pattern: road, region: both}
+  - {id: sent-mo-sign-066, yue: 不准掉頭, en: "No U-turn", pattern: road, region: both}
+  - {id: sent-mo-sign-067, yue: 行人路, en: "Pavement", pattern: road, region: both}
+  - {id: sent-mo-sign-068, yue: 行人過路處, en: "Pedestrian crossing", pattern: road, region: both}
+  - {id: sent-mo-sign-069, yue: 等候綠燈, en: "Wait for the green light", pattern: road, region: both}
+  - {id: sent-mo-sign-070, yue: 往碼頭, en: "To the ferry terminal", pattern: direction, region: both}
+  - {id: sent-mo-sign-071, yue: 往關閘, en: "To the Border Gate", pattern: direction}
+  - {id: sent-mo-sign-072, yue: 往機場, en: "To the airport", pattern: direction, region: both}
+  - {id: sent-mo-sign-073, yue: 往市中心, en: "To the city centre", pattern: direction, region: both}
+  - {id: sent-mo-sign-074, yue: 第一座, en: "Block 1", pattern: building, region: both}
+  - {id: sent-mo-sign-075, yue: 地下, en: "Ground floor", pattern: building, region: both}
+  - {id: sent-mo-sign-076, yue: 二樓, en: "Second floor (2/F)", pattern: building, region: both}
+  - {id: sent-mo-sign-077, yue: 東主有喜, en: "Closed for the owner's happy event", pattern: notice, region: both}
+  - {id: sent-mo-sign-078, yue: 東主有事，暫停營業, en: "Temporarily closed for personal reasons", pattern: notice, region: both}
+  - {id: sent-mo-sign-079, yue: 年初一至初三休息, en: "Closed from the first to the third day of Lunar New Year", pattern: notice, region: both}
+  - {id: sent-mo-sign-080, yue: 如有查詢，請致電, en: "For enquiries, please call", pattern: notice, region: both}
+  - {id: sent-mo-sign-081, yue: 多謝惠顧, en: "Thank you for your custom", pattern: shop, region: both}
+  - {id: sent-mo-sign-082, yue: 歡迎光臨, en: "Welcome", pattern: shop, region: both}
+  - {id: sent-mo-sign-083, yue: 請勿隨地吐痰, en: "No spitting", pattern: please, region: both}
+  - {id: sent-mo-sign-084, yue: 請勿亂拋垃圾, en: "No littering", pattern: please, region: both}
+  - {id: sent-mo-sign-085, yue: 違者罰款, en: "Offenders will be fined", pattern: prohibit, region: both}
+  - {id: sent-mo-sign-086, yue: 閉路電視監察中, en: "CCTV in operation", pattern: safety, region: both}
+  - {id: sent-mo-sign-087, yue: 小心扒手, en: "Beware of pickpockets", pattern: caution, region: both}
+  - {id: sent-mo-sign-088, yue: 失物認領, en: "Lost and found", pattern: counter, region: both}
+  - {id: sent-mo-sign-089, yue: 急症室, en: "Accident and emergency", pattern: clinic, region: both}
+  - {id: sent-mo-sign-090, yue: 藥房, en: "Pharmacy", pattern: clinic, region: both}
+  - {id: sent-mo-sign-091, yue: 診所, en: "Clinic", pattern: clinic, region: both}
+  - {id: sent-mo-sign-092, yue: 掛號處, en: "Registration", pattern: clinic, region: both}
+  - {id: sent-mo-sign-093, yue: 收費處, en: "Payment counter", pattern: clinic, region: both}
+  - {id: sent-mo-sign-094, yue: 候診區, en: "Waiting area", pattern: clinic, region: both}
+  - {id: sent-mo-sign-095, yue: 請關掉手提電話, en: "Please switch off your mobile phone", pattern: please, region: both}
+  - {id: sent-mo-sign-096, yue: 請勿超越黃線, en: "Do not cross the yellow line", pattern: transport, region: both}
+  - {id: sent-mo-sign-097, yue: 請讓座予有需要人士, en: "Please offer your seat to those in need", pattern: transport, region: both}
+  - {id: sent-mo-sign-098, yue: 請先落後上, en: "Let passengers off first", pattern: transport, region: both}
+  - {id: sent-mo-sign-099, yue: 上車, en: "Boarding", pattern: transport, region: both}
+  - {id: sent-mo-sign-100, yue: 下車, en: "Alighting", pattern: transport, region: both}
