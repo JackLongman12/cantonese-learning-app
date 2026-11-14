@@ -2,6 +2,10 @@
 /// and topics with how far along each one is.
 library;
 
+import 'dart:async';
+import 'dart:io';
+
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
@@ -26,12 +30,119 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  String _lang = 'yue';
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+  late String _lang = _s.prefs.lang;
+  StreamSubscription<String>? _shareSub;
+
+  /// Chinese text waiting on the clipboard: '' = some text (Android, unread), null = none.
+  String? _clip;
 
   AppServices get _s => widget.services;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _shareSub = _s.shares.incoming.listen(
+      (t) => _openReader(t, source: 'share'),
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final launch = await _s.shares.takeLaunchText();
+      if (launch != null && mounted) {
+        await _openReader(launch, source: 'share');
+      } else {
+        await _checkClipboard();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _shareSub?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _checkClipboard();
+  }
+
+  /// Offer to read copied Chinese text. On Android reading the clipboard shows a system
+  /// notice, so we only ask whether there is text and read it when the learner taps.
+  Future<void> _checkClipboard() async {
+    String? clip;
+    try {
+      if (Platform.isAndroid) {
+        clip = await Clipboard.hasStrings() ? '' : null;
+      } else {
+        final t = (await Clipboard.getData(Clipboard.kTextPlain))?.text?.trim();
+        final han = RegExp(r'[\u3400-\u9fff]').allMatches(t ?? '').length;
+        clip = (t != null && han >= 2 && t != _s.prefs.lastClipboardOffer)
+            ? t
+            : null;
+      }
+    } on Object {
+      clip = null;
+    }
+    if (mounted && clip != _clip) setState(() => _clip = clip);
+  }
+
+  Future<void> _openReader(String? text, {required String source}) async {
+    _s.logger.log('nav.screen', {'screen': 'free_reader', 'source': source});
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => PasteReaderScreen(
+          services: _s,
+          lang: _lang,
+          initialText: text,
+          source: source,
+        ),
+      ),
+    );
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _readClipboard() async {
+    final t = _clip == null || _clip!.isEmpty
+        ? (await Clipboard.getData(Clipboard.kTextPlain))?.text?.trim()
+        : _clip;
+    _s.prefs.lastClipboardOffer = t;
+    setState(() => _clip = null);
+    if (t != null && t.isNotEmpty) await _openReader(t, source: 'clipboard');
+  }
+
+  Future<void> _openTopic(ScenarioRow sc, {bool practise = false}) async {
+    _s.prefs.setLastTopic(_lang, sc.id);
+    _s.logger.log('nav.screen', {
+      'screen': practise ? 'reader' : 'topic',
+      'scenario_id': sc.id,
+    });
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => practise
+            ? ReaderScreen(
+                services: _s,
+                title: sc.title,
+                sentences: _s.content.sentences(sc.id, _lang),
+                lang: _lang,
+                scenarioId: sc.id,
+              )
+            : TopicScreen(services: _s, scenario: sc, lang: _lang),
+      ),
+    );
+    if (mounted) setState(() {});
+  }
+
   bool _isLang(ItemState st) => st.itemId.startsWith('cr:$_lang:');
+
+  ScenarioRow? _continueTopic(List<ScenarioRow> scenarios) {
+    final id = _s.prefs.lastTopic(_lang);
+    for (final sc in scenarios) {
+      if (sc.id == id) return sc;
+    }
+    return null;
+  }
 
   Future<void> _open({
     required String title,
@@ -125,6 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           'from': _lang,
                           'to': v.first,
                         });
+                        _s.prefs.lang = v.first;
                         setState(() => _lang = v.first);
                       },
                     ),
@@ -140,10 +252,66 @@ class _HomeScreenState extends State<HomeScreen> {
                     title: met == 0 ? 'First steps' : "Today's reading",
                     sentences: _s.content.allSentences(_lang),
                     mode: 'daily',
-                    count: 15,
-                    maxNew: 8,
+                    count: _s.prefs.sessionLength,
+                    maxNew: (_s.prefs.sessionLength / 2).ceil().clamp(3, 12),
                   ),
+                  length: _s.prefs.sessionLength,
+                  onLength: (n) {
+                    _s.logger.log('settings.change', {
+                      'key': 'session_length',
+                      'from': _s.prefs.sessionLength,
+                      'to': n,
+                    });
+                    setState(() => _s.prefs.sessionLength = n);
+                  },
                 ),
+                if (_clip != null) ...[
+                  const SizedBox(height: 12),
+                  Card(
+                    margin: EdgeInsets.zero,
+                    color: theme.colorScheme.tertiaryContainer,
+                    child: ListTile(
+                      key: const ValueKey('read-clipboard'),
+                      leading: const Icon(Icons.content_paste_go_rounded),
+                      title: const Text('Read what you copied'),
+                      subtitle: _clip!.isEmpty
+                          ? null
+                          : Text(
+                              _clip!.replaceAll('\n', ' '),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: chineseStyle(_lang, fontSize: 14),
+                            ),
+                      trailing: IconButton(
+                        tooltip: 'Not now',
+                        icon: const Icon(Icons.close_rounded),
+                        onPressed: () {
+                          _s.prefs.lastClipboardOffer = _clip;
+                          setState(() => _clip = null);
+                        },
+                      ),
+                      onTap: _readClipboard,
+                    ),
+                  ),
+                ],
+                if (_continueTopic(scenarios) case final last?) ...[
+                  const SizedBox(height: 12),
+                  Card(
+                    margin: EdgeInsets.zero,
+                    child: ListTile(
+                      key: const ValueKey('continue-topic'),
+                      leading: CircleAvatar(
+                        backgroundColor: theme.colorScheme.primaryContainer,
+                        foregroundColor: theme.colorScheme.onPrimaryContainer,
+                        child: const Icon(Icons.replay_rounded),
+                      ),
+                      title: Text('Continue: ${last.title}'),
+                      subtitle: const Text('Straight back into its sentences'),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => _openTopic(last, practise: true),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 12),
                 Card(
                   margin: EdgeInsets.zero,
@@ -156,14 +324,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     leading: CircleAvatar(
                       backgroundColor: theme.colorScheme.secondaryContainer,
                       foregroundColor: theme.colorScheme.onSecondaryContainer,
-                      child: const Icon(Icons.document_scanner_rounded),
+                      child: const Icon(Icons.chrome_reader_mode_rounded),
                     ),
                     title: Text(
                       'Read anything',
                       style: theme.textTheme.titleMedium,
                     ),
                     subtitle: const Text(
-                      'Paste or photograph a menu, sign or message. '
+                      'Paste or share a menu, sign or message. '
                       "Readings only over what you don't know yet.",
                     ),
                     trailing: const Icon(Icons.chevron_right_rounded),
@@ -243,22 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     met: (itemsByScenario[sc.id] ?? const {})
                         .where((id) => !_s.learner.stateOf(id).isNew)
                         .length,
-                    onTap: () async {
-                      _s.logger.log('nav.screen', {
-                        'screen': 'topic',
-                        'scenario_id': sc.id,
-                      });
-                      await Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => TopicScreen(
-                            services: _s,
-                            scenario: sc,
-                            lang: _lang,
-                          ),
-                        ),
-                      );
-                      if (mounted) setState(() {});
-                    },
+                    onTap: () => _openTopic(sc),
                   ),
               ],
             ),
@@ -276,6 +429,8 @@ class _TodayCard extends StatelessWidget {
     required this.isFirstTime,
     required this.hasContent,
     required this.onStart,
+    required this.length,
+    required this.onLength,
   });
 
   final int due;
@@ -283,6 +438,8 @@ class _TodayCard extends StatelessWidget {
   final bool isFirstTime;
   final bool hasContent;
   final VoidCallback onStart;
+  final int length;
+  final ValueChanged<int> onLength;
 
   @override
   Widget build(BuildContext context) {
@@ -297,7 +454,7 @@ class _TodayCard extends StatelessWidget {
           'The Jyutping fades as you learn each one.';
     } else if (due > 0) {
       headline = '$due ${due == 1 ? 'character' : 'characters'} to review';
-      detail = 'Mixed with a few new ones. About 5 minutes.';
+      detail = 'Mixed with a few new ones. Pick how long you have.';
     } else {
       headline = 'All caught up';
       detail = 'Nothing is due. Keep going with some new characters.';
@@ -307,49 +464,74 @@ class _TodayCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    headline,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      color: scheme.onPrimaryContainer,
-                      fontWeight: FontWeight.w600,
-                    ),
+            // headline beside the mascot; controls get the full width below
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        headline,
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          color: scheme.onPrimaryContainer,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        detail,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: scheme.onPrimaryContainer,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    detail,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: scheme.onPrimaryContainer,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  const SizedBox(height: 12),
-                  _GrowthLine(known: known),
-                  FilledButton.icon(
-                    key: const ValueKey('start-daily'),
-                    onPressed: hasContent ? onStart : null,
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size(0, 52),
-                    ),
-                    icon: const Icon(Icons.play_arrow_rounded),
-                    label: Text(
-                      isFirstTime ? 'Start' : "Start today's reading",
-                    ),
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 8),
+                DuckMascot(
+                  size: 92,
+                  stage: DuckStage.forKnown(known),
+                  mood: due == 0 && !isFirstTime
+                      ? DuckMood.sleepy
+                      : DuckMood.happy,
+                ),
+              ],
             ),
-            const SizedBox(width: 12),
-            DuckMascot(
-              size: 104,
-              stage: DuckStage.forKnown(known),
-              mood: due == 0 && !isFirstTime ? DuckMood.sleepy : DuckMood.happy,
+            const SizedBox(height: 10),
+            _GrowthLine(known: known),
+            Row(
+              children: [
+                Text(
+                  'Sentences',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: scheme.onPrimaryContainer,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                for (final n in const [5, 15, 30]) ...[
+                  ChoiceChip(
+                    key: ValueKey('length-$n'),
+                    label: Text('$n'),
+                    showCheckmark: false,
+                    selected: length == n,
+                    visualDensity: VisualDensity.compact,
+                    onSelected: (_) => onLength(n),
+                  ),
+                  const SizedBox(width: 6),
+                ],
+              ],
+            ),
+            const SizedBox(height: 12),
+            FilledButton.icon(
+              key: const ValueKey('start-daily'),
+              onPressed: hasContent ? onStart : null,
+              style: FilledButton.styleFrom(minimumSize: const Size(0, 52)),
+              icon: const Icon(Icons.play_arrow_rounded),
+              label: Text(isFirstTime ? 'Start' : "Start today's reading"),
             ),
           ],
         ),

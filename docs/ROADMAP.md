@@ -2,7 +2,7 @@
 
 Work top to bottom. Do not start a phase until the previous phase's "Done when" list is met. Tick boxes as tasks land and keep the **Status** line current.
 
-**Status (2026-11-15):** App is named **DuckLearn**. Phase 0 mostly done and the core of Phase 1 exists. Pipeline, engine, event log, ruby reader and thirteen 100-sentence topics (all the Macau topics; Hong Kong and Mandarin topics still to write) are built and tested. 65 conversations (5 per Macau topic) read as chat bubbles; Read anything (paste/photo); on-device read-aloud check. UI redesigned (home with daily session, per-topic progress, reader with hints, help sheet, summary; ink/cinnabar/rice-paper theme; duck mascot and icon). Toolchain installed; the app runs on Windows with audio and the Android APK builds. Not yet installed on a phone. Pushed to the private repo `JackLongman12/cantonese-learning-app`; the CI workflow has not been confirmed green yet.
+**Status (2026-11-15):** App is named **DuckLearn**. Phase 0 mostly done and the core of Phase 1 exists. Pipeline, engine, event log, ruby reader and thirteen 100-sentence topics (all the Macau topics; Hong Kong and Mandarin topics still to write) are built and tested. 65 conversations (5 per Macau topic) read as chat bubbles; Read anything (paste, Android Share, text-selection menu, clipboard prompt); on-device read-aloud check. UI redesigned (home with daily session, per-topic progress, reader with hints, help sheet, summary; ink/cinnabar/rice-paper theme; duck mascot and icon). Toolchain installed; the app runs on Windows with audio and the Android APK builds. Not yet installed on a phone. Pushed to the private repo `JackLongman12/cantonese-learning-app`; the CI workflow has not been confirmed green yet.
 
 ## Product principle: serve the unmet need, not a Duolingo copy
 
@@ -17,9 +17,10 @@ feature is judged against these gaps; anything that is only engagement mechanics
 3. **Real Macau and Hong Kong language.** Spoken written-Cantonese (佢哋、唔係) and standard
    written Chinese (signs, forms, news) are both taught; content is local situations, not
    textbook dialogues.
-4. **Read anything you meet.** Paste, photograph or screenshot any menu, sign, form or chat and
-   get Jyutping over only the characters *you* don't know yet; what you look up feeds back into
-   what you study. (Phase 4, pulled forward to be the next major feature after Phase 1.)
+4. **Read anything you meet.** Paste or share any menu, sign, form or chat and get Jyutping over
+   only the characters *you* don't know yet; what you look up feeds back into what you study.
+   Built-in OCR was removed (2026-11-15): Lens / Live Text / Pleco recognise text better, so
+   DuckLearn receives text from them instead (Android Share and text-selection menu).
 5. **Two languages, one character memory.** Cantonese/Traditional and Mandarin/Simplified tracks
    share the learner model, with differences (讀/读, 搭/坐) shown side by side.
 
@@ -172,3 +173,12 @@ Claude "explain this" and roleplay; local-LLM weekly report; desktop clipboard h
 - Golden tests for `RubyText`.
 - CI runs `flutter analyze`, `flutter test`, `ruff`, `pytest` on every push.
 - No phase is done until the owner has used the result on a real device.
+
+## Friction (2026-11-15)
+
+Built: Android Share and text-selection "Read in DuckLearn"; clipboard prompt on open/resume
+(Android: asks only whether text exists, reads on tap, so no system clipboard notice);
+remembers language and last topic ("Continue" card); session length 5/15/30; swipe left for
+next; one "drafts" note per topic instead of a Draft tag on every sentence.
+Not yet: Android home-screen widget, reminders at the learner's usual time, desktop global
+hotkey, auto-resume of a half-finished session.

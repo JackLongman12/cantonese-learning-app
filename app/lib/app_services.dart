@@ -2,12 +2,14 @@
 library;
 
 import 'data/content_db.dart';
+import 'data/prefs.dart';
 import 'engine/learner_model.dart';
 import 'engine/memory.dart';
 import 'engine/planner.dart';
 import 'engine/scaffold.dart';
 import 'engine/signals.dart';
 import 'events/event_logger.dart';
+import 'platform/share_inbox.dart';
 import 'platform/speech.dart';
 
 /// Plays a bundled clip. Implemented outside the engine so tests need no audio device.
@@ -25,10 +27,13 @@ class AppServices {
     required this.playAudio,
     this.speech,
     this.playFile,
+    Prefs? prefs,
+    ShareInbox? shares,
     this.scaffold = const ScaffoldPolicy(),
     this.signals = const SignalPolicy(),
     this.planner = const Planner(),
-  }) {
+  }) : prefs = prefs ?? Prefs.memory(),
+       shares = shares ?? ShareInbox() {
     logger.addListener(learner.apply);
   }
 
@@ -41,6 +46,8 @@ class AppServices {
   /// On-device recogniser for the read-aloud check (null where unavailable).
   final SpeechEngine? speech;
   final PlayFile? playFile;
+  final Prefs prefs;
+  final ShareInbox shares;
   final ScaffoldPolicy scaffold;
   final SignalPolicy signals;
   final Planner planner;

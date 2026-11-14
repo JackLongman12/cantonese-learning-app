@@ -9,6 +9,7 @@ import 'package:ulid/ulid.dart';
 
 import 'app_services.dart';
 import 'data/content_db.dart';
+import 'data/prefs.dart';
 import 'engine/learner_model.dart';
 import 'engine/memory.dart';
 import 'events/event_logger.dart';
@@ -70,6 +71,7 @@ Future<AppServices> _bootstrap() async {
     memory: memory,
     playAudio: createPlayAudio(),
     playFile: (path) => _filePlayer.play(DeviceFileSource(path)),
+    prefs: Prefs(File(p.join(support.path, 'prefs.json'))),
     speech: (Platform.isAndroid || Platform.isWindows || Platform.isMacOS)
         ? SpeechEngine(Directory(p.join(support.path, 'models', 'sensevoice')))
         : null,

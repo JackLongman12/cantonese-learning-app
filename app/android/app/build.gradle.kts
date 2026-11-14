@@ -34,7 +34,6 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 }
@@ -49,7 +48,3 @@ flutter {
     source = "../.."
 }
 
-dependencies {
-    // ML Kit's Chinese text model (traditional and simplified), used by the photo reader
-    implementation("com.google.mlkit:text-recognition-chinese:16.0.1")
-}

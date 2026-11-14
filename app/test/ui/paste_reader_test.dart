@@ -7,7 +7,6 @@ import 'package:duk/engine/memory.dart';
 import 'package:duk/events/event.dart';
 import 'package:duk/events/event_logger.dart';
 import 'package:duk/events/event_store.dart';
-import 'package:duk/platform/ocr.dart';
 import 'package:duk/ui/paste_reader_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -15,14 +14,6 @@ import 'package:material_ui/material_ui.dart';
 void main() {
   const dbPath = 'assets/content/content.db';
   final hasDb = File(dbPath).existsSync();
-
-  test(
-    'OCR text tidy-up drops the spaces Windows puts between Chinese characters',
-    () {
-      expect(tidyOcrText(' 唔 該 ， 埋 單 '), '唔該，埋單');
-      expect(tidyOcrText('MOP 25 蚊'), 'MOP 25 蚊');
-    },
-  );
 
   testWidgets('pasted text gets readings only where the learner needs them', (
     t,

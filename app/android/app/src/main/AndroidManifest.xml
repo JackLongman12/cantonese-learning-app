@@ -2,8 +2,7 @@
     <!-- read-aloud check (on-device) and one-time speech model download -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <!-- camera for the photo reader -->
-    <uses-permission android:name="android.permission.CAMERA"/>
+
     <application
         android:label="DuckLearn"
         android:name="${applicationName}"
@@ -25,6 +24,18 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <!-- "Share" text from any app to DuckLearn -->
+            <intent-filter android:label="Read in DuckLearn">
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+            <!-- DuckLearn in the text-selection menu of other apps -->
+            <intent-filter android:label="Read in DuckLearn">
+                <action android:name="android.intent.action.PROCESS_TEXT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

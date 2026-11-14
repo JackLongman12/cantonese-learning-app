@@ -1,4 +1,4 @@
-/// "Read anything": paste or photograph real text (a menu, a sign, a chat) and get
+/// "Read anything": paste or share real text (a menu, a sign, a chat) and get
 /// readings over only the characters this learner doesn't know yet.
 library;
 
@@ -8,7 +8,6 @@ import 'package:material_ui/material_ui.dart';
 import '../app_services.dart';
 import '../engine/annotator.dart';
 import '../engine/scaffold.dart';
-import '../platform/ocr.dart';
 import 'mascot.dart';
 import 'ruby_text.dart';
 
@@ -17,12 +16,16 @@ class PasteReaderScreen extends StatefulWidget {
     super.key,
     required this.services,
     required this.lang,
-    this.ocr,
+    this.initialText,
+    this.source = 'paste',
   });
 
   final AppServices services;
   final String lang;
-  final OcrService? ocr;
+
+  /// Text to read straight away (shared from another app, or the clipboard).
+  final String? initialText;
+  final String source;
 
   @override
   State<PasteReaderScreen> createState() => _PasteReaderScreenState();
@@ -30,14 +33,22 @@ class PasteReaderScreen extends StatefulWidget {
 
 class _PasteReaderScreenState extends State<PasteReaderScreen> {
   final _input = TextEditingController();
-  late final OcrService _ocr = widget.ocr ?? OcrService();
   List<AnnotatedToken> _tokens = const [];
   Map<String, ScaffoldLevel> _levels = const {};
   final Set<int> _revealed = {};
   bool _editing = true;
-  bool _busy = false;
 
   AppServices get _s => widget.services;
+
+  @override
+  void initState() {
+    super.initState();
+    final text = widget.initialText?.trim() ?? '';
+    if (text.isNotEmpty) {
+      _input.text = text;
+      _read(text, source: widget.source, initial: true);
+    }
+  }
 
   @override
   void dispose() {
@@ -45,7 +56,7 @@ class _PasteReaderScreenState extends State<PasteReaderScreen> {
     super.dispose();
   }
 
-  void _read(String text, {required String source}) {
+  void _read(String text, {required String source, bool initial = false}) {
     final tokens = _s.content.annotator(widget.lang).annotate(text);
     final now = _s.logger.now();
     final levels = <String, ScaffoldLevel>{};
@@ -72,12 +83,14 @@ class _PasteReaderScreenState extends State<PasteReaderScreen> {
       'chars': han,
       'unknown_ratio': han == 0 ? 0 : unknown / han,
     });
-    setState(() {
+    void apply() {
       _tokens = tokens;
       _levels = levels;
       _revealed.clear();
       _editing = false;
-    });
+    }
+
+    initial ? apply() : setState(apply);
   }
 
   void _reveal(int i) {
@@ -114,21 +127,6 @@ class _PasteReaderScreenState extends State<PasteReaderScreen> {
     _read(text, source: 'paste');
   }
 
-  Future<void> _photo({required bool camera}) async {
-    final path = await _ocr.pickImage(camera: camera);
-    if (path == null) return;
-    setState(() => _busy = true);
-    final r = await _ocr.recognise(path);
-    if (!mounted) return;
-    setState(() => _busy = false);
-    if (r.error != null) {
-      _toast(r.error!);
-      return;
-    }
-    _input.text = r.text;
-    _read(r.text, source: 'ocr');
-  }
-
   void _toast(String text) => ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(
@@ -157,11 +155,7 @@ class _PasteReaderScreenState extends State<PasteReaderScreen> {
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 760),
-            child: _busy
-                ? const Center(child: CircularProgressIndicator())
-                : _editing
-                ? _editor(context)
-                : _reader(context),
+            child: _editing ? _editor(context) : _reader(context),
           ),
         ),
       ),
@@ -179,8 +173,9 @@ class _PasteReaderScreenState extends State<PasteReaderScreen> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Paste or photograph anything you want to read: a menu, a sign, a form, '
-                'a message. Readings appear only over characters you don\'t know yet.',
+                'Paste anything you want to read: a menu, a sign, a form, a message. '
+                'On Android you can also Share text to DuckLearn from any app. '
+                'Readings appear only over characters you don\'t know yet.',
                 style: theme.textTheme.bodyMedium,
               ),
             ),
@@ -217,18 +212,6 @@ class _PasteReaderScreenState extends State<PasteReaderScreen> {
               icon: const Icon(Icons.content_paste_rounded),
               label: const Text('Paste'),
             ),
-            if (_ocr.canUseCamera)
-              OutlinedButton.icon(
-                onPressed: () => _photo(camera: true),
-                icon: const Icon(Icons.photo_camera_rounded),
-                label: const Text('Camera'),
-              ),
-            if (_ocr.supported)
-              OutlinedButton.icon(
-                onPressed: () => _photo(camera: false),
-                icon: const Icon(Icons.image_rounded),
-                label: const Text('Picture'),
-              ),
           ],
         ),
       ],

@@ -383,9 +383,17 @@ class _ReaderScreenState extends State<ReaderScreen> {
               ),
             ),
           ),
-          body: SafeArea(
-            child: LayoutBuilder(
-              builder: (context, c) => _body(context, wide: c.maxWidth > 700),
+          // Swipe left for the next sentence: one-thumb reading on a phone.
+          body: GestureDetector(
+            key: const ValueKey('swipe-area'),
+            behavior: HitTestBehavior.translucent,
+            onHorizontalDragEnd: (d) {
+              if ((d.primaryVelocity ?? 0) < -400) _next();
+            },
+            child: SafeArea(
+              child: LayoutBuilder(
+                builder: (context, c) => _body(context, wide: c.maxWidth > 700),
+              ),
             ),
           ),
         ),
@@ -431,13 +439,6 @@ class _ReaderScreenState extends State<ReaderScreen> {
                             icon: Icons.signpost_outlined,
                             text: 'Written Chinese',
                           ),
-                        if (!s.reviewed) ...[
-                          const SizedBox(width: 6),
-                          const _Tag(
-                            icon: Icons.edit_note_rounded,
-                            text: 'Draft',
-                          ),
-                        ],
                       ],
                     ),
                     if (widget.conversation) ...[
