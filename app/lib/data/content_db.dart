@@ -94,13 +94,36 @@ class ContentDb {
       ),
   ];
 
-  List<SentenceRow> sentences(String scenarioId, String lang) {
+  /// Character-reading items per scenario, for progress bars.
+  Map<String, Set<String>> charItemsByScenario(String lang) {
+    final out = <String, Set<String>>{};
+    for (final r in _db.select(
+      'SELECT DISTINCT s.scenario_id, t.item_id FROM token t '
+      'JOIN sentence s ON s.id = t.sentence_id '
+      'WHERE s.lang = ? AND t.item_id IS NOT NULL',
+      [lang],
+    )) {
+      out
+          .putIfAbsent(r['scenario_id'] as String, () => {})
+          .add(r['item_id'] as String);
+    }
+    return out;
+  }
+
+  /// Every sentence of a language, for mixed review sessions.
+  List<SentenceRow> allSentences(String lang) =>
+      _sentences('s.lang = ?', [lang]);
+
+  List<SentenceRow> sentences(String scenarioId, String lang) =>
+      _sentences('s.scenario_id = ? AND s.lang = ?', [scenarioId, lang]);
+
+  List<SentenceRow> _sentences(String where, List<Object?> args) {
     final tokens = <String, List<TokenRow>>{};
     for (final r in _db.select(
       'SELECT t.sentence_id, t.surface, t.kind, t.reading, t.item_id, t.flagged '
       'FROM token t JOIN sentence s ON s.id = t.sentence_id '
-      'WHERE s.scenario_id = ? AND s.lang = ? ORDER BY t.sentence_id, t.idx',
-      [scenarioId, lang],
+      'WHERE $where ORDER BY t.sentence_id, t.idx',
+      args,
     )) {
       tokens
           .putIfAbsent(r['sentence_id'] as String, () => [])
@@ -116,9 +139,9 @@ class ContentDb {
     }
     return [
       for (final r in _db.select(
-        'SELECT id, pair_id, lang, text, en, register, region, notes, reviewed, pattern '
-        'FROM sentence WHERE scenario_id = ? AND lang = ? ORDER BY id',
-        [scenarioId, lang],
+        'SELECT s.id, s.pair_id, s.lang, s.text, s.en, s.register, s.region, s.notes, '
+        's.reviewed, s.pattern FROM sentence s WHERE $where ORDER BY s.id',
+        args,
       ))
         SentenceRow(
           id: r['id'] as String,

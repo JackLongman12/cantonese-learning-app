@@ -2,7 +2,56 @@
 
 Work top to bottom. Do not start a phase until the previous phase's "Done when" list is met. Tick boxes as tasks land and keep the **Status** line current.
 
-**Status (2026-11-15):** Phase 0 mostly done and the core of Phase 1 exists. Pipeline, engine, event log, ruby reader and thirteen 100-sentence topics (all the Macau topics; Hong Kong and Mandarin topics still to write) are built and tested (15 pipeline tests, 30 app tests, Windows integration test). Toolchain installed; the app runs on Windows with audio and the Android APK builds. Not yet installed on a phone. Pushed to the private repo `JackLongman12/cantonese-learning-app`; the CI workflow has not been confirmed green yet.
+**Status (2026-11-15):** App is named **DuckLearn**. Phase 0 mostly done and the core of Phase 1 exists. Pipeline, engine, event log, ruby reader and thirteen 100-sentence topics (all the Macau topics; Hong Kong and Mandarin topics still to write) are built and tested. UI redesigned (home with daily session, per-topic progress, reader with hints, help sheet, summary; ink/cinnabar/rice-paper theme; duck mascot and icon). Toolchain installed; the app runs on Windows with audio and the Android APK builds. Not yet installed on a phone. Pushed to the private repo `JackLongman12/cantonese-learning-app`; the CI workflow has not been confirmed green yet.
+
+## Product principle: serve the unmet need, not a Duolingo copy
+
+The owner was explicit: this must fill a gap the market leaves, not imitate gamified apps. Every
+feature is judged against these gaps; anything that is only engagement mechanics is out.
+
+1. **Heritage speakers who can't read.** Existing apps teach Cantonese as a foreign language
+   (vocabulary + speaking). This learner already knows the words by ear; the only missing link
+   is character → sound. The app teaches exactly that link and nothing they already know.
+2. **Help that fades per character.** Jyutping disappears character by character as each one is
+   learned, so real text gets readable gradually instead of "pinyin on / pinyin off".
+3. **Real Macau and Hong Kong language.** Spoken written-Cantonese (佢哋、唔係) and standard
+   written Chinese (signs, forms, news) are both taught; content is local situations, not
+   textbook dialogues.
+4. **Read anything you meet.** Paste, photograph or screenshot any menu, sign, form or chat and
+   get Jyutping over only the characters *you* don't know yet; what you look up feeds back into
+   what you study. (Phase 4, pulled forward to be the next major feature after Phase 1.)
+5. **Two languages, one character memory.** Cantonese/Traditional and Mandarin/Simplified tracks
+   share the learner model, with differences (讀/读, 搭/坐) shown side by side.
+
+The duck mascot is branding and gentle feedback only: no XP, no hearts, no streak guilt.
+
+## Pronunciation accuracy (planned; owner asked to consider it)
+
+Goal: check that the learner says a character's sound, and especially its **tone**, correctly
+when reading aloud — the part a native-ear heritage speaker still gets wrong when reading
+unfamiliar characters.
+
+- **Mode:** "read aloud" on any sentence. Record → score each character → mark wrong tones in
+  the ruby line (e.g. said `si2`, expected `si6`). A mismatch counts as a reading lapse for that
+  `char_reading` item, exactly like tapping to reveal.
+- **Engines to evaluate (bake-off like TTS):**
+  - Azure Speech pronunciation assessment (strong for Mandarin with tone scoring; verify current
+    Cantonese `zh-HK` support).
+  - Local ASR on desktop (RTX 4060): SenseVoice or a Cantonese-tuned Whisper; convert the
+    transcript to Jyutping and compare syllable + tone per character.
+  - Tone-only check without ASR: pitch-contour (F0) extraction compared against the six
+    Cantonese tone shapes — useful offline and on the phone.
+- **Accept lazy sounds** (n→l, ng- dropped, gw→g) as correct, but note them (DESIGN §5 rule 9).
+- **Events:** `speech.attempt` already defined in EVENTS_SCHEMA.
+- **Where it fits:** Phase 4.4. Needs a microphone permission on Android/macOS and an engine
+  decision from the owner (Azure key vs local-only).
+
+## Duck ideas (branding; build only where it supports learning)
+
+- Mascot grows with characters known well: 蛋 egg → 小鴨 duckling → 鴨 duck → 天鵝 swan (built).
+- Session summary cheers; nothing-due state sleeps (built).
+- Later: duck footprints across a calendar for days read (no penalties for missed days); a
+  soft quack when a session ends (setting, off by default); duck poses in empty states.
 
 ## Needed from the owner (ask once, early; do not block on optional ones)
 

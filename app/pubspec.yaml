@@ -54,6 +54,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   integration_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -74,3 +75,25 @@ flutter:
     - family: NotoSansSC
       fonts:
         - asset: assets/fonts/NotoSansSC.ttf
+    # calligraphy-style (kai) font for headings and the logo; OFL
+    - family: LXGWWenKaiTC
+      fonts:
+        - asset: assets/fonts/LXGWWenKaiTC-Regular.ttf
+        - asset: assets/fonts/LXGWWenKaiTC-Bold.ttf
+          weight: 700
+
+# App icons are generated from code-drawn art: run
+#   flutter test --update-goldens --tags golden test/ui/brand_preview_test.dart
+#   dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: assets/icon/app_icon.png
+  android: true
+  min_sdk_android: 21
+  adaptive_icon_background: "#F7C948"
+  adaptive_icon_foreground: assets/icon/app_icon_fg.png
+  ios: false
+  windows:
+    generate: true
+    icon_size: 256
+  macos:
+    generate: true

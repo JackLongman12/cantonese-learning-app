@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "app.duk" "\0"
-            VALUE "FileDescription", "duk" "\0"
+            VALUE "FileDescription", "DuckLearn" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "duk" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 app.duk. All rights reserved." "\0"
             VALUE "OriginalFilename", "duk.exe" "\0"
-            VALUE "ProductName", "duk" "\0"
+            VALUE "ProductName", "DuckLearn" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -1,4 +1,7 @@
-﻿# Cantonese + Mandarin reading app
+﻿# DuckLearn: Cantonese + Mandarin reading app
+
+The user-facing name is **DuckLearn**; the Dart package and internal ids stay `duk`.
+Read the "Product principle" section of `docs/ROADMAP.md` before adding features.
 
 Personal, non-commercial app (Android, Windows, macOS) for one user who **speaks Cantonese natively but cannot read Chinese**. It teaches reading through real Macau/HK sentences with Jyutping that fades per character as mastery grows, plus a Mandarin/Simplified track.
 

@@ -1,4 +1,4 @@
-# Cantonese + Mandarin reading app
+# DuckLearn
 
 A personal app for learning to **read** Chinese when you can already speak Cantonese. Real Macau and Hong Kong sentences, Jyutping that fades character by character, flashcards for places and signs, and a Mandarin/Simplified track.
 

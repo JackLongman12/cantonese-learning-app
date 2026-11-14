@@ -46,7 +46,20 @@ void main() {
 
     await t.pumpWidget(DukApp(services: services));
     await t.pumpAndSettle();
-    await t.tap(find.text('Getting around Macau'));
+    await t.scrollUntilVisible(find.text('Getting around Macau'), 200);
+    await t.ensureVisible(
+      find.ancestor(
+        of: find.text('Getting around Macau'),
+        matching: find.byType(InkWell),
+      ),
+    );
+    await t.pumpAndSettle();
+    await t.tap(
+      find.ancestor(
+        of: find.text('Getting around Macau'),
+        matching: find.byType(InkWell),
+      ),
+    );
     await t.pumpAndSettle();
     expect(find.byKey(const ValueKey('ruby-0')), findsOneWidget);
 

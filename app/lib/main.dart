@@ -14,6 +14,7 @@ import 'engine/memory.dart';
 import 'events/event_logger.dart';
 import 'events/event_store.dart';
 import 'ui/home_screen.dart';
+import 'ui/theme.dart';
 
 const appVersion = String.fromEnvironment(
   'APP_VERSION',
@@ -86,16 +87,10 @@ class DukApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Duk',
-    theme: ThemeData(
-      colorSchemeSeed: const Color(0xFF00695C),
-      useMaterial3: true,
-    ),
-    darkTheme: ThemeData(
-      colorSchemeSeed: const Color(0xFF00695C),
-      brightness: Brightness.dark,
-      useMaterial3: true,
-    ),
+    title: 'DuckLearn',
+    debugShowCheckedModeBanner: false,
+    theme: dukTheme(Brightness.light),
+    darkTheme: dukTheme(Brightness.dark),
     home: HomeScreen(services: services),
   );
 }

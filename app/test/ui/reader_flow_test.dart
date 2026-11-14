@@ -61,9 +61,30 @@ void main() {
       playAudio: (path) async => played.add(path),
     );
 
+    String stat(String key) => (t.widget<Text>(
+      find
+          .descendant(
+            of: find.byKey(ValueKey(key)),
+            matching: find.byType(Text),
+          )
+          .first,
+    )).data!;
     await t.pumpWidget(MaterialApp(home: HomeScreen(services: services)));
-    expect(find.text('0 characters met so far'), findsOneWidget);
-    await t.tap(find.text('Getting around Macau'));
+    expect(stat('stat-met'), '0');
+    await t.scrollUntilVisible(find.text('Getting around Macau'), 200);
+    await t.ensureVisible(
+      find.ancestor(
+        of: find.text('Getting around Macau'),
+        matching: find.byType(InkWell),
+      ),
+    );
+    await t.pumpAndSettle();
+    await t.tap(
+      find.ancestor(
+        of: find.text('Getting around Macau'),
+        matching: find.byType(InkWell),
+      ),
+    );
     await t.pumpAndSettle();
 
     // First pass: everything is new, so readings are shown in full.
@@ -84,13 +105,19 @@ void main() {
       read++;
     }
     expect(read, greaterThan(0));
+    // the session ends on a summary screen
+    expect(find.byKey(const ValueKey('done')), findsOneWidget);
+    await t.tap(find.byKey(const ValueKey('done')));
+    await t.pumpAndSettle();
     final introduced = {
       for (final e in store.events.where((e) => e.type == 'review.applied'))
         e.payload['item_id']! as String,
     };
     expect(introduced.length, lessThanOrEqualTo(12));
-    expect(find.textContaining('characters met so far'), findsOneWidget);
-    expect(find.text('0 characters met so far'), findsNothing);
+    // back at the top of home, where the stats are
+    await t.fling(find.byType(Scrollable).first, const Offset(0, 3000), 5000);
+    await t.pumpAndSettle();
+    expect(stat('stat-met'), '${introduced.length}');
 
     final reviews = store.events
         .where((e) => e.type == 'review.applied')
@@ -124,7 +151,20 @@ void main() {
     );
     expect(level, isNot(ScaffoldLevel.full));
 
-    await t.tap(find.text('Getting around Macau'));
+    await t.scrollUntilVisible(find.text('Getting around Macau'), 200);
+    await t.ensureVisible(
+      find.ancestor(
+        of: find.text('Getting around Macau'),
+        matching: find.byType(InkWell),
+      ),
+    );
+    await t.pumpAndSettle();
+    await t.tap(
+      find.ancestor(
+        of: find.text('Getting around Macau'),
+        matching: find.byType(InkWell),
+      ),
+    );
     await t.pumpAndSettle();
     final again = store.events.lastWhere((e) => e.type == 'item.shown');
     final ids = (again.payload['item_ids']! as List).cast<String>();
