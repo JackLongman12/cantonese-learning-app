@@ -11,6 +11,7 @@ import 'package:material_ui/material_ui.dart';
 import '../app_services.dart';
 import '../data/content_db.dart';
 import '../engine/item_state.dart';
+import 'cards_screen.dart';
 import 'logo.dart';
 import 'mascot.dart';
 import 'paste_reader_screen.dart';
@@ -451,6 +452,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       page([
         _header(theme),
         const SizedBox(height: 20),
+        if (_lang == 'yue')
+          DeckSection(services: _s, onChanged: () => setState(() {})),
         Text('Topics', style: theme.textTheme.titleMedium),
         const SizedBox(height: 4),
         Text(

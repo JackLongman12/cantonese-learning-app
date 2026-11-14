@@ -407,3 +407,121 @@ class ContentDb {
 }
 
 final _hanOnly = RegExp(r'^[㐀-鿿豈-﫿]+$');
+
+class DeckRow {
+  const DeckRow(this.id, this.title, this.region, this.description, this.count);
+  final String id;
+  final String title;
+  final String region;
+  final String description;
+  final int count;
+}
+
+class CardRow {
+  const CardRow({
+    required this.id,
+    required this.deckId,
+    required this.zh,
+    required this.alt,
+    required this.note,
+    required this.flagged,
+    required this.tokens,
+  });
+  final String id;
+  final String deckId;
+  final String zh;
+
+  /// Portuguese (Macau) or English (Hong Kong) name, as on the sign.
+  final String alt;
+  final String note;
+  final bool flagged;
+  final List<TokenRow> tokens;
+
+  List<String> get itemIds => [
+    for (final t in tokens)
+      if (t.itemId != null) t.itemId!,
+  ];
+}
+
+extension DeckQueries on ContentDb {
+  /// Flashcard decks of real names (OpenStreetMap); empty on older databases.
+  List<DeckRow> decks() {
+    try {
+      return [
+        for (final r in _db.select(
+          'SELECT d.id, d.title, d.region, d.description, COUNT(c.id) AS n '
+          'FROM deck d JOIN card c ON c.deck_id = d.id GROUP BY d.id '
+          "ORDER BY d.region = 'macau' DESC, d.rowid",
+        ))
+          DeckRow(
+            r['id'] as String,
+            r['title'] as String,
+            r['region'] as String,
+            r['description'] as String,
+            r['n'] as int,
+          ),
+      ];
+    } on SqliteException {
+      return const [];
+    }
+  }
+
+  /// Cards of a deck in rank order (most important first).
+  List<CardRow> cards(String deckId) {
+    final tokens = <String, List<TokenRow>>{};
+    for (final r in _db.select(
+      'SELECT t.card_id, t.surface, t.kind, t.reading, t.item_id, t.flagged '
+      'FROM card_token t JOIN card c ON c.id = t.card_id WHERE c.deck_id = ? '
+      'ORDER BY t.card_id, t.idx',
+      [deckId],
+    )) {
+      (tokens[r['card_id'] as String] ??= []).add(
+        TokenRow(
+          r['surface'] as String,
+          r['kind'] as String,
+          r['reading'] as String?,
+          r['item_id'] as String?,
+          (r['flagged'] as int) == 1,
+        ),
+      );
+    }
+    return [
+      for (final r in _db.select(
+        'SELECT id, zh, alt, note, flagged FROM card WHERE deck_id = ? ORDER BY rank',
+        [deckId],
+      ))
+        CardRow(
+          id: r['id'] as String,
+          deckId: deckId,
+          zh: r['zh'] as String,
+          alt: r['alt'] as String,
+          note: r['note'] as String,
+          flagged: (r['flagged'] as int) == 1,
+          tokens: tokens[r['id'] as String] ?? const [],
+        ),
+    ];
+  }
+
+  /// "街 → Rua (122 of 123)": street-name endings and the word that goes with them,
+  /// counted from the map data.
+  List<({String zh, String word, int n, int total})> streetPatterns(
+    String region,
+  ) {
+    try {
+      return [
+        for (final r in _db.select(
+          'SELECT zh, word, n, total FROM street_pattern WHERE region = ? ORDER BY total DESC',
+          [region],
+        ))
+          (
+            zh: r['zh'] as String,
+            word: r['word'] as String,
+            n: r['n'] as int,
+            total: r['total'] as int,
+          ),
+      ];
+    } on SqliteException {
+      return const [];
+    }
+  }
+}

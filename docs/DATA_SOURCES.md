@@ -14,6 +14,10 @@ The owner has approved downloading existing material instead of building from sc
 | Noto Sans HK / SC | `github.com/google/fonts` `ofl/notosanshk`, `ofl/notosanssc` (OFL) | bundled fonts in `app/assets/fonts/` |
 | `edge-tts` (pip) | Microsoft Edge read-aloud endpoint, no key, unofficial | zh-HK / zh-CN neural voices for pre-generated audio until an Azure key exists |
 | ToJyutping, pycantonese, pypinyin, jieba, opencc (pip) | PyPI | annotation |
+| CC-CEDICT (CC BY-SA 4.0) | `https://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.zip` | English meanings for word lookup (`dict_entry`) |
+| CC-Canto + Canto readings (CC BY-SA 3.0, Pleco) | `https://cantonese.org/cccanto-170202.zip`, `cccedict-canto-readings-150923.zip` | Cantonese meanings first, Jyutping for CEDICT words |
+| OpenStreetMap via Overpass (ODbL 1.0) | `https://overpass-api.de/api/interpreter` (query in `fetch_sources.py`) | flashcard decks: Macau streets (`name:zh` + `name:pt`), LRT stations, HK MTR stations and streets (`name:en`); street-ending patterns are counted from this data. Top 400 streets by number of mapped segments. Re-fetching changes the hash (OSM is live), which is expected. Simplified duplicates are dropped. |
+| UI sounds | synthesised by `tool/make_sfx.py` | no third-party audio |
 
 Everything below is still unverified.
 

@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import time
 import zipfile
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -27,6 +28,24 @@ class Source:
     licence: str
     filename: str
     unzip: bool = False
+    query: str | None = None  # Overpass QL, sent as a POST
+
+
+_OVERPASS = "https://overpass-api.de/api/interpreter"
+
+
+def _osm_query(iso: str, highways: str) -> str:
+    return f"""[out:json][timeout:240];
+area["ISO3166-1"="{iso}"]->.a;
+(way(area.a)["highway"~"^({highways})$"]["name:zh"];
+ nwr(area.a)["railway"~"^(station|stop)$"]["name:zh"];);
+out tags;"""
+
+
+_ROADS = (
+    "primary|secondary|tertiary|trunk|residential|unclassified|pedestrian"
+    "|living_street|service|footway|steps"
+)
 
 
 SOURCES = [
@@ -64,6 +83,22 @@ SOURCES = [
         "readings.zip",
         unzip=True,
     ),
+    Source(
+        "osm_macau",
+        _OVERPASS,
+        "ODbL 1.0 (© OpenStreetMap contributors)",
+        "osm_macau.json",
+        query=_osm_query("MO", _ROADS),
+    ),
+    Source(
+        "osm_hk",
+        _OVERPASS,
+        "ODbL 1.0 (© OpenStreetMap contributors)",
+        "osm_hk.json",
+        query=_osm_query(
+            "HK", "primary|secondary|tertiary|trunk|residential|unclassified|pedestrian"
+        ),
+    ),
 ]
 
 
@@ -90,7 +125,18 @@ def fetch(raw_root: Path = paths.RAW, only: list[str] | None = None) -> list[str
             continue
         dest = raw_root / src.name
         dest.mkdir(parents=True, exist_ok=True)
-        resp = requests.get(src.url, timeout=120, headers={"User-Agent": "content-pipeline"})
+        headers = {"User-Agent": "content-pipeline"}
+        if src.query:
+            # the public Overpass server sheds load with 429/502/504: wait and retry
+            for attempt in range(4):
+                resp = requests.post(
+                    src.url, data={"data": src.query}, timeout=300, headers=headers
+                )
+                if resp.status_code not in (429, 502, 503, 504):
+                    break
+                time.sleep(30 * (attempt + 1))
+        else:
+            resp = requests.get(src.url, timeout=120, headers=headers)
         resp.raise_for_status()
         data = resp.content
         digest = hashlib.sha256(data).hexdigest()

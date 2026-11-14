@@ -63,6 +63,15 @@ def synthesise_all(
             for rate in RATES:
                 h = audio_hash(lang, voice, rate, text)
                 jobs.append((h, lang, voice, rate, text, audio_dir / f"{h}.mp3"))
+    # flashcard names: normal speed only (they are two to six syllables)
+    has_cards = db.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='card'"
+    ).fetchone()
+    cards = db.execute("SELECT zh FROM card ORDER BY id").fetchall() if has_cards else []
+    for (text,) in cards[:limit]:
+        for voice in VOICES["yue"][:voices_per_lang]:
+            h = audio_hash("yue", voice, "normal", text)
+            jobs.append((h, "yue", voice, "normal", text, audio_dir / f"{h}.mp3"))
 
     made = cached = failed = 0
 

@@ -22,7 +22,7 @@ from .annotate import FLAG, HAN, Annotation, annotate
 from .content import Content, ContentError, load_content
 from .reference import load_reference
 
-SCHEMA_VERSION = 5  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry
+SCHEMA_VERSION = 6  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry; 6: decks
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -77,6 +77,18 @@ CREATE TABLE dict_entry(
   en TEXT NOT NULL, source TEXT NOT NULL);
 CREATE INDEX dict_trad ON dict_entry(trad);
 CREATE INDEX dict_simp ON dict_entry(simp);
+CREATE TABLE deck(
+  id TEXT PRIMARY KEY, title TEXT NOT NULL, region TEXT NOT NULL, description TEXT NOT NULL,
+  source TEXT NOT NULL);
+CREATE TABLE card(
+  id TEXT PRIMARY KEY, deck_id TEXT NOT NULL REFERENCES deck(id), zh TEXT NOT NULL,
+  alt TEXT NOT NULL, note TEXT NOT NULL, rank INTEGER NOT NULL, flagged INTEGER NOT NULL);
+CREATE TABLE card_token(
+  card_id TEXT NOT NULL, idx INTEGER NOT NULL, surface TEXT NOT NULL, kind TEXT NOT NULL,
+  reading TEXT, item_id TEXT, flagged INTEGER NOT NULL, PRIMARY KEY(card_id, idx)) WITHOUT ROWID;
+CREATE TABLE street_pattern(
+  region TEXT NOT NULL, zh TEXT NOT NULL, word TEXT NOT NULL, n INTEGER NOT NULL,
+  total INTEGER NOT NULL);
 CREATE TABLE audio(
   hash TEXT PRIMARY KEY, lang TEXT NOT NULL, voice TEXT NOT NULL, rate TEXT NOT NULL,
   text TEXT NOT NULL, path TEXT NOT NULL);
@@ -248,6 +260,48 @@ def build(
                 json.dumps(p.nearby), p.example, int(p.reviewed), int(flagged),
             ),
         )  # fmt: skip
+
+    from .osm_decks import DECKS, load_decks
+
+    decks = load_decks(raw_root)
+    if decks is None:
+        result.warnings.append("OSM extracts missing (run `duk fetch`): no flashcard decks")
+    else:
+        for did, (title, region, desc) in DECKS.items():
+            db.execute(
+                "INSERT INTO deck VALUES(?,?,?,?,?)",
+                (did, title, region, desc, "OpenStreetMap (ODbL)"),
+            )
+        flagged_cards = 0
+        for c in decks.cards:
+            try:
+                ann = annotate(
+                    c.zh, "yue", overrides=content.overrides.get("yue"), prior=priors["yue"]
+                )
+            except ValueError as e:
+                result.warnings.append(f"{c.id}: {e}")
+                continue
+            flagged = bool(ann.flags)
+            flagged_cards += flagged
+            if flagged:
+                result.flags.append((c.id, "yue", ann))
+            db.execute(
+                "INSERT INTO card VALUES(?,?,?,?,?,?,?)",
+                (c.id, c.deck, c.zh, c.alt, c.note, c.rank, int(flagged)),
+            )
+            for idx, t in enumerate(ann.tokens):
+                item_id = None
+                if t.kind == HAN and t.reading:
+                    item_id = char_item_id("yue", t.surface, t.reading)
+                    item_rows.setdefault(item_id, ("char_reading", "yue", t.surface, t.reading))
+                db.execute(
+                    "INSERT INTO card_token VALUES(?,?,?,?,?,?,?)",
+                    (c.id, idx, t.surface, t.kind, t.reading, item_id, int(t.status == FLAG)),
+                )  # fmt: skip
+        db.executemany("INSERT INTO street_pattern VALUES(?,?,?,?,?)", decks.patterns)
+        result.warnings.append(
+            f"decks: {len(decks.cards)} cards, {flagged_cards} with an unconfirmed reading"
+        )
 
     for item_id, (kind, lang, key, reading) in item_rows.items():
         db.execute(

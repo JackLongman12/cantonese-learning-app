@@ -132,7 +132,7 @@ def test_build_writes_aligned_tokens_and_items(tmp_path):
     assert db.execute("SELECT COUNT(*) FROM item WHERE kind='word' AND key='唔該'").fetchone()[0]
     pair = db.execute("SELECT pair_id FROM sentence WHERE lang='cmn'").fetchone()[0]
     assert pair == "sent-test-001"
-    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "5"
+    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "6"
 
 
 def test_flags_reach_review_queue_until_fixed(tmp_path):

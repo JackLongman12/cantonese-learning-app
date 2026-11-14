@@ -2,7 +2,7 @@
 
 Work top to bottom. Do not start a phase until the previous phase's "Done when" list is met. Tick boxes as tasks land and keep the **Status** line current.
 
-**Status (2026-11-15):** App is named **DuckLearn**. Phase 0 mostly done and the core of Phase 1 exists. Pipeline, engine, event log, ruby reader and thirteen 100-sentence topics (all the Macau topics; Hong Kong and Mandarin topics still to write) are built and tested. 65 conversations (5 per Macau topic) read as chat bubbles; Read anything (paste, Android Share, text-selection menu, clipboard prompt); on-device read-aloud check. UI redesigned (home with daily session, per-topic progress, reader with hints, help sheet, summary; ink/cinnabar/rice-paper theme; duck mascot and icon). Toolchain installed; the app runs on Windows with audio and the Android APK builds. Not yet installed on a phone. Pushed to the private repo `JackLongman12/cantonese-learning-app`; the CI workflow has not been confirmed green yet.
+**Status (2026-11-15):** App is named **DuckLearn**; Android arm64 is the release target (Windows releases paused, macOS later). Home has bottom tabs: Today, Topics (with flashcard decks of real Macau/HK names from OpenStreetMap), Stories, Words ("My words": long-press any character for dictionary meanings from CC-Canto/CC-CEDICT and save it with its sentence), Read (paste/share). Thirteen 100-sentence Macau topics, 65 conversations, 6 stories. Sentences auto-play on open; read-aloud stops when you finish and shows a sound-accuracy percent; soft synthesised UI sounds; settings screen; daily reminder; home-screen widget; auto-update from public GitHub Releases. HK topics and owner review of LLM-written content are the biggest content gaps.
 
 ## Product principle: serve the unmet need, not a Duolingo copy
 
@@ -128,8 +128,8 @@ check them by eye → `duk tts` → `duk bundle`. The owner then confirms wordin
 
 ## Phase 2 — Breadth: cards, places, Mandarin, updates
 
-- [ ] 2.1 Place import from open data (Macau first), `content/places/`, special-reading overrides.
-- [ ] 2.2 Flashcard engine with templates; decks from CONTENT_GUIDE; cards feed the same item states.
+- [ ] 2.1 Place import from open data (Macau first), `content/places/`, special-reading overrides. (Names now come from OSM for decks; coordinates/districts not yet.)
+- [x] 2.2 Flashcards (first version): decks of real names from OpenStreetMap (Macau streets with Portuguese, Macau LRT, HK MTR, HK streets with English). Each card is its own FSRS item (`card:<deck>:<zh>`) and also grades its characters. Street-ending hints ("大馬路 is usually Avenida") are counted from the map data. Still to do: templates beyond read-the-sign (listening, Portuguese → Chinese), menu/sign decks.
 - [ ] 2.3 Map mode with offline tiles for Macau and HK.
 - [ ] 2.4 Scenario browser and trip mode (`goal.set`).
 - [ ] 2.5 Mandarin track: Simplified sentences, Pinyin, parallel view with difference highlighting; Mandarin placement.
