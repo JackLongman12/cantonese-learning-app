@@ -1,0 +1,77 @@
+# Drafted by an LLM; reviewed: false until the owner confirms wording and readings.
+scenario:
+  id: scn-mo-food-and-money
+  title: Eating out and paying
+  region: macau
+  tags: [food, money]
+
+sentences:
+  - id: sent-mo-food-001
+    yue: 唔該，一個豬扒包，一杯凍檸茶。
+    en: A pork chop bun and an iced lemon tea, please.
+    register: spoken
+    tags: [ordering]
+    source: llm
+
+  - id: sent-mo-food-002
+    yue: 凍檸茶少甜，走冰。
+    en: Iced lemon tea, less sugar, no ice.
+    register: spoken
+    tags: [ordering]
+    region: both
+    source: llm
+
+  - id: sent-mo-food-003
+    yue: 我想買兩個葡撻。
+    en: I'd like to buy two Portuguese egg tarts.
+    register: spoken
+    tags: [ordering]
+    source: llm
+
+  - id: sent-mo-food-004
+    yue: 唔該，埋單。
+    en: The bill, please.
+    register: spoken
+    tags: [paying]
+    region: both
+    source: llm
+
+  - id: sent-mo-food-005
+    yue: 呢個幾多錢呀？
+    cmn: 这个多少钱？
+    en: How much is this?
+    register: spoken
+    tags: [paying, asking]
+    region: both
+    source: llm
+
+  - id: sent-mo-food-006
+    yue: 你哋收唔收港紙？
+    en: Do you take Hong Kong dollars?
+    register: spoken
+    tags: [paying, asking]
+    notes: 港紙 is the everyday word for Hong Kong dollars; 葡紙 for patacas.
+    source: llm
+
+  - id: sent-mo-food-007
+    yue: 可唔可以用澳門通俾錢？
+    en: Can I pay with Macau Pass?
+    register: spoken
+    tags: [paying, asking]
+    source: llm
+
+  - id: sent-mo-food-008
+    yue: 小心地滑
+    en: Caution, wet floor
+    register: written
+    tags: [sign]
+    region: both
+    source: llm
+
+  - id: sent-mo-food-009
+    yue: 請勿吸煙
+    en: No smoking
+    register: written
+    tags: [sign]
+    region: both
+    source: llm

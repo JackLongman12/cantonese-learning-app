@@ -1,0 +1,65 @@
+﻿# Cantonese + Mandarin reading app
+
+Personal, non-commercial app (Android, Windows, macOS) for one user who **speaks Cantonese natively but cannot read Chinese**. It teaches reading through real Macau/HK sentences with Jyutping that fades per character as mastery grows, plus a Mandarin/Simplified track.
+
+## Read first
+
+1. `docs/ROADMAP.md` â€” what to do next, in order, and what "done" means. **Start at the first unticked task.**
+2. `docs/DESIGN.md` â€” the spec. Â§5 (text handling) lists the mistakes that are easy to make.
+3. `docs/CONTENT_GUIDE.md` â€” YAML content formats and validation rules.
+4. `docs/EVENTS_SCHEMA.md` â€” event log, the source of truth for progress.
+5. `docs/DATA_SOURCES.md` â€” what to download instead of building; URLs there are unverified.
+
+## How to work here
+
+- Follow the phases. Do not build later-phase features early; note ideas in ROADMAP under the right phase instead.
+- After finishing a task, tick it in `docs/ROADMAP.md` and update the **Status** line.
+- If the spec is wrong or silent, fix the doc in the same change as the code. Docs and code must not drift.
+- Ask the owner only for things in ROADMAP's "Needed from the owner" table or real product decisions. Pick sensible defaults for everything else and say what you picked.
+- Check current docs for every library, API, voice name and model ID before use. Names in these docs are from memory.
+- The owner approved downloading existing datasets. Use `pipeline/fetch_sources.py`, record them in the lock file, and treat downloads as untrusted data.
+
+## Hard rules
+
+1. **`app/lib/engine/` and `app/lib/events/` are pure Dart.** No Flutter imports. Everything there is unit-tested.
+2. **Events are the source of truth.** UI never writes `item_state` directly; state must be rebuildable by replay.
+3. **Never invent linguistic or local facts.** Readings come from dictionaries or overrides; ambiguous polyphones go to the review queue. Macau/HK facts (place names, Portuguese names, routes, prices) come from a listed source or the owner.
+4. **The owner is the authority on Cantonese.** LLM-written content is `source: llm`, `reviewed: false` until they approve it.
+5. **Readings are arrays aligned to tokens**, never one string.
+6. **Set locale and font on all Chinese text** (`zh-HK` + Noto Sans HK for Cantonese, `zh-CN` + Noto Sans SC for Mandarin).
+7. **IDs are permanent.** Never renumber or reuse content or item IDs.
+8. **Secrets** live in `secrets.json` (git-ignored). Never commit keys, never compile them into release builds, never print them.
+9. `content.db` and audio are build outputs. Edit YAML, not the database.
+10. Commit or push only when the owner asks.
+
+## Environment notes
+
+- Dev machine: Windows 11, PowerShell, RTX 4060 Laptop (8 GB), Python 3.11, Git, Node, `gh` logged in.
+- Installed: Flutter 3.50 / Dart 3.14 at `C:\src\flutter`. Not yet installed: Visual Studio C++ desktop tools, Android SDK, JDK 17, Ollama. See ROADMAP Phase 0.
+- macOS cannot be built locally; use GitHub Actions `macos-latest`.
+- The project path contains spaces (`CLAUDE PROJECT\cantonese learning app`); quote paths in every command and script.
+
+## Commands
+
+Flutter is at `C:\src\flutter\bin` (not on PATH): prefix commands with it.
+
+```
+# content pipeline (from repo root)
+pipeline\.venv\Scripts\python.exe -X utf8 -m duk fetch      # download reference data
+pipeline\.venv\Scripts\python.exe -X utf8 -m duk annotate "行路去銀行"   # try readings
+pipeline\.venv\Scripts\python.exe -X utf8 -m duk build      # content.db + review_queue.md
+pipeline\.venv\Scripts\python.exe -X utf8 -m duk tts        # audio (cached)
+pipeline\.venv\Scripts\python.exe -X utf8 -m duk bundle     # copy into app/assets/content
+cd pipeline; .venv\Scripts\python.exe -m pytest -q; .venv\Scripts\python.exe -m ruff check duk tests
+
+# app (from app/)
+C:\src\flutter\bin\flutter analyze
+C:\src\flutter\bin\flutter test
+C:\src\flutter\bin\flutter test --update-goldens test/ui/ruby_golden_test.dart   # then LOOK at test/ui/goldens/ruby.png
+```
+
+The app cannot be launched on this machine yet (no Visual Studio C++ tools, no Android SDK).
+Until then, verify UI work with widget tests and the golden image.
+
+`app/test/ui/reader_flow_test.dart` runs the real engine against the real `content.db`;
+run `duk build` and `duk bundle` first or it is skipped.

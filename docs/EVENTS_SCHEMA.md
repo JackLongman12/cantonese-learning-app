@@ -1,0 +1,78 @@
+# Event schema (v1)
+
+The event log is the source of truth for everything the app knows about the learner. All other progress tables are caches rebuilt by replaying it. Changing this schema is the most expensive change in the project, so additions are fine, but existing fields never change meaning.
+
+## Envelope
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | ULID | globally unique, sortable; dedup key for sync |
+| `ts_utc` | ISO 8601 ms | wall clock, UTC |
+| `tz_offset_min` | int | local offset at the time |
+| `mono_ms` | int | monotonic ms since session start; use for all durations |
+| `device_id` | string | random, generated on first run |
+| `device_kind` | `android` \| `windows` \| `macos` | |
+| `session_id` | ULID | |
+| `app_version`, `content_version` | string | |
+| `schema_v` | int | 1 |
+| `type` | string | below |
+| `payload` | object | below |
+
+Stored one JSON object per line (`.jsonl`), gzip-compressed for sync.
+
+## Types
+
+### Session and app
+- `app.open` `{source: icon|notification|widget|hotkey, notif_id?}`
+- `app.background` / `app.foreground` `{}`
+- `app.close` `{}`
+- `session.start` `{mode: review|reader|deck|map|placement|paste|ocr, goal?, planned_items, region_ctx?: macau|hk|other}`
+- `session.end` `{reason: done|quit|fatigue_stop|timeout, items_done, active_ms}`
+- `idle.start` / `idle.end` `{}` (no input for 20 s; excluded from latencies)
+- `nav.screen` `{screen}`
+
+### Items
+- `item.shown` `{exposure_id, sentence_id?|card_id?, lang, item_ids[], scaffold[], planner: {score, reasons[]}, pos_in_session}`
+- `item.reveal` `{exposure_id, item_id, token_idx, what: reading|tone|meaning|translation, latency_ms}`
+- `item.audio` `{exposure_id, scope: sentence|char|word, rate: normal|slow, nth}`
+- `item.grade` `{exposure_id, grade: again|hard|good|easy, explicit: bool, latency_ms}`
+- `item.done` `{exposure_id, dwell_ms, active_ms, reveals, audio_plays, skipped}`
+- `review.applied` `{item_id, grade, signal: no_reveal|reveal|slow|explicit|asr, r_before, s_before, s_after, due_after}` — one per item affected; this is what replay consumes
+- `error.diagnosed` `{item_id, kind: tone|sibling|polyphone|cross_lang|lookalike, given?, expected}`
+
+### Reading and input
+- `reader.open` `{source: library|paste|ocr|clipboard|srt, chars, unknown_ratio}`
+- `reader.lookup` `{char, reading_shown, in_sentence?}`
+- `reader.scrollback` `{from_idx, to_idx}`
+- `speech.attempt` `{exposure_id, engine, expected, heard, per_token: [{ok, tone_ok}], score}`
+- `typing.attempt` `{expected, typed, ms}`
+
+### Content and audio feedback
+- `content.flag` `{target_id, problem: wrong_reading|wrong_audio|unnatural|wrong_fact, note?}`
+- `content.approve` `{target_id}`
+- `user.card_add` `{card}` / `user.sentence_add` `{sentence}` (full object so it syncs)
+
+### System
+- `settings.change` `{key, from, to}`
+- `goal.set` `{kind: trip|topic, target, until}`
+- `notif.sent` `{notif_id, kind, planned_for}` / `notif.action` `{notif_id, action: open|dismiss|ignore}`
+- `bandit.assign` `{arm_set, arm, params}` / `bandit.reward` `{arm_set, arm, reward, window}`
+- `model.load` `{name, version}`
+- `sync.done` `{pushed, pulled, ms}` / `sync.error` `{code}`
+- `update.check` `{channel, found?}` / `update.apply` `{kind: app|content, from, to}`
+- `placement.result` `{lang, estimate, items_seeded}`
+- `state.rebuild` `{events, ms}`
+
+## Rules
+
+1. Log first, derive second. UI never writes `item_state` directly.
+2. Latencies use `mono_ms` and exclude idle spans.
+3. Events are immutable. Corrections are new events (`review.undo {exposure_id}`).
+4. Unknown types and unknown fields must be ignored by readers, not rejected (forward compatibility across devices on different app versions).
+5. `schema_v` increments only for breaking changes, with an upcaster in `events/upcast.dart` and a replay test.
+6. Never log raw pasted/OCR text; log lengths and character IDs only.
+7. Location is region-level only and opt-in.
+
+## Derived metrics (computed, not logged)
+
+Best study hours; fatigue curve; ideal session length; retention by device and by time of day; latency-as-confidence per item; drop-off points; notification effectiveness; coverage over time; retained items per active minute.

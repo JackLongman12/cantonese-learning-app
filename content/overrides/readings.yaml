@@ -1,0 +1,55 @@
+# Word-level reading overrides, applied by longest match before any per-sentence fix.
+# One reading per character. Add an entry only when the reading is certain wherever the
+# word appears; otherwise pin it on the sentence with fix_yue / fix_cmn.
+#
+# These entries settle cases where the two automatic sources disagree and a standard
+# dictionary reading is clear. The owner can change any of them; that is the point of
+# keeping them in one file.
+yue:
+  # sentence-final and question particles (most common value; pin exceptions per sentence)
+  呀: [aa3]
+  㗎: [gaa3]
+  # demonstrative 呢 "this" is ni1; the final particle 呢 is ne1
+  呢個: [ni1, go3]
+  呢啲: [ni1, di1]
+  呢度: [ni1, dou6]
+  呢邊: [ni1, bin1]
+  呢架: [ni1, gaa3]
+  呢間: [ni1, gaan1]
+  呢條: [ni1, tiu4]
+  呢張: [ni1, zoeng1]
+  呢隻: [ni1, zek3]
+  呢件: [ni1, gin6]
+  呢班: [ni1, baan1]
+  呢排: [ni1, paai4]
+  # 行 "to walk" is haang4 in speech
+  行路: [haang4, lou6]
+  點行: [dim2, haang4]
+  直行: [zik6, haang4]
+  行去: [haang4, heoi3]
+  行過: [haang4, gwo3]
+  行到: [haang4, dou3]
+  搭: [daap3]
+  轉左: [zyun3, zo2]
+  轉右: [zyun3, jau6]
+  轉車: [zyun3, ce1]
+  請問: [cing2, man6]
+  豬扒: [zyu1, paa2]
+  小心地滑: [siu2, sam1, dei6, waat6]
+  行錯: [haang4, co3]
+  行返: [haang4, faan1]
+  行十分鐘: [haang4, sap6, fan1, zung1]
+  行兩分鐘: [haang4, loeng5, fan1, zung1]
+  返屋企: [faan1, uk1, kei2]
+  返轉頭: [faan1, zyun3, tau4]
+  聽唔明: [teng1, m4, ming4]
+  班: [baan1]
+  樓梯: [lau4, tai1]
+  # 上 as a verb "go up" is soeng5; as "above/on" it is soeng6
+  上樓梯: [soeng5, lau4, tai1]
+  # everyday spoken readings where both automatic sources gave the formal one
+  睇下: [tai2, haa5]
+  一聲: [jat1, seng1]
+  證件: [zing3, gin2]
+cmn:
+  前地: [qian2, di4]

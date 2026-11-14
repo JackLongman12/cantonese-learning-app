@@ -1,0 +1,2 @@
+tags:
+  golden: # pixel comparison; font rasterisation differs per OS, so run locally only

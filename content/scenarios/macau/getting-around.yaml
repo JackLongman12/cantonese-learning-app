@@ -1,0 +1,191 @@
+# Drafted by an LLM. Every line stays reviewed: false until the owner has read it aloud
+# and confirmed both the wording and the readings in build/review_queue.md.
+scenario:
+  id: scn-mo-getting-around
+  title: Getting around Macau
+  region: macau
+  tags: [transport, directions]
+
+defaults: {register: spoken, source: llm}
+
+sentences:
+  - id: sent-mo-around-001
+    yue: 唔該，去關閘要搭幾號巴士？
+    cmn: 请问，去关闸要坐几路公交车？
+    en: Excuse me, which bus goes to the Border Gate?
+    register: spoken
+    tags: [bus, asking]
+    places: [place-mo-portas-do-cerco]
+    notes: Cantonese 搭 vs Mandarin 坐 for taking transport; 巴士 vs 公交车.
+    source: llm
+
+  - id: sent-mo-around-002
+    yue: 呢架巴士去唔去氹仔㗎？
+    en: Does this bus go to Taipa?
+    register: spoken
+    tags: [bus, asking]
+    places: [place-mo-taipa]
+    source: llm
+
+  - id: sent-mo-around-003
+    yue: 我想去大三巴，點行呀？
+    en: I want to go to the Ruins of St. Paul's. How do I get there?
+    register: spoken
+    tags: [directions, asking]
+    places: [place-mo-ruins-of-st-paul]
+    source: llm
+
+  - id: sent-mo-around-004
+    yue: 新馬路喺邊度呀？
+    en: Where is San Ma Lo?
+    register: spoken
+    tags: [directions, asking]
+    places: [place-mo-san-ma-lo]
+    source: llm
+
+  - id: sent-mo-around-005
+    yue: 一直行，到路口轉左。
+    en: Go straight, then turn left at the junction.
+    register: spoken
+    tags: [directions]
+    source: llm
+
+  - id: sent-mo-around-006
+    yue: 澳門通喺邊度可以增值？
+    en: Where can I top up my Macau Pass?
+    register: spoken
+    tags: [bus, payment]
+    source: llm
+
+  - id: sent-mo-around-007
+    yue: 過關要排幾耐隊呀？
+    en: How long is the queue to cross the border?
+    register: spoken
+    tags: [border]
+    source: llm
+
+  - id: sent-mo-around-008
+    yue: 我住喺氹仔。
+    cmn: 我住在氹仔。
+    en: I live in Taipa.
+    register: spoken
+    tags: [self]
+    places: [place-mo-taipa]
+    source: llm
+
+  - id: sent-mo-around-009
+    yue: 請問洗手間喺邊度？
+    cmn: 请问洗手间在哪里？
+    en: Excuse me, where is the toilet?
+    register: spoken
+    tags: [asking]
+    region: both
+    source: llm
+
+  - id: sent-mo-around-010
+    yue: 今日落大雨，記得帶遮。
+    en: It's raining hard today, remember to bring an umbrella.
+    register: spoken
+    tags: [weather]
+    region: both
+    source: llm
+
+  - id: sent-mo-around-011
+    yue: 掛八號風球，唔使返工。
+    en: Typhoon signal 8 is up, no need to go to work.
+    register: spoken
+    tags: [weather, emergency]
+    region: both
+    source: llm
+
+  # Variations. `pattern` groups sentences built on the same frame, so the planner
+  # spreads them out instead of showing near-duplicates back to back.
+  - {id: sent-mo-around-012, yue: 關閘喺邊度呀？, en: "Where is the Border Gate?", pattern: where-is}
+  - {id: sent-mo-around-013, yue: 巴士站喺邊度呀？, en: "Where is the bus stop?", pattern: where-is}
+  - {id: sent-mo-around-014, yue: 最近嘅巴士站喺邊度？, en: "Where is the nearest bus stop?", pattern: where-is}
+  - {id: sent-mo-around-015, yue: 的士站喺邊度呀？, en: "Where is the taxi stand?", pattern: where-is}
+  - {id: sent-mo-around-016, yue: 輕軌站喺邊度呀？, en: "Where is the light rail station?", pattern: where-is}
+  - {id: sent-mo-around-017, yue: 碼頭喺邊度呀？, en: "Where is the ferry terminal?", pattern: where-is}
+  - {id: sent-mo-around-018, yue: 機場喺邊度呀？, en: "Where is the airport?", pattern: where-is}
+  - {id: sent-mo-around-019, yue: 議事亭前地喺邊度？, en: "Where is Senado Square?", pattern: where-is}
+  - {id: sent-mo-around-020, yue: 官也街喺邊度呀？, en: "Where is Rua do Cunha?", pattern: where-is}
+  - {id: sent-mo-around-021, yue: 去路環點去呀？, en: "How do I get to Coloane?", pattern: how-to-go}
+  - {id: sent-mo-around-022, yue: 去機場點去最快？, en: "What's the fastest way to the airport?", pattern: how-to-go}
+  - {id: sent-mo-around-023, yue: 去氹仔搭咩車好？, en: "What should I take to get to Taipa?", pattern: how-to-go}
+  - {id: sent-mo-around-024, yue: 由呢度去新馬路要幾耐？, en: "How long does it take from here to San Ma Lo?", pattern: how-long}
+  - {id: sent-mo-around-025, yue: 行路去要幾耐呀？, en: "How long does it take on foot?", pattern: how-long}
+  - {id: sent-mo-around-026, yue: 行路去遠唔遠㗎？, en: "Is it far to walk?", pattern: how-long}
+  - {id: sent-mo-around-027, yue: 行十分鐘就到。, en: "It's a ten-minute walk.", pattern: how-long-answer}
+  - {id: sent-mo-around-028, yue: 好近㗎，行過去就得。, en: "It's very close, you can just walk over.", pattern: how-long-answer}
+  - {id: sent-mo-around-029, yue: 好遠㗎，搭車去啦。, en: "It's far, take a bus or a taxi.", pattern: how-long-answer}
+  - {id: sent-mo-around-030, yue: 去氹仔要搭幾號巴士？, en: "Which bus goes to Taipa?", pattern: which-bus}
+  - {id: sent-mo-around-031, yue: 去路環要搭幾號車？, en: "Which bus goes to Coloane?", pattern: which-bus}
+  - {id: sent-mo-around-032, yue: 呢架車去唔去關閘㗎？, en: "Does this bus go to the Border Gate?", pattern: does-it-go}
+  - {id: sent-mo-around-033, yue: 呢架車經唔經新馬路？, en: "Does this bus pass San Ma Lo?", pattern: does-it-go}
+  - {id: sent-mo-around-034, yue: 呢架巴士去邊度㗎？, en: "Where does this bus go?", pattern: does-it-go}
+  - {id: sent-mo-around-035, yue: 下一班車幾點到？, en: "What time does the next bus arrive?", pattern: what-time}
+  - {id: sent-mo-around-036, yue: 仲要等幾耐呀？, en: "How much longer is the wait?", pattern: what-time}
+  - {id: sent-mo-around-037, yue: 尾班車幾點開？, en: "What time is the last bus?", pattern: what-time}
+  - {id: sent-mo-around-038, yue: 頭班車幾點開？, en: "What time is the first bus?", pattern: what-time}
+  - {id: sent-mo-around-039, yue: 唔該，借借。, en: "Excuse me, coming through.", region: both}
+  - {id: sent-mo-around-040, yue: 唔該，我要落車。, en: "Excuse me, I need to get off.", pattern: get-off, region: both}
+  - {id: sent-mo-around-041, yue: 下個站落車。, en: "I'm getting off at the next stop.", pattern: get-off, region: both}
+  - {id: sent-mo-around-042, yue: 到關閘未呀？, en: "Are we at the Border Gate yet?", pattern: are-we-there}
+  - {id: sent-mo-around-043, yue: 仲有幾多個站先到？, en: "How many more stops until we get there?", pattern: are-we-there, region: both}
+  - {id: sent-mo-around-044, yue: 到咗叫我一聲，唔該。, en: "Please tell me when we get there.", pattern: are-we-there, region: both}
+  - {id: sent-mo-around-045, yue: 我喺邊個站落車好？, en: "Which stop should I get off at?", pattern: get-off, region: both}
+  - {id: sent-mo-around-046, yue: 唔好意思，我搭錯車。, en: "Sorry, I took the wrong bus.", pattern: mistake, region: both}
+  - {id: sent-mo-around-047, yue: 我過咗站喇。, en: "I've missed my stop.", pattern: mistake, region: both}
+  - {id: sent-mo-around-048, yue: 車費幾多錢呀？, en: "How much is the fare?", pattern: fare, region: both}
+  - {id: sent-mo-around-049, yue: 可唔可以用現金？, en: "Can I pay cash?", pattern: fare, region: both}
+  - {id: sent-mo-around-050, yue: 我冇散紙。, en: "I don't have small change.", pattern: fare, region: both}
+  - {id: sent-mo-around-051, yue: 我張澳門通冇錢喇。, en: "My Macau Pass has run out of credit.", pattern: fare}
+  - {id: sent-mo-around-052, yue: 我要增值一百蚊。, en: "I want to top up a hundred.", pattern: fare, region: both}
+  - {id: sent-mo-around-053, yue: 唔該，去機場。, en: "To the airport, please.", pattern: taxi-to}
+  - {id: sent-mo-around-054, yue: 唔該，去氹仔碼頭。, en: "To the Taipa ferry terminal, please.", pattern: taxi-to}
+  - {id: sent-mo-around-055, yue: 司機，前面停就得。, en: "Driver, you can stop just ahead.", pattern: taxi-stop, region: both}
+  - {id: sent-mo-around-056, yue: 喺呢度落車，唔該。, en: "I'll get off here, thanks.", pattern: taxi-stop, region: both}
+  - {id: sent-mo-around-057, yue: 可唔可以開快啲？我趕時間。, en: "Can you go a bit faster? I'm in a hurry.", region: both}
+  - {id: sent-mo-around-058, yue: 去到大概要幾多錢？, en: "Roughly how much will it cost to get there?", pattern: fare, region: both}
+  - {id: sent-mo-around-059, yue: 唔該，幫我開車尾箱。, en: "Please open the boot for me.", region: both}
+  - {id: sent-mo-around-060, yue: 唔使找喇。, en: "Keep the change.", region: both}
+  - {id: sent-mo-around-061, yue: 直行，第二個路口轉右。, en: "Go straight and turn right at the second junction.", pattern: directions, region: both}
+  - {id: sent-mo-around-062, yue: 過咗馬路就係。, en: "It's just across the road.", pattern: directions, region: both}
+  - {id: sent-mo-around-063, yue: 喺你後面。, en: "It's behind you.", pattern: directions, region: both}
+  - {id: sent-mo-around-064, yue: 喺對面。, en: "It's on the other side.", pattern: directions, region: both}
+  - {id: sent-mo-around-065, yue: 喺前面，行兩分鐘就到。, en: "It's ahead, two minutes' walk.", pattern: directions, region: both}
+  - {id: sent-mo-around-066, yue: 喺隔籬。, en: "It's next door.", pattern: directions, region: both}
+  - {id: sent-mo-around-067, yue: 轉左就見到。, en: "Turn left and you'll see it.", pattern: directions, region: both}
+  - {id: sent-mo-around-068, yue: 上樓梯，再轉右。, en: "Go up the stairs, then turn right.", pattern: directions, region: both}
+  - {id: sent-mo-around-069, yue: 落一層。, en: "Go down one floor.", pattern: directions, region: both}
+  - {id: sent-mo-around-070, yue: 行過條橋就到。, en: "Cross the bridge and you're there.", pattern: directions, region: both}
+  - {id: sent-mo-around-071, yue: 你行錯路喇。, en: "You've gone the wrong way.", pattern: lost, region: both}
+  - {id: sent-mo-around-072, yue: 要行返轉頭。, en: "You need to walk back.", pattern: lost, region: both}
+  - {id: sent-mo-around-073, yue: 我蕩失路。, en: "I'm lost.", pattern: lost, region: both}
+  - {id: sent-mo-around-074, yue: 我唔識路。, en: "I don't know the way.", pattern: lost, region: both}
+  - {id: sent-mo-around-075, yue: 可唔可以幫我睇下地圖？, en: "Could you take a look at the map for me?", pattern: lost, region: both}
+  - {id: sent-mo-around-076, yue: 呢度係邊度呀？, en: "Where is this place?", pattern: lost, region: both}
+  - {id: sent-mo-around-077, yue: 我而家喺邊度？, en: "Where am I now?", pattern: lost, region: both}
+  - {id: sent-mo-around-078, yue: 我要過關去珠海。, en: "I'm crossing the border to Zhuhai.", pattern: border}
+  - {id: sent-mo-around-079, yue: 今日關閘好多人。, en: "The Border Gate is very crowded today.", pattern: border}
+  - {id: sent-mo-around-080, yue: 過關要帶咩證件？, en: "What documents do I need to cross the border?", pattern: border}
+  - {id: sent-mo-around-081, yue: 我唔記得帶證件。, en: "I forgot to bring my ID.", pattern: border, region: both}
+  - {id: sent-mo-around-082, yue: 排呢條隊啱唔啱？, en: "Is this the right queue?", pattern: border, region: both}
+  - {id: sent-mo-around-083, yue: 自助過關喺邊邊？, en: "Which side is the self-service channel?", pattern: border}
+  - {id: sent-mo-around-084, yue: 去香港搭船定搭巴士好？, en: "Is it better to take the ferry or the bus to Hong Kong?", pattern: to-hk}
+  - {id: sent-mo-around-085, yue: 船飛喺邊度買？, en: "Where do I buy ferry tickets?", pattern: to-hk}
+  - {id: sent-mo-around-086, yue: 下一班船幾點開？, en: "What time does the next ferry leave?", pattern: what-time}
+  - {id: sent-mo-around-087, yue: 去香港嘅金巴喺邊度搭？, en: "Where do I catch the bridge shuttle bus to Hong Kong?", pattern: to-hk}
+  - {id: sent-mo-around-088, yue: 過大橋要幾耐？, en: "How long does it take to cross the bridge?", pattern: how-long}
+  - {id: sent-mo-around-089, yue: 輕軌去唔去機場？, en: "Does the light rail go to the airport?", pattern: does-it-go}
+  - {id: sent-mo-around-090, yue: 喺邊個站轉車？, en: "Which station do I change at?", pattern: get-off, region: both}
+  - {id: sent-mo-around-091, yue: 買一張去氹仔碼頭嘅飛。, en: "One ticket to the Taipa ferry terminal.", pattern: taxi-to}
+  - {id: sent-mo-around-092, yue: 唔該晒。, en: "Thank you very much.", region: both}
+  - {id: sent-mo-around-093, yue: 唔使客氣。, en: "You're welcome.", region: both}
+  - {id: sent-mo-around-094, yue: 唔好意思，阻你一陣。, en: "Sorry to bother you for a moment.", region: both}
+  - {id: sent-mo-around-095, yue: 你講慢啲，唔該。, en: "Please speak a bit slower.", pattern: say-again, region: both}
+  - {id: sent-mo-around-096, yue: 可唔可以講多次？, en: "Could you say that again?", pattern: say-again, region: both}
+  - {id: sent-mo-around-097, yue: 我聽唔明。, en: "I don't understand.", pattern: say-again, region: both}
+  - {id: sent-mo-around-098, yue: 我啱啱搬嚟澳門。, en: "I've just moved to Macau."}
+  - {id: sent-mo-around-099, yue: 我對呢度唔熟。, en: "I don't know this area well.", region: both}
+  - {id: sent-mo-around-100, yue: 我返屋企先。, en: "I'm heading home now.", region: both}

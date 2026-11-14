@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pipeline
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e ".[dev]"
+      - run: ruff check duk tests
+      - run: pytest -q
+
+  app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      # content.db is a build output: build it so the end-to-end reader test runs.
+      - run: pip install -e pipeline
+      - run: python -m duk build && python -m duk bundle
+      - run: mkdir -p app/assets/content/audio
+      - working-directory: app
+        run: flutter pub get && flutter analyze && flutter test --exclude-tags golden

@@ -1,0 +1,44 @@
+# secrets
+secrets.json
+*.keystore
+*.jks
+key.properties
+.env
+
+# data and build outputs
+data/raw/
+build/
+*.db
+*.db.tmp
+*.db-journal
+*.onnx
+audio_packs/
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# flutter / dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+app/build/
+app/android/.gradle/
+app/android/local.properties
+*.iml
+.idea/
+.vscode/
+
+# os
+Thumbs.db
+.DS_Store
+
+# bundled build outputs
+app/assets/content/
+content/readings.lock.json.tmp
+
+*.egg-info/

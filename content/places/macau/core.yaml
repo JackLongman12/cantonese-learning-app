@@ -1,0 +1,54 @@
+# Names only for now. Coordinates, districts and transit are left empty on purpose: they
+# must be imported from Macau open data / OpenStreetMap (ROADMAP 2.1), not typed from memory.
+places:
+  - id: place-mo-portas-do-cerco
+    zh: 關閘
+    official_pt: Portas do Cerco
+    en: Border Gate
+    region: macau
+    type: border
+
+  - id: place-mo-taipa
+    zh: 氹仔
+    official_pt: Taipa
+    en: Taipa
+    region: macau
+    type: district
+
+  - id: place-mo-coloane
+    zh: 路環
+    official_pt: Coloane
+    en: Coloane
+    region: macau
+    type: district
+
+  - id: place-mo-san-ma-lo
+    zh: 新馬路
+    official_pt: Avenida de Almeida Ribeiro
+    en: San Ma Lo
+    region: macau
+    type: street
+    nearby: [place-mo-largo-do-senado]
+
+  - id: place-mo-largo-do-senado
+    zh: 議事亭前地
+    official_pt: Largo do Senado
+    en: Senado Square
+    region: macau
+    type: square
+    nearby: [place-mo-san-ma-lo, place-mo-ruins-of-st-paul]
+
+  - id: place-mo-ruins-of-st-paul
+    zh: 大三巴牌坊
+    official_pt: Ruínas de São Paulo
+    en: Ruins of St. Paul's
+    region: macau
+    type: landmark
+    example: sent-mo-around-003
+
+  - id: place-mo-rua-do-cunha
+    zh: 官也街
+    official_pt: Rua do Cunha
+    en: Rua do Cunha
+    region: macau
+    type: street
