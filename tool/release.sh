@@ -19,7 +19,7 @@ KEY="${DUCKLEARN_KEY_PROPERTIES:-$USERPROFILE/.ducklearn/key.properties}"
 git push -q origin HEAD
 
 BUILD=$(git rev-list --count HEAD)
-NAME="0.$BUILD"
+NAME="0.$BUILD.0"  # Windows needs three-part versions
 TAG="b$BUILD"
 if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
   echo "$TAG already released; commit something new first." >&2

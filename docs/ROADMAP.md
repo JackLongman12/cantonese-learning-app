@@ -182,3 +182,11 @@ remembers language and last topic ("Continue" card); session length 5/15/30; swi
 next; one "drafts" note per topic instead of a Draft tag on every sentence.
 Not yet: Android home-screen widget, reminders at the learner's usual time, desktop global
 hotkey, auto-resume of a half-finished session.
+
+## Learning techniques (2026-11-15)
+
+Built: graded stories (6 Cantonese, 2 with Mandarin retellings; content/stories/), sorted by
+how much the learner can already read with a "Good next read"; read-along (audio plays as each
+line appears); shadowing (native line, then recording starts); sound families (phonetic
+components from Make Me a Hanzi, with same-sound / tone-only / different marks); spoken vs
+written Cantonese reference; resume a half-finished session from home.

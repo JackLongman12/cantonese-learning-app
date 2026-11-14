@@ -37,6 +37,11 @@ class Prefs {
   void setLastTopic(String lang, String scenarioId) =>
       _set('last_topic_$lang', scenarioId);
 
+  /// A session left part-way: offered as "Resume" on the home screen.
+  Map<String, Object?>? get resume =>
+      (_data['resume'] as Map?)?.cast<String, Object?>();
+  set resume(Map<String, Object?>? v) => _set('resume', v);
+
   /// Clipboard text already offered, so the same copy is not suggested twice.
   String? get lastClipboardOffer => _data['last_clipboard'] as String?;
   set lastClipboardOffer(String? v) => _set('last_clipboard', v);

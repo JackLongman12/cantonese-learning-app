@@ -1,0 +1,128 @@
+# Graded stories: short, everyday Macau life, mostly characters met in the topics.
+# level 1 = very easy, 2 = easy, 3 = more written-style characters.
+# `pair` links a Cantonese story to its Mandarin retelling ("Mandarin through Cantonese").
+# Drafted by an LLM; reviewed: false until the owner approves them.
+stories:
+  - id: sty-breakfast-yue
+    pair: sty-breakfast
+    lang: yue
+    level: 1
+    title: "Breakfast downstairs"
+    lines:
+      - ["今朝我好早起身。", "I got up very early this morning."]
+      - ["我去樓下嘅茶餐廳食早餐。", "I went to the cha chaan teng downstairs for breakfast."]
+      - ["伙計問我食咩。", "The waiter asked what I'd have."]
+      - ["我要咗一個常餐，同一杯凍奶茶。", "I ordered a set breakfast and an iced milk tea."]
+      - ["等咗五分鐘，啲嘢食就到喇。", "After five minutes the food arrived."]
+      - ["奶茶好香，多士都好好食。", "The milk tea smelled great and the toast was delicious."]
+      - ["食完，我同伙計講唔該，然後埋單。", "When I'd finished, I thanked the waiter and paid."]
+      - ["一共四十八蚊。", "Forty-eight dollars altogether."]
+      - ["我俾咗五十蚊，佢找返兩蚊俾我。", "I gave fifty and got two back."]
+      - ["今日開始得好好。", "A good start to the day."]
+
+  - id: sty-breakfast-cmn
+    pair: sty-breakfast
+    lang: cmn
+    level: 1
+    title: "Breakfast downstairs (Mandarin)"
+    lines:
+      - ["今天我很早起床。", "I got up very early today."]
+      - ["我去楼下的茶餐厅吃早餐。", "I went to the cha chaan teng downstairs for breakfast."]
+      - ["服务员问我吃什么。", "The waiter asked what I'd have."]
+      - ["我点了一份套餐和一杯冰奶茶。", "I ordered a set meal and an iced milk tea."]
+      - ["等了五分钟，饭菜就来了。", "After five minutes the food arrived."]
+      - ["奶茶很香，吐司也很好吃。", "The milk tea smelled great and the toast was delicious."]
+      - ["吃完以后，我谢谢服务员，然后买单。", "When I'd finished, I thanked the waiter and paid."]
+      - ["一共四十八块。", "Forty-eight altogether."]
+      - ["我给了五十块，他找了我两块。", "I gave fifty and got two back."]
+      - ["今天开了个好头。", "A good start to the day."]
+
+  - id: sty-wrong-bus-yue
+    pair: sty-wrong-bus
+    lang: yue
+    level: 1
+    title: "The wrong bus"
+    lines:
+      - ["今日我要去氹仔見朋友。", "Today I was going to Taipa to meet a friend."]
+      - ["我喺新馬路搭巴士。", "I caught a bus on San Ma Lo."]
+      - ["坐咗十分鐘，我覺得唔妥。", "After ten minutes I felt something was off."]
+      - ["窗外面唔係大橋，係關閘！", "Outside the window wasn't the bridge, it was the Border Gate!"]
+      - ["原來我搭錯車。", "It turned out I'd taken the wrong bus."]
+      - ["我即刻落車，問司機點去氹仔。", "I got off at once and asked the driver how to get to Taipa."]
+      - ["司機叫我過對面轉車。", "The driver told me to cross over and change buses."]
+      - ["最後我遲咗半個鐘先到。", "In the end I arrived half an hour late."]
+      - ["朋友笑住話：「唔緊要，我都啱啱到。」", "My friend laughed: \"No worries, I just got here too.\""]
+
+  - id: sty-wrong-bus-cmn
+    pair: sty-wrong-bus
+    lang: cmn
+    level: 1
+    title: "The wrong bus (Mandarin)"
+    lines:
+      - ["今天我要去氹仔见朋友。", "Today I was going to Taipa to meet a friend."]
+      - ["我在新马路坐公交车。", "I caught a bus on San Ma Lo."]
+      - ["坐了十分钟，我觉得不对劲。", "After ten minutes I felt something was off."]
+      - ["窗外不是大桥，是关闸！", "Outside the window wasn't the bridge, it was the Border Gate!"]
+      - ["原来我坐错车了。", "It turned out I'd taken the wrong bus."]
+      - ["我马上下车，问司机怎么去氹仔。", "I got off at once and asked the driver how to get to Taipa."]
+      - ["司机让我到对面换车。", "The driver told me to cross over and change buses."]
+      - ["最后我迟到了半个小时。", "In the end I arrived half an hour late."]
+      - ["朋友笑着说：“没关系，我也刚到。”", "My friend laughed: \"No worries, I just got here too.\""]
+
+  - id: sty-typhoon-yue
+    lang: yue
+    level: 2
+    title: "Typhoon day"
+    lines:
+      - ["尋晚新聞話會打風。", "Last night the news said a typhoon was coming."]
+      - ["今朝起身，出面掛咗八號風球。", "When I woke up, signal 8 was up."]
+      - ["唔使返工，我好開心。", "No work, I was happy."]
+      - ["不過出面風好大，雨又好大。", "But outside the wind was strong and the rain heavy."]
+      - ["我閂埋晒啲窗，又收埋啲衫。", "I shut all the windows and brought the laundry in."]
+      - ["晏晝停咗一陣電。", "In the afternoon the power went out for a while."]
+      - ["我同室友點住蠟燭，一齊食杯麵。", "My flatmate and I lit candles and ate cup noodles together."]
+      - ["夜晚風球除咗。", "At night the signal was lowered."]
+      - ["聽日又要返工喇。", "Back to work tomorrow."]
+
+  - id: sty-cold-yue
+    lang: yue
+    level: 2
+    title: "Catching a cold"
+    lines:
+      - ["呢幾日我成日咳，喉嚨又痛。", "These past few days I've been coughing, and my throat hurts."]
+      - ["朋友叫我去睇醫生。", "My friend told me to see a doctor."]
+      - ["診所好多人，我等咗成個鐘。", "The clinic was busy; I waited a whole hour."]
+      - ["醫生問我有冇發燒。", "The doctor asked if I had a fever."]
+      - ["我話冇，淨係好攰。", "I said no, just very tired."]
+      - ["醫生話係感冒，開咗啲藥俾我。", "The doctor said it was a cold and gave me some medicine."]
+      - ["佢叫我多啲休息，飲多啲暖水。", "They told me to rest and drink more warm water."]
+      - ["返到屋企，我食咗藥就瞓覺。", "Back home, I took the medicine and went to sleep."]
+      - ["第二朝，我好返好多。", "The next morning I felt much better."]
+
+  - id: sty-new-home-yue
+    lang: yue
+    level: 2
+    title: "Moving to Taipa"
+    lines:
+      - ["我上個月搬咗去氹仔。", "Last month I moved to Taipa."]
+      - ["新屋細少少，但係好光猛。", "The new place is a bit smaller, but very bright."]
+      - ["附近有街市、超市同巴士站。", "Nearby there's a market, a supermarket and a bus stop."]
+      - ["第一日，隔籬嘅婆婆送咗啲生果俾我。", "On the first day, the old lady next door gave me some fruit."]
+      - ["我好開心，同佢講多謝。", "I was really happy and thanked her."]
+      - ["後來我哋成日喺電梯度傾偈。", "After that we often chatted in the lift."]
+      - ["佢話我知邊間茶餐廳最好食。", "She told me which cha chaan teng is the best."]
+      - ["而家我好鍾意呢一區。", "Now I really like this area."]
+
+  - id: sty-signs-yue
+    lang: yue
+    level: 3
+    title: "Learning to read the signs"
+    lines:
+      - ["以前我識講廣東話，但係唔識睇字。", "I used to speak Cantonese but couldn't read."]
+      - ["行街見到招牌，我成日都唔明。", "Out and about, I often didn't understand the signs."]
+      - ["有一次，間舖門口寫住「東主有事」，我唔知咩意思。", "Once a shop door said \"東主有事\" and I didn't know what it meant."]
+      - ["我喺門口等咗好耐，間舖都冇開。", "I waited at the door for ages, but the shop never opened."]
+      - ["後來我開始每日讀幾句。", "Later I started reading a few sentences every day."]
+      - ["慢慢地，我識讀嘅字越嚟越多。", "Little by little, I could read more and more characters."]
+      - ["而家我見到「暫停營業」，就知道要聽日再嚟。", "Now when I see \"暫停營業\", I know to come back tomorrow."]
+      - ["原來識字，生活方便好多。", "It turns out being able to read makes life much easier."]

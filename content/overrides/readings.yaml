@@ -245,6 +245,10 @@ yue:
   銀行卡: [ngan4, hong4, kaat1]
   想請: [soeng2, ceng2]
   紹下: [siu6, haa5]
+  # stories
+  多士: [do1, si2]
+  坐咗: [co5, zo2]
+  會打風: [wui5, daa2, fung1]
   # 卡 "card" is kaat1
   收卡: [sau1, kaat1]
   信用卡: [seon3, jung6, kaat1]
@@ -252,4 +256,9 @@ yue:
   增值卡: [zang1, zik6, kaat1]
   會員卡: [wui2, jyun4, kaat1]
 cmn:
+  # common function-word readings (exceptions like 了解 liao3, 着急 zhao2 need word entries)
+  了: [le5]
+  和: [he2]
+  给: [gei3]
+  着: [zhe5]
   前地: [qian2, di4]

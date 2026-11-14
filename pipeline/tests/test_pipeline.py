@@ -132,7 +132,7 @@ def test_build_writes_aligned_tokens_and_items(tmp_path):
     assert db.execute("SELECT COUNT(*) FROM item WHERE kind='word' AND key='唔該'").fetchone()[0]
     pair = db.execute("SELECT pair_id FROM sentence WHERE lang='cmn'").fetchone()[0]
     assert pair == "sent-test-001"
-    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "3"
+    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "4"
 
 
 def test_flags_reach_review_queue_until_fixed(tmp_path):
@@ -198,7 +198,11 @@ def test_dialogues_become_ordered_sentences(tmp_path):
     out = tmp_path / "out" / "content.db"
     build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False)
     db = sqlite3.connect(out)
-    assert db.execute("SELECT title, lines FROM dialogue").fetchone() == ("Paying", 2)
+    assert db.execute("SELECT title, lines, kind FROM dialogue").fetchone() == (
+        "Paying",
+        2,
+        "conversation",
+    )
     rows = db.execute(
         "SELECT id, speaker, turn FROM sentence WHERE dialogue = 'dlg-test-01' ORDER BY turn"
     ).fetchall()

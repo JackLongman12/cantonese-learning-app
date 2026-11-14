@@ -15,6 +15,8 @@ import 'logo.dart';
 import 'mascot.dart';
 import 'paste_reader_screen.dart';
 import 'reader_screen.dart';
+import 'practice_screens.dart';
+import 'stories_screen.dart';
 import 'topic_screen.dart';
 import 'update_ui.dart';
 import '../platform/updater.dart';
@@ -124,6 +126,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (t != null && t.isNotEmpty) await _openReader(t, source: 'clipboard');
   }
 
+  Future<void> _push(Widget screen) async {
+    await Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (_) => screen));
+    if (mounted) setState(() {});
+  }
+
   Future<void> _openTopic(ScenarioRow sc, {bool practise = false}) async {
     _s.prefs.setLastTopic(_lang, sc.id);
     _s.logger.log('nav.screen', {
@@ -147,6 +155,32 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   bool _isLang(ItemState st) => st.itemId.startsWith('cr:$_lang:');
+
+  ({
+    String title,
+    String mode,
+    List<SentenceRow> lines,
+    int index,
+    bool conversation,
+    bool story,
+  })?
+  _resumable() {
+    final r = _s.prefs.resume;
+    if (r == null || r['lang'] != _lang) return null;
+    final lines = _s.content.sentencesByIds(
+      (r['ids'] as List? ?? const []).cast<String>(),
+    );
+    final index = (r['index'] as num?)?.toInt() ?? 0;
+    if (lines.isEmpty || index <= 0 || index >= lines.length) return null;
+    return (
+      title: r['title'] as String? ?? 'Reading',
+      mode: r['mode'] as String? ?? 'topic',
+      lines: lines,
+      index: index,
+      conversation: r['conversation'] == true,
+      story: r['story'] == true,
+    );
+  }
 
   ScenarioRow? _continueTopic(List<ScenarioRow> scenarios) {
     final id = _s.prefs.lastTopic(_lang);
@@ -312,6 +346,46 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     ),
                   ),
                 ],
+                if (_resumable() case final r?) ...[
+                  const SizedBox(height: 12),
+                  Card(
+                    margin: EdgeInsets.zero,
+                    color: theme.colorScheme.secondaryContainer,
+                    child: ListTile(
+                      key: const ValueKey('resume'),
+                      leading: const Icon(Icons.play_circle_outline_rounded),
+                      title: Text('Resume: ${r.title}'),
+                      subtitle: Text('${r.index + 1} of ${r.lines.length}'),
+                      trailing: IconButton(
+                        tooltip: 'Discard',
+                        icon: const Icon(Icons.close_rounded),
+                        onPressed: () => setState(() => _s.prefs.resume = null),
+                      ),
+                      onTap: () async {
+                        _s.logger.log('nav.screen', {
+                          'screen': 'reader',
+                          'mode': 'resume',
+                        });
+                        await Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => ReaderScreen(
+                              services: _s,
+                              title: r.title,
+                              sentences: r.lines,
+                              lang: _lang,
+                              mode: r.mode,
+                              ordered: true,
+                              conversation: r.conversation,
+                              story: r.story,
+                              startAt: r.index,
+                            ),
+                          ),
+                        );
+                        if (mounted) setState(() {});
+                      },
+                    ),
+                  ),
+                ],
                 if (_continueTopic(scenarios) case final last?) ...[
                   const SizedBox(height: 12),
                   Card(
@@ -331,6 +405,32 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   ),
                 ],
                 const SizedBox(height: 12),
+                Card(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  child: ListTile(
+                    key: const ValueKey('open-stories'),
+                    leading: CircleAvatar(
+                      backgroundColor: theme.colorScheme.tertiaryContainer,
+                      foregroundColor: theme.colorScheme.onTertiaryContainer,
+                      child: const Icon(Icons.auto_stories_rounded),
+                    ),
+                    title: Text('Stories', style: theme.textTheme.titleMedium),
+                    subtitle: const Text(
+                      'Short Macau stories, picked by how much you can already read.',
+                    ),
+                    trailing: const Icon(Icons.chevron_right_rounded),
+                    onTap: () async {
+                      _s.logger.log('nav.screen', {'screen': 'stories'});
+                      await Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) =>
+                              StoriesScreen(services: _s, lang: _lang),
+                        ),
+                      );
+                      if (mounted) setState(() {});
+                    },
+                  ),
+                ),
                 Card(
                   margin: EdgeInsets.zero,
                   child: ListTile(
@@ -403,6 +503,36 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
+                ),
+                const SizedBox(height: 20),
+                Text('Reading skills', style: theme.textTheme.titleMedium),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _SkillTile(
+                        key: const ValueKey('open-families'),
+                        icon: Icons.hub_rounded,
+                        title: 'Sound families',
+                        subtitle: '青 → 清 晴 請',
+                        onTap: () => _push(
+                          SoundFamiliesScreen(services: _s, lang: _lang),
+                        ),
+                      ),
+                    ),
+                    if (_lang == 'yue') ...[
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _SkillTile(
+                          key: const ValueKey('open-spoken-written'),
+                          icon: Icons.compare_arrows_rounded,
+                          title: 'Spoken vs written',
+                          subtitle: '佢係 · 他是',
+                          onTap: () => _push(const SpokenWrittenScreen()),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
                 const SizedBox(height: 24),
                 Text('Topics', style: theme.textTheme.titleMedium),
@@ -712,6 +842,43 @@ class _GrowthLine extends StatelessWidget {
         ),
         style: theme.textTheme.bodySmall?.copyWith(
           color: theme.colorScheme.onPrimaryContainer,
+        ),
+      ),
+    );
+  }
+}
+
+class _SkillTile extends StatelessWidget {
+  const _SkillTile({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: theme.colorScheme.primary),
+              const SizedBox(height: 8),
+              Text(title, style: theme.textTheme.titleSmall),
+              Text(subtitle, style: chineseStyle('yue', fontSize: 14)),
+            ],
+          ),
         ),
       ),
     );

@@ -81,6 +81,12 @@ Each line becomes a sentence `<dialogue id>-NN` (register spoken, `source: llm`)
 `dialogue`, `speaker` and `turn` set, so readings, review queue, audio and fading all apply.
 Conversation lines are excluded from the sentence planner and read in order in the app.
 
+## Story
+
+`content/stories/*.yaml`: `id`, `lang` (yue|cmn), `level` (1-3), `title`, optional `pair`
+(links a Cantonese story to its Mandarin retelling), and `lines: [[text, english], ...]`.
+Lines become ordered sentences under the hidden `scn-stories` scenario.
+
 ## Place
 
 ```yaml

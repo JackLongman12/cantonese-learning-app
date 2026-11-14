@@ -89,6 +89,11 @@ PlayAudio createPlayAudio() {
   return (path) async {
     await player.stop();
     await player.play(AssetSource('content/$path'));
+    // resolve when the clip ends, so shadowing can start recording right after it
+    await player.onPlayerComplete.first.timeout(
+      const Duration(seconds: 20),
+      onTimeout: () {},
+    );
   };
 }
 

@@ -78,6 +78,10 @@ class Dialogue:
     scenario: str
     title: str
     lines: int
+    kind: str = "conversation"  # conversation | story
+    lang: str = "yue"
+    level: int = 0
+    pair: str | None = None
 
 
 @dataclass
@@ -213,6 +217,55 @@ def load_content(root: Path) -> Content:
                     )
                 )
             dialogues.append(Dialogue(dlg["id"], sid, str(dlg.get("title", "")), len(lines)))
+
+    # Stories: content/stories/*.yaml. Same mechanics as conversations (ordered lines),
+    # kept under one hidden "Stories" scenario so they never mix into topic sessions.
+    story_files = sorted((root / "stories").rglob("*.yaml")) if (root / "stories").exists() else []
+    if story_files and "scn-stories" not in scenario_region:
+        scenarios.append(Scenario("scn-stories", "Stories", "general", ["stories"]))
+        scenario_region["scn-stories"] = "general"
+    for path in story_files:
+        for st in _load(path).get("stories") or []:
+            if not claim(st.get("id"), path):
+                continue
+            lang = st.get("lang", "yue")
+            need(lang in ("yue", "cmn"), f"{st['id']}: lang must be yue or cmn")
+            need(bool(st.get("title")), f"{st['id']}: title required")
+            lines = st.get("lines") or []
+            need(len(lines) >= 3, f"{st['id']}: a story needs at least three lines")
+            for n, line in enumerate(lines, 1):
+                if not (isinstance(line, list) and len(line) == 2 and all(line)):
+                    problems.append(f"{st['id']} line {n}: expected [text, english]")
+                    continue
+                line_id = f"{st['id']}-{n:02d}"
+                if not claim(line_id, path):
+                    continue
+                sentences.append(
+                    Sentence(
+                        id=line_id,
+                        scenario="scn-stories",
+                        text={lang: str(line[0]).strip()},
+                        en=str(line[1]),
+                        register="spoken",
+                        region="general",
+                        source="llm",
+                        reviewed=bool(st.get("reviewed", False)),
+                        dialogue=st["id"],
+                        turn=n,
+                    )
+                )
+            dialogues.append(
+                Dialogue(
+                    st["id"],
+                    "scn-stories",
+                    str(st.get("title", "")),
+                    len(lines),
+                    kind="story",
+                    lang=lang,
+                    level=int(st.get("level", 1)),
+                    pair=st.get("pair"),
+                )
+            )
 
     places: list[Place] = []
     for path in sorted((root / "places").rglob("*.yaml")):

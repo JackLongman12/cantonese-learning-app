@@ -30,6 +30,10 @@ class ReaderScreen extends StatefulWidget {
     this.count,
     this.maxNew = 12,
     this.conversation = false,
+    this.story = false,
+    this.autoplay = false,
+    this.ordered = false,
+    this.startAt = 0,
   });
 
   final AppServices services;
@@ -47,6 +51,16 @@ class ReaderScreen extends StatefulWidget {
 
   /// Read [sentences] in the given order as a conversation (no planner).
   final bool conversation;
+
+  /// Read [sentences] in order as a story: earlier lines stay as plain paragraphs.
+  final bool story;
+
+  /// Read along: play each line's audio as it appears.
+  final bool autoplay;
+
+  /// Keep [sentences] in the given order (resuming), starting at [startAt].
+  final bool ordered;
+  final int startAt;
 
   @override
   State<ReaderScreen> createState() => _ReaderScreenState();
@@ -82,7 +96,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.conversation) {
+    if (widget.conversation || widget.story || widget.ordered) {
       _queue = [...widget.sentences];
     } else {
       final picks = _s.planner.plan(
@@ -104,6 +118,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
       'lang': widget.lang,
       'planned_items': _queue.length,
     });
+    _index = widget.startAt.clamp(0, _queue.isEmpty ? 0 : _queue.length - 1);
     if (_queue.isNotEmpty) _present();
   }
 
@@ -122,6 +137,21 @@ class _ReaderScreenState extends State<ReaderScreen> {
     _exposure++;
     _mark = _s.logger.mark();
     _s.logger.touch();
+    // remember where we are, so an interrupted session can be resumed from home
+    _s.prefs.resume = {
+      'title': widget.title,
+      'lang': widget.lang,
+      'mode': widget.mode,
+      'ids': [for (final q in _queue) q.id],
+      'index': _index,
+      'conversation': widget.conversation,
+      'story': widget.story,
+    };
+    if (widget.autoplay) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _play(slow: false);
+      });
+    }
     _s.logger.log('item.shown', {
       'exposure_id': _exposureId,
       'sentence_id': _sentence.id,
@@ -270,6 +300,17 @@ class _ReaderScreenState extends State<ReaderScreen> {
     });
   }
 
+  /// Shadowing: hear the native line, then recording starts straight away.
+  Future<void> _shadow() async {
+    if (_s.speech == null || _mic != _Mic.idle) return;
+    _s.logger.log('item.audio', {
+      'exposure_id': _exposureId,
+      'scope': 'shadow',
+    });
+    await _play(slow: false);
+    if (mounted && _mic == _Mic.idle) await _readAloud();
+  }
+
   void _toast(String text) => ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(
@@ -314,6 +355,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
     if (_finished) return;
     _finishCurrent(skipped: skipped);
     if (_index + 1 >= _queue.length) {
+      _s.prefs.resume = null;
       _s.logger.log('session.end', {
         'reason': 'done',
         'items_done': _queue.length,
@@ -441,6 +483,20 @@ class _ReaderScreenState extends State<ReaderScreen> {
                           ),
                       ],
                     ),
+                    if (widget.story && _index > 0)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          [for (var k = 0; k < _index; k++) _queue[k].text]
+                              .join(),
+                          key: const ValueKey('story-so-far'),
+                          style: chineseStyle(
+                            widget.lang,
+                            fontSize: 18,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ).copyWith(height: 1.7),
+                        ),
+                      ),
                     if (widget.conversation) ...[
                       for (var k = 0; k < _index; k++)
                         _Bubble(
@@ -517,6 +573,18 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         ),
                       ],
                     ),
+                    if (_s.speech != null &&
+                        _mic == _Mic.idle &&
+                        _speech.isEmpty)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          key: const ValueKey('shadow'),
+                          onPressed: _shadow,
+                          icon: const Icon(Icons.repeat_rounded, size: 18),
+                          label: const Text('Shadow: listen, then say it'),
+                        ),
+                      ),
                     if (_speech.isNotEmpty)
                       _SpeechResult(
                         scores: _speech.values.toList(),

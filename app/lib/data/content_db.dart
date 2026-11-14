@@ -65,11 +65,29 @@ class SentenceRow {
       Candidate(id: id, itemIds: itemIds, region: region, pattern: pattern);
 }
 
+/// A phonetic component and the characters built on it.
+class SoundFamily {
+  const SoundFamily(this.component, this.reading, this.members);
+  final String component;
+  final String reading;
+  final List<({String char, String reading})> members;
+}
+
 class DialogueRow {
-  const DialogueRow(this.id, this.title, this.lines);
+  const DialogueRow(
+    this.id,
+    this.title,
+    this.lines, {
+    this.level = 0,
+    this.pair,
+  });
   final String id;
   final String title;
   final int lines;
+
+  /// Stories only.
+  final int level;
+  final String? pair;
 }
 
 class ScenarioRow {
@@ -187,11 +205,77 @@ class ContentDb {
     for (final r in _db.select(
       'SELECT d.id, d.title, COUNT(s.id) AS n FROM dialogue d '
       'JOIN sentence s ON s.dialogue = d.id AND s.lang = ? '
-      'WHERE d.scenario_id = ? GROUP BY d.id ORDER BY d.id',
+      "WHERE d.scenario_id = ? AND d.kind = 'conversation' GROUP BY d.id ORDER BY d.id",
       [lang, scenarioId],
     ))
       DialogueRow(r['id'] as String, r['title'] as String, r['n'] as int),
   ];
+
+  /// Sound families (characters sharing a phonetic component, from Make Me a Hanzi) that
+  /// matter for this content: members that appear in the sentences, with their readings.
+  List<SoundFamily> soundFamilies(String lang) {
+    final reading = {
+      for (final r in _db.select(
+        'SELECT char, reading FROM lex_char WHERE lang = ?',
+        [lang],
+      ))
+        r['char'] as String: r['reading'] as String,
+    };
+    final used = {
+      for (final r in _db.select(
+        "SELECT DISTINCT t.surface FROM token t JOIN sentence s ON s.id = t.sentence_id "
+        "WHERE s.lang = ? AND t.kind = 'han'",
+        [lang],
+      ))
+        r['surface'] as String,
+    };
+    final byComponent = <String, List<String>>{};
+    for (final r in _db.select('SELECT component, member FROM family')) {
+      final m = r['member'] as String;
+      if (used.contains(m) && reading.containsKey(m)) {
+        byComponent.putIfAbsent(r['component'] as String, () => []).add(m);
+      }
+    }
+    return [
+      for (final e in byComponent.entries)
+        if (e.value.length >= 2 && reading.containsKey(e.key))
+          SoundFamily(e.key, reading[e.key]!, [
+            for (final m in e.value) (char: m, reading: reading[m]!),
+          ]),
+    ]..sort((a, b) => b.members.length.compareTo(a.members.length));
+  }
+
+  /// Sentences by id, in the order given (resuming a session).
+  List<SentenceRow> sentencesByIds(List<String> ids) {
+    if (ids.isEmpty) return const [];
+    final marks = List.filled(ids.length, '?').join(',');
+    final byId = {for (final s in _sentences('s.id IN ($marks)', ids)) s.id: s};
+    return [for (final id in ids) ?byId[id]];
+  }
+
+  /// Graded stories in a language, easiest first.
+  List<DialogueRow> stories(String lang) => [
+    for (final r in _db.select(
+      "SELECT id, title, lines, level, pair_id FROM dialogue WHERE kind = 'story' AND lang = ? "
+      'ORDER BY level, id',
+      [lang],
+    ))
+      DialogueRow(
+        r['id'] as String,
+        r['title'] as String,
+        r['lines'] as int,
+        level: r['level'] as int,
+        pair: r['pair_id'] as String?,
+      ),
+  ];
+
+  /// The other-language version of a story, if there is one.
+  DialogueRow? storyPair(String pairId, String lang) {
+    for (final s in stories(lang)) {
+      if (s.pair == pairId) return s;
+    }
+    return null;
+  }
 
   /// The lines of one conversation, in speaking order.
   List<SentenceRow> dialogueLines(String dialogueId, String lang) =>
