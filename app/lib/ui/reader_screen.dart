@@ -2,6 +2,8 @@
 /// from what the learner did, not asked for.
 library;
 
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
@@ -13,6 +15,8 @@ import '../engine/signals.dart';
 import '../events/event_logger.dart';
 import 'mascot.dart';
 import 'ruby_text.dart';
+import '../engine/pronunciation.dart';
+import '../platform/speech.dart';
 
 class ReaderScreen extends StatefulWidget {
   const ReaderScreen({
@@ -57,6 +61,9 @@ class _ReaderScreenState extends State<ReaderScreen> {
   final Set<int> _revealedTokens = {};
   bool _showTranslation = false;
   int _audioPlays = 0;
+  Map<int, CharScore> _speech = const {};
+  String? _myRecording;
+  _Mic _mic = _Mic.idle;
   late ActiveMark _mark;
 
   // session totals for the summary
@@ -102,6 +109,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
     _revealedTokens.clear();
     _showTranslation = false;
     _audioPlays = 0;
+    _speech = const {};
+    _myRecording = null;
     _exposure++;
     _mark = _s.logger.mark();
     _s.logger.touch();
@@ -168,6 +177,86 @@ class _ReaderScreenState extends State<ReaderScreen> {
     } on Object catch (e) {
       if (mounted) _toast('Could not play audio: $e');
     }
+  }
+
+  Future<void> _readAloud() async {
+    final eng = _s.speech;
+    if (eng == null || _mic == _Mic.scoring) return;
+    _s.logger.touch();
+    if (_mic == _Mic.recording) {
+      setState(() => _mic = _Mic.scoring);
+      final samples = await eng.stopRecording();
+      final wav = File(
+        '${Directory.systemTemp.path}${Platform.pathSeparator}ducklearn_mine_$_exposure.wav',
+      )..writeAsBytesSync(writeWav16(samples));
+      _myRecording = wav.path;
+      // let the spinner paint before the (sub-second) recognition runs
+      await Future<void>.delayed(const Duration(milliseconds: 16));
+      _scoreSpeech(eng.recognise(samples, lang: widget.lang));
+      if (mounted) setState(() => _mic = _Mic.idle);
+      return;
+    }
+    if (!eng.installed) {
+      final ok = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => _ModelDownloadDialog(engine: eng),
+      );
+      if (ok != true || !mounted) return;
+    }
+    if (!await eng.canRecord()) {
+      _toast('DuckLearn needs the microphone to check your reading.');
+      return;
+    }
+    await eng.startRecording();
+    if (mounted) setState(() => _mic = _Mic.recording);
+  }
+
+  /// Compares the readings heard with the readings expected, character by character.
+  void scoreSpeechForTest(String heardText) => _scoreSpeech(heardText);
+
+  void _scoreSpeech(String heardText) {
+    final s = _sentence;
+    final heard = _s.content
+        .annotator(widget.lang)
+        .annotate(
+          widget.lang == 'yue'
+              ? _s.content.toTraditional(heardText)
+              : heardText,
+        )
+        .where((t) => t.kind == 'han' && t.reading != null)
+        .map((t) => t.reading!)
+        .toList();
+    final idx = [
+      for (var i = 0; i < s.tokens.length; i++)
+        if (s.tokens[i].kind == 'han' && s.tokens[i].reading != null) i,
+    ];
+    final score = scoreAttempt([
+      for (final i in idx) s.tokens[i].reading!,
+    ], heard);
+    final byToken = {
+      for (var k = 0; k < idx.length; k++) idx[k]: score.chars[k],
+    };
+    _s.logger.log('speech.attempt', {
+      'exposure_id': _exposureId,
+      'engine': 'sensevoice-int8',
+      'score': score.ratio,
+      'per_token': [
+        for (final c in score.chars)
+          {'expected': c.expected, 'heard': c.heard, 'v': c.verdict.name},
+      ],
+    });
+    setState(() {
+      _speech = byToken;
+      // A mispronounced character is a reading lapse, exactly like tapping to reveal.
+      for (final e in byToken.entries.where((e) => e.value.isError)) {
+        final id = s.tokens[e.key].itemId;
+        if (id != null) {
+          _revealed.add(id);
+          _revealedTokens.add(e.key);
+        }
+      }
+    });
   }
 
   void _toast(String text) => ScaffoldMessenger.of(context)
@@ -261,6 +350,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
             _play(slow: false),
         const SingleActivator(LogicalKeyboardKey.keyS): () => _play(slow: true),
         const SingleActivator(LogicalKeyboardKey.keyM): _toggleMeaning,
+        const SingleActivator(LogicalKeyboardKey.keyR): _readAloud,
       },
       child: Focus(
         autofocus: true,
@@ -365,6 +455,13 @@ class _ReaderScreenState extends State<ReaderScreen> {
                                     ScaffoldLevel.full,
                                 revealed: _revealedTokens.contains(i),
                                 flagged: s.tokens[i].flagged,
+                                mark: switch (_speech[i]?.verdict) {
+                                  Verdict.ok => SpeechMark.ok,
+                                  Verdict.tone => SpeechMark.tone,
+                                  Verdict.wrong => SpeechMark.wrong,
+                                  Verdict.missed => SpeechMark.missed,
+                                  null => null,
+                                },
                               ),
                           ],
                         ),
@@ -390,6 +487,20 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         ),
                       ],
                     ),
+                    if (_speech.isNotEmpty)
+                      _SpeechResult(
+                        scores: _speech.values.toList(),
+                        onPlayMine: _myRecording == null || _s.playFile == null
+                            ? null
+                            : () {
+                                _s.logger.log('item.audio', {
+                                  'exposure_id': _exposureId,
+                                  'scope': 'own_recording',
+                                });
+                                _s.playFile!(_myRecording!);
+                              },
+                        onPlayNative: () => _play(slow: false),
+                      ),
                     const SizedBox(height: 16),
                     _MeaningPanel(
                       open: _showTranslation,
@@ -407,6 +518,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
               onSlow: () => _play(slow: true),
               onSkip: () => _next(skipped: true),
               onNext: _next,
+              mic: _s.speech == null ? null : _mic,
+              onMic: _readAloud,
               // keyboard hints only where there is a keyboard
               showShortcuts:
                   wide &&
@@ -525,6 +638,8 @@ class _BottomBar extends StatelessWidget {
     required this.onSkip,
     required this.onNext,
     required this.showShortcuts,
+    this.mic,
+    this.onMic,
   });
 
   final bool isLast;
@@ -533,6 +648,8 @@ class _BottomBar extends StatelessWidget {
   final VoidCallback onSkip;
   final VoidCallback onNext;
   final bool showShortcuts;
+  final _Mic? mic;
+  final VoidCallback? onMic;
 
   @override
   Widget build(BuildContext context) {
@@ -561,6 +678,29 @@ class _BottomBar extends StatelessWidget {
                   onPressed: onSlow,
                   icon: const Icon(Icons.slow_motion_video_rounded),
                 ),
+                if (mic != null) ...[
+                  const SizedBox(width: 4),
+                  mic == _Mic.recording
+                      ? IconButton.filled(
+                          key: const ValueKey('mic'),
+                          tooltip: 'Stop and check',
+                          onPressed: onMic,
+                          icon: const Icon(Icons.stop_rounded),
+                        )
+                      : IconButton.outlined(
+                          key: const ValueKey('mic'),
+                          tooltip: 'Read aloud and check',
+                          onPressed: mic == _Mic.scoring ? null : onMic,
+                          icon: mic == _Mic.scoring
+                              ? const SizedBox.square(
+                                  dimension: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Icon(Icons.mic_rounded),
+                        ),
+                ],
                 const SizedBox(width: 4),
                 TextButton(onPressed: onSkip, child: const Text('Skip')),
                 const SizedBox(width: 4),
@@ -587,7 +727,7 @@ class _BottomBar extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 6),
                 child: Text(
-                  'Keys: Enter next · L listen · S slow · M meaning',
+                  'Keys: Enter next · L listen · S slow · R read aloud · M meaning',
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -814,6 +954,163 @@ class _SummaryScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+enum _Mic { idle, recording, scoring }
+
+/// "4 of 5 right · 1 tone off" plus what was said instead.
+class _SpeechResult extends StatelessWidget {
+  const _SpeechResult({
+    required this.scores,
+    this.onPlayMine,
+    this.onPlayNative,
+  });
+  final List<CharScore> scores;
+  final VoidCallback? onPlayMine;
+  final VoidCallback? onPlayNative;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final ok = scores.where((c) => c.verdict == Verdict.ok).length;
+    final tones = scores.where((c) => c.verdict == Verdict.tone).length;
+    final wrong = scores.where((c) => c.verdict == Verdict.wrong).length;
+    final missed = scores.where((c) => c.verdict == Verdict.missed).length;
+    final parts = [
+      '$ok of ${scores.length} right',
+      if (tones > 0) '$tones tone${tones == 1 ? '' : 's'} off',
+      if (wrong > 0) '$wrong different sound${wrong == 1 ? '' : 's'}',
+      if (missed > 0) '$missed not heard',
+    ];
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: Card(
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                parts.join(' · '),
+                key: const ValueKey('speech-result'),
+                style: theme.textTheme.titleSmall,
+              ),
+              for (final c in scores.where((c) => c.isError).take(4))
+                Text(
+                  "You said ${c.heard}, it's ${c.expected}",
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              if (ok == scores.length)
+                Text('Every sound right.', style: theme.textTheme.bodySmall),
+              const SizedBox(height: 8),
+              // Recognition hears sounds well but can "correct" a wrong tone into another
+              // real word (賣 heard as 買), so tones are left to the learner's own ear.
+              Text(
+                'Tones: listen to yours, then the native audio.',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 8,
+                children: [
+                  if (onPlayMine != null)
+                    OutlinedButton.icon(
+                      key: const ValueKey('play-mine'),
+                      onPressed: onPlayMine,
+                      icon: const Icon(Icons.record_voice_over_rounded),
+                      label: const Text('Play mine'),
+                    ),
+                  if (onPlayNative != null)
+                    OutlinedButton.icon(
+                      onPressed: onPlayNative,
+                      icon: const Icon(Icons.volume_up_rounded),
+                      label: const Text('Native'),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ModelDownloadDialog extends StatefulWidget {
+  const _ModelDownloadDialog({required this.engine});
+  final SpeechEngine engine;
+
+  @override
+  State<_ModelDownloadDialog> createState() => _ModelDownloadDialogState();
+}
+
+class _ModelDownloadDialogState extends State<_ModelDownloadDialog> {
+  double? _progress;
+  String? _error;
+
+  Future<void> _download() async {
+    setState(() {
+      _progress = 0;
+      _error = null;
+    });
+    try {
+      await widget.engine.install(
+        progress: (v) {
+          if (mounted) setState(() => _progress = v);
+        },
+      );
+      if (mounted) Navigator.of(context).pop(true);
+    } on Object catch (e) {
+      if (mounted) setState(() => _error = '$e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final busy = _progress != null && _error == null;
+    return AlertDialog(
+      title: const Text('Check your reading aloud'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "DuckLearn listens on this device and checks every character's sound and "
+            'tone. It needs a one-time download of the speech model '
+            '(${modelBytes ~/ 1000000} MB). Nothing you say leaves the device.',
+          ),
+          if (_progress != null) ...[
+            const SizedBox(height: 16),
+            LinearProgressIndicator(value: _progress),
+            const SizedBox(height: 6),
+            Text('${(100 * _progress!).round()}%'),
+          ],
+          if (_error != null) ...[
+            const SizedBox(height: 12),
+            Text(
+              'Download failed: $_error',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ],
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: busy ? null : () => Navigator.of(context).pop(false),
+          child: const Text('Not now'),
+        ),
+        FilledButton(
+          onPressed: busy ? null : _download,
+          child: Text(_error == null ? 'Download' : 'Try again'),
+        ),
+      ],
     );
   }
 }

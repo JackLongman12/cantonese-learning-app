@@ -119,6 +119,28 @@ class ContentDb {
     return Annotator(chars: chars, words: words);
   });
 
+  Map<String, String>? _toTrad;
+
+  /// Simplified -> traditional by character (Unihan), for recogniser output, which is
+  /// written in simplified characters. Ambiguous mappings keep the first variant; the
+  /// readings compared afterwards are what matter, not the exact character.
+  String toTraditional(String text) {
+    _toTrad ??= {
+      for (final r in _db.select(
+        "SELECT char, traditional FROM char_info WHERE traditional IS NOT NULL AND traditional != ''",
+      ))
+        r['char'] as String: String.fromCharCode(
+          (r['traditional'] as String).runes.first,
+        ),
+    };
+    return String.fromCharCodes(
+      text.runes.expand((c) {
+        final t = _toTrad![String.fromCharCode(c)];
+        return t == null ? [c] : t.runes;
+      }),
+    );
+  }
+
   /// Character-reading items per scenario, for progress bars.
   Map<String, Set<String>> charItemsByScenario(String lang) {
     final out = <String, Set<String>>{};

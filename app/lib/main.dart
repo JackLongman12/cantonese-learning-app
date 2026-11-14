@@ -13,6 +13,7 @@ import 'engine/learner_model.dart';
 import 'engine/memory.dart';
 import 'events/event_logger.dart';
 import 'events/event_store.dart';
+import 'platform/speech.dart';
 import 'ui/home_screen.dart';
 import 'ui/theme.dart';
 
@@ -68,11 +69,17 @@ Future<AppServices> _bootstrap() async {
     learner: learner,
     memory: memory,
     playAudio: createPlayAudio(),
+    playFile: (path) => _filePlayer.play(DeviceFileSource(path)),
+    speech: (Platform.isAndroid || Platform.isWindows || Platform.isMacOS)
+        ? SpeechEngine(Directory(p.join(support.path, 'models', 'sensevoice')))
+        : null,
   );
 }
 
 /// Plays a clip bundled under `assets/content/`. One player, so a new clip replaces the
 /// one still playing.
+final _filePlayer = AudioPlayer();
+
 PlayAudio createPlayAudio() {
   final player = AudioPlayer();
   return (path) async {

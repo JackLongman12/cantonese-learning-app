@@ -25,26 +25,26 @@ feature is judged against these gaps; anything that is only engagement mechanics
 
 The duck mascot is branding and gentle feedback only: no XP, no hearts, no streak guilt.
 
-## Pronunciation accuracy (planned; owner asked to consider it)
+## Pronunciation accuracy (built 2026-11-15: sound check on device; tones by ear)
 
-Goal: check that the learner says a character's sound, and especially its **tone**, correctly
-when reading aloud — the part a native-ear heritage speaker still gets wrong when reading
-unfamiliar characters.
-
-- **Mode:** "read aloud" on any sentence. Record → score each character → mark wrong tones in
-  the ruby line (e.g. said `si2`, expected `si6`). A mismatch counts as a reading lapse for that
-  `char_reading` item, exactly like tapping to reveal.
-- **Engines to evaluate (bake-off like TTS):**
-  - Azure Speech pronunciation assessment (strong for Mandarin with tone scoring; verify current
-    Cantonese `zh-HK` support).
-  - Local ASR on desktop (RTX 4060): SenseVoice or a Cantonese-tuned Whisper; convert the
-    transcript to Jyutping and compare syllable + tone per character.
-  - Tone-only check without ASR: pitch-contour (F0) extraction compared against the six
-    Cantonese tone shapes — useful offline and on the phone.
-- **Accept lazy sounds** (n→l, ng- dropped, gw→g) as correct, but note them (DESIGN §5 rule 9).
-- **Events:** `speech.attempt` already defined in EVENTS_SCHEMA.
-- **Where it fits:** Phase 4.4. Needs a microphone permission on Android/macOS and an engine
-  decision from the owner (Azure key vs local-only).
+- **Read aloud** button (mic, key R) in the reader. Recognition runs on the device with
+  SenseVoice (sherpa-onnx, int8, 240 MB, downloaded once on first use, nothing leaves the
+  device). Output is compared by **Jyutping, not characters** (`engine/pronunciation.dart`),
+  so homophones the recogniser writes (比/俾, 翻/返) don't count as errors. Lazy sounds
+  (n/l, dropped ng-, gw/g before o) are accepted.
+- Per character: ok / tone / wrong / missed, shown as coloured underlines; errors count as
+  reading lapses. `speech.attempt` is logged with readings only.
+- **Measured limits.** Recognition catches wrong *sounds* reliably (integration test:
+  睇 tai2 for 買 maai5 is flagged). It does **not** catch a tone slip that forms another real
+  word: a 賣 maai6 recording was transcribed as 買. A pitch-contour tone classifier
+  (pYIN + per-syllable timestamps, trained on 2,069 syllables of app audio) reached only 47%
+  tone accuracy and couldn't separate 買/賣, so it was not shipped: false "wrong tone"
+  marks would teach the learner to distrust the app.
+- **Tones are therefore checked by ear:** after reading aloud, "Play mine" and "Native"
+  play the two back to back. The learner is a native listener; this is the reliable judge.
+- Whisper (large-v3-turbo) was also tried and rejected: it rewrites Cantonese into Mandarin
+  wording (我喺屋企返工 -> 我在家上班).
+- Next, if wanted: a dedicated tone model trained on real (not TTS) Cantonese speech.
 
 ## Duck ideas (branding; build only where it supports learning)
 

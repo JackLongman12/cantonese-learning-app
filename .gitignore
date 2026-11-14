@@ -42,3 +42,6 @@ app/assets/content/
 content/readings.lock.json.tmp
 
 *.egg-info/
+
+# downloaded speech models (hundreds of MB)
+data/models/

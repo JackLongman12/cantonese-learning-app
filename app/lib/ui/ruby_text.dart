@@ -9,6 +9,8 @@ import 'package:material_ui/material_ui.dart';
 import '../engine/reading_format.dart';
 import '../engine/scaffold.dart';
 
+enum SpeechMark { ok, tone, wrong, missed }
+
 class RubyToken {
   const RubyToken({
     required this.surface,
@@ -17,6 +19,7 @@ class RubyToken {
     this.level = ScaffoldLevel.full,
     this.revealed = false,
     this.flagged = false,
+    this.mark,
   });
 
   final String surface;
@@ -31,6 +34,9 @@ class RubyToken {
 
   /// The reading has not been confirmed by a human yet.
   final bool flagged;
+
+  /// Read-aloud result for this character, shown as a coloured underline.
+  final SpeechMark? mark;
 
   bool get isHan => kind == 'han';
 }
@@ -128,11 +134,17 @@ class RubyText extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    width: 2,
-                    color:
+                    width: t.mark == null ? 2 : 4,
+                    color: switch (t.mark) {
+                      SpeechMark.ok => const Color(0xFF2F6F62),
+                      SpeechMark.tone => const Color(0xFFB8892B),
+                      SpeechMark.wrong => scheme.error,
+                      SpeechMark.missed => scheme.outline,
+                      null =>
                         t.isHan && !t.revealed && t.level == ScaffoldLevel.tap
-                        ? scheme.outlineVariant
-                        : Colors.transparent,
+                            ? scheme.outlineVariant
+                            : Colors.transparent,
+                    },
                   ),
                 ),
               ),
