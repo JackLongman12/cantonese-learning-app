@@ -18,10 +18,6 @@ void main() {
       'DuckLearn-android-arm64.apk',
     );
     expect(
-      assetNameFor(os: 'android', dartVersion: '3.14 on "android_arm"'),
-      'DuckLearn-android-arm32.apk',
-    );
-    expect(
       assetNameFor(os: 'windows', dartVersion: ''),
       'DuckLearn-windows-x64.zip',
     );

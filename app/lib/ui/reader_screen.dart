@@ -529,7 +529,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         child: RubyText(
                           lang: widget.lang,
                           onReveal: _reveal,
-                          fontSize: wide ? 44 : 34,
+                          fontSize: (wide ? 44 : 34) * _s.prefs.textScale,
                           tokens: [
                             for (var i = 0; i < s.tokens.length; i++)
                               RubyToken(

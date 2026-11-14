@@ -21,6 +21,9 @@ class ShareInbox {
   static const _channel = MethodChannel('ducklearn/share');
   final _incoming = StreamController<String>.broadcast();
 
+  /// Hand text to the app as if it had been shared (desktop hotkey).
+  void deliver(String text) => _incoming.add(text);
+
   /// Text shared while the app was already open.
   Stream<String> get incoming => _incoming.stream;
 

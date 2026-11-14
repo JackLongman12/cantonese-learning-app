@@ -32,7 +32,7 @@ class StoriesScreen extends StatefulWidget {
 }
 
 class _StoriesScreenState extends State<StoriesScreen> {
-  bool _readAlong = false;
+  late bool _readAlong = _s.prefs.readAlong;
 
   AppServices get _s => widget.services;
 
@@ -99,7 +99,8 @@ class _StoriesScreenState extends State<StoriesScreen> {
                     'Each line plays as it appears. Turn off to test yourself.',
                   ),
                   value: _readAlong,
-                  onChanged: (v) => setState(() => _readAlong = v),
+                  onChanged: (v) =>
+                      setState(() => _s.prefs.readAlong = _readAlong = v),
                 ),
                 const SizedBox(height: 4),
                 if (stories.isEmpty)

@@ -1,7 +1,7 @@
 /// Auto-update from GitHub Releases (public repo, no token needed).
 ///
 /// Releases are tagged `b<build number>` and carry assets named
-///   DuckLearn-android-arm64.apk, DuckLearn-android-arm32.apk, DuckLearn-windows-x64.zip
+///   DuckLearn-android-arm64.apk (and DuckLearn-windows-x64.zip once Windows releases resume)
 /// (see tool/release.sh). The app compares the release's build number with its own and,
 /// if newer, downloads the right asset and hands it to the platform installer.
 library;
@@ -33,11 +33,7 @@ class UpdateInfo {
 
 /// Which release asset this device needs, or null where updates aren't supported.
 String? assetNameFor({required String os, required String dartVersion}) {
-  if (os == 'android') {
-    return dartVersion.contains('android_arm64') || dartVersion.contains('x64')
-        ? 'DuckLearn-android-arm64.apk'
-        : 'DuckLearn-android-arm32.apk';
-  }
+  if (os == 'android') return 'DuckLearn-android-arm64.apk'; // arm64 only
   if (os == 'windows') return 'DuckLearn-windows-x64.zip';
   return null; // macOS later
 }

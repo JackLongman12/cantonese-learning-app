@@ -16,6 +16,8 @@ import 'mascot.dart';
 import 'paste_reader_screen.dart';
 import 'reader_screen.dart';
 import 'practice_screens.dart';
+import '../platform/home_widget_sync.dart';
+import 'settings_screen.dart';
 import 'stories_screen.dart';
 import 'topic_screen.dart';
 import 'update_ui.dart';
@@ -85,6 +87,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   /// Offer to read copied Chinese text. On Android reading the clipboard shows a system
   /// notice, so we only ask whether there is text and read it when the learner taps.
   Future<void> _checkClipboard() async {
+    if (!_s.prefs.clipboardPrompt) {
+      if (_clip != null) setState(() => _clip = null);
+      return;
+    }
     String? clip;
     try {
       if (Platform.isAndroid) {
@@ -238,6 +244,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         .where((x) => x.due != null && !x.due!.isAfter(now))
         .length;
     final totalChars = itemsByScenario.values.expand((x) => x).toSet().length;
+    unawaited(syncHomeWidget(due: due, known: solid));
 
     return Scaffold(
       body: SafeArea(
@@ -257,6 +264,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         style: theme.textTheme.titleLarge,
                         overflow: TextOverflow.ellipsis,
                       ),
+                    ),
+                    IconButton(
+                      key: const ValueKey('open-settings'),
+                      tooltip: 'Settings',
+                      onPressed: () async {
+                        await _push(SettingsScreen(services: _s));
+                        setState(() => _lang = _s.prefs.lang);
+                      },
+                      icon: const Icon(Icons.settings_rounded),
                     ),
                     SegmentedButton<String>(
                       showSelectedIcon: false,

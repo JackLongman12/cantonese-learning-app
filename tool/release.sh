@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds and publishes a DuckLearn release to GitHub Releases. Installed apps check the
+# Builds and publishes a DuckLearn release (Android arm64) to GitHub Releases. Installed apps check the
 # latest release on launch and offer to update (app/lib/platform/updater.dart).
 #
 #   bash tool/release.sh            # from the repo root, on the dev PC (Git Bash)
@@ -34,17 +34,17 @@ echo "== content"
 
 echo "== builds"
 cd app
-"$FLUTTER" build apk --release --split-per-abi --target-platform android-arm,android-arm64 \
+"$FLUTTER" build apk --release --split-per-abi --target-platform android-arm64 \
   --build-name "$NAME" --build-number "$BUILD" | grep -E "Built|rror"
-"$FLUTTER" build windows --release --build-name "$NAME" --build-number "$BUILD" | grep -E "Built|rror"
+# Windows releases are paused (owner, 2026-11-15).
+# "$FLUTTER" build windows --release --build-name "$NAME" --build-number "$BUILD" | grep -E "Built|rror"
 cd ..
 
 OUT=build/release
 rm -rf "$OUT"
 mkdir -p "$OUT"
 cp app/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk "$OUT/DuckLearn-android-arm64.apk"
-cp app/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk "$OUT/DuckLearn-android-arm32.apk"
-powershell -NoProfile -Command "Compress-Archive -Path 'app\\build\\windows\\x64\\runner\\Release\\*' -DestinationPath '$OUT\\DuckLearn-windows-x64.zip' -Force"
+# powershell -NoProfile -Command "Compress-Archive -Path 'app\\build\\windows\\x64\\runner\\Release\\*' -DestinationPath '$OUT\\DuckLearn-windows-x64.zip' -Force"
 
 PREV=$(git describe --tags --abbrev=0 --match 'b*' 2>/dev/null || true)
 NOTES=$(git log --no-merges --format='- %s' ${PREV:+$PREV..}HEAD | head -30)

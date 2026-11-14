@@ -37,6 +37,28 @@ class Prefs {
   void setLastTopic(String lang, String scenarioId) =>
       _set('last_topic_$lang', scenarioId);
 
+  /// Jyutping help: +1 more, 0 normal, -1 less (shifts every character's fade level).
+  int get helpShift => (_data['help_shift'] as num?)?.toInt() ?? 0;
+  set helpShift(int v) => _set('help_shift', v);
+
+  /// Reader text size multiplier.
+  double get textScale => (_data['text_scale'] as num?)?.toDouble() ?? 1.0;
+  set textScale(double v) => _set('text_scale', v);
+
+  /// Stories start in read-along mode.
+  bool get readAlong => _data['read_along'] == true;
+  set readAlong(bool v) => _set('read_along', v);
+
+  /// Offer to read copied Chinese text when the app opens.
+  bool get clipboardPrompt => _data['clipboard_prompt'] != false;
+  set clipboardPrompt(bool v) => _set('clipboard_prompt', v);
+
+  /// Daily reminder: off by default; null minute = use the learned usual time.
+  bool get reminderOn => _data['reminder_on'] == true;
+  set reminderOn(bool v) => _set('reminder_on', v);
+  int? get reminderMinute => (_data['reminder_minute'] as num?)?.toInt();
+  set reminderMinute(int? v) => _set('reminder_minute', v);
+
   /// A session left part-way: offered as "Resume" on the home screen.
   Map<String, Object?>? get resume =>
       (_data['resume'] as Map?)?.cast<String, Object?>();

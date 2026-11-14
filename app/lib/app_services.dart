@@ -9,6 +9,7 @@ import 'engine/planner.dart';
 import 'engine/scaffold.dart';
 import 'engine/signals.dart';
 import 'events/event_logger.dart';
+import 'platform/reminders.dart';
 import 'platform/share_inbox.dart';
 import 'platform/updater.dart';
 import 'platform/speech.dart';
@@ -31,7 +32,7 @@ class AppServices {
     Prefs? prefs,
     ShareInbox? shares,
     this.updater,
-    this.scaffold = const ScaffoldPolicy(),
+    this.reminders,
     this.signals = const SignalPolicy(),
     this.planner = const Planner(),
   }) : prefs = prefs ?? Prefs.memory(),
@@ -53,7 +54,12 @@ class AppServices {
 
   /// Checks GitHub Releases for a newer build (null in tests).
   final Updater? updater;
-  final ScaffoldPolicy scaffold;
+
+  /// Daily reminder (Android; null in tests).
+  final Reminders? reminders;
+
+  /// Fade rules, shifted by the learner's "Jyutping help" setting.
+  ScaffoldPolicy get scaffold => ScaffoldPolicy(shift: prefs.helpShift);
   final SignalPolicy signals;
   final Planner planner;
 }

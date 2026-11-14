@@ -14,6 +14,7 @@ import 'engine/learner_model.dart';
 import 'engine/memory.dart';
 import 'events/event_logger.dart';
 import 'events/event_store.dart';
+import 'platform/reminders.dart';
 import 'platform/speech.dart';
 import 'platform/updater.dart';
 import 'ui/home_screen.dart';
@@ -74,6 +75,7 @@ Future<AppServices> _bootstrap() async {
     playFile: (path) => _filePlayer.play(DeviceFileSource(path)),
     prefs: Prefs(File(p.join(support.path, 'prefs.json'))),
     updater: Updater(),
+    reminders: Platform.isAndroid ? Reminders() : null,
     speech: (Platform.isAndroid || Platform.isWindows || Platform.isMacOS)
         ? SpeechEngine(Directory(p.join(support.path, 'models', 'sensevoice')))
         : null,

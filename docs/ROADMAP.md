@@ -180,8 +180,12 @@ Built: Android Share and text-selection "Read in DuckLearn"; clipboard prompt on
 (Android: asks only whether text exists, reads on tap, so no system clipboard notice);
 remembers language and last topic ("Continue" card); session length 5/15/30; swipe left for
 next; one "drafts" note per topic instead of a Draft tag on every sentence.
-Not yet: Android home-screen widget, reminders at the learner's usual time, desktop global
-hotkey, auto-resume of a half-finished session.
+Also built: resume a half-finished session; Android home-screen widget (characters to review);
+daily reminder at the learner's usual study time (learned from session starts, inexact, off by
+default); Settings screen (language, Jyutping help more/normal/less, text size, session length,
+read-along, clipboard prompt, reminder, speech model, updates, licences).
+Paused by the owner (2026-11-15): Windows releases and the Windows global hotkey; arm32 builds
+dropped (arm64 only).
 
 ## Learning techniques (2026-11-15)
 
