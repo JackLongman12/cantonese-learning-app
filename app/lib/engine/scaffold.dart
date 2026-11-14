@@ -54,9 +54,3 @@ class ScaffoldPolicy {
     return ScaffoldLevel.values[i];
   }
 }
-
-/// Tone of a Jyutping or numbered-Pinyin syllable ("hong4" -> "4").
-String toneOf(String reading) {
-  final m = RegExp(r'[1-6]$').firstMatch(reading);
-  return m == null ? '' : m.group(0)!;
-}

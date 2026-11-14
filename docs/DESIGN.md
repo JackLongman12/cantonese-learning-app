@@ -197,7 +197,8 @@ If an event older than one already applied arrives (merged from another device),
 4. **Polyphones.** Cantonese readings need two independent sources (ToJyutping, pycantonese) to agree; Unihan confirms a lone source and picks the default while a disagreement waits in `build/review_queue.md`. Curated word overrides live in `content/overrides/readings.yaml`. Two sources can agree on a formal reading where speech differs (聲 sing1/seng1), so the owner's ear remains the final check.
 5. **Colloquial vs literary readings** (聽 teng1/ting1, 平 peng4/ping4) are separate `char_reading` items, tagged.
 6. **Place-name readings** override dictionary defaults (涌 cung1 in HK place names; 氹 tam5).
-7. **Mandarin tone sandhi:** store citation tones; optionally display sandhi for 不/一/third-tone as a setting.
+7. **Display form.** Cantonese is shown as Jyutping (`hong4`). Mandarin is shown as Hanyu Pinyin with tone marks (`háng`); it is only *stored* numbered (`hang2`) so item ids stay plain ASCII (`engine/reading_format.dart`).
+7a. **Mandarin tone sandhi:** store citation tones; optionally display sandhi for 不/一/third-tone as a setting.
 8. **Registers:** every sentence is tagged `spoken` (written Cantonese) or `written` (standard written Chinese read in Cantonese). Both are taught.
 9. **Lazy sounds** (n→l, dropped ng-) are accepted in read-aloud checks and noted, not marked wrong.
 

@@ -6,6 +6,7 @@ library;
 
 import 'package:material_ui/material_ui.dart';
 
+import '../engine/reading_format.dart';
 import '../engine/scaffold.dart';
 
 class RubyToken {
@@ -82,12 +83,12 @@ class RubyText extends StatelessWidget {
       if (!t.isHan || t.reading == null) {
         ruby = '';
       } else if (t.revealed) {
-        ruby = t.reading!;
+        ruby = displayReading(lang, t.reading!);
         rubyColor = scheme.error;
       } else {
         ruby = switch (t.level) {
-          ScaffoldLevel.full => t.reading!,
-          ScaffoldLevel.hint => toneOf(t.reading!),
+          ScaffoldLevel.full => displayReading(lang, t.reading!),
+          ScaffoldLevel.hint => displayToneHint(lang, t.reading!),
           ScaffoldLevel.tap || ScaffoldLevel.none => '',
         };
         if (t.flagged) rubyColor = scheme.tertiary;

@@ -140,12 +140,6 @@ void main() {
         ScaffoldLevel.full,
       );
     });
-
-    test('toneOf', () {
-      expect(toneOf('hong4'), '4');
-      expect(toneOf('lü3'), '3');
-      expect(toneOf('MOP'), '');
-    });
   });
 
   group('signals', () {

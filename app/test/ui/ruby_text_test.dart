@@ -105,6 +105,7 @@ void main() {
         ),
       ),
     );
+    expect(rubyAt(t, 0), 'fā'); // Mandarin is shown as tone-marked Pinyin
     final style = t.widget<Text>(find.text('发')).style!;
     expect(style.fontFamily, 'NotoSansSC');
     expect(style.locale, const Locale('zh', 'CN'));
