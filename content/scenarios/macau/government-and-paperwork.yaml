@@ -1,0 +1,112 @@
+# Drafted by an LLM. Every line stays reviewed: false until the owner has read it aloud
+# and confirmed both the wording and the readings in build/review_queue.md.
+scenario:
+  id: scn-mo-gov
+  title: Banks, post and paperwork
+  region: macau
+  tags: [paperwork, bank, post]
+
+defaults: {register: spoken, source: llm}
+
+# `pattern` groups variations of one sentence frame so the planner spreads them out.
+sentences:
+  - {id: sent-mo-gov-001, yue: 我想開戶口。, en: "I'd like to open an account.", pattern: bank, region: both}
+  - {id: sent-mo-gov-002, yue: 開戶口要帶咩文件？, en: "What documents do I need to open an account?", pattern: bank, region: both}
+  - {id: sent-mo-gov-003, yue: 我想存錢。, en: "I'd like to deposit money.", pattern: bank, region: both}
+  - {id: sent-mo-gov-004, yue: 我想攞錢。, en: "I'd like to withdraw money.", pattern: bank, region: both}
+  - {id: sent-mo-gov-005, yue: 我想過數俾人。, en: "I'd like to transfer money to someone.", pattern: bank, region: both}
+  - {id: sent-mo-gov-006, yue: 呢張支票我想入數。, en: "I'd like to pay in this cheque.", pattern: bank, region: both}
+  - {id: sent-mo-gov-007, yue: 部櫃員機食咗我張卡。, en: "The cash machine swallowed my card.", pattern: bank, region: both}
+  - {id: sent-mo-gov-008, yue: 我唔記得密碼。, en: "I've forgotten my PIN.", pattern: bank, region: both}
+  - {id: sent-mo-gov-009, yue: 我想改地址。, en: "I'd like to change my address.", pattern: forms, region: both}
+  - {id: sent-mo-gov-010, yue: 我想補領身份證。, en: "I'd like to replace my ID card.", pattern: id, region: both}
+  - {id: sent-mo-gov-011, yue: 我想續期。, en: "I'd like to renew it.", pattern: id, region: both}
+  - {id: sent-mo-gov-012, yue: 使唔使影相？, en: "Do I need a photo?", pattern: id, region: both}
+  - {id: sent-mo-gov-013, yue: 要等幾耐先攞到？, en: "How long until I can collect it?", pattern: id, region: both}
+  - {id: sent-mo-gov-014, yue: 使唔使預約？, en: "Do I need an appointment?", pattern: office, region: both}
+  - {id: sent-mo-gov-015, yue: 喺邊度攞籌？, en: "Where do I take a queue number?", pattern: office, region: both}
+  - {id: sent-mo-gov-016, yue: 而家叫到幾多號？, en: "What number are they calling now?", pattern: office, region: both}
+  - {id: sent-mo-gov-017, yue: 我係一百二十三號。, en: "I'm number 123.", pattern: office, region: both}
+  - {id: sent-mo-gov-018, yue: 請問呢度係咪排隊？, en: "Excuse me, is this the queue?", pattern: office, region: both}
+  - {id: sent-mo-gov-019, yue: 呢份表點填？, en: "How do I fill in this form?", pattern: forms, region: both}
+  - {id: sent-mo-gov-020, yue: 呢度要簽名。, en: "You need to sign here.", pattern: forms, region: both}
+  - {id: sent-mo-gov-021, yue: 用中文定英文填？, en: "Do I fill it in in Chinese or English?", pattern: forms, region: both}
+  - {id: sent-mo-gov-022, yue: 我唔識寫呢個字。, en: "I don't know how to write this character.", pattern: forms, region: both}
+  - {id: sent-mo-gov-023, yue: 可唔可以幫我填？, en: "Could you fill it in for me?", pattern: forms, region: both}
+  - {id: sent-mo-gov-024, yue: 姓名寫喺邊度？, en: "Where do I write my name?", pattern: forms, region: both}
+  - {id: sent-mo-gov-025, yue: 出生日期點寫？, en: "How do I write my date of birth?", pattern: forms, region: both}
+  - {id: sent-mo-gov-026, yue: 使唔使影印本？, en: "Do you need a photocopy?", pattern: forms, region: both}
+  - {id: sent-mo-gov-027, yue: 邊度可以影印？, en: "Where can I make a photocopy?", pattern: forms, region: both}
+  - {id: sent-mo-gov-028, yue: 我帶齊文件喇。, en: "I've brought all the documents.", pattern: forms, region: both}
+  - {id: sent-mo-gov-029, yue: 仲差咩文件？, en: "What documents am I still missing?", pattern: forms, region: both}
+  - {id: sent-mo-gov-030, yue: 手續費幾多錢？, en: "How much is the processing fee?", pattern: fees, region: both}
+  - {id: sent-mo-gov-031, yue: 可唔可以網上申請？, en: "Can I apply online?", pattern: online, region: both}
+  - {id: sent-mo-gov-032, yue: 網上登記唔到。, en: "I can't register online.", pattern: online, region: both}
+  - {id: sent-mo-gov-033, yue: 我收唔到驗證碼。, en: "I'm not receiving the verification code.", pattern: online, region: both}
+  - {id: sent-mo-gov-034, yue: 我想寄信。, en: "I'd like to send a letter.", pattern: post, region: both}
+  - {id: sent-mo-gov-035, yue: 寄去香港要幾多錢？, en: "How much to send it to Hong Kong?", pattern: post}
+  - {id: sent-mo-gov-036, yue: 寄掛號。, en: "Registered mail, please.", pattern: post, region: both}
+  - {id: sent-mo-gov-037, yue: 幾時寄到？, en: "When will it arrive?", pattern: post, region: both}
+  - {id: sent-mo-gov-038, yue: 我想買郵票。, en: "I'd like to buy stamps.", pattern: post, region: both}
+  - {id: sent-mo-gov-039, yue: 我有個包裹要拎。, en: "I have a parcel to collect.", pattern: post, region: both}
+  - {id: sent-mo-gov-040, yue: 呢度有冇郵筒？, en: "Is there a postbox here?", pattern: post, region: both}
+  - {id: sent-mo-gov-041, yue: 我收到張告票。, en: "I got a ticket (a fine).", pattern: fines, region: both}
+  - {id: sent-mo-gov-042, yue: 喺邊度交罰款？, en: "Where do I pay the fine?", pattern: fines, region: both}
+  - {id: sent-mo-gov-043, yue: 我想問下交稅嘅問題。, en: "I'd like to ask about tax.", pattern: tax, region: both}
+  - {id: sent-mo-gov-044, yue: 幾時要報稅？, en: "When do I need to file my tax return?", pattern: tax, region: both}
+  - {id: sent-mo-gov-045, yue: 我想申請簽證。, en: "I'd like to apply for a visa.", pattern: visa, region: both}
+  - {id: sent-mo-gov-046, yue: 我個簽證就快到期。, en: "My visa is about to expire.", pattern: visa, region: both}
+  - {id: sent-mo-gov-047, yue: 我想續簽證。, en: "I'd like to extend my visa.", pattern: visa, region: both}
+  - {id: sent-mo-gov-048, yue: 我想報名考車牌。, en: "I'd like to sign up for the driving test.", pattern: license, region: both}
+  - {id: sent-mo-gov-049, yue: 我搬咗屋，使唔使通知你哋？, en: "I've moved, do I need to tell you?", pattern: forms, region: both}
+  - {id: sent-mo-gov-050, yue: 辦公時間係幾點到幾點？, en: "What are the office hours?", pattern: office, region: both}
+  - {id: sent-mo-gov-051, yue: 星期六開唔開門？, en: "Are you open on Saturdays?", pattern: office, region: both}
+  - {id: sent-mo-gov-052, yue: 午飯時間唔辦公。, en: "Closed over lunchtime.", pattern: office, region: both}
+  - {id: sent-mo-gov-053, yue: 我想搵負責人。, en: "I'd like to speak to the person in charge.", pattern: office, region: both}
+  - {id: sent-mo-gov-054, yue: 我想投訴。, en: "I'd like to make a complaint.", pattern: office, region: both}
+  - {id: sent-mo-gov-055, yue: 你可唔可以講慢啲？, en: "Could you speak a bit more slowly?", pattern: office, region: both}
+  - {id: sent-mo-gov-056, yue: 我唔係好明，可唔可以再解釋下？, en: "I don't quite get it, could you explain again?", pattern: office, region: both}
+  - {id: sent-mo-gov-057, yue: 等我寫低先。, en: "Let me write that down.", pattern: office, region: both}
+  - {id: sent-mo-gov-058, yue: 有冇電話可以查詢？, en: "Is there a phone number for enquiries?", pattern: office, region: both}
+  - {id: sent-mo-gov-059, yue: 我想約個時間。, en: "I'd like to make an appointment.", pattern: office, region: both}
+  - {id: sent-mo-gov-060, yue: 我遲咗，仲得唔得？, en: "I'm late, is it still OK?", pattern: office, region: both}
+  - {id: sent-mo-gov-061, yue: 張證幾時到期？, en: "When does the card expire?", pattern: id, region: both}
+  - {id: sent-mo-gov-062, yue: 我想改名。, en: "I'd like to change my name.", pattern: id, region: both}
+  - {id: sent-mo-gov-063, yue: 呢個係我嘅證件。, en: "This is my ID.", pattern: id, region: both}
+  - {id: sent-mo-gov-064, yue: 我冇帶身份證。, en: "I didn't bring my ID card.", pattern: id, region: both}
+  - {id: sent-mo-gov-065, yue: 用護照得唔得？, en: "Can I use my passport?", pattern: id, region: both}
+  - {id: sent-mo-gov-066, yue: 我想申請回鄉證。, en: "I'd like to apply for a Home Return Permit.", pattern: id, region: both}
+  - {id: sent-mo-gov-067, yue: 我想查下戶口有幾多錢。, en: "I'd like to check my account balance.", pattern: bank, region: both}
+  - {id: sent-mo-gov-068, yue: 銀行幾點關門？, en: "What time does the bank close?", pattern: bank, region: both}
+  - {id: sent-mo-gov-069, yue: 我想換張新卡。, en: "I'd like a new card.", pattern: bank, region: both}
+  - {id: sent-mo-gov-070, yue: 我張卡唔見咗，想停咗佢。, en: "I've lost my card and want to cancel it.", pattern: bank, region: both}
+  - {id: sent-mo-gov-071, yue: 網上銀行點用？, en: "How do I use online banking?", pattern: bank, region: both}
+  - {id: sent-mo-gov-072, yue: 每個月使唔使俾手續費？, en: "Is there a monthly fee?", pattern: bank, region: both}
+  - {id: sent-mo-gov-073, yue: 利息幾多？, en: "What's the interest rate?", pattern: bank, region: both}
+  - {id: sent-mo-gov-074, yue: 我想問下借錢嘅事。, en: "I'd like to ask about a loan.", pattern: bank, region: both}
+  - {id: sent-mo-gov-075, yue: 我要交水電煤。, en: "I need to pay the water, electricity and gas bills.", pattern: bills, region: both}
+  - {id: sent-mo-gov-076, yue: 可唔可以自動轉賬？, en: "Can it be paid by direct debit?", pattern: bills, region: both}
+  - {id: sent-mo-gov-077, yue: 張單過咗期。, en: "The bill is overdue.", pattern: bills, region: both}
+  - {id: sent-mo-gov-078, yue: 我想取消呢個服務。, en: "I'd like to cancel this service.", pattern: bills, region: both}
+  - {id: sent-mo-gov-079, yue: 我想申請上網。, en: "I'd like to sign up for internet.", pattern: bills, region: both}
+  - {id: sent-mo-gov-080, yue: 我想轉第二間公司。, en: "I'd like to switch to another company.", pattern: bills, region: both}
+  - {id: sent-mo-gov-081, yue: 合約仲有幾耐？, en: "How long is left on the contract?", pattern: bills, region: both}
+  - {id: sent-mo-gov-082, yue: 我要搵律師。, en: "I need to get a lawyer.", pattern: legal, region: both}
+  - {id: sent-mo-gov-083, yue: 呢份合約我要睇清楚先。, en: "I need to read this contract carefully first.", pattern: legal, region: both}
+  - {id: sent-mo-gov-084, yue: 呢度使唔使蓋印？, en: "Does this need a stamp?", pattern: forms, region: both}
+  - {id: sent-mo-gov-085, yue: 正本定副本？, en: "Original or copy?", pattern: forms, region: both}
+  - {id: sent-mo-gov-086, yue: 我想攞返正本。, en: "I'd like the original back.", pattern: forms, region: both}
+  - {id: sent-mo-gov-087, yue: 唔該喺呢度填你嘅地址。, en: "Please fill in your address here.", pattern: forms, region: both}
+  - {id: sent-mo-gov-088, yue: 電話號碼都要填埋。, en: "Fill in the phone number as well.", pattern: forms, region: both}
+  - {id: sent-mo-gov-089, yue: 電郵地址寫錯咗。, en: "The email address is wrong.", pattern: forms, region: both}
+  - {id: sent-mo-gov-090, yue: 我想更正資料。, en: "I'd like to correct my details.", pattern: forms, region: both}
+  - {id: sent-mo-gov-091, yue: 批咗未？, en: "Has it been approved?", pattern: status, region: both}
+  - {id: sent-mo-gov-092, yue: 申請唔成功。, en: "The application wasn't successful.", pattern: status, region: both}
+  - {id: sent-mo-gov-093, yue: 點解唔批？, en: "Why wasn't it approved?", pattern: status, region: both}
+  - {id: sent-mo-gov-094, yue: 可唔可以再申請？, en: "Can I apply again?", pattern: status, region: both}
+  - {id: sent-mo-gov-095, yue: 有結果會通知你。, en: "We'll let you know when there's a result.", pattern: status, region: both}
+  - {id: sent-mo-gov-096, yue: 我哋會發短訊俾你。, en: "We'll send you a text message.", pattern: status, region: both}
+  - {id: sent-mo-gov-097, yue: 我想查下進度。, en: "I'd like to check the progress.", pattern: status, region: both}
+  - {id: sent-mo-gov-098, yue: 編號係幾多？, en: "What's the reference number?", pattern: status, region: both}
+  - {id: sent-mo-gov-099, yue: 唔該晒你幫手。, en: "Thanks so much for your help.", pattern: polite, region: both}
+  - {id: sent-mo-gov-100, yue: 辛苦晒。, en: "Thanks for all your trouble.", pattern: polite, region: both}

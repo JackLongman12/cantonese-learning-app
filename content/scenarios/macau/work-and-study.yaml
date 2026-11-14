@@ -1,0 +1,112 @@
+# Drafted by an LLM. Every line stays reviewed: false until the owner has read it aloud
+# and confirmed both the wording and the readings in build/review_queue.md.
+scenario:
+  id: scn-mo-work
+  title: Work and study
+  region: macau
+  tags: [work, study]
+
+defaults: {register: spoken, source: llm}
+
+# `pattern` groups variations of one sentence frame so the planner spreads them out.
+sentences:
+  - {id: sent-mo-work-001, yue: 你做咩工㗎？, en: "What do you do for work?", pattern: job, region: both}
+  - {id: sent-mo-work-002, yue: 我喺酒店做嘢。, en: "I work at a hotel.", pattern: job, region: both}
+  - {id: sent-mo-work-003, yue: 我喺賭場返工。, en: "I work at a casino.", pattern: job}
+  - {id: sent-mo-work-004, yue: 我做文員。, en: "I'm an office clerk.", pattern: job, region: both}
+  - {id: sent-mo-work-005, yue: 我自己做生意。, en: "I run my own business.", pattern: job, region: both}
+  - {id: sent-mo-work-006, yue: 我而家搵緊工。, en: "I'm looking for a job.", pattern: job, region: both}
+  - {id: sent-mo-work-007, yue: 我聽日去見工。, en: "I have a job interview tomorrow.", pattern: interview, region: both}
+  - {id: sent-mo-work-008, yue: 幾時可以開工？, en: "When can I start?", pattern: interview, region: both}
+  - {id: sent-mo-work-009, yue: 人工幾多？, en: "What's the salary?", pattern: interview, region: both}
+  - {id: sent-mo-work-010, yue: 有冇雙糧？, en: "Is there a thirteenth-month bonus?", pattern: interview, region: both}
+  - {id: sent-mo-work-011, yue: 一個禮拜做幾多日？, en: "How many days a week?", pattern: interview, region: both}
+  - {id: sent-mo-work-012, yue: 使唔使輪更？, en: "Is it shift work?", pattern: interview, region: both}
+  - {id: sent-mo-work-013, yue: 我做夜更。, en: "I'm on the night shift.", pattern: shift, region: both}
+  - {id: sent-mo-work-014, yue: 我今日返早更。, en: "I'm on the early shift today.", pattern: shift, region: both}
+  - {id: sent-mo-work-015, yue: 你幾點放工？, en: "What time do you finish work?", pattern: shift, region: both}
+  - {id: sent-mo-work-016, yue: 我今日要OT。, en: "I have to work overtime today.", pattern: shift, region: both}
+  - {id: sent-mo-work-017, yue: 今日好多嘢做。, en: "Lots to do today.", pattern: office, region: both}
+  - {id: sent-mo-work-018, yue: 老細搵你。, en: "The boss is looking for you.", pattern: office, region: both}
+  - {id: sent-mo-work-019, yue: 幾點開會？, en: "What time is the meeting?", pattern: office, region: both}
+  - {id: sent-mo-work-020, yue: 個會改咗時間。, en: "The meeting has been rescheduled.", pattern: office, region: both}
+  - {id: sent-mo-work-021, yue: 我聽日放假。, en: "I'm off tomorrow.", pattern: leave, region: both}
+  - {id: sent-mo-work-022, yue: 我想請一日假。, en: "I'd like to take a day off.", pattern: leave, region: both}
+  - {id: sent-mo-work-023, yue: 我今年仲有幾多日假？, en: "How many days of leave do I have left this year?", pattern: leave, region: both}
+  - {id: sent-mo-work-024, yue: 出糧喇！, en: "Payday!", pattern: pay, region: both}
+  - {id: sent-mo-work-025, yue: 幾號出糧？, en: "What day is payday?", pattern: pay, region: both}
+  - {id: sent-mo-work-026, yue: 份工好辛苦。, en: "The job is really tough.", pattern: feel, region: both}
+  - {id: sent-mo-work-027, yue: 我想轉工。, en: "I want to change jobs.", pattern: job, region: both}
+  - {id: sent-mo-work-028, yue: 我辭咗職。, en: "I've quit my job.", pattern: job, region: both}
+  - {id: sent-mo-work-029, yue: 我俾人炒咗。, en: "I got fired.", pattern: job, region: both}
+  - {id: sent-mo-work-030, yue: 啲同事人好好。, en: "My colleagues are really nice.", pattern: people, region: both}
+  - {id: sent-mo-work-031, yue: 我同事今日病咗。, en: "My colleague is off sick today.", pattern: people, region: both}
+  - {id: sent-mo-work-032, yue: 可唔可以幫我睇下呢份文件？, en: "Could you look over this document for me?", pattern: office, region: both}
+  - {id: sent-mo-work-033, yue: 份報告幾時要交？, en: "When is the report due?", pattern: office, region: both}
+  - {id: sent-mo-work-034, yue: 我聽日之前做完。, en: "I'll finish it by tomorrow.", pattern: office, region: both}
+  - {id: sent-mo-work-035, yue: 部電腦壞咗。, en: "The computer's broken.", pattern: office, region: both}
+  - {id: sent-mo-work-036, yue: 部印表機冇紙。, en: "The printer is out of paper.", pattern: office, region: both}
+  - {id: sent-mo-work-037, yue: 我寄咗電郵俾你。, en: "I've sent you an email.", pattern: office, region: both}
+  - {id: sent-mo-work-038, yue: 你收唔收到我個電郵？, en: "Did you get my email?", pattern: office, region: both}
+  - {id: sent-mo-work-039, yue: 我開緊會。, en: "I'm in a meeting.", pattern: office, region: both}
+  - {id: sent-mo-work-040, yue: 我開完會覆你。, en: "I'll get back to you after the meeting.", pattern: office, region: both}
+  - {id: sent-mo-work-041, yue: 今日晏晝食咩？, en: "What are we having for lunch today?", pattern: lunch, region: both}
+  - {id: sent-mo-work-042, yue: 一齊去食晏？, en: "Lunch together?", pattern: lunch, region: both}
+  - {id: sent-mo-work-043, yue: 我叫咗外賣。, en: "I've ordered takeaway.", pattern: lunch, region: both}
+  - {id: sent-mo-work-044, yue: 我今日帶飯。, en: "I brought my own lunch today.", pattern: lunch, region: both}
+  - {id: sent-mo-work-045, yue: 三點三，食下午茶！, en: "It's three-fifteen, tea time!", pattern: lunch, region: both}
+  - {id: sent-mo-work-046, yue: 你讀緊書定做緊嘢？, en: "Are you studying or working?", pattern: study, region: both}
+  - {id: sent-mo-work-047, yue: 我讀緊大學。, en: "I'm at university.", pattern: study, region: both}
+  - {id: sent-mo-work-048, yue: 你讀咩科？, en: "What are you studying?", pattern: study, region: both}
+  - {id: sent-mo-work-049, yue: 我讀商科。, en: "I'm studying business.", pattern: study, region: both}
+  - {id: sent-mo-work-050, yue: 幾點上堂？, en: "What time is class?", pattern: study, region: both}
+  - {id: sent-mo-work-051, yue: 今日唔使上堂。, en: "No class today.", pattern: study, region: both}
+  - {id: sent-mo-work-052, yue: 我今日走堂。, en: "I'm skipping class today.", pattern: study, region: both}
+  - {id: sent-mo-work-053, yue: 功課做完未？, en: "Have you finished your homework?", pattern: study, region: both}
+  - {id: sent-mo-work-054, yue: 聽日考試。, en: "There's an exam tomorrow.", pattern: study, region: both}
+  - {id: sent-mo-work-055, yue: 我要溫書。, en: "I need to revise.", pattern: study, region: both}
+  - {id: sent-mo-work-056, yue: 考試合唔合格？, en: "Did you pass the exam?", pattern: study, region: both}
+  - {id: sent-mo-work-057, yue: 我肥佬咗。, en: "I failed.", pattern: study, region: both}
+  - {id: sent-mo-work-058, yue: 我想學中文。, en: "I want to learn Chinese.", pattern: study, region: both}
+  - {id: sent-mo-work-059, yue: 我識講廣東話，但係唔識睇字。, en: "I can speak Cantonese but can't read the characters.", pattern: study, region: both}
+  - {id: sent-mo-work-060, yue: 我想學識睇中文字。, en: "I want to learn to read Chinese.", pattern: study, region: both}
+  - {id: sent-mo-work-061, yue: 呢個字點讀？, en: "How do you read this character?", pattern: study, region: both}
+  - {id: sent-mo-work-062, yue: 呢個字咩意思？, en: "What does this character mean?", pattern: study, region: both}
+  - {id: sent-mo-work-063, yue: 可唔可以寫俾我睇？, en: "Could you write it down for me?", pattern: study, region: both}
+  - {id: sent-mo-work-064, yue: 我寫錯咗字。, en: "I wrote the wrong character.", pattern: study, region: both}
+  - {id: sent-mo-work-065, yue: 普通話我識少少。, en: "I know a little Mandarin.", pattern: study, region: both}
+  - {id: sent-mo-work-066, yue: 圖書館幾點開？, en: "What time does the library open?", pattern: study, region: both}
+  - {id: sent-mo-work-067, yue: 我去圖書館溫書。, en: "I'm going to the library to study.", pattern: study, region: both}
+  - {id: sent-mo-work-068, yue: 老師今日唔喺度。, en: "The teacher isn't in today.", pattern: study, region: both}
+  - {id: sent-mo-work-069, yue: 我想報名讀夜校。, en: "I want to sign up for evening classes.", pattern: study, region: both}
+  - {id: sent-mo-work-070, yue: 學費幾多錢？, en: "How much are the fees?", pattern: study, region: both}
+  - {id: sent-mo-work-071, yue: 我畢咗業。, en: "I've graduated.", pattern: study, region: both}
+  - {id: sent-mo-work-072, yue: 我實習緊。, en: "I'm doing an internship.", pattern: job, region: both}
+  - {id: sent-mo-work-073, yue: 我做兼職。, en: "I work part-time.", pattern: job, region: both}
+  - {id: sent-mo-work-074, yue: 我做全職。, en: "I work full-time.", pattern: job, region: both}
+  - {id: sent-mo-work-075, yue: 我喺屋企返工。, en: "I work from home.", pattern: job, region: both}
+  - {id: sent-mo-work-076, yue: 我要出差。, en: "I have to go on a business trip.", pattern: job, region: both}
+  - {id: sent-mo-work-077, yue: 我去香港開會。, en: "I'm going to Hong Kong for a meeting.", pattern: job}
+  - {id: sent-mo-work-078, yue: 呢個客好難搞。, en: "This client is really difficult.", pattern: feel, region: both}
+  - {id: sent-mo-work-079, yue: 今日好忙。, en: "Very busy today.", pattern: feel, region: both}
+  - {id: sent-mo-work-080, yue: 終於放工喇！, en: "Finally off work!", pattern: feel, region: both}
+  - {id: sent-mo-work-081, yue: 聽日又要返工。, en: "Back to work again tomorrow.", pattern: feel, region: both}
+  - {id: sent-mo-work-082, yue: 我好想放假。, en: "I really want a holiday.", pattern: feel, region: both}
+  - {id: sent-mo-work-083, yue: 我聽日要早起身。, en: "I have to get up early tomorrow.", pattern: routine, region: both}
+  - {id: sent-mo-work-084, yue: 我七點起身。, en: "I get up at seven.", pattern: routine, region: both}
+  - {id: sent-mo-work-085, yue: 我搭巴士返工。, en: "I take the bus to work.", pattern: routine, region: both}
+  - {id: sent-mo-work-086, yue: 返工要一個鐘。, en: "It takes an hour to get to work.", pattern: routine, region: both}
+  - {id: sent-mo-work-087, yue: 塞車，我會遲啲到。, en: "Traffic's bad, I'll be a bit late.", pattern: routine, region: both}
+  - {id: sent-mo-work-088, yue: 我今日唔舒服，唔返工喇。, en: "I'm not well today, I won't come in.", pattern: leave, region: both}
+  - {id: sent-mo-work-089, yue: 你今日得唔得閒幫我？, en: "Are you free to help me today?", pattern: office, region: both}
+  - {id: sent-mo-work-090, yue: 我幫你。, en: "I'll help you.", pattern: office, region: both}
+  - {id: sent-mo-work-091, yue: 唔該你幫我交俾老細。, en: "Please hand it to the boss for me.", pattern: office, region: both}
+  - {id: sent-mo-work-092, yue: 份合約簽咗未？, en: "Has the contract been signed?", pattern: office, region: both}
+  - {id: sent-mo-work-093, yue: 呢單生意傾成咗。, en: "We closed the deal.", pattern: office, region: both}
+  - {id: sent-mo-work-094, yue: 我哋聽日再傾。, en: "Let's talk about it again tomorrow.", pattern: office, region: both}
+  - {id: sent-mo-work-095, yue: 多謝大家咁努力。, en: "Thanks everyone for working so hard.", pattern: office, region: both}
+  - {id: sent-mo-work-096, yue: 今晚公司請食飯。, en: "The company is treating us to dinner tonight.", pattern: office, region: both}
+  - {id: sent-mo-work-097, yue: 年尾有花紅。, en: "There's a year-end bonus.", pattern: pay, region: both}
+  - {id: sent-mo-work-098, yue: 我想加人工。, en: "I want a pay rise.", pattern: pay, region: both}
+  - {id: sent-mo-work-099, yue: 我升咗職！, en: "I got promoted!", pattern: pay, region: both}
+  - {id: sent-mo-work-100, yue: 祝你工作順利。, en: "Hope work goes well for you.", pattern: wishes, region: both}
