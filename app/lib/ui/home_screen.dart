@@ -17,9 +17,11 @@ import 'paste_reader_screen.dart';
 import 'reader_screen.dart';
 import 'practice_screens.dart';
 import '../platform/home_widget_sync.dart';
+import '../platform/sfx.dart';
 import 'settings_screen.dart';
 import 'stories_screen.dart';
 import 'topic_screen.dart';
+import 'words_screen.dart';
 import 'update_ui.dart';
 import '../platform/updater.dart';
 import 'ruby_text.dart';
@@ -38,6 +40,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late String _lang = _s.prefs.lang;
+  int _tab = 0;
   StreamSubscription<String>? _shareSub;
   UpdateInfo? _update;
 
@@ -246,342 +249,355 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final totalChars = itemsByScenario.values.expand((x) => x).toSet().length;
     unawaited(syncHomeWidget(due: due, known: solid));
 
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 720),
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
-              children: [
-                Row(
-                  children: [
-                    const DuckLogo(size: 40, tile: true),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        'DuckLearn',
-                        style: theme.textTheme.titleLarge,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    IconButton(
-                      key: const ValueKey('open-settings'),
-                      tooltip: 'Settings',
-                      onPressed: () async {
-                        await _push(SettingsScreen(services: _s));
-                        setState(() => _lang = _s.prefs.lang);
-                      },
-                      icon: const Icon(Icons.settings_rounded),
-                    ),
-                    SegmentedButton<String>(
-                      showSelectedIcon: false,
-                      style: const ButtonStyle(
-                        visualDensity: VisualDensity.compact,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      segments: [
-                        const ButtonSegment(value: 'yue', label: Text('粵語')),
-                        ButtonSegment(
-                          value: 'cmn',
-                          // simplified glyphs need the SC font
-                          label: Text(
-                            '普通话',
-                            style: chineseStyle('cmn', fontSize: 14),
-                          ),
-                        ),
-                      ],
-                      selected: {_lang},
-                      onSelectionChanged: (v) {
-                        _s.logger.log('settings.change', {
-                          'key': 'lang',
-                          'from': _lang,
-                          'to': v.first,
-                        });
-                        _s.prefs.lang = v.first;
-                        setState(() => _lang = v.first);
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                if (_update case final u?)
-                  UpdateBanner(
-                    info: u,
-                    onLater: () => setState(() => _update = null),
-                    onUpdate: () => runUpdate(context, _s, u),
-                  ),
-                _TodayCard(
-                  due: due,
-                  known: solid,
-                  isFirstTime: met == 0,
-                  hasContent: scenarios.isNotEmpty,
-                  onStart: () => _open(
-                    title: met == 0 ? 'First steps' : "Today's reading",
-                    sentences: _s.content.allSentences(_lang),
-                    mode: 'daily',
-                    count: _s.prefs.sessionLength,
-                    maxNew: (_s.prefs.sessionLength / 2).ceil().clamp(3, 12),
-                  ),
-                  length: _s.prefs.sessionLength,
-                  onLength: (n) {
-                    _s.logger.log('settings.change', {
-                      'key': 'session_length',
-                      'from': _s.prefs.sessionLength,
-                      'to': n,
-                    });
-                    setState(() => _s.prefs.sessionLength = n);
-                  },
-                ),
-                if (_clip != null) ...[
-                  const SizedBox(height: 12),
-                  Card(
-                    margin: EdgeInsets.zero,
-                    color: theme.colorScheme.tertiaryContainer,
-                    child: ListTile(
-                      key: const ValueKey('read-clipboard'),
-                      leading: const Icon(Icons.content_paste_go_rounded),
-                      title: const Text('Read what you copied'),
-                      subtitle: _clip!.isEmpty
-                          ? null
-                          : Text(
-                              _clip!.replaceAll('\n', ' '),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: chineseStyle(_lang, fontSize: 14),
-                            ),
-                      trailing: IconButton(
-                        tooltip: 'Not now',
-                        icon: const Icon(Icons.close_rounded),
-                        onPressed: () {
-                          _s.prefs.lastClipboardOffer = _clip;
-                          setState(() => _clip = null);
-                        },
-                      ),
-                      onTap: _readClipboard,
-                    ),
-                  ),
-                ],
-                if (_resumable() case final r?) ...[
-                  const SizedBox(height: 12),
-                  Card(
-                    margin: EdgeInsets.zero,
-                    color: theme.colorScheme.secondaryContainer,
-                    child: ListTile(
-                      key: const ValueKey('resume'),
-                      leading: const Icon(Icons.play_circle_outline_rounded),
-                      title: Text('Resume: ${r.title}'),
-                      subtitle: Text('${r.index + 1} of ${r.lines.length}'),
-                      trailing: IconButton(
-                        tooltip: 'Discard',
-                        icon: const Icon(Icons.close_rounded),
-                        onPressed: () => setState(() => _s.prefs.resume = null),
-                      ),
-                      onTap: () async {
-                        _s.logger.log('nav.screen', {
-                          'screen': 'reader',
-                          'mode': 'resume',
-                        });
-                        await Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (_) => ReaderScreen(
-                              services: _s,
-                              title: r.title,
-                              sentences: r.lines,
-                              lang: _lang,
-                              mode: r.mode,
-                              ordered: true,
-                              conversation: r.conversation,
-                              story: r.story,
-                              startAt: r.index,
-                            ),
-                          ),
-                        );
-                        if (mounted) setState(() {});
-                      },
-                    ),
-                  ),
-                ],
-                if (_continueTopic(scenarios) case final last?) ...[
-                  const SizedBox(height: 12),
-                  Card(
-                    margin: EdgeInsets.zero,
-                    child: ListTile(
-                      key: const ValueKey('continue-topic'),
-                      leading: CircleAvatar(
-                        backgroundColor: theme.colorScheme.primaryContainer,
-                        foregroundColor: theme.colorScheme.onPrimaryContainer,
-                        child: const Icon(Icons.replay_rounded),
-                      ),
-                      title: Text('Continue: ${last.title}'),
-                      subtitle: const Text('Straight back into its sentences'),
-                      trailing: const Icon(Icons.chevron_right_rounded),
-                      onTap: () => _openTopic(last, practise: true),
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 12),
-                Card(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: ListTile(
-                    key: const ValueKey('open-stories'),
-                    leading: CircleAvatar(
-                      backgroundColor: theme.colorScheme.tertiaryContainer,
-                      foregroundColor: theme.colorScheme.onTertiaryContainer,
-                      child: const Icon(Icons.auto_stories_rounded),
-                    ),
-                    title: Text('Stories', style: theme.textTheme.titleMedium),
-                    subtitle: const Text(
-                      'Short Macau stories, picked by how much you can already read.',
-                    ),
-                    trailing: const Icon(Icons.chevron_right_rounded),
-                    onTap: () async {
-                      _s.logger.log('nav.screen', {'screen': 'stories'});
-                      await Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) =>
-                              StoriesScreen(services: _s, lang: _lang),
-                        ),
-                      );
-                      if (mounted) setState(() {});
-                    },
-                  ),
-                ),
-                Card(
-                  margin: EdgeInsets.zero,
-                  child: ListTile(
-                    key: const ValueKey('open-free-reader'),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 6,
-                    ),
-                    leading: CircleAvatar(
-                      backgroundColor: theme.colorScheme.secondaryContainer,
-                      foregroundColor: theme.colorScheme.onSecondaryContainer,
-                      child: const Icon(Icons.chrome_reader_mode_rounded),
-                    ),
-                    title: Text(
-                      'Read anything',
-                      style: theme.textTheme.titleMedium,
-                    ),
-                    subtitle: const Text(
-                      'Paste or share a menu, sign or message. '
-                      "Readings only over what you don't know yet.",
-                    ),
-                    trailing: const Icon(Icons.chevron_right_rounded),
-                    onTap: () async {
-                      _s.logger.log('nav.screen', {'screen': 'free_reader'});
-                      await Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) =>
-                              PasteReaderScreen(services: _s, lang: _lang),
-                        ),
-                      );
-                      if (mounted) setState(() {});
-                    },
-                  ),
-                ),
-                const SizedBox(height: 12),
-                IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: _Stat(
-                          key: const ValueKey('stat-met'),
-                          value: '$met',
-                          label: 'met',
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _Stat(
-                          key: const ValueKey('stat-solid'),
-                          value: '$solid',
-                          label: 'known well',
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _Stat(
-                          value: totalChars == 0
-                              ? '–'
-                              : '${(100 * solid / totalChars).round()}%',
-                          label: 'readable',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Characters you have met, can read reliably, and the share of all content you can read.',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text('Reading skills', style: theme.textTheme.titleMedium),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _SkillTile(
-                        key: const ValueKey('open-families'),
-                        icon: Icons.hub_rounded,
-                        title: 'Sound families',
-                        subtitle: '青 → 清 晴 請',
-                        onTap: () => _push(
-                          SoundFamiliesScreen(services: _s, lang: _lang),
-                        ),
-                      ),
-                    ),
-                    if (_lang == 'yue') ...[
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _SkillTile(
-                          key: const ValueKey('open-spoken-written'),
-                          icon: Icons.compare_arrows_rounded,
-                          title: 'Spoken vs written',
-                          subtitle: '佢係 · 他是',
-                          onTap: () => _push(const SpokenWrittenScreen()),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-                const SizedBox(height: 24),
-                Text('Topics', style: theme.textTheme.titleMedium),
-                const SizedBox(height: 4),
-                Text(
-                  'Each topic has sentences and conversations. Characters you meet anywhere count everywhere.',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                if (scenarios.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24),
-                    child: Text(
-                      'No ${_lang == 'cmn' ? 'Mandarin' : 'Cantonese'} content yet.',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                for (final sc in scenarios)
-                  _TopicTile(
-                    scenario: sc,
-                    total: itemsByScenario[sc.id]?.length ?? 0,
-                    met: (itemsByScenario[sc.id] ?? const {})
-                        .where((id) => !_s.learner.stateOf(id).isNew)
-                        .length,
-                    onTap: () => _openTopic(sc),
-                  ),
-              ],
-            ),
-          ),
+    Widget page(List<Widget> children) => Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 720),
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+          children: children,
         ),
       ),
+    );
+
+    final pages = <Widget>[
+      page([
+        _header(theme),
+        const SizedBox(height: 20),
+        if (_update case final u?)
+          UpdateBanner(
+            info: u,
+            onLater: () => setState(() => _update = null),
+            onUpdate: () => runUpdate(context, _s, u),
+          ),
+        _TodayCard(
+          due: due,
+          known: solid,
+          isFirstTime: met == 0,
+          hasContent: scenarios.isNotEmpty,
+          onQuack: () => _s.sound(Sfx.quack),
+          onStart: () => _open(
+            title: met == 0 ? 'First steps' : "Today's reading",
+            sentences: _s.content.allSentences(_lang),
+            mode: 'daily',
+            count: _s.prefs.sessionLength,
+            maxNew: (_s.prefs.sessionLength / 2).ceil().clamp(3, 12),
+          ),
+          length: _s.prefs.sessionLength,
+          onLength: (n) {
+            _s.logger.log('settings.change', {
+              'key': 'session_length',
+              'from': _s.prefs.sessionLength,
+              'to': n,
+            });
+            setState(() => _s.prefs.sessionLength = n);
+          },
+        ),
+        if (_clip != null) ...[
+          const SizedBox(height: 12),
+          Card(
+            margin: EdgeInsets.zero,
+            color: theme.colorScheme.tertiaryContainer,
+            child: ListTile(
+              key: const ValueKey('read-clipboard'),
+              leading: const Icon(Icons.content_paste_go_rounded),
+              title: const Text('Read what you copied'),
+              subtitle: _clip!.isEmpty
+                  ? null
+                  : Text(
+                      _clip!.replaceAll('\n', ' '),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: chineseStyle(_lang, fontSize: 14),
+                    ),
+              trailing: IconButton(
+                tooltip: 'Not now',
+                icon: const Icon(Icons.close_rounded),
+                onPressed: () {
+                  _s.prefs.lastClipboardOffer = _clip;
+                  setState(() => _clip = null);
+                },
+              ),
+              onTap: _readClipboard,
+            ),
+          ),
+        ],
+        if (_resumable() case final r?) ...[
+          const SizedBox(height: 12),
+          Card(
+            margin: EdgeInsets.zero,
+            color: theme.colorScheme.secondaryContainer,
+            child: ListTile(
+              key: const ValueKey('resume'),
+              leading: const Icon(Icons.play_circle_outline_rounded),
+              title: Text('Resume: ${r.title}'),
+              subtitle: Text('${r.index + 1} of ${r.lines.length}'),
+              trailing: IconButton(
+                tooltip: 'Discard',
+                icon: const Icon(Icons.close_rounded),
+                onPressed: () => setState(() => _s.prefs.resume = null),
+              ),
+              onTap: () async {
+                _s.logger.log('nav.screen', {
+                  'screen': 'reader',
+                  'mode': 'resume',
+                });
+                await Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => ReaderScreen(
+                      services: _s,
+                      title: r.title,
+                      sentences: r.lines,
+                      lang: _lang,
+                      mode: r.mode,
+                      ordered: true,
+                      conversation: r.conversation,
+                      story: r.story,
+                      startAt: r.index,
+                    ),
+                  ),
+                );
+                if (mounted) setState(() {});
+              },
+            ),
+          ),
+        ],
+        if (_continueTopic(scenarios) case final last?) ...[
+          const SizedBox(height: 12),
+          Card(
+            margin: EdgeInsets.zero,
+            child: ListTile(
+              key: const ValueKey('continue-topic'),
+              leading: CircleAvatar(
+                backgroundColor: theme.colorScheme.primaryContainer,
+                foregroundColor: theme.colorScheme.onPrimaryContainer,
+                child: const Icon(Icons.replay_rounded),
+              ),
+              title: Text('Continue: ${last.title}'),
+              subtitle: const Text('Straight back into its sentences'),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => _openTopic(last, practise: true),
+            ),
+          ),
+        ],
+        const SizedBox(height: 12),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: _Stat(
+                  key: const ValueKey('stat-met'),
+                  value: '$met',
+                  label: 'met',
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _Stat(
+                  key: const ValueKey('stat-solid'),
+                  value: '$solid',
+                  label: 'known well',
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _Stat(
+                  value: totalChars == 0
+                      ? '–'
+                      : '${(100 * solid / totalChars).round()}%',
+                  label: 'readable',
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Characters you have met, can read reliably, and the share of all content you can read.',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 20),
+        Text('Reading skills', style: theme.textTheme.titleMedium),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: _SkillTile(
+                key: const ValueKey('open-families'),
+                icon: Icons.hub_rounded,
+                title: 'Sound families',
+                subtitle: '青 → 清 晴 請',
+                onTap: () =>
+                    _push(SoundFamiliesScreen(services: _s, lang: _lang)),
+              ),
+            ),
+            if (_lang == 'yue') ...[
+              const SizedBox(width: 10),
+              Expanded(
+                child: _SkillTile(
+                  key: const ValueKey('open-spoken-written'),
+                  icon: Icons.compare_arrows_rounded,
+                  title: 'Spoken vs written',
+                  subtitle: '佢係 · 他是',
+                  onTap: () => _push(const SpokenWrittenScreen()),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ]),
+      page([
+        _header(theme),
+        const SizedBox(height: 20),
+        Text('Topics', style: theme.textTheme.titleMedium),
+        const SizedBox(height: 4),
+        Text(
+          'Each topic has sentences and conversations. Characters you meet anywhere count everywhere.',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 12),
+        if (scenarios.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            child: Text(
+              'No ${_lang == 'cmn' ? 'Mandarin' : 'Cantonese'} content yet.',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        for (final sc in scenarios)
+          _TopicTile(
+            scenario: sc,
+            total: itemsByScenario[sc.id]?.length ?? 0,
+            met: (itemsByScenario[sc.id] ?? const {})
+                .where((id) => !_s.learner.stateOf(id).isNew)
+                .length,
+            onTap: () {
+              _s.sound(Sfx.tap);
+              _openTopic(sc);
+            },
+          ),
+      ]),
+      StoriesScreen(key: ValueKey('stories-$_lang'), services: _s, lang: _lang),
+      WordsScreen(key: ValueKey('words-$_lang'), services: _s, lang: _lang),
+      PasteReaderScreen(
+        key: ValueKey('read-$_lang'),
+        services: _s,
+        lang: _lang,
+      ),
+    ];
+
+    return Scaffold(
+      body: SafeArea(
+        child: IndexedStack(index: _tab, children: pages),
+      ),
+      bottomNavigationBar: NavigationBar(
+        key: const ValueKey('nav-bar'),
+        selectedIndex: _tab,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        onDestinationSelected: (i) {
+          if (i == _tab) return;
+          _s.sound(Sfx.tap);
+          _s.logger.log('nav.screen', {
+            'screen': _tabNames[i],
+            'source': 'tab',
+          });
+          setState(() => _tab = i);
+        },
+        destinations: const [
+          NavigationDestination(
+            key: ValueKey('tab-today'),
+            icon: Icon(Icons.wb_sunny_outlined),
+            selectedIcon: Icon(Icons.wb_sunny_rounded),
+            label: 'Today',
+          ),
+          NavigationDestination(
+            key: ValueKey('tab-topics'),
+            icon: Icon(Icons.grid_view_outlined),
+            selectedIcon: Icon(Icons.grid_view_rounded),
+            label: 'Topics',
+          ),
+          NavigationDestination(
+            key: ValueKey('tab-stories'),
+            icon: Icon(Icons.auto_stories_outlined),
+            selectedIcon: Icon(Icons.auto_stories_rounded),
+            label: 'Stories',
+          ),
+          NavigationDestination(
+            key: ValueKey('tab-words'),
+            icon: Icon(Icons.bookmarks_outlined),
+            selectedIcon: Icon(Icons.bookmarks_rounded),
+            label: 'Words',
+          ),
+          NavigationDestination(
+            key: ValueKey('tab-read'),
+            icon: Icon(Icons.chrome_reader_mode_outlined),
+            selectedIcon: Icon(Icons.chrome_reader_mode_rounded),
+            label: 'Read',
+          ),
+        ],
+      ),
+    );
+  }
+
+  static const _tabNames = [
+    'today',
+    'topics',
+    'stories',
+    'words',
+    'free_reader',
+  ];
+
+  Widget _header(ThemeData theme) {
+    return Row(
+      children: [
+        const DuckLogo(size: 40, tile: true),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            'DuckLearn',
+            style: theme.textTheme.titleLarge,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        IconButton(
+          key: const ValueKey('open-settings'),
+          tooltip: 'Settings',
+          onPressed: () async {
+            await _push(SettingsScreen(services: _s));
+            setState(() => _lang = _s.prefs.lang);
+          },
+          icon: const Icon(Icons.settings_rounded),
+        ),
+        SegmentedButton<String>(
+          showSelectedIcon: false,
+          style: const ButtonStyle(
+            visualDensity: VisualDensity.compact,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+          segments: [
+            const ButtonSegment(value: 'yue', label: Text('粵語')),
+            ButtonSegment(
+              value: 'cmn',
+              // simplified glyphs need the SC font
+              label: Text('普通话', style: chineseStyle('cmn', fontSize: 14)),
+            ),
+          ],
+          selected: {_lang},
+          onSelectionChanged: (v) {
+            _s.logger.log('settings.change', {
+              'key': 'lang',
+              'from': _lang,
+              'to': v.first,
+            });
+            _s.prefs.lang = v.first;
+            setState(() => _lang = v.first);
+          },
+        ),
+      ],
     );
   }
 }
@@ -595,7 +611,10 @@ class _TodayCard extends StatelessWidget {
     required this.onStart,
     required this.length,
     required this.onLength,
+    this.onQuack,
   });
+
+  final VoidCallback? onQuack;
 
   final int due;
   final int known;
@@ -656,12 +675,16 @@ class _TodayCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                DuckMascot(
-                  size: 92,
-                  stage: DuckStage.forKnown(known),
-                  mood: due == 0 && !isFirstTime
-                      ? DuckMood.sleepy
-                      : DuckMood.happy,
+                GestureDetector(
+                  key: const ValueKey('mascot'),
+                  onTap: onQuack,
+                  child: DuckMascot(
+                    size: 92,
+                    stage: DuckStage.forKnown(known),
+                    mood: due == 0 && !isFirstTime
+                        ? DuckMood.sleepy
+                        : DuckMood.happy,
+                  ),
                 ),
               ],
             ),

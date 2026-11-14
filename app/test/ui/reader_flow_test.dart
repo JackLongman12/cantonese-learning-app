@@ -72,7 +72,13 @@ void main() {
     )).data!;
     await t.pumpWidget(MaterialApp(home: HomeScreen(services: services)));
     expect(stat('stat-met'), '0');
-    await t.scrollUntilVisible(find.text('Getting around Macau'), 200);
+    await t.tap(find.byKey(const ValueKey('tab-topics')));
+    await t.pumpAndSettle();
+    await t.scrollUntilVisible(
+      find.text('Getting around Macau'),
+      200,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
     await t.ensureVisible(
       find.ancestor(
         of: find.text('Getting around Macau'),
@@ -94,9 +100,11 @@ void main() {
     final shown = store.events.lastWhere((e) => e.type == 'item.shown');
     expect((shown.payload['scaffold']! as List).toSet(), {'full'});
 
+    // the sentence plays by itself when it opens, and again on Listen
+    expect(played.single, startsWith('audio/'));
     await t.tap(find.text('Listen'));
     await t.pump();
-    expect(played.single, startsWith('audio/'));
+    expect(played, hasLength(2));
 
     // The planner caps new characters per session, so a first session is shorter than
     // the whole topic. Read until it ends.
@@ -120,8 +128,8 @@ void main() {
         e.payload['item_id']! as String,
     };
     expect(introduced.length, lessThanOrEqualTo(12));
-    // back at the top of home, where the stats are
-    await t.fling(find.byType(Scrollable).first, const Offset(0, 3000), 5000);
+    // back on the Today tab, where the stats are
+    await t.tap(find.byKey(const ValueKey('tab-today')));
     await t.pumpAndSettle();
     expect(stat('stat-met'), '${introduced.length}');
 
@@ -139,7 +147,10 @@ void main() {
       );
     }
     expect(firstSignal.values.toSet(), {'introduced'});
-    expect(store.events.last.type, 'session.end');
+    expect(
+      store.events.lastWhere((e) => e.type != 'nav.screen').type,
+      'session.end',
+    );
 
     // The live model equals a rebuild from the log.
     expect(
@@ -157,7 +168,13 @@ void main() {
     );
     expect(level, isNot(ScaffoldLevel.full));
 
-    await t.scrollUntilVisible(find.text('Getting around Macau'), 200);
+    await t.tap(find.byKey(const ValueKey('tab-topics')));
+    await t.pumpAndSettle();
+    await t.scrollUntilVisible(
+      find.text('Getting around Macau'),
+      200,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
     await t.ensureVisible(
       find.ancestor(
         of: find.text('Getting around Macau'),

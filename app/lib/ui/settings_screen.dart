@@ -8,6 +8,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../app_services.dart';
 import '../engine/insights.dart';
+import '../platform/sfx.dart';
 import '../platform/speech.dart';
 import 'ruby_text.dart';
 import 'update_ui.dart';
@@ -192,6 +193,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       _changed('session_length', from, v.first);
                     },
                   ),
+                ),
+                SwitchListTile(
+                  key: const ValueKey('set-sfx'),
+                  title: const Text('Sound effects'),
+                  subtitle: const Text(
+                    'Soft sounds on taps, saves and results',
+                  ),
+                  value: p.soundEffects,
+                  onChanged: (v) {
+                    p.soundEffects = v;
+                    if (v) _s.sound(Sfx.tap);
+                    _changed('sound_effects', !v, v);
+                  },
+                ),
+                SwitchListTile(
+                  key: const ValueKey('set-auto-play'),
+                  title: const Text('Play sentences automatically'),
+                  subtitle: const Text(
+                    'Hear each sentence and line as it opens',
+                  ),
+                  value: p.autoPlay,
+                  onChanged: (v) {
+                    p.autoPlay = v;
+                    _changed('auto_play', !v, v);
+                  },
                 ),
                 SwitchListTile(
                   key: const ValueKey('set-read-along'),

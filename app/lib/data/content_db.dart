@@ -98,6 +98,27 @@ class ScenarioRow {
   final int sentenceCount;
 }
 
+class DictEntry {
+  const DictEntry({
+    required this.trad,
+    required this.simp,
+    required this.pinyin,
+    required this.jyutping,
+    required this.en,
+    required this.source,
+  });
+  final String trad;
+  final String simp;
+
+  /// Numbered Pinyin / Jyutping, space separated ('jyutping' may be empty).
+  final String pinyin;
+  final String jyutping;
+  final String en;
+
+  /// cccanto | cedict
+  final String source;
+}
+
 class ContentDb {
   ContentDb.open(String path)
     : _db = sqlite3.open(path, mode: OpenMode.readOnly);
@@ -112,6 +133,53 @@ class ContentDb {
   }
 
   String get contentVersion => meta('content_version');
+
+  /// Dictionary entries written exactly [text] (Traditional for yue, Simplified for
+  /// cmn). Cantonese-specific meanings (CC-Canto) come first. Empty on old databases.
+  List<DictEntry> lookup(String text, String lang) {
+    try {
+      final col = lang == 'cmn' ? 'simp' : 'trad';
+      return [
+        for (final r in _db.select(
+          'SELECT trad, simp, pinyin, jyutping, en, source FROM dict_entry '
+          "WHERE $col = ? ORDER BY source = 'cccanto' DESC, rowid LIMIT 8",
+          [text],
+        ))
+          DictEntry(
+            trad: r['trad'] as String,
+            simp: r['simp'] as String,
+            pinyin: r['pinyin'] as String,
+            jyutping: r['jyutping'] as String,
+            en: r['en'] as String,
+            source: r['source'] as String,
+          ),
+      ];
+    } on SqliteException {
+      return const [];
+    }
+  }
+
+  /// Dictionary words inside [text] that cover character [pos], longest first: tapping
+  /// 銀 in 行路去銀行 offers 銀行 "bank" before 銀 "silver".
+  List<({int start, int end, List<DictEntry> entries})> wordsAt(
+    String text,
+    int pos,
+    String lang, {
+    int maxLen = 6,
+  }) {
+    final out = <({int start, int end, List<DictEntry> entries})>[];
+    for (var len = maxLen; len >= 1; len--) {
+      for (var start = pos - len + 1; start <= pos; start++) {
+        final end = start + len;
+        if (start < 0 || end > text.length) continue;
+        final w = text.substring(start, end);
+        if (!_hanOnly.hasMatch(w)) continue;
+        final e = lookup(w, lang);
+        if (e.isNotEmpty) out.add((start: start, end: end, entries: e));
+      }
+    }
+    return out;
+  }
 
   List<ScenarioRow> scenarios(String lang) => [
     for (final r in _db.select(
@@ -337,3 +405,5 @@ class ContentDb {
     return rows.isEmpty ? null : rows.first['path'] as String;
   }
 }
+
+final _hanOnly = RegExp(r'^[㐀-鿿豈-﫿]+$');

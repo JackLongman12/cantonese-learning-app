@@ -15,6 +15,7 @@ import 'engine/memory.dart';
 import 'events/event_logger.dart';
 import 'events/event_store.dart';
 import 'platform/reminders.dart';
+import 'platform/sfx.dart';
 import 'platform/speech.dart';
 import 'platform/updater.dart';
 import 'ui/home_screen.dart';
@@ -43,6 +44,20 @@ Future<AppServices> _bootstrap() async {
     flush: true,
   );
   final content = ContentDb.open(dbFile.path);
+
+  // Leftovers from an earlier update (installer, unpack folders) are junk once it ran.
+  try {
+    Updater.cleanUp(await getTemporaryDirectory());
+  } on Object {
+    // temp dir unavailable: nothing to clean
+  }
+  // A speech-model download cut off part way leaves a .part file; it restarts anyway.
+  final modelDir = Directory(p.join(support.path, 'models', 'sensevoice'));
+  if (modelDir.existsSync()) {
+    for (final f in modelDir.listSync().whereType<File>()) {
+      if (f.path.endsWith('.part')) f.deleteSync();
+    }
+  }
 
   final idFile = File(p.join(support.path, 'device_id'));
   if (!idFile.existsSync()) idFile.writeAsStringSync(Ulid().toString());
@@ -75,9 +90,10 @@ Future<AppServices> _bootstrap() async {
     playFile: (path) => _filePlayer.play(DeviceFileSource(path)),
     prefs: Prefs(File(p.join(support.path, 'prefs.json'))),
     updater: Updater(),
+    sfx: SoundEffects(),
     reminders: Platform.isAndroid ? Reminders() : null,
     speech: (Platform.isAndroid || Platform.isWindows || Platform.isMacOS)
-        ? SpeechEngine(Directory(p.join(support.path, 'models', 'sensevoice')))
+        ? SpeechEngine(modelDir)
         : null,
   );
 }

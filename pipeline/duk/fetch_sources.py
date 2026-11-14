@@ -43,6 +43,27 @@ SOURCES = [
         "LGPL (derived from Arphic PL fonts and Unihan)",
         "dictionary.txt",
     ),
+    Source(
+        "cedict",
+        "https://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.zip",
+        "CC BY-SA 4.0 (CC-CEDICT)",
+        "cedict.zip",
+        unzip=True,
+    ),
+    Source(
+        "cccanto",
+        "https://cantonese.org/cccanto-170202.zip",
+        "CC BY-SA 3.0 (CC-Canto, Pleco)",
+        "cccanto.zip",
+        unzip=True,
+    ),
+    Source(
+        "cccanto_readings",
+        "https://cantonese.org/cccedict-canto-readings-150923.zip",
+        "CC BY-SA 3.0 (Jyutping for CC-CEDICT entries)",
+        "readings.zip",
+        unzip=True,
+    ),
 ]
 
 

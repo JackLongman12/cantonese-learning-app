@@ -20,6 +20,7 @@ class RubyToken {
     this.revealed = false,
     this.flagged = false,
     this.mark,
+    this.saved = false,
   });
 
   final String surface;
@@ -37,6 +38,9 @@ class RubyToken {
 
   /// Read-aloud result for this character, shown as a coloured underline.
   final SpeechMark? mark;
+
+  /// Part of a word in the learner's "My words": drawn on a soft highlight.
+  final bool saved;
 
   bool get isHan => kind == 'han';
 }
@@ -63,6 +67,7 @@ class RubyText extends StatelessWidget {
     required this.lang,
     this.fontSize = 34,
     this.onReveal,
+    this.onLookup,
   });
 
   final List<RubyToken> tokens;
@@ -71,6 +76,9 @@ class RubyText extends StatelessWidget {
 
   /// Called with the token index when the learner asks for a hidden reading.
   final void Function(int index)? onReveal;
+
+  /// Long-press: look the word up (meaning, save to My words). Falls back to reveal.
+  final void Function(int index)? onLookup;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +112,8 @@ class RubyText extends StatelessWidget {
           t.reading != null &&
           !t.revealed &&
           (t.level == ScaffoldLevel.hint || t.level == ScaffoldLevel.tap);
-      final canLongPress = t.isHan && t.reading != null && !t.revealed;
+      final canLongPress =
+          t.isHan && (onLookup != null || (t.reading != null && !t.revealed));
       final column = Padding(
         padding: EdgeInsets.symmetric(
           horizontal: t.isHan ? fontSize * 0.07 : 0,
@@ -148,22 +157,34 @@ class RubyText extends StatelessWidget {
                   ),
                 ),
               ),
-              child: base,
+              child: t.saved
+                  ? DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: scheme.tertiaryContainer.withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: base,
+                    )
+                  : base,
             ),
           ],
         ),
       );
-      if (!canLongPress || onReveal == null) return column;
+      if (!canLongPress || (onReveal == null && onLookup == null)) {
+        return column;
+      }
       return Semantics(
         label: t.surface,
         hint: canTap
             ? 'Tap to show the reading'
+            : onLookup != null
+            ? 'Long-press for the meaning'
             : 'Long-press to show the reading',
         child: GestureDetector(
           key: ValueKey('cell-$i'),
           behavior: HitTestBehavior.opaque,
-          onTap: canTap ? () => onReveal!(i) : null,
-          onLongPress: () => onReveal!(i),
+          onTap: canTap && onReveal != null ? () => onReveal!(i) : null,
+          onLongPress: () => (onLookup ?? onReveal)!(i),
           child: column,
         ),
       );

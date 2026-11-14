@@ -77,7 +77,11 @@ class _UpdateDialogState extends State<_UpdateDialog> {
     });
     try {
       final from = await s.updater!.currentBuild();
-      final dir = await getTemporaryDirectory();
+      final temp = await getTemporaryDirectory();
+      Updater.cleanUp(
+        temp,
+      ); // never keep more than the one installer being fetched
+      final dir = Updater.updatesDir(temp);
       final path = await s.updater!.download(
         widget.info,
         dir,

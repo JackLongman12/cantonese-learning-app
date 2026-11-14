@@ -46,7 +46,13 @@ void main() {
 
     await t.pumpWidget(DukApp(services: services));
     await t.pumpAndSettle();
-    await t.scrollUntilVisible(find.text('Getting around Macau'), 200);
+    await t.tap(find.byKey(const ValueKey('tab-topics')));
+    await t.pumpAndSettle();
+    await t.scrollUntilVisible(
+      find.text('Getting around Macau'),
+      200,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
     await t.ensureVisible(
       find.ancestor(
         of: find.text('Getting around Macau'),

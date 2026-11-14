@@ -34,7 +34,7 @@ Stored one JSON object per line (`.jsonl`), gzip-compressed for sync.
 ### Items
 - `item.shown` `{exposure_id, sentence_id?|card_id?, lang, item_ids[], scaffold[], planner: {score, reasons[]}, pos_in_session}`
 - `item.reveal` `{exposure_id, item_id, token_idx, what: reading|tone|meaning|translation, latency_ms}`
-- `item.audio` `{exposure_id, scope: sentence|char|word, rate: normal|slow, nth}`
+- `item.audio` `{exposure_id, scope: sentence|char|word, rate: normal|slow, nth, available, auto?}` — `auto: true` when the app played it on open (not counted in `audio_plays`)
 - `item.grade` `{exposure_id, grade: again|hard|good|easy, explicit: bool, latency_ms}`
 - `item.done` `{exposure_id, dwell_ms, active_ms, reveals, audio_plays, skipped}`
 - `review.applied` `{item_id, grade, signal: no_reveal|reveal|slow|explicit|asr, r_before, s_before, s_after, due_after}` — one per item affected; this is what replay consumes
@@ -42,7 +42,9 @@ Stored one JSON object per line (`.jsonl`), gzip-compressed for sync.
 
 ### Reading and input
 - `reader.open` `{source: library|paste|ocr|clipboard|srt, chars, unknown_ratio}`
-- `reader.lookup` `{char, reading_shown, in_sentence?}`
+- `reader.lookup` `{char, reading_shown, in_sentence?}` — long-press on a character; `words_found` = dictionary words covering it
+- `word.save` `{text, lang, reading?, en?, sentence_id?, context?, context_en?}` — added to "My words" (replayed into `WordBook`; a later save of the same `lang:text` replaces it)
+- `word.remove` `{text, lang}`
 - `reader.scrollback` `{from_idx, to_idx}`
 - `speech.attempt` `{exposure_id, engine, expected, heard, per_token: [{ok, tone_ok}], score}`
 - `typing.attempt` `{expected, typed, ms}`

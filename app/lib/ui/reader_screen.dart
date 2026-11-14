@@ -15,7 +15,9 @@ import '../engine/signals.dart';
 import '../events/event_logger.dart';
 import 'mascot.dart';
 import 'ruby_text.dart';
+import 'word_sheet.dart';
 import '../engine/pronunciation.dart';
+import '../platform/sfx.dart';
 import '../platform/speech.dart';
 
 class ReaderScreen extends StatefulWidget {
@@ -147,9 +149,10 @@ class _ReaderScreenState extends State<ReaderScreen> {
       'conversation': widget.conversation,
       'story': widget.story,
     };
-    if (widget.autoplay) {
+    if (widget.autoplay || _s.prefs.autoPlay) {
+      final shown = _index;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _play(slow: false);
+        if (mounted && _index == shown) _play(slow: false, auto: true);
       });
     }
     _s.logger.log('item.shown', {
@@ -172,6 +175,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
     final t = _sentence.tokens[tokenIndex];
     if (t.itemId == null || _revealedTokens.contains(tokenIndex)) return;
     HapticFeedback.selectionClick();
+    _s.sound(Sfx.reveal);
     _s.logger.touch();
     _s.logger.log('item.reveal', {
       'exposure_id': _exposureId,
@@ -187,6 +191,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
   }
 
   void _toggleMeaning() {
+    _s.sound(Sfx.tap);
     _s.logger.touch();
     if (!_showTranslation) {
       _s.logger.log('item.reveal', {
@@ -198,18 +203,20 @@ class _ReaderScreenState extends State<ReaderScreen> {
     setState(() => _showTranslation = !_showTranslation);
   }
 
-  Future<void> _play({required bool slow}) async {
-    _s.logger.touch();
+  Future<void> _play({required bool slow, bool auto = false}) async {
+    if (!auto) _s.logger.touch();
     final path = _s.content.audioPath(widget.lang, _sentence.text, slow: slow);
-    _audioPlays++;
+    if (!auto) _audioPlays++;
     _s.logger.log('item.audio', {
       'exposure_id': _exposureId,
       'scope': 'sentence',
       'rate': slow ? 'slow' : 'normal',
       'nth': _audioPlays,
       'available': path != null,
+      if (auto) 'auto': true,
     });
     if (path == null) {
+      if (auto) return;
       _toast('No audio for this sentence yet');
       return;
     }
@@ -249,7 +256,20 @@ class _ReaderScreenState extends State<ReaderScreen> {
       _toast('DuckLearn needs the microphone to check your reading.');
       return;
     }
-    await eng.startRecording();
+    final syllables = _sentence.tokens.where((t) => t.kind == 'han').length;
+    final started = _exposure;
+    _s.sound(Sfx.mic);
+    // let the start sound finish so it isn't recorded
+    await Future<void>.delayed(const Duration(milliseconds: 110));
+    await eng.startRecording(
+      // stop by itself when the learner finishes the sentence
+      onFinished: () {
+        if (mounted && _mic == _Mic.recording && _exposure == started) {
+          _readAloud();
+        }
+      },
+      maxLength: Duration(milliseconds: 4000 + syllables * 700),
+    );
     if (mounted) setState(() => _mic = _Mic.recording);
   }
 
@@ -287,6 +307,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
           {'expected': c.expected, 'heard': c.heard, 'v': c.verdict.name},
       ],
     });
+    _s.sound(soundAccuracy(score.chars) >= 85 ? Sfx.good : Sfx.tryAgain);
     setState(() {
       _speech = byToken;
       // A mispronounced character is a reading lapse, exactly like tapping to reveal.
@@ -360,13 +381,29 @@ class _ReaderScreenState extends State<ReaderScreen> {
         'reason': 'done',
         'items_done': _queue.length,
       });
+      _s.sound(Sfx.finish);
       setState(() => _finished = true);
       return;
     }
+    _s.sound(Sfx.next);
     setState(() {
       _index++;
       _present();
     });
+  }
+
+  /// Token indexes that fall inside a saved word ("My words").
+  Set<int> _savedTokens(SentenceRow s) {
+    final ranges = _s.words.highlights(widget.lang, s.text);
+    if (ranges.isEmpty) return const {};
+    final offs = tokenOffsets(s.tokens);
+    return {
+      for (var i = 0; i < s.tokens.length; i++)
+        if (ranges.any(
+          (r) => offs[i] < r.$2 && offs[i] + s.tokens[i].surface.length > r.$1,
+        ))
+          i,
+    };
   }
 
   void _showHelp() {
@@ -447,6 +484,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final s = _sentence;
+    final savedChars = _savedTokens(s);
     final levels = _levels.values.toSet();
     final hint =
         levels.contains(ScaffoldLevel.tap) ||
@@ -509,15 +547,32 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         alignment: _isLearner(s)
                             ? Alignment.centerRight
                             : Alignment.centerLeft,
-                        child: _SpeakerLabel(
-                          name: _isLearner(s) ? 'You' : (s.speaker ?? ''),
-                          zh: s.speaker ?? '',
+                        child: _SpeakerHeader(
+                          speaker: s.speaker ?? '',
+                          mine: _isLearner(s),
+                          current: true,
                         ),
                       ),
                     ],
                     const SizedBox(height: 12),
                     Card(
                       margin: EdgeInsets.zero,
+                      color: widget.conversation
+                          ? (_isLearner(s)
+                                ? theme.colorScheme.primaryContainer
+                                : theme.colorScheme.surfaceContainerHigh)
+                          : null,
+                      shape: widget.conversation
+                          ? RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                              side: BorderSide(
+                                width: 2,
+                                color: _isLearner(s)
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.outline,
+                              ),
+                            )
+                          : null,
                       child: Container(
                         width: double.infinity,
                         padding: EdgeInsets.fromLTRB(
@@ -529,6 +584,18 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         child: RubyText(
                           lang: widget.lang,
                           onReveal: _reveal,
+                          onLookup: (i) {
+                            _reveal(i);
+                            showWordLookup(
+                              context,
+                              services: _s,
+                              lang: widget.lang,
+                              sentence: _sentence,
+                              tokenIndex: i,
+                            ).then((_) {
+                              if (mounted) setState(() {});
+                            });
+                          },
                           fontSize: (wide ? 44 : 34) * _s.prefs.textScale,
                           tokens: [
                             for (var i = 0; i < s.tokens.length; i++)
@@ -541,6 +608,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                                     ScaffoldLevel.full,
                                 revealed: _revealedTokens.contains(i),
                                 flagged: s.tokens[i].flagged,
+                                saved: savedChars.contains(i),
                                 mark: switch (_speech[i]?.verdict) {
                                   Verdict.ok => SpeechMark.ok,
                                   Verdict.tone => SpeechMark.tone,
@@ -1059,6 +1127,62 @@ class _SummaryScreen extends StatelessWidget {
 enum _Mic { idle, recording, scoring }
 
 /// "4 of 5 right · 1 tone off" plus what was said instead.
+/// Share of characters whose sound was right; a heard tone slip counts half.
+/// Tones the recogniser "corrects" silently can't be seen, so this measures sounds.
+int soundAccuracy(List<CharScore> scores) {
+  if (scores.isEmpty) return 0;
+  var pts = 0.0;
+  for (final c in scores) {
+    if (c.verdict == Verdict.ok) pts += 1;
+    if (c.verdict == Verdict.tone) pts += 0.5;
+  }
+  return (100 * pts / scores.length).round();
+}
+
+class _AccuracyBadge extends StatelessWidget {
+  const _AccuracyBadge({required this.percent});
+  final int percent;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final good = percent >= 85;
+    final mid = percent >= 60;
+    final bg = good
+        ? scheme.primaryContainer
+        : mid
+        ? scheme.tertiaryContainer
+        : scheme.errorContainer;
+    final fg = good
+        ? scheme.onPrimaryContainer
+        : mid
+        ? scheme.onTertiaryContainer
+        : scheme.onErrorContainer;
+    return Container(
+      key: const ValueKey('speech-accuracy'),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '$percent%',
+            style: Theme.of(context).textTheme.titleLarge
+                ?.copyWith(color: fg, fontWeight: FontWeight.w700),
+          ),
+          Text(
+            'sounds',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(color: fg),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _SpeechResult extends StatelessWidget {
   const _SpeechResult({
     required this.scores,
@@ -1091,11 +1215,20 @@ class _SpeechResult extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                parts.join(' · '),
-                key: const ValueKey('speech-result'),
-                style: theme.textTheme.titleSmall,
+              Row(
+                children: [
+                  _AccuracyBadge(percent: soundAccuracy(scores)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      parts.join(' · '),
+                      key: const ValueKey('speech-result'),
+                      style: theme.textTheme.titleSmall,
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(height: 6),
               for (final c in scores.where((c) => c.isError).take(4))
                 Text(
                   "You said ${c.heard}, it's ${c.expected}",
@@ -1213,21 +1346,89 @@ class _ModelDownloadDialogState extends State<_ModelDownloadDialog> {
   }
 }
 
-class _SpeakerLabel extends StatelessWidget {
-  const _SpeakerLabel({required this.name, required this.zh});
-  final String name;
-  final String zh;
+/// English role for each speaker name used in the conversations.
+const speakerRoles = {
+  '你': 'You',
+  '司機': 'Driver',
+  '伙計': 'Waiter',
+  '店員': 'Shop assistant',
+  '檔主': 'Stall owner',
+  '路人': 'Passer-by',
+  '朋友': 'Friend',
+  '醫生': 'Doctor',
+  '姑娘': 'Nurse',
+  '老細': 'Boss',
+  '職員': 'Staff',
+  '經紀': 'Agent',
+  '業主': 'Landlord',
+  '鄰居': 'Neighbour',
+  '速遞員': 'Courier',
+  '室友': 'Flatmate',
+  '同事': 'Colleague',
+  '警員': 'Police officer',
+  '保安': 'Security guard',
+  '經理': 'Manager',
+  '同學': 'Classmate',
+  '遊客': 'Tourist',
+  '阿明': 'Ah Ming',
+};
+
+/// "You say" / "伙計 Waiter says", with an avatar, on the speaker's side.
+class _SpeakerHeader extends StatelessWidget {
+  const _SpeakerHeader({
+    required this.speaker,
+    required this.mine,
+    this.current = false,
+  });
+  final String speaker;
+  final bool mine;
+  final bool current;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final role = speakerRoles[speaker];
+    final avatar = CircleAvatar(
+      radius: current ? 14 : 11,
+      backgroundColor: mine ? scheme.primary : scheme.secondary,
+      foregroundColor: mine ? scheme.onPrimary : scheme.onSecondary,
+      child: mine
+          ? Icon(Icons.person_rounded, size: current ? 18 : 14)
+          : Text(
+              speaker.isEmpty ? '?' : speaker.characters.first,
+              style: chineseStyle(
+                'yue',
+                fontSize: current ? 14 : 11,
+                color: scheme.onSecondary,
+              ),
+            ),
+    );
+    final label = Text.rich(
+      TextSpan(
+        children: [
+          if (!mine)
+            TextSpan(
+              text: '$speaker ',
+              style: chineseStyle('yue', fontSize: 14),
+            ),
+          TextSpan(text: mine ? 'You' : (role ?? '')),
+          if (current) TextSpan(text: mine ? ' say' : ' says'),
+        ],
+      ),
+      style: (current ? theme.textTheme.labelLarge : theme.textTheme.labelSmall)
+          ?.copyWith(
+            color: mine ? scheme.primary : scheme.onSurfaceVariant,
+            fontWeight: FontWeight.w600,
+          ),
+    );
     return Padding(
       padding: const EdgeInsets.only(top: 6),
-      child: Text(
-        name == 'You' ? 'You (你)' : zh,
-        style: theme.textTheme.labelMedium?.copyWith(
-          color: theme.colorScheme.primary,
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: mine
+            ? [label, const SizedBox(width: 6), avatar]
+            : [avatar, const SizedBox(width: 6), label],
       ),
     );
   }
@@ -1264,9 +1465,11 @@ class _Bubble extends StatelessWidget {
               ? CrossAxisAlignment.end
               : CrossAxisAlignment.start,
           children: [
-            if (!mine && (line.speaker ?? '').isNotEmpty)
+            if ((line.speaker ?? '').isNotEmpty)
               Text(
-                line.speaker!,
+                mine
+                    ? 'You'
+                    : '${line.speaker} ${speakerRoles[line.speaker] ?? ''}',
                 style: Theme.of(context).textTheme.labelSmall,
               ),
             Text(line.text, style: chineseStyle(lang, fontSize: 18)),

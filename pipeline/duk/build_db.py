@@ -22,7 +22,7 @@ from .annotate import FLAG, HAN, Annotation, annotate
 from .content import Content, ContentError, load_content
 from .reference import load_reference
 
-SCHEMA_VERSION = 4  # 2: lex_char / lex_word; 3: dialogue; 4: stories (dialogue.kind)
+SCHEMA_VERSION = 5  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -72,6 +72,11 @@ CREATE TABLE dialogue(
   id TEXT PRIMARY KEY, scenario_id TEXT NOT NULL REFERENCES scenario(id), title TEXT NOT NULL,
   lines INTEGER NOT NULL, kind TEXT NOT NULL, lang TEXT NOT NULL, level INTEGER NOT NULL,
   pair_id TEXT);
+CREATE TABLE dict_entry(
+  trad TEXT NOT NULL, simp TEXT NOT NULL, pinyin TEXT NOT NULL, jyutping TEXT NOT NULL,
+  en TEXT NOT NULL, source TEXT NOT NULL);
+CREATE INDEX dict_trad ON dict_entry(trad);
+CREATE INDEX dict_simp ON dict_entry(simp);
 CREATE TABLE audio(
   hash TEXT PRIMARY KEY, lang TEXT NOT NULL, voice TEXT NOT NULL, rate TEXT NOT NULL,
   text TEXT NOT NULL, path TEXT NOT NULL);
@@ -270,6 +275,19 @@ def build(
                 "INSERT INTO lex_word VALUES(?,?,?)", ((lang, w, r) for w, r in words.items())
             )
             result.warnings.append(f"lexicon {lang}: {len(chars)} chars, {len(words)} words")
+
+    if with_lexicon:
+        from .dictionary import load_dictionary
+
+        entries = load_dictionary(raw_root)
+        if entries is None:
+            result.warnings.append("dictionary missing (run `duk fetch`): word meanings empty")
+        else:
+            db.executemany(
+                "INSERT INTO dict_entry VALUES(?,?,?,?,?,?)",
+                ((e.trad, e.simp, e.pinyin, e.jyutping, e.en, e.source) for e in entries),
+            )
+            result.warnings.append(f"dictionary: {len(entries)} entries")
 
     if problems:
         db.close()

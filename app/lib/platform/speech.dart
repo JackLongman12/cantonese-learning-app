@@ -9,8 +9,11 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
+
 import 'package:record/record.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
+
+import '../engine/end_of_speech.dart';
 
 const _hf =
     'https://huggingface.co/csukuangfj/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17/resolve/main';
@@ -109,8 +112,15 @@ class SpeechEngine {
 
   Future<bool> canRecord() => _recorder.hasPermission();
 
-  Future<void> startRecording() async {
+  /// Starts recording. [onFinished] fires once, when the learner stops speaking
+  /// (see [EndOfSpeech]); [maxLength] caps very long sentences.
+  Future<void> startRecording({
+    void Function()? onFinished,
+    Duration maxLength = const Duration(seconds: 20),
+  }) async {
     _pcm.clear();
+    final end = EndOfSpeech(sampleRate: sampleRate, maxLength: maxLength);
+    var fired = false;
     final stream = await _recorder.startStream(
       const RecordConfig(
         encoder: AudioEncoder.pcm16bits,
@@ -119,7 +129,13 @@ class SpeechEngine {
         noiseSuppress: true,
       ),
     );
-    _sub = stream.listen(_pcm.add);
+    _sub = stream.listen((chunk) {
+      _pcm.add(chunk);
+      if (!fired && end.add(pcm16ToFloat(chunk))) {
+        fired = true;
+        onFinished?.call();
+      }
+    });
   }
 
   /// Stops and returns the recording as float samples in [-1, 1].

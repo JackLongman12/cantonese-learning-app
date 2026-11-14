@@ -103,6 +103,34 @@ class Updater {
     }
   }
 
+  /// Update downloads live in their own folder under the temp dir, so they can be
+  /// wiped without touching anything else.
+  static Directory updatesDir(Directory temp) =>
+      Directory(p.join(temp.path, 'ducklearn_updates'));
+
+  /// Removes leftovers of earlier updates: installers, half downloads, the Windows
+  /// script and unpack folders. Progress, settings and the speech model live in the
+  /// app support folder and are never touched.
+  static void cleanUp(Directory temp) {
+    try {
+      final dir = updatesDir(temp);
+      if (dir.existsSync()) dir.deleteSync(recursive: true);
+      if (!temp.existsSync()) return;
+      for (final e in temp.listSync()) {
+        final name = p.basename(e.path);
+        if (name.startsWith('ducklearn_update') ||
+            (name.startsWith('DuckLearn-') &&
+                (name.endsWith('.apk') ||
+                    name.endsWith('.zip') ||
+                    name.endsWith('.part')))) {
+          e.deleteSync(recursive: true);
+        }
+      }
+    } on Object {
+      // a file still in use (Windows) is cleaned next launch
+    }
+  }
+
   /// Downloads the asset into [dir] and returns its path.
   Future<String> download(
     UpdateInfo u,
@@ -175,5 +203,6 @@ Expand-Archive -Path $Zip -DestinationPath $tmp -Force
 $src = Get-ChildItem $tmp -Recurse -Filter 'duk.exe' | Select-Object -First 1
 Copy-Item -Path (Join-Path $src.DirectoryName '*') -Destination $Dir -Recurse -Force
 Remove-Item $tmp -Recurse -Force
+Remove-Item $Zip -Force -ErrorAction SilentlyContinue
 Start-Process -FilePath $Exe
 ''';

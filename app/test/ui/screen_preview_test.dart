@@ -93,7 +93,13 @@ void main() {
       );
 
       // Day 1: first session, everything new.
-      await t.scrollUntilVisible(find.text('Getting around Macau'), 200);
+      await t.tap(find.byKey(const ValueKey('tab-topics')));
+      await t.pumpAndSettle();
+      await t.scrollUntilVisible(
+        find.text('Getting around Macau'),
+        200,
+        scrollable: find.byType(Scrollable).hitTestable().first,
+      );
       await t.ensureVisible(
         find.ancestor(
           of: find.text('Getting around Macau'),
@@ -147,7 +153,13 @@ void main() {
       of: find.text('Eating out and paying'),
       matching: find.byType(InkWell),
     );
-    await t.scrollUntilVisible(find.text('Eating out and paying'), 200);
+    await t.tap(find.byKey(const ValueKey('tab-topics')));
+    await t.pumpAndSettle();
+    await t.scrollUntilVisible(
+      find.text('Eating out and paying'),
+      200,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
     await t.ensureVisible(topic);
     await t.pumpAndSettle();
     await t.tap(topic);

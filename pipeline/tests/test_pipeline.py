@@ -132,7 +132,7 @@ def test_build_writes_aligned_tokens_and_items(tmp_path):
     assert db.execute("SELECT COUNT(*) FROM item WHERE kind='word' AND key='唔該'").fetchone()[0]
     pair = db.execute("SELECT pair_id FROM sentence WHERE lang='cmn'").fetchone()[0]
     assert pair == "sent-test-001"
-    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "4"
+    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "5"
 
 
 def test_flags_reach_review_queue_until_fixed(tmp_path):
@@ -207,3 +207,23 @@ def test_dialogues_become_ordered_sentences(tmp_path):
         "SELECT id, speaker, turn FROM sentence WHERE dialogue = 'dlg-test-01' ORDER BY turn"
     ).fetchall()
     assert rows == [("dlg-test-01-01:yue", "你", 1), ("dlg-test-01-02:yue", "伙計", 2)]
+
+
+def test_dictionary_line_parsing(tmp_path):
+    from duk.dictionary import load_dictionary
+
+    for d in ("cedict", "cccanto", "cccanto_readings"):
+        (tmp_path / d).mkdir()
+    nl = chr(10)
+    (tmp_path / "cedict" / "c.u8").write_text(
+        "# header" + nl + "銀行 银行 [yin2 hang2] /bank/CL:家[jia1]/" + nl, "utf-8"
+    )
+    (tmp_path / "cccanto" / "c.txt").write_text(
+        "埋單 埋单 [mai2 dan1] {maai4 daan1} /to ask for the bill/" + nl, "utf-8"
+    )
+    (tmp_path / "cccanto_readings" / "r.txt").write_text(
+        "銀行 银行 [yin2 hang2] {ngan4 hong4}" + nl, "utf-8"
+    )
+    e = {x.trad: x for x in load_dictionary(tmp_path)}
+    assert e["銀行"].en == "bank" and e["銀行"].jyutping == "ngan4 hong4"
+    assert e["埋單"].source == "cccanto" and e["埋單"].en == "to ask for the bill"

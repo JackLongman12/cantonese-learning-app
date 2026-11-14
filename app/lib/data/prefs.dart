@@ -45,6 +45,14 @@ class Prefs {
   double get textScale => (_data['text_scale'] as num?)?.toDouble() ?? 1.0;
   set textScale(double v) => _set('text_scale', v);
 
+  /// Soft UI sounds on taps, next, save, results (on by default).
+  bool get soundEffects => _data['sound_effects'] != false;
+  set soundEffects(bool v) => _set('sound_effects', v);
+
+  /// Play each sentence's audio as soon as it appears (on by default).
+  bool get autoPlay => _data['auto_play'] != false;
+  set autoPlay(bool v) => _set('auto_play', v);
+
   /// Stories start in read-along mode.
   bool get readAlong => _data['read_along'] == true;
   set readAlong(bool v) => _set('read_along', v);

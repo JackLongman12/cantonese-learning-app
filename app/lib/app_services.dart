@@ -8,8 +8,10 @@ import 'engine/memory.dart';
 import 'engine/planner.dart';
 import 'engine/scaffold.dart';
 import 'engine/signals.dart';
+import 'engine/word_book.dart';
 import 'events/event_logger.dart';
 import 'platform/reminders.dart';
+import 'platform/sfx.dart';
 import 'platform/share_inbox.dart';
 import 'platform/updater.dart';
 import 'platform/speech.dart';
@@ -33,12 +35,17 @@ class AppServices {
     ShareInbox? shares,
     this.updater,
     this.reminders,
+    this.sfx,
     this.signals = const SignalPolicy(),
     this.planner = const Planner(),
   }) : prefs = prefs ?? Prefs.memory(),
        shares = shares ?? ShareInbox() {
     logger.addListener(learner.apply);
+    logger.addListener((e) => words.apply(e));
   }
+
+  /// Words saved from reading ("My words"), rebuilt from the event log.
+  late final WordBook words = WordBook.replay(logger.store.readAll());
 
   final ContentDb content;
   final EventLogger logger;
@@ -57,6 +64,14 @@ class AppServices {
 
   /// Daily reminder (Android; null in tests).
   final Reminders? reminders;
+
+  /// UI sounds (null in tests).
+  final SoundEffects? sfx;
+
+  /// Plays a UI sound unless the learner turned them off.
+  void sound(Sfx s) {
+    if (prefs.soundEffects) sfx?.play(s);
+  }
 
   /// Fade rules, shifted by the learner's "Jyutping help" setting.
   ScaffoldPolicy get scaffold => ScaffoldPolicy(shift: prefs.helpShift);
