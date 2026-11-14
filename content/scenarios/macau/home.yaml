@@ -1,0 +1,112 @@
+# Drafted by an LLM. Every line stays reviewed: false until the owner has read it aloud
+# and confirmed both the wording and the readings in build/review_queue.md.
+scenario:
+  id: scn-mo-home
+  title: Home and renting
+  region: macau
+  tags: [home, renting]
+
+defaults: {register: spoken, source: llm}
+
+# `pattern` groups variations of one sentence frame so the planner spreads them out.
+sentences:
+  - {id: sent-mo-home-001, yue: 我想租屋。, en: "I'm looking for a flat to rent.", pattern: rent, region: both}
+  - {id: sent-mo-home-002, yue: 呢個單位租幾多錢一個月？, en: "How much a month is this flat?", pattern: rent, region: both}
+  - {id: sent-mo-home-003, yue: 包唔包水電？, en: "Are water and electricity included?", pattern: rent, region: both}
+  - {id: sent-mo-home-004, yue: 要俾幾多個月按金？, en: "How many months' deposit?", pattern: rent, region: both}
+  - {id: sent-mo-home-005, yue: 租約簽幾耐？, en: "How long is the lease?", pattern: rent, region: both}
+  - {id: sent-mo-home-006, yue: 可唔可以約個時間睇樓？, en: "Can we arrange a time to view the flat?", pattern: view, region: both}
+  - {id: sent-mo-home-007, yue: 呢度有幾多個房？, en: "How many bedrooms are there?", pattern: view, region: both}
+  - {id: sent-mo-home-008, yue: 有冇冷氣？, en: "Is there air conditioning?", pattern: view, region: both}
+  - {id: sent-mo-home-009, yue: 有冇傢俬？, en: "Is it furnished?", pattern: view, region: both}
+  - {id: sent-mo-home-010, yue: 有冇電梯？, en: "Is there a lift?", pattern: view, region: both}
+  - {id: sent-mo-home-011, yue: 喺幾多樓呀？, en: "Which floor is it on?", pattern: view, region: both}
+  - {id: sent-mo-home-012, yue: 呢度近唔近巴士站？, en: "Is it near a bus stop?", pattern: view, region: both}
+  - {id: sent-mo-home-013, yue: 附近有冇街市？, en: "Is there a market nearby?", pattern: view, region: both}
+  - {id: sent-mo-home-014, yue: 呢區靜唔靜㗎？, en: "Is this area quiet?", pattern: view, region: both}
+  - {id: sent-mo-home-015, yue: 業主幾時可以俾鎖匙？, en: "When can the landlord give me the keys?", pattern: move, region: both}
+  - {id: sent-mo-home-016, yue: 我下個月搬入嚟。, en: "I'm moving in next month.", pattern: move, region: both}
+  - {id: sent-mo-home-017, yue: 我想搵搬屋公司。, en: "I'm looking for a removal company.", pattern: move, region: both}
+  - {id: sent-mo-home-018, yue: 幾時交租？, en: "When is the rent due?", pattern: rent, region: both}
+  - {id: sent-mo-home-019, yue: 我轉咗租俾你喇。, en: "I've transferred the rent to you.", pattern: rent, region: both}
+  - {id: sent-mo-home-020, yue: 唔該俾張收據我。, en: "Please give me a receipt.", pattern: rent, region: both}
+  - {id: sent-mo-home-021, yue: 冷氣壞咗。, en: "The air conditioning is broken.", pattern: repair, region: both}
+  - {id: sent-mo-home-022, yue: 熱水爐冇熱水。, en: "The water heater isn't giving any hot water.", pattern: repair, region: both}
+  - {id: sent-mo-home-023, yue: 個水喉漏水。, en: "The tap is leaking.", pattern: repair, region: both}
+  - {id: sent-mo-home-024, yue: 廁所塞咗。, en: "The toilet is blocked.", pattern: repair, region: both}
+  - {id: sent-mo-home-025, yue: 燈膽燒咗。, en: "The light bulb has blown.", pattern: repair, region: both}
+  - {id: sent-mo-home-026, yue: 個窗閂唔埋。, en: "The window won't close.", pattern: repair, region: both}
+  - {id: sent-mo-home-027, yue: 屋企停電。, en: "There's a power cut at home.", pattern: repair, region: both}
+  - {id: sent-mo-home-028, yue: 屋企冇水。, en: "There's no water at home.", pattern: repair, region: both}
+  - {id: sent-mo-home-029, yue: 可唔可以搵師傅嚟整？, en: "Can you get a repairman to fix it?", pattern: repair, region: both}
+  - {id: sent-mo-home-030, yue: 師傅幾時嚟？, en: "When is the repairman coming?", pattern: repair, region: both}
+  - {id: sent-mo-home-031, yue: 整要幾多錢？, en: "How much will the repair cost?", pattern: repair, region: both}
+  - {id: sent-mo-home-032, yue: 呢筆錢邊個俾？, en: "Who pays for this?", pattern: repair, region: both}
+  - {id: sent-mo-home-033, yue: 我要交電費。, en: "I need to pay the electricity bill.", pattern: bills, region: both}
+  - {id: sent-mo-home-034, yue: 水費單到咗。, en: "The water bill has arrived.", pattern: bills, region: both}
+  - {id: sent-mo-home-035, yue: 上網點申請？, en: "How do I sign up for internet?", pattern: bills, region: both}
+  - {id: sent-mo-home-036, yue: 屋企上唔到網。, en: "The internet isn't working at home.", pattern: bills, region: both}
+  - {id: sent-mo-home-037, yue: WiFi密碼係咩？, en: "What's the WiFi password?", pattern: bills, region: both}
+  - {id: sent-mo-home-038, yue: 管理費幾多錢？, en: "How much is the management fee?", pattern: bills, region: both}
+  - {id: sent-mo-home-039, yue: 管理處喺邊度？, en: "Where's the management office?", pattern: building, region: both}
+  - {id: sent-mo-home-040, yue: 樓下有保安。, en: "There's a security guard downstairs.", pattern: building, region: both}
+  - {id: sent-mo-home-041, yue: 垃圾房喺邊？, en: "Where's the rubbish room?", pattern: building, region: both}
+  - {id: sent-mo-home-042, yue: 幾點收垃圾？, en: "What time is the rubbish collected?", pattern: building, region: both}
+  - {id: sent-mo-home-043, yue: 隔籬好嘈。, en: "The neighbours are very noisy.", pattern: neighbours, region: both}
+  - {id: sent-mo-home-044, yue: 樓上漏水落嚟。, en: "Water is leaking down from upstairs.", pattern: neighbours, region: both}
+  - {id: sent-mo-home-045, yue: 唔該細聲啲。, en: "Please keep it down.", pattern: neighbours, region: both}
+  - {id: sent-mo-home-046, yue: 早晨！, en: "Good morning!", pattern: neighbours, region: both}
+  - {id: sent-mo-home-047, yue: 你都住呢度呀？, en: "You live here too?", pattern: neighbours, region: both}
+  - {id: sent-mo-home-048, yue: 我住喺十二樓。, en: "I live on the twelfth floor.", pattern: neighbours, region: both}
+  - {id: sent-mo-home-049, yue: 我屋企好細。, en: "My place is very small.", pattern: home, region: both}
+  - {id: sent-mo-home-050, yue: 屋企有兩房一廳。, en: "My place has two bedrooms and a living room.", pattern: home, region: both}
+  - {id: sent-mo-home-051, yue: 我同屋企人住。, en: "I live with my family.", pattern: home, region: both}
+  - {id: sent-mo-home-052, yue: 我自己一個人住。, en: "I live by myself.", pattern: home, region: both}
+  - {id: sent-mo-home-053, yue: 我同朋友夾租。, en: "I share the rent with a friend.", pattern: home, region: both}
+  - {id: sent-mo-home-054, yue: 今日要執屋。, en: "I need to tidy the place today.", pattern: chores, region: both}
+  - {id: sent-mo-home-055, yue: 我去洗衫。, en: "I'm going to do the laundry.", pattern: chores, region: both}
+  - {id: sent-mo-home-056, yue: 幫手晾衫。, en: "Help hang the clothes out.", pattern: chores, region: both}
+  - {id: sent-mo-home-057, yue: 收衫喇，就快落雨。, en: "Bring the laundry in, it's about to rain.", pattern: chores, region: both}
+  - {id: sent-mo-home-058, yue: 我去倒垃圾。, en: "I'm taking the rubbish out.", pattern: chores, region: both}
+  - {id: sent-mo-home-059, yue: 洗碗啦。, en: "Do the dishes.", pattern: chores, region: both}
+  - {id: sent-mo-home-060, yue: 我煮飯，你洗碗。, en: "I'll cook, you wash up.", pattern: chores, region: both}
+  - {id: sent-mo-home-061, yue: 拖下地啦。, en: "Mop the floor, will you.", pattern: chores, region: both}
+  - {id: sent-mo-home-062, yue: 雪櫃冇嘢食喇。, en: "There's nothing to eat in the fridge.", pattern: kitchen, region: both}
+  - {id: sent-mo-home-063, yue: 飯煲好未？, en: "Is the rice cooked yet?", pattern: kitchen, region: both}
+  - {id: sent-mo-home-064, yue: 今晚食咩好？, en: "What shall we have tonight?", pattern: kitchen, region: both}
+  - {id: sent-mo-home-065, yue: 叫外賣啦。, en: "Let's order takeaway.", pattern: kitchen, region: both}
+  - {id: sent-mo-home-066, yue: 記得熄爐。, en: "Remember to turn off the stove.", pattern: kitchen, region: both}
+  - {id: sent-mo-home-067, yue: 熄燈喇。, en: "Turn off the lights.", pattern: home, region: both}
+  - {id: sent-mo-home-068, yue: 開冷氣啦，好熱。, en: "Turn on the air con, it's hot.", pattern: home, region: both}
+  - {id: sent-mo-home-069, yue: 好凍，閂埋窗啦。, en: "It's cold, close the window.", pattern: home, region: both}
+  - {id: sent-mo-home-070, yue: 記得鎖門。, en: "Remember to lock the door.", pattern: home, region: both}
+  - {id: sent-mo-home-071, yue: 我唔記得帶鎖匙。, en: "I forgot my keys.", pattern: home, region: both}
+  - {id: sent-mo-home-072, yue: 我鎖咗自己喺門外。, en: "I've locked myself out.", pattern: home, region: both}
+  - {id: sent-mo-home-073, yue: 有人撳門鐘。, en: "Someone's ringing the doorbell.", pattern: home, region: both}
+  - {id: sent-mo-home-074, yue: 邊位？, en: "Who is it?", pattern: home, region: both}
+  - {id: sent-mo-home-075, yue: 速遞，唔該簽收。, en: "Delivery, please sign for it.", pattern: delivery, region: both}
+  - {id: sent-mo-home-076, yue: 放喺門口就得。, en: "Just leave it at the door.", pattern: delivery, region: both}
+  - {id: sent-mo-home-077, yue: 我返到屋企喇。, en: "I'm home.", pattern: home, region: both}
+  - {id: sent-mo-home-078, yue: 你幾點返屋企？, en: "What time are you coming home?", pattern: home, region: both}
+  - {id: sent-mo-home-079, yue: 今晚我唔返嚟食飯。, en: "I won't be home for dinner tonight.", pattern: home, region: both}
+  - {id: sent-mo-home-080, yue: 屋企有曱甴。, en: "There are cockroaches at home.", pattern: pests, region: both}
+  - {id: sent-mo-home-081, yue: 要搵人嚟殺蟲。, en: "We need someone to come and do pest control.", pattern: pests, region: both}
+  - {id: sent-mo-home-082, yue: 屋企好潮濕。, en: "The place is very damp.", pattern: weather, region: both}
+  - {id: sent-mo-home-083, yue: 開抽濕機啦。, en: "Turn on the dehumidifier.", pattern: weather, region: both}
+  - {id: sent-mo-home-084, yue: 啲衫晾唔乾。, en: "The clothes won't dry.", pattern: weather, region: both}
+  - {id: sent-mo-home-085, yue: 牆身生咗霉。, en: "The wall has gone mouldy.", pattern: weather, region: both}
+  - {id: sent-mo-home-086, yue: 我想退租。, en: "I want to end the lease.", pattern: leave, region: both}
+  - {id: sent-mo-home-087, yue: 要早一個月通知。, en: "One month's notice is required.", pattern: leave, region: both}
+  - {id: sent-mo-home-088, yue: 按金幾時退俾我？, en: "When will I get my deposit back?", pattern: leave, region: both}
+  - {id: sent-mo-home-089, yue: 搬走之前要執返乾淨。, en: "It has to be cleaned up before moving out.", pattern: leave, region: both}
+  - {id: sent-mo-home-090, yue: 搬屋好辛苦。, en: "Moving house is exhausting.", pattern: move, region: both}
+  - {id: sent-mo-home-091, yue: 我想買啲新傢俬。, en: "I want to buy some new furniture.", pattern: furniture, region: both}
+  - {id: sent-mo-home-092, yue: 張床太細。, en: "The bed is too small.", pattern: furniture, region: both}
+  - {id: sent-mo-home-093, yue: 張梳化好舒服。, en: "The sofa is really comfortable.", pattern: furniture, region: both}
+  - {id: sent-mo-home-094, yue: 張枱擺唔落。, en: "The table won't fit.", pattern: furniture, region: both}
+  - {id: sent-mo-home-095, yue: 呢度可唔可以養狗？, en: "Can I keep a dog here?", pattern: pets, region: both}
+  - {id: sent-mo-home-096, yue: 我養咗隻貓。, en: "I have a cat.", pattern: pets, region: both}
+  - {id: sent-mo-home-097, yue: 大廈有冇泳池？, en: "Does the building have a pool?", pattern: building, region: both}
+  - {id: sent-mo-home-098, yue: 大廈有會所。, en: "The building has a clubhouse.", pattern: building, region: both}
+  - {id: sent-mo-home-099, yue: 地方唔大，但係好光猛。, en: "It's not big, but it's very bright.", pattern: view, region: both}
+  - {id: sent-mo-home-100, yue: 我好鍾意呢個單位。, en: "I really like this flat.", pattern: view, region: both}

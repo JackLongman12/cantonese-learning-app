@@ -1,0 +1,112 @@
+# Drafted by an LLM. Every line stays reviewed: false until the owner has read it aloud
+# and confirmed both the wording and the readings in build/review_queue.md.
+scenario:
+  id: scn-mo-shopping
+  title: Shopping and markets
+  region: macau
+  tags: [shopping, market]
+
+defaults: {register: spoken, source: llm}
+
+# `pattern` groups variations of one sentence frame so the planner spreads them out.
+sentences:
+  - {id: sent-mo-shop-001, yue: 呢個幾錢呀？, en: "How much is this?", pattern: price, region: both}
+  - {id: sent-mo-shop-002, yue: 有冇平啲嘅？, en: "Is there anything cheaper?", pattern: price, region: both}
+  - {id: sent-mo-shop-003, yue: 可唔可以平啲？, en: "Can you make it cheaper?", pattern: bargain, region: both}
+  - {id: sent-mo-shop-004, yue: 買兩個平唔平啲？, en: "Is it cheaper if I buy two?", pattern: bargain, region: both}
+  - {id: sent-mo-shop-005, yue: 算平啲啦。, en: "Give me a better price.", pattern: bargain, region: both}
+  - {id: sent-mo-shop-006, yue: 太貴喇，我唔要喇。, en: "Too expensive, I'll leave it.", pattern: bargain, region: both}
+  - {id: sent-mo-shop-007, yue: 我睇下先。, en: "I'm just looking.", pattern: browse, region: both}
+  - {id: sent-mo-shop-008, yue: 我諗下先。, en: "Let me think about it.", pattern: browse, region: both}
+  - {id: sent-mo-shop-009, yue: 有冇其他顏色？, en: "Any other colours?", pattern: options, region: both}
+  - {id: sent-mo-shop-010, yue: 有冇大啲嘅？, en: "Do you have a bigger one?", pattern: options, region: both}
+  - {id: sent-mo-shop-011, yue: 有冇細啲嘅？, en: "Do you have a smaller one?", pattern: options, region: both}
+  - {id: sent-mo-shop-012, yue: 有冇細碼？, en: "Do you have a small size?", pattern: options, region: both}
+  - {id: sent-mo-shop-013, yue: 可唔可以試下？, en: "Can I try it on?", pattern: try, region: both}
+  - {id: sent-mo-shop-014, yue: 試身室喺邊度？, en: "Where's the fitting room?", pattern: try, region: both}
+  - {id: sent-mo-shop-015, yue: 呢件啱唔啱我？, en: "Does this one suit me?", pattern: try, region: both}
+  - {id: sent-mo-shop-016, yue: 太緊喇。, en: "It's too tight.", pattern: try, region: both}
+  - {id: sent-mo-shop-017, yue: 太鬆喇。, en: "It's too loose.", pattern: try, region: both}
+  - {id: sent-mo-shop-018, yue: 我要呢件。, en: "I'll take this one.", pattern: buy, region: both}
+  - {id: sent-mo-shop-019, yue: 我要兩件。, en: "I'll take two.", pattern: buy, region: both}
+  - {id: sent-mo-shop-020, yue: 唔該幫我包起佢。, en: "Please wrap it up for me.", pattern: buy, region: both}
+  - {id: sent-mo-shop-021, yue: 可唔可以俾個膠袋我？, en: "Can I have a plastic bag?", pattern: bag, region: both}
+  - {id: sent-mo-shop-022, yue: 膠袋要錢㗎？, en: "Do plastic bags cost extra?", pattern: bag, region: both}
+  - {id: sent-mo-shop-023, yue: 我自己有袋。, en: "I've got my own bag.", pattern: bag, region: both}
+  - {id: sent-mo-shop-024, yue: 可唔可以退貨？, en: "Can I return it?", pattern: return, region: both}
+  - {id: sent-mo-shop-025, yue: 我想換過件。, en: "I'd like to exchange it.", pattern: return, region: both}
+  - {id: sent-mo-shop-026, yue: 呢件壞咗。, en: "This one is broken.", pattern: return, region: both}
+  - {id: sent-mo-shop-027, yue: 有冇保養？, en: "Is there a warranty?", pattern: return, region: both}
+  - {id: sent-mo-shop-028, yue: 超市喺邊度？, en: "Where's the supermarket?", pattern: where, region: both}
+  - {id: sent-mo-shop-029, yue: 邊度有便利店？, en: "Where is there a convenience store?", pattern: where, region: both}
+  - {id: sent-mo-shop-030, yue: 街市幾點開？, en: "What time does the market open?", pattern: hours, region: both}
+  - {id: sent-mo-shop-031, yue: 街市幾點收？, en: "What time does the market close?", pattern: hours, region: both}
+  - {id: sent-mo-shop-032, yue: 呢啲菜幾錢一斤？, en: "How much a catty are these vegetables?", pattern: market, region: both}
+  - {id: sent-mo-shop-033, yue: 我要半斤菜心。, en: "Half a catty of choi sum.", pattern: market, region: both}
+  - {id: sent-mo-shop-034, yue: 我要一斤蘋果。, en: "A catty of apples.", pattern: market, region: both}
+  - {id: sent-mo-shop-035, yue: 呢啲橙甜唔甜？, en: "Are these oranges sweet?", pattern: market, region: both}
+  - {id: sent-mo-shop-036, yue: 呢條魚新唔新鮮？, en: "Is this fish fresh?", pattern: market, region: both}
+  - {id: sent-mo-shop-037, yue: 幫我劏埋條魚。, en: "Please gut the fish for me as well.", pattern: market, region: both}
+  - {id: sent-mo-shop-038, yue: 我要一斤豬肉，要瘦啲。, en: "A catty of pork, on the lean side.", pattern: market, region: both}
+  - {id: sent-mo-shop-039, yue: 幫我切粒。, en: "Please dice it for me.", pattern: market, region: both}
+  - {id: sent-mo-shop-040, yue: 幫我剁碎佢。, en: "Please mince it for me.", pattern: market, region: both}
+  - {id: sent-mo-shop-041, yue: 雞蛋幾錢一打？, en: "How much for a dozen eggs?", pattern: market, region: both}
+  - {id: sent-mo-shop-042, yue: 有冇豆腐？, en: "Do you have tofu?", pattern: market, region: both}
+  - {id: sent-mo-shop-043, yue: 送唔送貨㗎？, en: "Do you deliver?", pattern: delivery, region: both}
+  - {id: sent-mo-shop-044, yue: 送到氹仔要幾錢？, en: "How much to deliver to Taipa?", pattern: delivery}
+  - {id: sent-mo-shop-045, yue: 幾時可以送到？, en: "When can it be delivered?", pattern: delivery, region: both}
+  - {id: sent-mo-shop-046, yue: 藥房喺邊度？, en: "Where's the pharmacy?", pattern: where, region: both}
+  - {id: sent-mo-shop-047, yue: 我想買啲感冒藥。, en: "I'd like some cold medicine.", pattern: pharmacy, region: both}
+  - {id: sent-mo-shop-048, yue: 有冇止痛藥？, en: "Do you have painkillers?", pattern: pharmacy, region: both}
+  - {id: sent-mo-shop-049, yue: 呢隻藥點食㗎？, en: "How do I take this medicine?", pattern: pharmacy, region: both}
+  - {id: sent-mo-shop-050, yue: 一日食幾多次？, en: "How many times a day?", pattern: pharmacy, region: both}
+  - {id: sent-mo-shop-051, yue: 我想買支洗頭水。, en: "I'd like a bottle of shampoo.", pattern: toiletries, region: both}
+  - {id: sent-mo-shop-052, yue: 牙膏放喺邊度？, en: "Where's the toothpaste?", pattern: toiletries, region: both}
+  - {id: sent-mo-shop-053, yue: 有冇紙巾？, en: "Do you have tissues?", pattern: toiletries, region: both}
+  - {id: sent-mo-shop-054, yue: 廁紙喺邊行？, en: "Which aisle is the toilet paper in?", pattern: toiletries, region: both}
+  - {id: sent-mo-shop-055, yue: 呢個有冇得試？, en: "Is there a tester for this?", pattern: browse, region: both}
+  - {id: sent-mo-shop-056, yue: 呢樣嘢做緊特價。, en: "This is on special offer.", pattern: sale, region: both}
+  - {id: sent-mo-shop-057, yue: 買一送一。, en: "Buy one get one free.", pattern: sale, region: both}
+  - {id: sent-mo-shop-058, yue: 全場八折。, en: "20% off everything.", pattern: sale, region: both}
+  - {id: sent-mo-shop-059, yue: 呢個打幾折？, en: "What's the discount on this?", pattern: sale, region: both}
+  - {id: sent-mo-shop-060, yue: 會員有冇折？, en: "Is there a member discount?", pattern: sale, region: both}
+  - {id: sent-mo-shop-061, yue: 我冇會員卡。, en: "I don't have a membership card.", pattern: sale, region: both}
+  - {id: sent-mo-shop-062, yue: 收唔收信用卡？, en: "Do you take credit cards?", pattern: pay, region: both}
+  - {id: sent-mo-shop-063, yue: 可唔可以分期？, en: "Can I pay in instalments?", pattern: pay, region: both}
+  - {id: sent-mo-shop-064, yue: 呢個係咪正貨嚟㗎？, en: "Is this genuine?", pattern: quality, region: both}
+  - {id: sent-mo-shop-065, yue: 呢個係邊度整㗎？, en: "Where is this made?", pattern: quality, region: both}
+  - {id: sent-mo-shop-066, yue: 質素好唔好㗎？, en: "Is the quality good?", pattern: quality, region: both}
+  - {id: sent-mo-shop-067, yue: 用唔用得耐㗎？, en: "Will it last?", pattern: quality, region: both}
+  - {id: sent-mo-shop-068, yue: 我想買部新電話。, en: "I want to buy a new phone.", pattern: electronics, region: both}
+  - {id: sent-mo-shop-069, yue: 有冇叉電器賣？, en: "Do you sell chargers?", pattern: electronics, region: both}
+  - {id: sent-mo-shop-070, yue: 呢部係咪行貨？, en: "Is this the local-warranty version?", pattern: electronics, region: both}
+  - {id: sent-mo-shop-071, yue: 我部電話壞咗，可唔可以整？, en: "My phone is broken, can it be fixed?", pattern: electronics, region: both}
+  - {id: sent-mo-shop-072, yue: 整要幾耐？, en: "How long will the repair take?", pattern: electronics, region: both}
+  - {id: sent-mo-shop-073, yue: 我想買張電話卡。, en: "I'd like to buy a SIM card.", pattern: electronics, region: both}
+  - {id: sent-mo-shop-074, yue: 增值卡喺邊度買？, en: "Where can I buy a top-up card?", pattern: electronics, region: both}
+  - {id: sent-mo-shop-075, yue: 我想睇下嗰對鞋。, en: "I'd like to look at that pair of shoes.", pattern: browse, region: both}
+  - {id: sent-mo-shop-076, yue: 有冇四十號？, en: "Do you have size 40?", pattern: options, region: both}
+  - {id: sent-mo-shop-077, yue: 呢對鞋著得好舒服。, en: "These shoes are really comfortable.", pattern: try, region: both}
+  - {id: sent-mo-shop-078, yue: 我買嚟送人嘅。, en: "I'm buying it as a gift.", pattern: gift, region: both}
+  - {id: sent-mo-shop-079, yue: 可唔可以包靚啲？, en: "Can you wrap it nicely?", pattern: gift, region: both}
+  - {id: sent-mo-shop-080, yue: 有冇禮物盒？, en: "Do you have a gift box?", pattern: gift, region: both}
+  - {id: sent-mo-shop-081, yue: 唔該，我想搵呢樣嘢。, en: "Excuse me, I'm looking for this.", pattern: where, region: both}
+  - {id: sent-mo-shop-082, yue: 呢樣嘢賣晒未？, en: "Is this sold out?", pattern: stock, region: both}
+  - {id: sent-mo-shop-083, yue: 幾時有貨？, en: "When will it be back in stock?", pattern: stock, region: both}
+  - {id: sent-mo-shop-084, yue: 可唔可以幫我留一件？, en: "Can you put one aside for me?", pattern: stock, region: both}
+  - {id: sent-mo-shop-085, yue: 我聽日嚟拎。, en: "I'll come and collect it tomorrow.", pattern: stock, region: both}
+  - {id: sent-mo-shop-086, yue: 呢度有冇得泊車？, en: "Is there parking here?", pattern: where, region: both}
+  - {id: sent-mo-shop-087, yue: 商場幾點閂門？, en: "What time does the mall close?", pattern: hours, region: both}
+  - {id: sent-mo-shop-088, yue: 我去行街。, en: "I'm going shopping.", pattern: chat, region: both}
+  - {id: sent-mo-shop-089, yue: 我淨係行下，唔買嘢。, en: "I'm just browsing, not buying.", pattern: chat, region: both}
+  - {id: sent-mo-shop-090, yue: 今日買咗好多嘢。, en: "I bought a lot today.", pattern: chat, region: both}
+  - {id: sent-mo-shop-091, yue: 啲錢用晒喇。, en: "I've spent all my money.", pattern: chat, region: both}
+  - {id: sent-mo-shop-092, yue: 呢度啲嘢好抵。, en: "Things here are good value.", pattern: chat, region: both}
+  - {id: sent-mo-shop-093, yue: 網上買平啲。, en: "It's cheaper online.", pattern: chat, region: both}
+  - {id: sent-mo-shop-094, yue: 我喺網上訂咗。, en: "I ordered it online.", pattern: online, region: both}
+  - {id: sent-mo-shop-095, yue: 我個速遞到咗未？, en: "Has my parcel arrived?", pattern: online, region: both}
+  - {id: sent-mo-shop-096, yue: 速遞放咗喺管理處。, en: "The parcel was left at the management office.", pattern: online, region: both}
+  - {id: sent-mo-shop-097, yue: 我要拎包裹。, en: "I need to collect a parcel.", pattern: online, region: both}
+  - {id: sent-mo-shop-098, yue: 呢個包裹唔係我嘅。, en: "This parcel isn't mine.", pattern: online, region: both}
+  - {id: sent-mo-shop-099, yue: 收據唔好掉咗佢。, en: "Don't throw the receipt away.", pattern: return, region: both}
+  - {id: sent-mo-shop-100, yue: 多謝，拜拜。, en: "Thanks, bye.", pattern: chat, region: both}

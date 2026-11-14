@@ -2,7 +2,7 @@
 
 Work top to bottom. Do not start a phase until the previous phase's "Done when" list is met. Tick boxes as tasks land and keep the **Status** line current.
 
-**Status (2026-11-15):** Phase 0 mostly done and the core of Phase 1 exists. Pipeline, engine, event log, ruby reader and one 100-sentence topic are built and tested (15 pipeline tests, 28 app tests). Toolchain installed; the app runs on Windows with audio and the Android APK builds. Not yet installed on a phone. Pushed to the private repo `JackLongman12/cantonese-learning-app`; the CI workflow has not been confirmed green yet.
+**Status (2026-11-15):** Phase 0 mostly done and the core of Phase 1 exists. Pipeline, engine, event log, ruby reader and seven 100-sentence topics (transport, food and money, shopping, health, home, friends and chat, weather and emergencies) are built and tested (15 pipeline tests, 30 app tests, Windows integration test). Toolchain installed; the app runs on Windows with audio and the Android APK builds. Not yet installed on a phone. Pushed to the private repo `JackLongman12/cantonese-learning-app`; the CI workflow has not been confirmed green yet.
 
 ## Needed from the owner (ask once, early; do not block on optional ones)
 
@@ -52,15 +52,15 @@ Goal: prove the three risky things (readings, audio, ruby rendering) on 20 sente
 | Topic | File | Sentences | Owner-reviewed |
 |---|---|---|---|
 | Getting around Macau (bus, taxi, LRT, border, directions) | `scenarios/macau/getting-around.yaml` | 100 | 0 |
-| Eating out and paying (茶餐廳, Macanese food, bills, money) | `scenarios/macau/food-and-money.yaml` | 9 | 0 |
-| Shopping and markets (supermarket, wet market, pharmacy) | to write | 0 | 0 |
-| Home and renting (landlord, repairs, utilities, deliveries) | to write | 0 | 0 |
-| Health (clinic, hospital, pharmacy, symptoms) | to write | 0 | 0 |
+| Eating out and paying (茶餐廳, Macanese food, bills, money) | `scenarios/macau/food-and-money.yaml` | 100 | 0 |
+| Shopping and markets (supermarket, wet market, pharmacy) | `scenarios/macau/shopping.yaml` | 100 | 0 |
+| Home and renting (landlord, repairs, utilities, deliveries) | `scenarios/macau/home.yaml` | 100 | 0 |
+| Health (clinic, hospital, pharmacy, symptoms) | `scenarios/macau/health.yaml` | 100 | 0 |
 | Government and paperwork (ID, forms, bank, post office) | to write | 0 | 0 |
 | Work and study | to write | 0 | 0 |
-| Friends, family, small talk and slang | to write | 0 | 0 |
+| Friends, family, small talk and slang | `scenarios/macau/friends-and-chat.yaml` | 100 | 0 |
 | Phone, messaging and written Cantonese (chat style) | to write | 0 | 0 |
-| Weather and emergencies (typhoon, rainstorm, police, fire) | to write | 0 | 0 |
+| Weather and emergencies (typhoon, rainstorm, police, fire) | `scenarios/macau/weather-and-emergencies.yaml` | 100 | 0 |
 | Signs and notices (written register) | to write | 0 | 0 |
 | Casinos, hotels and tourism spots in Macau | to write | 0 | 0 |
 | Getting around Hong Kong (MTR, minibus, Octopus) | to write | 0 | 0 |

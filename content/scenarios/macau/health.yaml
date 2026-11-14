@@ -1,0 +1,112 @@
+# Drafted by an LLM. Every line stays reviewed: false until the owner has read it aloud
+# and confirmed both the wording and the readings in build/review_queue.md.
+scenario:
+  id: scn-mo-health
+  title: Health and the doctor
+  region: macau
+  tags: [health]
+
+defaults: {register: spoken, source: llm}
+
+# `pattern` groups variations of one sentence frame so the planner spreads them out.
+sentences:
+  - {id: sent-mo-health-001, yue: 我唔舒服。, en: "I'm not feeling well.", pattern: feel, region: both}
+  - {id: sent-mo-health-002, yue: 我頭痛。, en: "I have a headache.", pattern: symptom, region: both}
+  - {id: sent-mo-health-003, yue: 我肚痛。, en: "I have a stomach ache.", pattern: symptom, region: both}
+  - {id: sent-mo-health-004, yue: 我喉嚨痛。, en: "I have a sore throat.", pattern: symptom, region: both}
+  - {id: sent-mo-health-005, yue: 我發燒。, en: "I have a fever.", pattern: symptom, region: both}
+  - {id: sent-mo-health-006, yue: 我咳得好犀利。, en: "I'm coughing badly.", pattern: symptom, region: both}
+  - {id: sent-mo-health-007, yue: 我流鼻水。, en: "I have a runny nose.", pattern: symptom, region: both}
+  - {id: sent-mo-health-008, yue: 我塞鼻。, en: "I have a blocked nose.", pattern: symptom, region: both}
+  - {id: sent-mo-health-009, yue: 我頭暈。, en: "I feel dizzy.", pattern: symptom, region: both}
+  - {id: sent-mo-health-010, yue: 我想嘔。, en: "I feel like throwing up.", pattern: symptom, region: both}
+  - {id: sent-mo-health-011, yue: 我肚屙。, en: "I have diarrhoea.", pattern: symptom, region: both}
+  - {id: sent-mo-health-012, yue: 我成身骨痛。, en: "My whole body aches.", pattern: symptom, region: both}
+  - {id: sent-mo-health-013, yue: 我瞓唔着。, en: "I can't sleep.", pattern: symptom, region: both}
+  - {id: sent-mo-health-014, yue: 我扭親腳。, en: "I've twisted my ankle.", pattern: injury, region: both}
+  - {id: sent-mo-health-015, yue: 我跌親。, en: "I fell and hurt myself.", pattern: injury, region: both}
+  - {id: sent-mo-health-016, yue: 我割親手指。, en: "I've cut my finger.", pattern: injury, region: both}
+  - {id: sent-mo-health-017, yue: 我俾蚊咬。, en: "I've been bitten by mosquitoes.", pattern: injury, region: both}
+  - {id: sent-mo-health-018, yue: 痛咗兩日。, en: "It's been hurting for two days.", pattern: duration, region: both}
+  - {id: sent-mo-health-019, yue: 由尋日開始。, en: "It started yesterday.", pattern: duration, region: both}
+  - {id: sent-mo-health-020, yue: 已經一個禮拜喇。, en: "It's been a week already.", pattern: duration, region: both}
+  - {id: sent-mo-health-021, yue: 有時好啲，有時差啲。, en: "Sometimes better, sometimes worse.", pattern: duration, region: both}
+  - {id: sent-mo-health-022, yue: 我想睇醫生。, en: "I want to see a doctor.", pattern: clinic, region: both}
+  - {id: sent-mo-health-023, yue: 附近有冇診所？, en: "Is there a clinic nearby?", pattern: clinic, region: both}
+  - {id: sent-mo-health-024, yue: 醫院喺邊度？, en: "Where is the hospital?", pattern: clinic, region: both}
+  - {id: sent-mo-health-025, yue: 我想掛號。, en: "I'd like to register.", pattern: clinic, region: both}
+  - {id: sent-mo-health-026, yue: 要等幾耐先到我？, en: "How long until it's my turn?", pattern: clinic, region: both}
+  - {id: sent-mo-health-027, yue: 我有預約。, en: "I have an appointment.", pattern: clinic, region: both}
+  - {id: sent-mo-health-028, yue: 我想約醫生。, en: "I'd like to book an appointment with the doctor.", pattern: clinic, region: both}
+  - {id: sent-mo-health-029, yue: 睇醫生要幾錢？, en: "How much is a consultation?", pattern: clinic, region: both}
+  - {id: sent-mo-health-030, yue: 我冇買保險。, en: "I don't have insurance.", pattern: clinic, region: both}
+  - {id: sent-mo-health-031, yue: 我有醫療保險。, en: "I have medical insurance.", pattern: clinic, region: both}
+  - {id: sent-mo-health-032, yue: 呢度睇唔睇急症？, en: "Do you handle emergencies here?", pattern: emergency, region: both}
+  - {id: sent-mo-health-033, yue: 快啲叫白車！, en: "Call an ambulance, quick!", pattern: emergency, region: both}
+  - {id: sent-mo-health-034, yue: 救命呀！, en: "Help!", pattern: emergency, region: both}
+  - {id: sent-mo-health-035, yue: 佢暈低咗。, en: "They've fainted.", pattern: emergency, region: both}
+  - {id: sent-mo-health-036, yue: 佢唞唔到氣。, en: "They can't breathe.", pattern: emergency, region: both}
+  - {id: sent-mo-health-037, yue: 我心口痛。, en: "I have chest pain.", pattern: emergency, region: both}
+  - {id: sent-mo-health-038, yue: 我對盤尼西林敏感。, en: "I'm allergic to penicillin.", pattern: allergy, region: both}
+  - {id: sent-mo-health-039, yue: 我冇藥物敏感。, en: "I have no drug allergies.", pattern: allergy, region: both}
+  - {id: sent-mo-health-040, yue: 我有哮喘。, en: "I have asthma.", pattern: history, region: both}
+  - {id: sent-mo-health-041, yue: 我有高血壓。, en: "I have high blood pressure.", pattern: history, region: both}
+  - {id: sent-mo-health-042, yue: 我有糖尿病。, en: "I have diabetes.", pattern: history, region: both}
+  - {id: sent-mo-health-043, yue: 我做過手術。, en: "I've had surgery before.", pattern: history, region: both}
+  - {id: sent-mo-health-044, yue: 我而家食緊藥。, en: "I'm currently taking medication.", pattern: history, region: both}
+  - {id: sent-mo-health-045, yue: 醫生，係咪好嚴重？, en: "Doctor, is it serious?", pattern: doctor, region: both}
+  - {id: sent-mo-health-046, yue: 使唔使驗血？, en: "Do I need a blood test?", pattern: doctor, region: both}
+  - {id: sent-mo-health-047, yue: 使唔使照X光？, en: "Do I need an X-ray?", pattern: doctor, region: both}
+  - {id: sent-mo-health-048, yue: 幾時有報告？, en: "When will the results be ready?", pattern: doctor, region: both}
+  - {id: sent-mo-health-049, yue: 要唔要打針？, en: "Do I need an injection?", pattern: doctor, region: both}
+  - {id: sent-mo-health-050, yue: 要休息幾耐？, en: "How long should I rest?", pattern: doctor, region: both}
+  - {id: sent-mo-health-051, yue: 可唔可以開張病假紙俾我？, en: "Can you give me a sick note?", pattern: doctor, region: both}
+  - {id: sent-mo-health-052, yue: 使唔使覆診？, en: "Do I need a follow-up?", pattern: doctor, region: both}
+  - {id: sent-mo-health-053, yue: 幾時覆診？, en: "When is the follow-up appointment?", pattern: doctor, region: both}
+  - {id: sent-mo-health-054, yue: 呢啲藥飯前食定飯後食？, en: "Do I take these before or after meals?", pattern: medicine, region: both}
+  - {id: sent-mo-health-055, yue: 一日三次，飯後食。, en: "Three times a day, after meals.", pattern: medicine, region: both}
+  - {id: sent-mo-health-056, yue: 瞓覺前食一粒。, en: "One tablet before bed.", pattern: medicine, region: both}
+  - {id: sent-mo-health-057, yue: 食咗會唔會眼瞓？, en: "Will it make me drowsy?", pattern: medicine, region: both}
+  - {id: sent-mo-health-058, yue: 食完要飲多啲水。, en: "Drink plenty of water after taking it.", pattern: medicine, region: both}
+  - {id: sent-mo-health-059, yue: 呢啲藥要食晒佢。, en: "You need to finish all of this medicine.", pattern: medicine, region: both}
+  - {id: sent-mo-health-060, yue: 唔好飲酒。, en: "Don't drink alcohol.", pattern: medicine, region: both}
+  - {id: sent-mo-health-061, yue: 我想買退燒藥。, en: "I'd like some fever medicine.", pattern: pharmacy, region: both}
+  - {id: sent-mo-health-062, yue: 有冇咳藥水？, en: "Do you have cough syrup?", pattern: pharmacy, region: both}
+  - {id: sent-mo-health-063, yue: 有冇膠布？, en: "Do you have plasters?", pattern: pharmacy, region: both}
+  - {id: sent-mo-health-064, yue: 有冇口罩？, en: "Do you have face masks?", pattern: pharmacy, region: both}
+  - {id: sent-mo-health-065, yue: 呢隻藥使唔使醫生紙？, en: "Does this medicine need a prescription?", pattern: pharmacy, region: both}
+  - {id: sent-mo-health-066, yue: 細路仔食唔食得？, en: "Can children take it?", pattern: pharmacy, region: both}
+  - {id: sent-mo-health-067, yue: 我想探下熱。, en: "I'd like to take my temperature.", pattern: pharmacy, region: both}
+  - {id: sent-mo-health-068, yue: 我想度下血壓。, en: "I'd like to check my blood pressure.", pattern: pharmacy, region: both}
+  - {id: sent-mo-health-069, yue: 我想睇牙醫。, en: "I want to see a dentist.", pattern: dentist, region: both}
+  - {id: sent-mo-health-070, yue: 我隻牙好痛。, en: "My tooth really hurts.", pattern: dentist, region: both}
+  - {id: sent-mo-health-071, yue: 我想洗牙。, en: "I'd like my teeth cleaned.", pattern: dentist, region: both}
+  - {id: sent-mo-health-072, yue: 我副眼鏡爛咗。, en: "My glasses are broken.", pattern: eyes, region: both}
+  - {id: sent-mo-health-073, yue: 我對眼好痕。, en: "My eyes are really itchy.", pattern: eyes, region: both}
+  - {id: sent-mo-health-074, yue: 我睇嘢唔清楚。, en: "I can't see clearly.", pattern: eyes, region: both}
+  - {id: sent-mo-health-075, yue: 我皮膚出咗啲紅點。, en: "I've got red spots on my skin.", pattern: skin, region: both}
+  - {id: sent-mo-health-076, yue: 好痕呀。, en: "It's really itchy.", pattern: skin, region: both}
+  - {id: sent-mo-health-077, yue: 我曬傷咗。, en: "I got sunburnt.", pattern: skin, region: both}
+  - {id: sent-mo-health-078, yue: 我好攰。, en: "I'm really tired.", pattern: feel, region: both}
+  - {id: sent-mo-health-079, yue: 我冇胃口。, en: "I have no appetite.", pattern: feel, region: both}
+  - {id: sent-mo-health-080, yue: 我好似感冒咗。, en: "I think I've caught a cold.", pattern: feel, region: both}
+  - {id: sent-mo-health-081, yue: 我好返啲喇。, en: "I'm feeling a bit better.", pattern: feel, region: both}
+  - {id: sent-mo-health-082, yue: 我已經好返喇。, en: "I've recovered.", pattern: feel, region: both}
+  - {id: sent-mo-health-083, yue: 你面色好差喎。, en: "You look pale.", pattern: care, region: both}
+  - {id: sent-mo-health-084, yue: 你冇事吖嘛？, en: "Are you OK?", pattern: care, region: both}
+  - {id: sent-mo-health-085, yue: 多啲休息。, en: "Get plenty of rest.", pattern: care, region: both}
+  - {id: sent-mo-health-086, yue: 早啲瞓啦。, en: "Go to bed early.", pattern: care, region: both}
+  - {id: sent-mo-health-087, yue: 飲多啲暖水。, en: "Drink more warm water.", pattern: care, region: both}
+  - {id: sent-mo-health-088, yue: 祝你早日康復。, en: "Get well soon.", pattern: care, region: both}
+  - {id: sent-mo-health-089, yue: 我今日請病假。, en: "I'm taking sick leave today.", pattern: work, region: both}
+  - {id: sent-mo-health-090, yue: 我要去醫院探人。, en: "I'm going to visit someone in hospital.", pattern: visit, region: both}
+  - {id: sent-mo-health-091, yue: 探病時間係幾點？, en: "What are the visiting hours?", pattern: visit, region: both}
+  - {id: sent-mo-health-092, yue: 佢喺邊間病房？, en: "Which ward are they in?", pattern: visit, region: both}
+  - {id: sent-mo-health-093, yue: 我想打流感針。, en: "I'd like a flu jab.", pattern: vaccine, region: both}
+  - {id: sent-mo-health-094, yue: 我打咗疫苗。, en: "I've been vaccinated.", pattern: vaccine, region: both}
+  - {id: sent-mo-health-095, yue: 我想做身體檢查。, en: "I'd like a health check-up.", pattern: checkup, region: both}
+  - {id: sent-mo-health-096, yue: 使唔使空肚？, en: "Do I need to fast?", pattern: checkup, region: both}
+  - {id: sent-mo-health-097, yue: 我想驗眼。, en: "I'd like an eye test.", pattern: eyes, region: both}
+  - {id: sent-mo-health-098, yue: 我想搵中醫睇下。, en: "I'd like to see a Chinese medicine doctor.", pattern: tcm, region: both}
+  - {id: sent-mo-health-099, yue: 我想做針灸。, en: "I'd like acupuncture.", pattern: tcm, region: both}
+  - {id: sent-mo-health-100, yue: 中藥要煲幾耐？, en: "How long do I boil the herbal medicine?", pattern: tcm, region: both}

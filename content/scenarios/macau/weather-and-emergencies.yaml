@@ -1,0 +1,112 @@
+# Drafted by an LLM. Every line stays reviewed: false until the owner has read it aloud
+# and confirmed both the wording and the readings in build/review_queue.md.
+scenario:
+  id: scn-mo-weather
+  title: Weather and emergencies
+  region: macau
+  tags: [weather, emergency]
+
+defaults: {register: spoken, source: llm}
+
+# `pattern` groups variations of one sentence frame so the planner spreads them out.
+sentences:
+  - {id: sent-mo-wx-001, yue: 今日天氣點？, en: "What's the weather like today?", pattern: forecast, region: both}
+  - {id: sent-mo-wx-002, yue: 天氣報告話今日會落雨。, en: "The forecast says it will rain today.", pattern: forecast, region: both}
+  - {id: sent-mo-wx-003, yue: 聽日會唔會落雨？, en: "Will it rain tomorrow?", pattern: forecast, region: both}
+  - {id: sent-mo-wx-004, yue: 今日幾多度？, en: "What's the temperature today?", pattern: forecast, region: both}
+  - {id: sent-mo-wx-005, yue: 今日好熱，三十五度。, en: "It's hot today, 35 degrees.", pattern: temp, region: both}
+  - {id: sent-mo-wx-006, yue: 今日好凍，得十度。, en: "It's cold today, only 10 degrees.", pattern: temp, region: both}
+  - {id: sent-mo-wx-007, yue: 天氣好翳焗。, en: "It's really muggy.", pattern: temp, region: both}
+  - {id: sent-mo-wx-008, yue: 好潮濕呀。, en: "It's really humid.", pattern: temp, region: both}
+  - {id: sent-mo-wx-009, yue: 出面好曬，記得搽防曬。, en: "It's very sunny out, remember your sunscreen.", pattern: sun, region: both}
+  - {id: sent-mo-wx-010, yue: 落緊雨，帶遮啦。, en: "It's raining, take an umbrella.", pattern: rain, region: both}
+  - {id: sent-mo-wx-011, yue: 雨好大。, en: "It's raining hard.", pattern: rain, region: both}
+  - {id: sent-mo-wx-012, yue: 雨停咗未？, en: "Has the rain stopped?", pattern: rain, region: both}
+  - {id: sent-mo-wx-013, yue: 我冇帶遮，濕晒。, en: "I didn't bring an umbrella, I'm soaked.", pattern: rain, region: both}
+  - {id: sent-mo-wx-014, yue: 行雷呀！, en: "There's thunder!", pattern: rain, region: both}
+  - {id: sent-mo-wx-015, yue: 行雷閃電，唔好出去。, en: "There's thunder and lightning, don't go out.", pattern: rain, region: both}
+  - {id: sent-mo-wx-016, yue: 掛咗黑雨。, en: "The black rainstorm signal is up.", pattern: rain, region: hk}
+  - {id: sent-mo-wx-017, yue: 掛咗三號風球。, en: "Typhoon signal 3 is up.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-018, yue: 會唔會改掛八號風球？, en: "Will they raise signal 8?", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-019, yue: 八號風球幾點除？, en: "What time will signal 8 be lowered?", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-020, yue: 打風唔使返工。, en: "No work when there's a typhoon.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-021, yue: 今日停課。, en: "Classes are cancelled today.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-022, yue: 巴士全部停晒。, en: "All the buses have stopped.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-023, yue: 啲船停咗航。, en: "The ferries have stopped running.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-024, yue: 記得買定啲嘢食。, en: "Remember to stock up on food.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-025, yue: 窗要貼膠紙。, en: "Tape up the windows.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-026, yue: 出面好大風，唔好出街。, en: "It's really windy out, don't go outside.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-027, yue: 有啲樹冧咗。, en: "Some trees have fallen down.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-028, yue: 水浸呀！, en: "It's flooding!", pattern: flood, region: both}
+  - {id: sent-mo-wx-029, yue: 內港又水浸。, en: "The Inner Harbour is flooded again.", pattern: flood}
+  - {id: sent-mo-wx-030, yue: 啲水浸到膝頭。, en: "The water is up to my knees.", pattern: flood, region: both}
+  - {id: sent-mo-wx-031, yue: 停電喇。, en: "The power's gone out.", pattern: outage, region: both}
+  - {id: sent-mo-wx-032, yue: 有冇電筒？, en: "Is there a torch?", pattern: outage, region: both}
+  - {id: sent-mo-wx-033, yue: 我部電話冇電喇。, en: "My phone's out of battery.", pattern: outage, region: both}
+  - {id: sent-mo-wx-034, yue: 救命！, en: "Help!", pattern: emergency, region: both}
+  - {id: sent-mo-wx-035, yue: 快啲報警！, en: "Call the police, quick!", pattern: emergency, region: both}
+  - {id: sent-mo-wx-036, yue: 有人受傷。, en: "Someone's injured.", pattern: emergency, region: both}
+  - {id: sent-mo-wx-037, yue: 火燭呀！, en: "Fire!", pattern: emergency, region: both}
+  - {id: sent-mo-wx-038, yue: 快啲走！, en: "Get out, quick!", pattern: emergency, region: both}
+  - {id: sent-mo-wx-039, yue: 走火通道喺邊？, en: "Where's the fire exit?", pattern: emergency, region: both}
+  - {id: sent-mo-wx-040, yue: 唔好用電梯。, en: "Don't use the lift.", pattern: emergency, region: both}
+  - {id: sent-mo-wx-041, yue: 我要報警。, en: "I need to report this to the police.", pattern: police, region: both}
+  - {id: sent-mo-wx-042, yue: 我個銀包俾人偷咗。, en: "My wallet's been stolen.", pattern: police, region: both}
+  - {id: sent-mo-wx-043, yue: 我唔見咗部電話。, en: "I've lost my phone.", pattern: police, region: both}
+  - {id: sent-mo-wx-044, yue: 我唔見咗證件。, en: "I've lost my ID.", pattern: police, region: both}
+  - {id: sent-mo-wx-045, yue: 有人跟住我。, en: "Someone's following me.", pattern: police, region: both}
+  - {id: sent-mo-wx-046, yue: 差館喺邊度？, en: "Where's the police station?", pattern: police, region: both}
+  - {id: sent-mo-wx-047, yue: 撞車呀！, en: "There's been a crash!", pattern: accident, region: both}
+  - {id: sent-mo-wx-048, yue: 我俾車撞親。, en: "I was hit by a car.", pattern: accident, region: both}
+  - {id: sent-mo-wx-049, yue: 有冇人受傷？, en: "Is anyone hurt?", pattern: accident, region: both}
+  - {id: sent-mo-wx-050, yue: 唔好郁佢。, en: "Don't move them.", pattern: accident, region: both}
+  - {id: sent-mo-wx-051, yue: 我好驚。, en: "I'm scared.", pattern: feel, region: both}
+  - {id: sent-mo-wx-052, yue: 冷靜啲。, en: "Stay calm.", pattern: feel, region: both}
+  - {id: sent-mo-wx-053, yue: 冇事喇，唔使驚。, en: "It's OK now, don't be scared.", pattern: feel, region: both}
+  - {id: sent-mo-wx-054, yue: 你喺邊度？我嚟搵你。, en: "Where are you? I'll come and find you.", pattern: help, region: both}
+  - {id: sent-mo-wx-055, yue: 你使唔使幫手？, en: "Do you need help?", pattern: help, region: both}
+  - {id: sent-mo-wx-056, yue: 我蕩失路喇。, en: "I'm lost.", pattern: help, region: both}
+  - {id: sent-mo-wx-057, yue: 我唔識講普通話。, en: "I can't speak Mandarin.", pattern: help, region: both}
+  - {id: sent-mo-wx-058, yue: 你識唔識講廣東話？, en: "Can you speak Cantonese?", pattern: help, region: both}
+  - {id: sent-mo-wx-059, yue: 春天好潮濕。, en: "Spring is really humid.", pattern: season, region: both}
+  - {id: sent-mo-wx-060, yue: 夏天成日打風。, en: "There are lots of typhoons in summer.", pattern: season, region: both}
+  - {id: sent-mo-wx-061, yue: 秋天天氣最好。, en: "Autumn has the best weather.", pattern: season, region: both}
+  - {id: sent-mo-wx-062, yue: 冬天都幾凍。, en: "Winter is quite cold.", pattern: season, region: both}
+  - {id: sent-mo-wx-063, yue: 今日有霧。, en: "It's foggy today.", pattern: forecast, region: both}
+  - {id: sent-mo-wx-064, yue: 空氣好差。, en: "The air quality is bad.", pattern: forecast, region: both}
+  - {id: sent-mo-wx-065, yue: 紫外線好強。, en: "The UV is very strong.", pattern: sun, region: both}
+  - {id: sent-mo-wx-066, yue: 我曬到黑晒。, en: "I've got really tanned.", pattern: sun, region: both}
+  - {id: sent-mo-wx-067, yue: 天黑得好早。, en: "It gets dark very early.", pattern: season, region: both}
+  - {id: sent-mo-wx-068, yue: 天光喇。, en: "It's light now.", pattern: season, region: both}
+  - {id: sent-mo-wx-069, yue: 今晚會轉涼。, en: "It'll get cooler tonight.", pattern: forecast, region: both}
+  - {id: sent-mo-wx-070, yue: 著多件衫啦。, en: "Put another layer on.", pattern: temp, region: both}
+  - {id: sent-mo-wx-071, yue: 好熱，開冷氣啦。, en: "It's hot, turn on the air con.", pattern: temp, region: both}
+  - {id: sent-mo-wx-072, yue: 啲雨落咗成日。, en: "It's been raining all day.", pattern: rain, region: both}
+  - {id: sent-mo-wx-073, yue: 地下好濕，小心跌親。, en: "The ground is wet, careful not to slip.", pattern: rain, region: both}
+  - {id: sent-mo-wx-074, yue: 打完風，周圍都好亂。, en: "After the typhoon, everything's a mess.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-075, yue: 風球除咗喇。, en: "The typhoon signal has been lowered.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-076, yue: 聽日要返工喇。, en: "Back to work tomorrow.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-077, yue: 颱風今晚最接近。, en: "The typhoon will be closest tonight.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-078, yue: 收音機有冇講？, en: "Did the radio say anything?", pattern: news, region: both}
+  - {id: sent-mo-wx-079, yue: 睇下新聞先。, en: "Let's check the news first.", pattern: news, region: both}
+  - {id: sent-mo-wx-080, yue: 手機收到警告。, en: "My phone received a warning.", pattern: news, region: both}
+  - {id: sent-mo-wx-081, yue: 呢度危險，唔好過去。, en: "It's dangerous here, don't go over there.", pattern: warning, region: both}
+  - {id: sent-mo-wx-082, yue: 小心！, en: "Careful!", pattern: warning, region: both}
+  - {id: sent-mo-wx-083, yue: 前面封路。, en: "The road ahead is closed.", pattern: warning, region: both}
+  - {id: sent-mo-wx-084, yue: 呢條路行唔到。, en: "You can't get through this way.", pattern: warning, region: both}
+  - {id: sent-mo-wx-085, yue: 我哋要搵地方避雨。, en: "We need to find somewhere to shelter from the rain.", pattern: rain, region: both}
+  - {id: sent-mo-wx-086, yue: 個天好黑，就嚟落雨。, en: "The sky is dark, rain is coming.", pattern: rain, region: both}
+  - {id: sent-mo-wx-087, yue: 好似就嚟打風。, en: "Looks like a typhoon is coming.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-088, yue: 今年打咗好多次風。, en: "There have been a lot of typhoons this year.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-089, yue: 啲窗閂好未？, en: "Are the windows shut properly?", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-090, yue: 啲衫收咗未？, en: "Has the laundry been brought in?", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-091, yue: 屋企入水。, en: "Water has got into the flat.", pattern: flood, region: both}
+  - {id: sent-mo-wx-092, yue: 我哋去高啲嘅地方。, en: "Let's go to higher ground.", pattern: flood, region: both}
+  - {id: sent-mo-wx-093, yue: 白車就嚟到。, en: "The ambulance is almost here.", pattern: emergency, region: both}
+  - {id: sent-mo-wx-094, yue: 消防員到咗。, en: "The firefighters have arrived.", pattern: emergency, region: both}
+  - {id: sent-mo-wx-095, yue: 警察問咗我幾條問題。, en: "The police asked me a few questions.", pattern: police, region: both}
+  - {id: sent-mo-wx-096, yue: 我要落口供。, en: "I need to give a statement.", pattern: police, region: both}
+  - {id: sent-mo-wx-097, yue: 我想搵人幫我翻譯。, en: "I need someone to interpret for me.", pattern: help, region: both}
+  - {id: sent-mo-wx-098, yue: 你可唔可以陪我去？, en: "Could you come with me?", pattern: help, region: both}
+  - {id: sent-mo-wx-099, yue: 多謝你幫我。, en: "Thank you for helping me.", pattern: help, region: both}
+  - {id: sent-mo-wx-100, yue: 大家冇事就好。, en: "As long as everyone's OK.", pattern: feel, region: both}

@@ -1,0 +1,112 @@
+# Drafted by an LLM. Every line stays reviewed: false until the owner has read it aloud
+# and confirmed both the wording and the readings in build/review_queue.md.
+scenario:
+  id: scn-mo-chat
+  title: Friends, small talk and slang
+  region: macau
+  tags: [social, slang]
+
+defaults: {register: spoken, source: llm}
+
+# `pattern` groups variations of one sentence frame so the planner spreads them out.
+sentences:
+  - {id: sent-mo-chat-001, yue: 你好嗎？, en: "How are you?", pattern: greet, region: both}
+  - {id: sent-mo-chat-002, yue: 幾好，你呢？, en: "Pretty good, and you?", pattern: greet, region: both}
+  - {id: sent-mo-chat-003, yue: 好耐冇見！, en: "Long time no see!", pattern: greet, region: both}
+  - {id: sent-mo-chat-004, yue: 最近點呀？, en: "How have you been lately?", pattern: greet, region: both}
+  - {id: sent-mo-chat-005, yue: 食咗飯未呀？, en: "Have you eaten yet?", pattern: greet, region: both}
+  - {id: sent-mo-chat-006, yue: 你叫咩名呀？, en: "What's your name?", pattern: intro, region: both}
+  - {id: sent-mo-chat-007, yue: 我叫阿明。, en: "I'm Ah Ming.", pattern: intro, region: both}
+  - {id: sent-mo-chat-008, yue: 你係邊度人？, en: "Where are you from?", pattern: intro, region: both}
+  - {id: sent-mo-chat-009, yue: 我喺澳門出世。, en: "I was born in Macau.", pattern: intro}
+  - {id: sent-mo-chat-010, yue: 你做邊行㗎？, en: "What line of work are you in?", pattern: intro, region: both}
+  - {id: sent-mo-chat-011, yue: 你住邊區？, en: "Which area do you live in?", pattern: intro, region: both}
+  - {id: sent-mo-chat-012, yue: 你有冇兄弟姊妹？, en: "Do you have any brothers or sisters?", pattern: intro, region: both}
+  - {id: sent-mo-chat-013, yue: 得閒出嚟食飯吖。, en: "Let's go out for a meal when you're free.", pattern: plans, region: both}
+  - {id: sent-mo-chat-014, yue: 你幾時得閒？, en: "When are you free?", pattern: plans, region: both}
+  - {id: sent-mo-chat-015, yue: 星期六得唔得？, en: "Does Saturday work?", pattern: plans, region: both}
+  - {id: sent-mo-chat-016, yue: 我哋喺邊度等？, en: "Where shall we meet?", pattern: plans, region: both}
+  - {id: sent-mo-chat-017, yue: 七點喺議事亭前地等。, en: "Meet at Senado Square at seven.", pattern: plans}
+  - {id: sent-mo-chat-018, yue: 我會遲少少到。, en: "I'll be a little late.", pattern: plans, region: both}
+  - {id: sent-mo-chat-019, yue: 唔好意思，我遲到。, en: "Sorry I'm late.", pattern: plans, region: both}
+  - {id: sent-mo-chat-020, yue: 我到咗喇，你喺邊？, en: "I'm here, where are you?", pattern: plans, region: both}
+  - {id: sent-mo-chat-021, yue: 我就快到。, en: "I'm almost there.", pattern: plans, region: both}
+  - {id: sent-mo-chat-022, yue: 今日唔得閒，改日啦。, en: "I'm busy today, another day.", pattern: plans, region: both}
+  - {id: sent-mo-chat-023, yue: 你今晚有冇嘢做？, en: "Are you doing anything tonight?", pattern: plans, region: both}
+  - {id: sent-mo-chat-024, yue: 去唔去飲嘢？, en: "Want to go for a drink?", pattern: plans, region: both}
+  - {id: sent-mo-chat-025, yue: 好呀，一齊去。, en: "Sure, let's go together.", pattern: plans, region: both}
+  - {id: sent-mo-chat-026, yue: 今餐我請。, en: "This meal's on me.", pattern: plans, region: both}
+  - {id: sent-mo-chat-027, yue: 唔使客氣。, en: "Don't mention it.", pattern: polite, region: both}
+  - {id: sent-mo-chat-028, yue: 唔好意思。, en: "Excuse me, sorry.", pattern: polite, region: both}
+  - {id: sent-mo-chat-029, yue: 對唔住。, en: "I'm sorry.", pattern: polite, region: both}
+  - {id: sent-mo-chat-030, yue: 冇問題。, en: "No problem.", pattern: polite, region: both}
+  - {id: sent-mo-chat-031, yue: 冇所謂。, en: "I don't mind.", pattern: reply, region: both}
+  - {id: sent-mo-chat-032, yue: 隨便啦。, en: "Whatever you like.", pattern: reply, region: both}
+  - {id: sent-mo-chat-033, yue: 係咩？, en: "Is that so?", pattern: reply, region: both}
+  - {id: sent-mo-chat-034, yue: 真㗎？, en: "Really?", pattern: reply, region: both}
+  - {id: sent-mo-chat-035, yue: 唔係掛。, en: "No way.", pattern: reply, region: both}
+  - {id: sent-mo-chat-036, yue: 梗係啦。, en: "Of course.", pattern: reply, region: both}
+  - {id: sent-mo-chat-037, yue: 我都係噉諗。, en: "I think so too.", pattern: reply, region: both}
+  - {id: sent-mo-chat-038, yue: 我唔係好明。, en: "I don't quite understand.", pattern: reply, region: both}
+  - {id: sent-mo-chat-039, yue: 你講咩呀？, en: "What did you say?", pattern: reply, region: both}
+  - {id: sent-mo-chat-040, yue: 算啦。, en: "Forget it.", pattern: reply, region: both}
+  - {id: sent-mo-chat-041, yue: 好正！, en: "Awesome!", pattern: slang, region: both}
+  - {id: sent-mo-chat-042, yue: 勁呀！, en: "Amazing!", pattern: slang, region: both}
+  - {id: sent-mo-chat-043, yue: 好癲。, en: "That's crazy.", pattern: slang, region: both}
+  - {id: sent-mo-chat-044, yue: 好悶呀。, en: "So boring.", pattern: slang, region: both}
+  - {id: sent-mo-chat-045, yue: 好攰呀，想瞓覺。, en: "So tired, I want to sleep.", pattern: feel, region: both}
+  - {id: sent-mo-chat-046, yue: 我好肚餓。, en: "I'm starving.", pattern: feel, region: both}
+  - {id: sent-mo-chat-047, yue: 今日好開心。, en: "I'm really happy today.", pattern: feel, region: both}
+  - {id: sent-mo-chat-048, yue: 我好擔心。, en: "I'm worried.", pattern: feel, region: both}
+  - {id: sent-mo-chat-049, yue: 佢好搞笑。, en: "They're really funny.", pattern: people, region: both}
+  - {id: sent-mo-chat-050, yue: 佢好好人。, en: "They're a really nice person.", pattern: people, region: both}
+  - {id: sent-mo-chat-051, yue: 佢好靚仔。, en: "He's very handsome.", pattern: people, region: both}
+  - {id: sent-mo-chat-052, yue: 佢好靚女。, en: "She's very pretty.", pattern: people, region: both}
+  - {id: sent-mo-chat-053, yue: 佢好高。, en: "They're very tall.", pattern: people, region: both}
+  - {id: sent-mo-chat-054, yue: 佢好有型。, en: "They're really stylish.", pattern: people, region: both}
+  - {id: sent-mo-chat-055, yue: 佢成日遲到。, en: "They're always late.", pattern: people, region: both}
+  - {id: sent-mo-chat-056, yue: 你真係好叻。, en: "You're really clever.", pattern: praise, region: both}
+  - {id: sent-mo-chat-057, yue: 做得好！, en: "Well done!", pattern: praise, region: both}
+  - {id: sent-mo-chat-058, yue: 加油！, en: "You can do it!", pattern: praise, region: both}
+  - {id: sent-mo-chat-059, yue: 恭喜晒！, en: "Congratulations!", pattern: praise, region: both}
+  - {id: sent-mo-chat-060, yue: 生日快樂！, en: "Happy birthday!", pattern: wishes, region: both}
+  - {id: sent-mo-chat-061, yue: 新年快樂！, en: "Happy New Year!", pattern: wishes, region: both}
+  - {id: sent-mo-chat-062, yue: 恭喜發財！, en: "Wishing you prosperity! (Lunar New Year)", pattern: wishes, region: both}
+  - {id: sent-mo-chat-063, yue: 身體健康！, en: "Wishing you good health!", pattern: wishes, region: both}
+  - {id: sent-mo-chat-064, yue: 聖誕快樂！, en: "Merry Christmas!", pattern: wishes, region: both}
+  - {id: sent-mo-chat-065, yue: 你有冇睇波？, en: "Did you watch the match?", pattern: hobby, region: both}
+  - {id: sent-mo-chat-066, yue: 你鍾意做咩運動？, en: "What sport do you like?", pattern: hobby, region: both}
+  - {id: sent-mo-chat-067, yue: 我鍾意行山。, en: "I like hiking.", pattern: hobby, region: both}
+  - {id: sent-mo-chat-068, yue: 週末我通常留喺屋企。, en: "I usually stay home at weekends.", pattern: hobby, region: both}
+  - {id: sent-mo-chat-069, yue: 我好鍾意睇戲。, en: "I love watching films.", pattern: hobby, region: both}
+  - {id: sent-mo-chat-070, yue: 你有冇睇過呢套劇？, en: "Have you seen this series?", pattern: hobby, region: both}
+  - {id: sent-mo-chat-071, yue: 我鍾意唱K。, en: "I like karaoke.", pattern: hobby, region: both}
+  - {id: sent-mo-chat-072, yue: 一齊去打邊爐啦！, en: "Let's go for hotpot!", pattern: food, region: both}
+  - {id: sent-mo-chat-073, yue: 今晚去唔去食宵夜？, en: "Want a late-night snack tonight?", pattern: food, region: both}
+  - {id: sent-mo-chat-074, yue: 你飲唔飲酒㗎？, en: "Do you drink?", pattern: food, region: both}
+  - {id: sent-mo-chat-075, yue: 乾杯！, en: "Cheers!", pattern: food, region: both}
+  - {id: sent-mo-chat-076, yue: 天氣好熱。, en: "The weather's really hot.", pattern: weather, region: both}
+  - {id: sent-mo-chat-077, yue: 今日好大風。, en: "It's really windy today.", pattern: weather, region: both}
+  - {id: sent-mo-chat-078, yue: 聽講就嚟打風。, en: "I hear a typhoon is coming.", pattern: weather, region: both}
+  - {id: sent-mo-chat-079, yue: 你有冇WhatsApp？, en: "Are you on WhatsApp?", pattern: contact, region: both}
+  - {id: sent-mo-chat-080, yue: 加我微信啦。, en: "Add me on WeChat.", pattern: contact, region: both}
+  - {id: sent-mo-chat-081, yue: 你電話號碼幾多號？, en: "What's your phone number?", pattern: contact, region: both}
+  - {id: sent-mo-chat-082, yue: 遲啲打俾你。, en: "I'll call you later.", pattern: contact, region: both}
+  - {id: sent-mo-chat-083, yue: 有事WhatsApp我。, en: "WhatsApp me if anything comes up.", pattern: contact, region: both}
+  - {id: sent-mo-chat-084, yue: 我遲啲覆你。, en: "I'll get back to you later.", pattern: contact, region: both}
+  - {id: sent-mo-chat-085, yue: 唔好意思，頭先聽唔到電話。, en: "Sorry, I didn't hear the phone just now.", pattern: contact, region: both}
+  - {id: sent-mo-chat-086, yue: 我哋影張相啦。, en: "Let's take a photo.", pattern: photo, region: both}
+  - {id: sent-mo-chat-087, yue: 可唔可以幫我哋影張相？, en: "Could you take a photo of us?", pattern: photo, region: both}
+  - {id: sent-mo-chat-088, yue: 你屋企人好嗎？, en: "How's your family?", pattern: family, region: both}
+  - {id: sent-mo-chat-089, yue: 我媽咪好鍾意煮嘢食。, en: "My mum loves cooking.", pattern: family, region: both}
+  - {id: sent-mo-chat-090, yue: 我爸爸喺香港返工。, en: "My dad works in Hong Kong.", pattern: family, region: both}
+  - {id: sent-mo-chat-091, yue: 我細佬讀緊大學。, en: "My younger brother is at university.", pattern: family, region: both}
+  - {id: sent-mo-chat-092, yue: 我家姐結咗婚。, en: "My older sister is married.", pattern: family, region: both}
+  - {id: sent-mo-chat-093, yue: 你結咗婚未？, en: "Are you married?", pattern: family, region: both}
+  - {id: sent-mo-chat-094, yue: 你有冇男朋友？, en: "Do you have a boyfriend?", pattern: family, region: both}
+  - {id: sent-mo-chat-095, yue: 佢係我好朋友。, en: "They're my good friend.", pattern: people, region: both}
+  - {id: sent-mo-chat-096, yue: 我哋識咗好多年。, en: "We've known each other for years.", pattern: people, region: both}
+  - {id: sent-mo-chat-097, yue: 我差唔多要走喇。, en: "I have to go soon.", pattern: bye, region: both}
+  - {id: sent-mo-chat-098, yue: 拜拜，下次見。, en: "Bye, see you next time.", pattern: bye, region: both}
+  - {id: sent-mo-chat-099, yue: 小心啲，返到屋企話我知。, en: "Take care, let me know when you get home.", pattern: bye, region: both}
+  - {id: sent-mo-chat-100, yue: 早唞！, en: "Good night!", pattern: bye, region: both}

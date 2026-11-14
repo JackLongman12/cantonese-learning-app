@@ -5,6 +5,8 @@ scenario:
   region: macau
   tags: [food, money]
 
+defaults: {register: spoken, source: llm}
+
 sentences:
   - id: sent-mo-food-001
     yue: 唔該，一個豬扒包，一杯凍檸茶。
@@ -75,3 +77,96 @@ sentences:
     tags: [sign]
     region: both
     source: llm
+
+  # Variations, grouped by `pattern`.
+  - {id: sent-mo-food-010, yue: 唔該，兩位。, en: "Table for two, please.", pattern: seat, region: both}
+  - {id: sent-mo-food-011, yue: 有冇位呀？, en: "Are there any seats?", pattern: seat, region: both}
+  - {id: sent-mo-food-012, yue: 要等幾耐呀？, en: "How long is the wait?", pattern: seat, region: both}
+  - {id: sent-mo-food-013, yue: 可唔可以搭枱？, en: "Can we share a table?", pattern: seat, region: both}
+  - {id: sent-mo-food-014, yue: 我哋坐呢度得唔得？, en: "Can we sit here?", pattern: seat, region: both}
+  - {id: sent-mo-food-015, yue: 唔該俾個餐牌我。, en: "Can I have a menu, please?", pattern: menu, region: both}
+  - {id: sent-mo-food-016, yue: 有冇英文餐牌？, en: "Do you have an English menu?", pattern: menu, region: both}
+  - {id: sent-mo-food-017, yue: 有咩推介呀？, en: "What do you recommend?", pattern: menu, region: both}
+  - {id: sent-mo-food-018, yue: 今日有咩特價？, en: "What's on special today?", pattern: menu, region: both}
+  - {id: sent-mo-food-019, yue: 呢個係咩嚟㗎？, en: "What is this?", pattern: menu, region: both}
+  - {id: sent-mo-food-020, yue: 呢個辣唔辣㗎？, en: "Is this spicy?", pattern: menu, region: both}
+  - {id: sent-mo-food-021, yue: 我要一個常餐。, en: "I'll have the set breakfast.", pattern: order, region: both}
+  - {id: sent-mo-food-022, yue: 我要一碟乾炒牛河。, en: "A plate of dry-fried beef ho fun.", pattern: order, region: both}
+  - {id: sent-mo-food-023, yue: 我要一碗雲吞麵。, en: "A bowl of wonton noodles.", pattern: order, region: both}
+  - {id: sent-mo-food-024, yue: 我要一份西多士。, en: "One French toast.", pattern: order, region: both}
+  - {id: sent-mo-food-025, yue: 我要一個菠蘿油。, en: "One pineapple bun with butter.", pattern: order, region: both}
+  - {id: sent-mo-food-026, yue: 我要一杯熱奶茶。, en: "A hot milk tea.", pattern: drink, region: both}
+  - {id: sent-mo-food-027, yue: 一杯凍奶茶，少冰。, en: "An iced milk tea, less ice.", pattern: drink, region: both}
+  - {id: sent-mo-food-028, yue: 一杯熱檸水。, en: "A hot lemon water.", pattern: drink, region: both}
+  - {id: sent-mo-food-029, yue: 一杯鴛鴦，凍嘅。, en: "An iced yuenyeung (coffee with tea).", pattern: drink, region: both}
+  - {id: sent-mo-food-030, yue: 一杯阿華田。, en: "An Ovaltine.", pattern: drink, region: both}
+  - {id: sent-mo-food-031, yue: 我要杯檸樂。, en: "A lemon cola, please.", pattern: drink, region: both}
+  - {id: sent-mo-food-032, yue: 飲品走甜。, en: "No sugar in the drink.", pattern: drink-mod, region: both}
+  - {id: sent-mo-food-033, yue: 唔該，唔好落蔥。, en: "No spring onion, please.", pattern: food-mod, region: both}
+  - {id: sent-mo-food-034, yue: 唔該，唔好落辣。, en: "No chilli, please.", pattern: food-mod, region: both}
+  - {id: sent-mo-food-035, yue: 少油少鹽。, en: "Less oil and salt.", pattern: food-mod, region: both}
+  - {id: sent-mo-food-036, yue: 飯多啲。, en: "Extra rice.", pattern: food-mod, region: both}
+  - {id: sent-mo-food-037, yue: 汁另上。, en: "Sauce on the side.", pattern: food-mod, region: both}
+  - {id: sent-mo-food-038, yue: 我食素㗎。, en: "I'm vegetarian.", pattern: diet, region: both}
+  - {id: sent-mo-food-039, yue: 我對花生敏感。, en: "I'm allergic to peanuts.", pattern: diet, region: both}
+  - {id: sent-mo-food-040, yue: 有冇唔辣嘅？, en: "Is there anything that isn't spicy?", pattern: diet, region: both}
+  - {id: sent-mo-food-041, yue: 我要一份葡國雞。, en: "One Portuguese chicken.", pattern: macanese}
+  - {id: sent-mo-food-042, yue: 呢度嘅馬介休好唔好食？, en: "Is the bacalhau good here?", pattern: macanese}
+  - {id: sent-mo-food-043, yue: 我想試下免治。, en: "I'd like to try minchi.", pattern: macanese}
+  - {id: sent-mo-food-044, yue: 有冇木糠布甸？, en: "Do you have serradura?", pattern: macanese}
+  - {id: sent-mo-food-045, yue: 我想買杏仁餅做手信。, en: "I want to buy almond cookies as souvenirs.", pattern: macanese}
+  - {id: sent-mo-food-046, yue: 一盒杏仁餅幾多錢？, en: "How much is a box of almond cookies?", pattern: price}
+  - {id: sent-mo-food-047, yue: 我要一碗水蟹粥。, en: "A bowl of crab congee.", pattern: macanese}
+  - {id: sent-mo-food-048, yue: 豬扒包要熱嘅。, en: "I'd like the pork chop bun hot.", pattern: macanese}
+  - {id: sent-mo-food-049, yue: 外賣定堂食？, en: "Take away or eat in?", pattern: takeaway, region: both}
+  - {id: sent-mo-food-050, yue: 堂食。, en: "Eat in.", pattern: takeaway, region: both}
+  - {id: sent-mo-food-051, yue: 拎走，唔該。, en: "Take away, please.", pattern: takeaway, region: both}
+  - {id: sent-mo-food-052, yue: 可唔可以幫我打包？, en: "Can you pack this up for me?", pattern: takeaway, region: both}
+  - {id: sent-mo-food-053, yue: 唔該俾多對筷子。, en: "Another pair of chopsticks, please.", pattern: request, region: both}
+  - {id: sent-mo-food-054, yue: 唔該俾多張紙巾。, en: "Another napkin, please.", pattern: request, region: both}
+  - {id: sent-mo-food-055, yue: 唔該加啲水。, en: "Some more water, please.", pattern: request, region: both}
+  - {id: sent-mo-food-056, yue: 唔該，加多碗飯。, en: "Another bowl of rice, please.", pattern: request, region: both}
+  - {id: sent-mo-food-057, yue: 唔該，換過隻碟。, en: "Could you change the plate, please?", pattern: request, region: both}
+  - {id: sent-mo-food-058, yue: 我哋叫嘅嘢仲未到。, en: "Our order hasn't arrived yet.", pattern: problem, region: both}
+  - {id: sent-mo-food-059, yue: 呢個唔係我叫嘅。, en: "This isn't what I ordered.", pattern: problem, region: both}
+  - {id: sent-mo-food-060, yue: 呢碗麵凍咗。, en: "This bowl of noodles has gone cold.", pattern: problem, region: both}
+  - {id: sent-mo-food-061, yue: 好好食！, en: "Delicious!", pattern: comment, region: both}
+  - {id: sent-mo-food-062, yue: 太鹹喇。, en: "Too salty.", pattern: comment, region: both}
+  - {id: sent-mo-food-063, yue: 有啲淡。, en: "A bit bland.", pattern: comment, region: both}
+  - {id: sent-mo-food-064, yue: 我食飽喇。, en: "I'm full.", pattern: comment, region: both}
+  - {id: sent-mo-food-065, yue: 飲茶，四位。, en: "Dim sum for four.", pattern: dimsum, region: both}
+  - {id: sent-mo-food-066, yue: 一壺普洱。, en: "A pot of pu'er tea.", pattern: dimsum, region: both}
+  - {id: sent-mo-food-067, yue: 我要蝦餃同燒賣。, en: "Har gow and siu mai, please.", pattern: dimsum, region: both}
+  - {id: sent-mo-food-068, yue: 唔該，茶壺加水。, en: "More hot water in the teapot, please.", pattern: dimsum, region: both}
+  - {id: sent-mo-food-069, yue: 呢度收唔收卡？, en: "Do you take cards here?", pattern: pay, region: both}
+  - {id: sent-mo-food-070, yue: 可唔可以用支付寶？, en: "Can I use Alipay?", pattern: pay, region: both}
+  - {id: sent-mo-food-071, yue: 可唔可以用微信支付？, en: "Can I use WeChat Pay?", pattern: pay, region: both}
+  - {id: sent-mo-food-072, yue: 我用八達通俾。, en: "I'll pay with Octopus.", pattern: pay, region: hk}
+  - {id: sent-mo-food-073, yue: 我俾現金。, en: "I'll pay cash.", pattern: pay, region: both}
+  - {id: sent-mo-food-074, yue: 一共幾多錢？, en: "How much altogether?", pattern: price, region: both}
+  - {id: sent-mo-food-075, yue: 加埋服務費幾多？, en: "How much including the service charge?", pattern: price, region: both}
+  - {id: sent-mo-food-076, yue: 分開俾得唔得？, en: "Can we pay separately?", pattern: pay, region: both}
+  - {id: sent-mo-food-077, yue: 我請你。, en: "My treat.", pattern: pay, region: both}
+  - {id: sent-mo-food-078, yue: 下次到你請。, en: "Next time it's your treat.", pattern: pay, region: both}
+  - {id: sent-mo-food-079, yue: 唔該找錢。, en: "My change, please.", pattern: pay, region: both}
+  - {id: sent-mo-food-080, yue: 你找錯錢喇。, en: "You gave me the wrong change.", pattern: pay, region: both}
+  - {id: sent-mo-food-081, yue: 有冇收據？, en: "Can I have a receipt?", pattern: pay, region: both}
+  - {id: sent-mo-food-082, yue: 呢度用港紙會唔會蝕？, en: "Do I lose out paying in Hong Kong dollars here?", pattern: money}
+  - {id: sent-mo-food-083, yue: 你哋找錢俾葡紙定港紙？, en: "Do you give change in patacas or Hong Kong dollars?", pattern: money}
+  - {id: sent-mo-food-084, yue: 邊度有櫃員機？, en: "Where is there an ATM?", pattern: money, region: both}
+  - {id: sent-mo-food-085, yue: 我想換錢。, en: "I want to change money.", pattern: money, region: both}
+  - {id: sent-mo-food-086, yue: 今日匯率幾多？, en: "What's today's exchange rate?", pattern: money, region: both}
+  - {id: sent-mo-food-087, yue: 我想撳錢。, en: "I want to withdraw cash.", pattern: money, region: both}
+  - {id: sent-mo-food-088, yue: 散紙唔夠。, en: "I don't have enough small change.", pattern: money, region: both}
+  - {id: sent-mo-food-089, yue: 有冇散紙找？, en: "Do you have change?", pattern: money, region: both}
+  - {id: sent-mo-food-090, yue: 你哋幾點收舖？, en: "What time do you close?", pattern: hours, region: both}
+  - {id: sent-mo-food-091, yue: 你哋開到幾點？, en: "How late are you open?", pattern: hours, region: both}
+  - {id: sent-mo-food-092, yue: 星期日開唔開？, en: "Are you open on Sunday?", pattern: hours, region: both}
+  - {id: sent-mo-food-093, yue: 我想訂枱，今晚七點，四位。, en: "I'd like to book a table for four at seven tonight.", pattern: booking, region: both}
+  - {id: sent-mo-food-094, yue: 我姓陳，訂咗枱。, en: "My surname is Chan, I have a booking.", pattern: booking, region: both}
+  - {id: sent-mo-food-095, yue: 可唔可以改到八點？, en: "Can I change it to eight o'clock?", pattern: booking, region: both}
+  - {id: sent-mo-food-096, yue: 呢間茶餐廳好出名。, en: "This cha chaan teng is very well known.", pattern: comment, region: both}
+  - {id: sent-mo-food-097, yue: 呢度啲嘢好抵食。, en: "The food here is great value.", pattern: comment, region: both}
+  - {id: sent-mo-food-098, yue: 呢度太貴喇。, en: "This place is too expensive.", pattern: comment, region: both}
+  - {id: sent-mo-food-099, yue: 唔該，埋單，一齊俾。, en: "The bill please, we'll pay together.", pattern: pay, region: both}
+  - {id: sent-mo-food-100, yue: 我想要杯熱咖啡。, en: "I'd like a hot coffee.", pattern: drink, region: both}
