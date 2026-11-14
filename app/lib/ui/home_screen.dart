@@ -16,6 +16,8 @@ import 'mascot.dart';
 import 'paste_reader_screen.dart';
 import 'reader_screen.dart';
 import 'topic_screen.dart';
+import 'update_ui.dart';
+import '../platform/updater.dart';
 import 'ruby_text.dart';
 import 'theme.dart';
 
@@ -33,6 +35,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late String _lang = _s.prefs.lang;
   StreamSubscription<String>? _shareSub;
+  UpdateInfo? _update;
 
   /// Chinese text waiting on the clipboard: '' = some text (Android, unread), null = none.
   String? _clip;
@@ -47,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       (t) => _openReader(t, source: 'share'),
     );
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      unawaited(_checkUpdate());
       final launch = await _s.shares.takeLaunchText();
       if (launch != null && mounted) {
         await _openReader(launch, source: 'share');
@@ -66,6 +70,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) _checkClipboard();
+  }
+
+  Future<void> _checkUpdate() async {
+    final u = _s.updater;
+    if (u == null) return;
+    final info = await u.check();
+    _s.logger.log('update.check', {'channel': 'release', 'found': info?.build});
+    if (mounted && info != null) setState(() => _update = info);
   }
 
   /// Offer to read copied Chinese text. On Android reading the clipboard shows a system
@@ -243,6 +255,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   ],
                 ),
                 const SizedBox(height: 20),
+                if (_update case final u?)
+                  UpdateBanner(
+                    info: u,
+                    onLater: () => setState(() => _update = null),
+                    onUpdate: () => runUpdate(context, _s, u),
+                  ),
                 _TodayCard(
                   due: due,
                   known: solid,

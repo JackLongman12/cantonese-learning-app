@@ -15,6 +15,7 @@ import 'engine/memory.dart';
 import 'events/event_logger.dart';
 import 'events/event_store.dart';
 import 'platform/speech.dart';
+import 'platform/updater.dart';
 import 'ui/home_screen.dart';
 import 'ui/theme.dart';
 
@@ -72,6 +73,7 @@ Future<AppServices> _bootstrap() async {
     playAudio: createPlayAudio(),
     playFile: (path) => _filePlayer.play(DeviceFileSource(path)),
     prefs: Prefs(File(p.join(support.path, 'prefs.json'))),
+    updater: Updater(),
     speech: (Platform.isAndroid || Platform.isWindows || Platform.isMacOS)
         ? SpeechEngine(Directory(p.join(support.path, 'models', 'sensevoice')))
         : null,

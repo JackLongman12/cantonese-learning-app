@@ -133,8 +133,8 @@ check them by eye → `duk tts` → `duk bundle`. The owner then confirms wordin
 - [ ] 2.3 Map mode with offline tiles for Macau and HK.
 - [ ] 2.4 Scenario browser and trip mode (`goal.set`).
 - [ ] 2.5 Mandarin track: Simplified sentences, Pinyin, parallel view with difference highlighting; Mandarin placement.
-- [ ] 2.6 GitHub Actions: build Android APK, Windows installer, macOS dmg; `dev` and `stable` channels; signed Android.
-- [ ] 2.7 Auto-update on launch: app binaries and content packs separately; pre-migration backup.
+- [x] 2.6 Releases: `tool/release.sh` builds signed Android APKs + Windows zip on the dev PC and publishes a GitHub Release (CI signing was not set up: the key stays on the PC). macOS later.
+- [x] 2.7 Auto-update on launch (Android + Windows), from public GitHub Releases. Content packs separate from the app: not yet.
 - [ ] 2.8 Error diagnosis and targeted drills (DESIGN §2.6).
 
 **Done when:** a push to main reaches the phone as an update without a cable; Macau place deck usable on a walk.

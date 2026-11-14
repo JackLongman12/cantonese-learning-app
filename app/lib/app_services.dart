@@ -10,6 +10,7 @@ import 'engine/scaffold.dart';
 import 'engine/signals.dart';
 import 'events/event_logger.dart';
 import 'platform/share_inbox.dart';
+import 'platform/updater.dart';
 import 'platform/speech.dart';
 
 /// Plays a bundled clip. Implemented outside the engine so tests need no audio device.
@@ -29,6 +30,7 @@ class AppServices {
     this.playFile,
     Prefs? prefs,
     ShareInbox? shares,
+    this.updater,
     this.scaffold = const ScaffoldPolicy(),
     this.signals = const SignalPolicy(),
     this.planner = const Planner(),
@@ -48,6 +50,9 @@ class AppServices {
   final PlayFile? playFile;
   final Prefs prefs;
   final ShareInbox shares;
+
+  /// Checks GitHub Releases for a newer build (null in tests).
+  final Updater? updater;
   final ScaffoldPolicy scaffold;
   final SignalPolicy signals;
   final Planner planner;

@@ -42,6 +42,14 @@ Personal, non-commercial app (Android, Windows, macOS) for one user who **speaks
 - macOS cannot be built locally; use GitHub Actions `macos-latest`.
 - The project path contains spaces (`CLAUDE PROJECT\cantonese learning app`); quote paths in every command and script.
 
+## Releases and auto-update
+
+`bash tool/release.sh` builds Android (arm64 + arm32 APKs) and Windows (zip), tags `b<commits>`
+and publishes a GitHub Release. Installed apps check `releases/latest` on launch and offer the
+update (Android: system installer; Windows: files swapped, app restarted). Release APKs are
+signed with the key in `%USERPROFILE%\.ducklearn\` (outside the repo; the owner must back it
+up: losing it means reinstalling the app from scratch). macOS is not released yet.
+
 ## Commands
 
 Flutter is at `C:\src\flutter\bin` (not on PATH): prefix commands with it.
