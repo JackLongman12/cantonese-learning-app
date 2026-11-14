@@ -2,7 +2,7 @@
 
 Work top to bottom. Do not start a phase until the previous phase's "Done when" list is met. Tick boxes as tasks land and keep the **Status** line current.
 
-**Status (2026-11-15):** Phase 0 mostly done and the core of Phase 1 exists. Pipeline, engine, event log, ruby reader and one 100-sentence topic are built and tested (15 pipeline tests, 28 app tests). **Blocked on the owner:** installing Visual Studio C++ tools and the Android SDK so the app can actually be launched; nothing has been run on a device yet. Nothing is committed.
+**Status (2026-11-15):** Phase 0 mostly done and the core of Phase 1 exists. Pipeline, engine, event log, ruby reader and one 100-sentence topic are built and tested (15 pipeline tests, 28 app tests). **Blocked on the owner:** installing Visual Studio C++ tools and the Android SDK so the app can actually be launched; nothing has been run on a device yet. Pushed to the private repo `JackLongman12/cantonese-learning-app`; the CI workflow has not been confirmed green yet.
 
 ## Needed from the owner (ask once, early; do not block on optional ones)
 
@@ -25,7 +25,7 @@ Windows 11, RTX 4060 Laptop 8 GB, Python 3.11.9, Git, Node, GitHub CLI (logged i
 
 Goal: prove the three risky things (readings, audio, ruby rendering) on 20 sentences before building anything wide.
 
-- [ ] 0.1 `git init` done. First commit and GitHub repo wait for the owner's go-ahead.
+- [x] 0.1 Repo initialised and pushed (private).
 - [ ] 0.2 Flutter installed. Still needed: JDK 17, Android SDK, VS C++ workload; then `flutter doctor` clean for Windows + Android.
 - [x] 0.3 `pipeline/`: Python project (`uv` or venv, `pyproject.toml`, `ruff`, `pytest`).
 - [x] 0.4 `duk fetch`: Unihan and Make Me a Hanzi, hash-locked. (CC-Canto, words.hk, rime-cantonese still to add as a fourth voter and word source.)
