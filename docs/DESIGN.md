@@ -151,7 +151,7 @@ app/lib/
   platform/   OCR channels, hotkeys
 ```
 
-Packages in use: `sqlite3` (raw, no code generation), `fsrs`, `just_audio`, `ulid`, `path_provider`; widgets come from `package:material_ui` (Flutter ≥ 3.47 moved Material out of the SDK). Planned: `flutter_map` (+ tile caching), `google_mlkit_text_recognition` (Android), `flutter_tts`, `googleapis`/`googleapis_auth`/`google_sign_in`, `package_info_plus`, `onnxruntime`, `auto_updater` or a custom updater.
+Packages in use: `sqlite3` (raw, no code generation), `fsrs`, `audioplayers` (has a Windows backend; `just_audio` does not), `ulid`, `path_provider`; widgets come from `package:material_ui` (Flutter ≥ 3.47 moved Material out of the SDK). Planned: `flutter_map` (+ tile caching), `google_mlkit_text_recognition` (Android), `flutter_tts`, `googleapis`/`googleapis_auth`/`google_sign_in`, `package_info_plus`, `onnxruntime`, `auto_updater` or a custom updater.
 
 ### 4.2 Two databases
 

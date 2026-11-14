@@ -35,7 +35,7 @@ Personal, non-commercial app (Android, Windows, macOS) for one user who **speaks
 ## Environment notes
 
 - Dev machine: Windows 11, PowerShell, RTX 4060 Laptop (8 GB), Python 3.11, Git, Node, `gh` logged in.
-- Installed: Flutter 3.50 / Dart 3.14 at `C:\src\flutter`. Not yet installed: Visual Studio C++ desktop tools, Android SDK, JDK 17, Ollama. See ROADMAP Phase 0.
+- Installed: Flutter 3.50 / Dart 3.14 at `C:\src\flutter`; Visual Studio 2022 Build Tools (C++); Microsoft OpenJDK 17 at `C:\Program Files\Microsoft\jdk-17.0.21.21-hotspot`; Android SDK at `C:\Android\Sdk` (platform 36, build-tools 37). Flutter is configured to use both. Not installed: Android Studio, an emulator image, Ollama.
 - macOS cannot be built locally; use GitHub Actions `macos-latest`.
 - The project path contains spaces (`CLAUDE PROJECT\cantonese learning app`); quote paths in every command and script.
 
@@ -56,10 +56,13 @@ cd pipeline; .venv\Scripts\python.exe -m pytest -q; .venv\Scripts\python.exe -m 
 C:\src\flutter\bin\flutter analyze
 C:\src\flutter\bin\flutter test
 C:\src\flutter\bin\flutter test --update-goldens test/ui/ruby_golden_test.dart   # then LOOK at test/ui/goldens/ruby.png
+C:\src\flutter\bin\flutter run -d windows                        # run on this PC
+C:\src\flutter\bin\flutter test integration_test -d windows      # real build, real sqlite + audio
+C:\src\flutter\bin\flutter build apk --release                   # phone build
 ```
 
-The app cannot be launched on this machine yet (no Visual Studio C++ tools, no Android SDK).
-Until then, verify UI work with widget tests and the golden image.
+`integration_test/` runs the real build with real plugins and writes progress to a temp
+folder, never to the owner's event log (`%APPDATA%\app.duk\duk\events`).
 
 `app/test/ui/reader_flow_test.dart` runs the real engine against the real `content.db`;
 run `duk build` and `duk bundle` first or it is skipped.

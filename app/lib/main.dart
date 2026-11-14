@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:ulid/ulid.dart';
@@ -61,17 +61,23 @@ Future<AppServices> _bootstrap() async {
     'replayed_items': learner.known.length,
   });
 
-  final player = AudioPlayer();
   return AppServices(
     content: content,
     logger: logger,
     learner: learner,
     memory: memory,
-    playAudio: (path) async {
-      await player.setAsset('assets/content/$path');
-      await player.play();
-    },
+    playAudio: createPlayAudio(),
   );
+}
+
+/// Plays a clip bundled under `assets/content/`. One player, so a new clip replaces the
+/// one still playing.
+PlayAudio createPlayAudio() {
+  final player = AudioPlayer();
+  return (path) async {
+    await player.stop();
+    await player.play(AssetSource('content/$path'));
+  };
 }
 
 class DukApp extends StatelessWidget {

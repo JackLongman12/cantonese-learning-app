@@ -39,8 +39,8 @@ dependencies:
   sqlite3: ^3.9.1
   path_provider: ^2.1.6
   path: ^1.9.1
-  just_audio: ^0.10.6
   ulid: ^2.2.0
+  audioplayers: ^6.8.1
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +52,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  integration_test:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
