@@ -1,0 +1,112 @@
+# Drafted by an LLM. Every line stays reviewed: false until the owner has read it aloud
+# and confirmed both the wording and the readings in build/review_queue.md.
+scenario:
+  id: scn-mo-tourism
+  title: Hotels, sightseeing and casinos
+  region: macau
+  tags: [hotel, tourism, casino]
+
+defaults: {register: spoken, source: llm}
+
+# `pattern` groups variations of one sentence frame so the planner spreads them out.
+sentences:
+  - {id: sent-mo-tour-001, yue: 我想訂房。, en: "I'd like to book a room.", pattern: book, region: both}
+  - {id: sent-mo-tour-002, yue: 有冇房？, en: "Are there any rooms available?", pattern: book, region: both}
+  - {id: sent-mo-tour-003, yue: 一晚幾錢？, en: "How much per night?", pattern: book, region: both}
+  - {id: sent-mo-tour-004, yue: 包唔包早餐？, en: "Is breakfast included?", pattern: book, region: both}
+  - {id: sent-mo-tour-005, yue: 我想要雙人房。, en: "I'd like a double room.", pattern: book, region: both}
+  - {id: sent-mo-tour-006, yue: 我要住三晚。, en: "I'll stay three nights.", pattern: book, region: both}
+  - {id: sent-mo-tour-007, yue: 我已經網上訂咗。, en: "I've already booked online.", pattern: checkin, region: both}
+  - {id: sent-mo-tour-008, yue: 我想check in。, en: "I'd like to check in.", pattern: checkin, region: both}
+  - {id: sent-mo-tour-009, yue: 幾點可以入住？, en: "What time can I check in?", pattern: checkin, region: both}
+  - {id: sent-mo-tour-010, yue: 幾點要退房？, en: "What time is check-out?", pattern: checkin, region: both}
+  - {id: sent-mo-tour-011, yue: 可唔可以遲啲退房？, en: "Can I check out late?", pattern: checkin, region: both}
+  - {id: sent-mo-tour-012, yue: 可唔可以寄存行李？, en: "Can I leave my luggage here?", pattern: checkin, region: both}
+  - {id: sent-mo-tour-013, yue: 張房卡用唔到。, en: "The key card doesn't work.", pattern: room, region: both}
+  - {id: sent-mo-tour-014, yue: 房冇熱水。, en: "There's no hot water in the room.", pattern: room, region: both}
+  - {id: sent-mo-tour-015, yue: 冷氣太凍。, en: "The air con is too cold.", pattern: room, region: both}
+  - {id: sent-mo-tour-016, yue: 可唔可以換房？, en: "Can I change rooms?", pattern: room, region: both}
+  - {id: sent-mo-tour-017, yue: 唔該送多兩條毛巾。, en: "Two more towels, please.", pattern: room, region: both}
+  - {id: sent-mo-tour-018, yue: 間房要打掃。, en: "The room needs cleaning.", pattern: room, region: both}
+  - {id: sent-mo-tour-019, yue: WiFi密碼係幾多？, en: "What's the WiFi password?", pattern: room, region: both}
+  - {id: sent-mo-tour-020, yue: 早餐喺邊度食？, en: "Where is breakfast served?", pattern: room, region: both}
+  - {id: sent-mo-tour-021, yue: 酒店有冇穿梭巴士？, en: "Does the hotel have a shuttle bus?", pattern: transport, region: both}
+  - {id: sent-mo-tour-022, yue: 穿梭巴士幾點有？, en: "When does the shuttle bus run?", pattern: transport, region: both}
+  - {id: sent-mo-tour-023, yue: 可唔可以幫我叫的士？, en: "Could you call me a taxi?", pattern: transport, region: both}
+  - {id: sent-mo-tour-024, yue: 澳門有咩好玩？, en: "What's fun to do in Macau?", pattern: sights}
+  - {id: sent-mo-tour-025, yue: 有咩地方推介？, en: "What places do you recommend?", pattern: sights, region: both}
+  - {id: sent-mo-tour-026, yue: 大三巴點去？, en: "How do I get to the Ruins of St. Paul's?", pattern: sights}
+  - {id: sent-mo-tour-027, yue: 呢度可唔可以影相？, en: "Can I take photos here?", pattern: sights, region: both}
+  - {id: sent-mo-tour-028, yue: 入場使唔使錢？, en: "Is there an admission fee?", pattern: sights, region: both}
+  - {id: sent-mo-tour-029, yue: 門票幾錢？, en: "How much is a ticket?", pattern: sights, region: both}
+  - {id: sent-mo-tour-030, yue: 幾點開放？, en: "What are the opening hours?", pattern: sights, region: both}
+  - {id: sent-mo-tour-031, yue: 有冇導賞團？, en: "Are there guided tours?", pattern: sights, region: both}
+  - {id: sent-mo-tour-032, yue: 呢間教堂好靚。, en: "This church is beautiful.", pattern: sights, region: both}
+  - {id: sent-mo-tour-033, yue: 呢度好多遊客。, en: "There are so many tourists here.", pattern: sights, region: both}
+  - {id: sent-mo-tour-034, yue: 我想去路環行下。, en: "I want to go and wander around Coloane.", pattern: sights}
+  - {id: sent-mo-tour-035, yue: 官也街有好多手信舖。, en: "Rua do Cunha has lots of souvenir shops.", pattern: sights}
+  - {id: sent-mo-tour-036, yue: 我想買啲手信返去。, en: "I want to buy some souvenirs to take home.", pattern: shop, region: both}
+  - {id: sent-mo-tour-037, yue: 呢度有咩特產？, en: "What are the local specialities here?", pattern: shop, region: both}
+  - {id: sent-mo-tour-038, yue: 啲肉乾可唔可以試食？, en: "Can I try the jerky?", pattern: shop, region: both}
+  - {id: sent-mo-tour-039, yue: 我想試下葡國菜。, en: "I'd like to try Portuguese food.", pattern: food}
+  - {id: sent-mo-tour-040, yue: 邊間葡國餐廳好食？, en: "Which Portuguese restaurant is good?", pattern: food}
+  - {id: sent-mo-tour-041, yue: 呢度有冇夜市？, en: "Is there a night market here?", pattern: sights, region: both}
+  - {id: sent-mo-tour-042, yue: 我哋去睇夜景。, en: "Let's go and see the night view.", pattern: sights, region: both}
+  - {id: sent-mo-tour-043, yue: 今晚有冇煙花？, en: "Are there fireworks tonight?", pattern: sights, region: both}
+  - {id: sent-mo-tour-044, yue: 我想去賭場睇下。, en: "I'd like to look around a casino.", pattern: casino}
+  - {id: sent-mo-tour-045, yue: 入賭場要幾多歲？, en: "How old do you have to be to go into a casino?", pattern: casino}
+  - {id: sent-mo-tour-046, yue: 我唔賭錢，淨係睇下。, en: "I don't gamble, I'm just looking.", pattern: casino, region: both}
+  - {id: sent-mo-tour-047, yue: 佢輸咗好多錢。, en: "They lost a lot of money.", pattern: casino, region: both}
+  - {id: sent-mo-tour-048, yue: 佢贏咗錢。, en: "They won money.", pattern: casino, region: both}
+  - {id: sent-mo-tour-049, yue: 唔好賭咁多。, en: "Don't gamble so much.", pattern: casino, region: both}
+  - {id: sent-mo-tour-050, yue: 賭場入面唔可以影相。, en: "You can't take photos inside the casino.", pattern: casino}
+  - {id: sent-mo-tour-051, yue: 我第一次嚟澳門。, en: "It's my first time in Macau.", pattern: visitor}
+  - {id: sent-mo-tour-052, yue: 我嚟玩三日。, en: "I'm here for three days.", pattern: visitor, region: both}
+  - {id: sent-mo-tour-053, yue: 我同朋友嚟旅行。, en: "I'm travelling with friends.", pattern: visitor, region: both}
+  - {id: sent-mo-tour-054, yue: 你可唔可以幫我影張相？, en: "Could you take a photo of me?", pattern: visitor, region: both}
+  - {id: sent-mo-tour-055, yue: 呢度係咪排隊入去？, en: "Is this the queue to get in?", pattern: sights, region: both}
+  - {id: sent-mo-tour-056, yue: 洗手間喺邊？, en: "Where's the toilet?", pattern: basic, region: both}
+  - {id: sent-mo-tour-057, yue: 附近有冇便利店？, en: "Is there a convenience store nearby?", pattern: basic, region: both}
+  - {id: sent-mo-tour-058, yue: 我想買杯嘢飲。, en: "I'd like to buy a drink.", pattern: basic, region: both}
+  - {id: sent-mo-tour-059, yue: 行到好攰，坐低休息下。, en: "I'm tired from walking, let's sit and rest.", pattern: basic, region: both}
+  - {id: sent-mo-tour-060, yue: 今日行咗好多路。, en: "We walked a lot today.", pattern: basic, region: both}
+  - {id: sent-mo-tour-061, yue: 我對腳好痛。, en: "My feet really hurt.", pattern: basic, region: both}
+  - {id: sent-mo-tour-062, yue: 下一個去邊度？, en: "Where to next?", pattern: plans, region: both}
+  - {id: sent-mo-tour-063, yue: 去完大三巴去議事亭前地。, en: "After the Ruins of St. Paul's, let's go to Senado Square.", pattern: plans}
+  - {id: sent-mo-tour-064, yue: 使唔使搭車去？, en: "Do we need to take a car there?", pattern: plans, region: both}
+  - {id: sent-mo-tour-065, yue: 行過去都得。, en: "We can walk there too.", pattern: plans, region: both}
+  - {id: sent-mo-tour-066, yue: 我哋蕩失路喇。, en: "We're lost.", pattern: lost, region: both}
+  - {id: sent-mo-tour-067, yue: 地圖話就喺附近。, en: "The map says it's nearby.", pattern: lost, region: both}
+  - {id: sent-mo-tour-068, yue: 唔該，呢度係咪議事亭前地？, en: "Excuse me, is this Senado Square?", pattern: lost}
+  - {id: sent-mo-tour-069, yue: 我想返酒店，點行？, en: "I want to get back to the hotel, which way?", pattern: lost, region: both}
+  - {id: sent-mo-tour-070, yue: 酒店喺邊個方向？, en: "Which direction is the hotel?", pattern: lost, region: both}
+  - {id: sent-mo-tour-071, yue: 我想喺酒店餐廳訂枱。, en: "I'd like to book a table at the hotel restaurant.", pattern: food, region: both}
+  - {id: sent-mo-tour-072, yue: 可唔可以叫餐上房？, en: "Can I order room service?", pattern: room, region: both}
+  - {id: sent-mo-tour-073, yue: 有冇健身室？, en: "Is there a gym?", pattern: facilities, region: both}
+  - {id: sent-mo-tour-074, yue: 泳池幾點開？, en: "What time does the pool open?", pattern: facilities, region: both}
+  - {id: sent-mo-tour-075, yue: 有冇水療？, en: "Is there a spa?", pattern: facilities, region: both}
+  - {id: sent-mo-tour-076, yue: 我想用商務中心。, en: "I'd like to use the business centre.", pattern: facilities, region: both}
+  - {id: sent-mo-tour-077, yue: 前台喺邊？, en: "Where's the front desk?", pattern: facilities, region: both}
+  - {id: sent-mo-tour-078, yue: 我唔見咗張房卡。, en: "I've lost my key card.", pattern: room, region: both}
+  - {id: sent-mo-tour-079, yue: 我將張卡留咗喺房入面。, en: "I left my key card in the room.", pattern: room, region: both}
+  - {id: sent-mo-tour-080, yue: 可唔可以幫我換錢？, en: "Can you change money for me?", pattern: money, region: both}
+  - {id: sent-mo-tour-081, yue: 呢度收唔收人民幣？, en: "Do you accept renminbi here?", pattern: money, region: both}
+  - {id: sent-mo-tour-082, yue: 我想退房。, en: "I'd like to check out.", pattern: checkout, region: both}
+  - {id: sent-mo-tour-083, yue: 可唔可以俾張單我睇下？, en: "Could I see the bill?", pattern: checkout, region: both}
+  - {id: sent-mo-tour-084, yue: 呢項費用係咩嚟？, en: "What is this charge for?", pattern: checkout, region: both}
+  - {id: sent-mo-tour-085, yue: 我冇用過迷你吧。, en: "I didn't use the minibar.", pattern: checkout, region: both}
+  - {id: sent-mo-tour-086, yue: 我想用信用卡俾。, en: "I'd like to pay by credit card.", pattern: checkout, region: both}
+  - {id: sent-mo-tour-087, yue: 可唔可以幫我叫車去碼頭？, en: "Could you get me a car to the ferry terminal?", pattern: transport, region: both}
+  - {id: sent-mo-tour-088, yue: 去機場要幾耐？, en: "How long does it take to the airport?", pattern: transport, region: both}
+  - {id: sent-mo-tour-089, yue: 住得好舒服，多謝。, en: "It was a very comfortable stay, thank you.", pattern: checkout, region: both}
+  - {id: sent-mo-tour-090, yue: 下次再嚟。, en: "We'll come again.", pattern: checkout, region: both}
+  - {id: sent-mo-tour-091, yue: 澳門幾時天氣最好？, en: "When does Macau have the best weather?", pattern: visitor}
+  - {id: sent-mo-tour-092, yue: 夏天好熱又好潮濕。, en: "Summer is very hot and humid.", pattern: visitor, region: both}
+  - {id: sent-mo-tour-093, yue: 秋天去最舒服。, en: "Autumn is the most comfortable time to go.", pattern: visitor, region: both}
+  - {id: sent-mo-tour-094, yue: 呢度好有葡國風味。, en: "This place has a real Portuguese feel.", pattern: visitor}
+  - {id: sent-mo-tour-095, yue: 啲街名有中文同葡文。, en: "The street names are in Chinese and Portuguese.", pattern: visitor}
+  - {id: sent-mo-tour-096, yue: 我睇唔明葡文。, en: "I can't read Portuguese.", pattern: visitor, region: both}
+  - {id: sent-mo-tour-097, yue: 澳門好細，行路都去到好多地方。, en: "Macau is small, you can walk to lots of places.", pattern: visitor}
+  - {id: sent-mo-tour-098, yue: 我好鍾意澳門。, en: "I really like Macau.", pattern: visitor}
+  - {id: sent-mo-tour-099, yue: 下次帶屋企人嚟。, en: "Next time I'll bring my family.", pattern: visitor, region: both}
+  - {id: sent-mo-tour-100, yue: 祝你旅途愉快。, en: "Have a pleasant trip.", pattern: visitor, region: both}

@@ -1,0 +1,112 @@
+# Drafted by an LLM. Every line stays reviewed: false until the owner has read it aloud
+# and confirmed both the wording and the readings in build/review_queue.md.
+scenario:
+  id: scn-mo-messaging
+  title: Phone and messaging
+  region: macau
+  tags: [phone, chat]
+
+defaults: {register: spoken, source: llm}
+
+# `pattern` groups variations of one sentence frame so the planner spreads them out.
+sentences:
+  - {id: sent-mo-msg-001, yue: 喺度？, en: "You there?", pattern: check-in, region: both}
+  - {id: sent-mo-msg-002, yue: 得唔得閒傾兩句？, en: "Got time for a quick chat?", pattern: check-in, region: both}
+  - {id: sent-mo-msg-003, yue: 收到。, en: "Got it.", pattern: reply, region: both}
+  - {id: sent-mo-msg-004, yue: 好呀，冇問題。, en: "OK, no problem.", pattern: reply, region: both}
+  - {id: sent-mo-msg-005, yue: 等陣覆你。, en: "I'll reply in a bit.", pattern: reply, region: both}
+  - {id: sent-mo-msg-006, yue: 頭先冇睇到訊息。, en: "I didn't see your message earlier.", pattern: reply, region: both}
+  - {id: sent-mo-msg-007, yue: 唔好意思，遲咗覆。, en: "Sorry for the late reply.", pattern: reply, region: both}
+  - {id: sent-mo-msg-008, yue: 你到咗未？, en: "Are you there yet?", pattern: meet, region: both}
+  - {id: sent-mo-msg-009, yue: 我出緊門。, en: "I'm heading out now.", pattern: meet, region: both}
+  - {id: sent-mo-msg-010, yue: 仲有五分鐘。, en: "Five more minutes.", pattern: meet, region: both}
+  - {id: sent-mo-msg-011, yue: 我喺門口等你。, en: "I'm waiting for you at the entrance.", pattern: meet, region: both}
+  - {id: sent-mo-msg-012, yue: 你著咩衫？, en: "What are you wearing?", pattern: meet, region: both}
+  - {id: sent-mo-msg-013, yue: 我搵唔到你。, en: "I can't find you.", pattern: meet, region: both}
+  - {id: sent-mo-msg-014, yue: 打俾我。, en: "Call me.", pattern: call, region: both}
+  - {id: sent-mo-msg-015, yue: 我而家唔方便聽電話。, en: "I can't take a call right now.", pattern: call, region: both}
+  - {id: sent-mo-msg-016, yue: 遲啲再打俾你。, en: "I'll call you back later.", pattern: call, region: both}
+  - {id: sent-mo-msg-017, yue: 你啱啱打嚟有咩事？, en: "You just called, what's up?", pattern: call, region: both}
+  - {id: sent-mo-msg-018, yue: 我就快冇電，就嚟熄機。, en: "My battery's almost dead, my phone's about to die.", pattern: phone, region: both}
+  - {id: sent-mo-msg-019, yue: 我部電話好慢。, en: "My phone is really slow.", pattern: phone, region: both}
+  - {id: sent-mo-msg-020, yue: 我換咗新號碼。, en: "I've changed my number.", pattern: phone, region: both}
+  - {id: sent-mo-msg-021, yue: send個地址俾我。, en: "Send me the address.", pattern: share, region: both}
+  - {id: sent-mo-msg-022, yue: 我send咗張相俾你。, en: "I've sent you a photo.", pattern: share, region: both}
+  - {id: sent-mo-msg-023, yue: 你收唔收到張相？, en: "Did you get the photo?", pattern: share, region: both}
+  - {id: sent-mo-msg-024, yue: 我開咗個group。, en: "I've started a group chat.", pattern: group, region: both}
+  - {id: sent-mo-msg-025, yue: 拉埋佢入group。, en: "Add them to the group.", pattern: group, region: both}
+  - {id: sent-mo-msg-026, yue: group入面講咗。, en: "It was mentioned in the group.", pattern: group, region: both}
+  - {id: sent-mo-msg-027, yue: 佢已讀唔回。, en: "They read it and didn't reply.", pattern: reply, region: both}
+  - {id: sent-mo-msg-028, yue: 你係咪block咗我？, en: "Did you block me?", pattern: social, region: both}
+  - {id: sent-mo-msg-029, yue: 我follow咗你。, en: "I've followed you.", pattern: social, region: both}
+  - {id: sent-mo-msg-030, yue: 你有冇IG？, en: "Are you on Instagram?", pattern: social, region: both}
+  - {id: sent-mo-msg-031, yue: 呢個post好多like。, en: "This post got lots of likes.", pattern: social, region: both}
+  - {id: sent-mo-msg-032, yue: 我share咗俾你睇。, en: "I shared it with you.", pattern: social, region: both}
+  - {id: sent-mo-msg-033, yue: 好好笑，笑死我。, en: "So funny, I'm dying.", pattern: react, region: both}
+  - {id: sent-mo-msg-034, yue: 正呀！, en: "Nice!", pattern: react, region: both}
+  - {id: sent-mo-msg-035, yue: 唔係呀嘛？, en: "You're kidding?", pattern: react, region: both}
+  - {id: sent-mo-msg-036, yue: 真定假㗎？, en: "For real?", pattern: react, region: both}
+  - {id: sent-mo-msg-037, yue: 好嘢！, en: "Yay!", pattern: react, region: both}
+  - {id: sent-mo-msg-038, yue: 唉，好煩。, en: "Ugh, so annoying.", pattern: react, region: both}
+  - {id: sent-mo-msg-039, yue: 加油呀！, en: "Go for it!", pattern: react, region: both}
+  - {id: sent-mo-msg-040, yue: 早晨，今日點呀？, en: "Morning, how's your day?", pattern: greet, region: both}
+  - {id: sent-mo-msg-041, yue: 早唞，聽日見。, en: "Night, see you tomorrow.", pattern: greet, region: both}
+  - {id: sent-mo-msg-042, yue: 生日快樂呀！, en: "Happy birthday!", pattern: greet, region: both}
+  - {id: sent-mo-msg-043, yue: 得閒飲茶。, en: "Let's do dim sum sometime.", pattern: greet, region: both}
+  - {id: sent-mo-msg-044, yue: 今晚食咩呀？, en: "What's for dinner tonight?", pattern: plans, region: both}
+  - {id: sent-mo-msg-045, yue: 今晚出唔出嚟？, en: "Are you coming out tonight?", pattern: plans, region: both}
+  - {id: sent-mo-msg-046, yue: 我哋改聽日啦。, en: "Let's move it to tomorrow.", pattern: plans, region: both}
+  - {id: sent-mo-msg-047, yue: 我嚟唔到喇，唔好意思。, en: "I can't make it, sorry.", pattern: plans, region: both}
+  - {id: sent-mo-msg-048, yue: 你幾點收工？, en: "What time do you finish work?", pattern: plans, region: both}
+  - {id: sent-mo-msg-049, yue: 我塞緊車。, en: "I'm stuck in traffic.", pattern: meet, region: both}
+  - {id: sent-mo-msg-050, yue: 出門記得帶遮。, en: "Remember your umbrella when you go out.", pattern: remind, region: both}
+  - {id: sent-mo-msg-051, yue: 記得食藥。, en: "Remember to take your medicine.", pattern: remind, region: both}
+  - {id: sent-mo-msg-052, yue: 唔好唔記得。, en: "Don't forget.", pattern: remind, region: both}
+  - {id: sent-mo-msg-053, yue: 提提你，聽日開會。, en: "Just a reminder, meeting tomorrow.", pattern: remind, region: both}
+  - {id: sent-mo-msg-054, yue: 你訂咗枱未？, en: "Have you booked a table?", pattern: plans, region: both}
+  - {id: sent-mo-msg-055, yue: 我訂咗七點。, en: "I've booked for seven.", pattern: plans, region: both}
+  - {id: sent-mo-msg-056, yue: 轉咗數俾你喇。, en: "I've transferred the money to you.", pattern: money, region: both}
+  - {id: sent-mo-msg-057, yue: 你轉咗數未？, en: "Have you transferred the money?", pattern: money, region: both}
+  - {id: sent-mo-msg-058, yue: 幾多錢？我轉俾你。, en: "How much? I'll transfer it to you.", pattern: money, region: both}
+  - {id: sent-mo-msg-059, yue: 夾錢買份禮物。, en: "Let's chip in for a present.", pattern: money, region: both}
+  - {id: sent-mo-msg-060, yue: 我啱啱放工。, en: "I've just finished work.", pattern: status, region: both}
+  - {id: sent-mo-msg-061, yue: 我喺屋企。, en: "I'm at home.", pattern: status, region: both}
+  - {id: sent-mo-msg-062, yue: 我喺巴士度。, en: "I'm on the bus.", pattern: status, region: both}
+  - {id: sent-mo-msg-063, yue: 我頭先瞓著咗。, en: "I fell asleep earlier.", pattern: status, region: both}
+  - {id: sent-mo-msg-064, yue: 我病咗，今日唔出嚟喇。, en: "I'm sick, not going out today.", pattern: status, region: both}
+  - {id: sent-mo-msg-065, yue: 我好攰，想早啲瞓。, en: "I'm tired, I want to sleep early.", pattern: status, region: both}
+  - {id: sent-mo-msg-066, yue: 你冇嘢吖嘛？, en: "You OK?", pattern: care, region: both}
+  - {id: sent-mo-msg-067, yue: 有咩事搵我。, en: "Find me if you need anything.", pattern: care, region: both}
+  - {id: sent-mo-msg-068, yue: 返到屋企話我知。, en: "Tell me when you get home.", pattern: care, region: both}
+  - {id: sent-mo-msg-069, yue: 小心啲。, en: "Be careful.", pattern: care, region: both}
+  - {id: sent-mo-msg-070, yue: 掛住你。, en: "Miss you.", pattern: care, region: both}
+  - {id: sent-mo-msg-071, yue: 多謝晒！, en: "Thanks so much!", pattern: thanks, region: both}
+  - {id: sent-mo-msg-072, yue: 唔使客氣啦。, en: "No worries.", pattern: thanks, region: both}
+  - {id: sent-mo-msg-073, yue: 唔該你。, en: "Thank you.", pattern: thanks, region: both}
+  - {id: sent-mo-msg-074, yue: 你講乜？, en: "What did you say?", pattern: confuse, region: both}
+  - {id: sent-mo-msg-075, yue: 我唔明你講咩。, en: "I don't get what you mean.", pattern: confuse, region: both}
+  - {id: sent-mo-msg-076, yue: 打錯字。, en: "Typo.", pattern: confuse, region: both}
+  - {id: sent-mo-msg-077, yue: 我部手機打唔到中文。, en: "I can't type Chinese on my phone.", pattern: typing, region: both}
+  - {id: sent-mo-msg-078, yue: 我用語音輸入。, en: "I use voice input.", pattern: typing, region: both}
+  - {id: sent-mo-msg-079, yue: 你send語音俾我啦。, en: "Send me a voice message.", pattern: typing, region: both}
+  - {id: sent-mo-msg-080, yue: 我睇唔明呢個字。, en: "I can't read this character.", pattern: typing, region: both}
+  - {id: sent-mo-msg-081, yue: 呢個係咩字嚟？, en: "What character is this?", pattern: typing, region: both}
+  - {id: sent-mo-msg-082, yue: 你可唔可以打粵拼？, en: "Could you type it in Jyutping?", pattern: typing, region: both}
+  - {id: sent-mo-msg-083, yue: 我發緊短訊。, en: "I'm texting.", pattern: phone, region: both}
+  - {id: sent-mo-msg-084, yue: 有冇WiFi？, en: "Is there WiFi?", pattern: phone, region: both}
+  - {id: sent-mo-msg-085, yue: 我冇數據喇。, en: "I'm out of data.", pattern: phone, region: both}
+  - {id: sent-mo-msg-086, yue: 呢度冇訊號。, en: "No signal here.", pattern: phone, region: both}
+  - {id: sent-mo-msg-087, yue: 網絡好差。, en: "The connection is bad.", pattern: phone, region: both}
+  - {id: sent-mo-msg-088, yue: 我睇唔到條片。, en: "I can't watch the video.", pattern: share, region: both}
+  - {id: sent-mo-msg-089, yue: 條片好好笑。, en: "The video is hilarious.", pattern: share, region: both}
+  - {id: sent-mo-msg-090, yue: 你睇咗新聞未？, en: "Have you seen the news?", pattern: share, region: both}
+  - {id: sent-mo-msg-091, yue: 聽講佢哋拍緊拖。, en: "I hear they're dating.", pattern: gossip, region: both}
+  - {id: sent-mo-msg-092, yue: 佢哋分咗手。, en: "They broke up.", pattern: gossip, region: both}
+  - {id: sent-mo-msg-093, yue: 佢搬咗去香港。, en: "They moved to Hong Kong.", pattern: gossip, region: both}
+  - {id: sent-mo-msg-094, yue: 唔好話俾人知。, en: "Don't tell anyone.", pattern: gossip, region: both}
+  - {id: sent-mo-msg-095, yue: 秘密嚟㗎。, en: "It's a secret.", pattern: gossip, region: both}
+  - {id: sent-mo-msg-096, yue: OK，就噉話。, en: "OK, it's settled.", pattern: plans, region: both}
+  - {id: sent-mo-msg-097, yue: 一言為定。, en: "It's a deal.", pattern: plans, region: both}
+  - {id: sent-mo-msg-098, yue: 到時見。, en: "See you then.", pattern: plans, region: both}
+  - {id: sent-mo-msg-099, yue: 好，拜拜。, en: "OK, bye.", pattern: bye, region: both}
+  - {id: sent-mo-msg-100, yue: 晚安。, en: "Good night.", pattern: bye, region: both}
