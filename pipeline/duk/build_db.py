@@ -18,7 +18,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from . import __version__, paths
-from .annotate import FLAG, HAN, Annotation, annotate
+from .annotate import FLAG, HAN, Annotation, annotate, load_word_readings, spoken_readings
 from .content import Content, ContentError, load_content
 from .reference import load_reference
 from .words import refine_words
@@ -148,6 +148,10 @@ def build(
 
     ref = load_reference(raw_root)
     priors = {"yue": ref.prior("yue") if ref else {}}
+    spoken = spoken_readings()  # how words are said in HKCanCor (third voter)
+    word_readings = load_word_readings(
+        raw_root / "rime_cantonese" / "jyut6ping3.words.dict.yaml"
+    )
     # dictionary words, to keep only real words as underlined groups
     vocab = None
     _entries = None
@@ -204,6 +208,8 @@ def build(
                     overrides=content.overrides.get(lang),
                     fix=s.fix.get(lang),
                     prior=priors[lang],
+                    spoken=spoken,
+                    words=word_readings,
                 )
             except ValueError as e:
                 problems.append(f"{sid}: {e}")
@@ -259,6 +265,8 @@ def build(
                     overrides=content.overrides.get(lang),
                     fix=p.fix.get(lang),
                     prior=priors[lang],
+                    spoken=spoken,
+                    words=word_readings,
                 )
             except ValueError as e:
                 problems.append(f"{p.id}:{lang}: {e}")
@@ -285,7 +293,15 @@ def build(
     def add_card(cid, deck, zh, alt, note, rank, image=None, credit=""):
         nonlocal flagged_cards
         try:
-            ann = annotate(zh, "yue", overrides=content.overrides.get("yue"), prior=priors["yue"])
+            ann = annotate(
+                zh,
+                "yue",
+                overrides=content.overrides.get("yue"),
+                prior=priors["yue"],
+                names=True,
+                spoken=spoken,
+                    words=word_readings,
+            )
         except ValueError as e:
             result.warnings.append(f"{cid}: {e}")
             return
@@ -365,7 +381,9 @@ def build(
         for rank, e in enumerate(doc.get("entries") or []):
             try:
                 ann = annotate(
-                    e["zh"], "yue", overrides=content.overrides.get("yue"), prior=priors["yue"]
+                    e["zh"], "yue", overrides=content.overrides.get("yue"), prior=priors["yue"],
+                    spoken=spoken,
+                    words=word_readings,
                 )
                 reading = " ".join(r for r in ann.readings if r)
             except ValueError as err:

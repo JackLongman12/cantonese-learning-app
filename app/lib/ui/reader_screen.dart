@@ -562,6 +562,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
 
   void _next({bool skipped = false}) {
     if (_finished) return;
+    _s.silence(); // nothing from this sentence keeps playing over the next
     _finishCurrent(skipped: skipped);
     if (_index + 1 >= _queue.length) {
       _s.prefs.resume = null;

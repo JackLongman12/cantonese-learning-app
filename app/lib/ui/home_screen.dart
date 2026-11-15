@@ -17,6 +17,7 @@ import 'cards_screen.dart';
 import 'goal_picker.dart';
 import 'paste_reader_screen.dart';
 import 'reader_screen.dart';
+import 'reminder_sync.dart';
 import 'practice_screens.dart';
 import 'progress_view.dart';
 import 'skills.dart';
@@ -256,25 +257,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     unawaited(_refreshReminders());
   }
 
-  /// Read anything today? (a reminder is then skipped for today)
-  bool get _readToday {
-    final now = _s.logger.now().toLocal();
-    return _s.learner.known.any((x) {
-      final l = x.lastReview?.toLocal();
-      return l != null &&
-          l.year == now.year &&
-          l.month == now.month &&
-          l.day == now.day;
-    });
-  }
-
   /// Keeps the next reminders in step with today's reading (called on open/return).
-  Future<void> _refreshReminders() async {
-    final r = _s.reminders;
-    final m = _s.prefs.reminderMinute;
-    if (r == null || !_s.prefs.reminderOn || m == null) return;
-    await r.scheduleDaily(m, readToday: _readToday);
-  }
+  Future<void> _refreshReminders() => syncReminders(_s);
 
   /// Reminder on/off and time, from the bell on Today.
   Future<void> _reminderSheet() async {
@@ -283,78 +267,64 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       context: context,
       showDragHandle: true,
       builder: (ctx) => StatefulBuilder(
-        builder: (ctx, set) {
-          final m = _s.prefs.reminderMinute ?? 20 * 60;
-          final clock =
-              '${(m ~/ 60).toString().padLeft(2, '0')}:${(m % 60).toString().padLeft(2, '0')}';
-          return SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SwitchListTile(
-                    key: const ValueKey('reminder-toggle'),
-                    title: const Text('Gentle reminder'),
-                    subtitle: const Text(
-                      'Only on days you have not read yet. It stops by itself if '
-                      'you take a break.',
-                    ),
-                    value: _s.prefs.reminderOn,
-                    onChanged: (on) async {
-                      if (on && !await r.requestPermission()) return;
-                      _s.prefs.reminderOn = on;
-                      _s.prefs.reminderMinute ??= m;
-                      on ? await _refreshReminders() : await r.cancel();
-                      _s.logger.log('settings.change', {
-                        'key': 'reminder',
-                        'from': !on,
-                        'to': on,
-                      });
-                      set(() {});
-                      if (mounted) setState(() {});
-                    },
+        builder: (ctx, set) => SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SwitchListTile(
+                  key: const ValueKey('reminder-toggle'),
+                  title: const Text('Gentle reminder'),
+                  subtitle: Text(
+                    '${reminderLabel(_s)}. Only on days you have not read '
+                    'yet; it stops by itself if you take a break.',
                   ),
-                  ListTile(
-                    title: const Text('Time'),
-                    trailing: Text(clock),
-                    onTap: () async {
-                      final t = await showTimePicker(
-                        context: ctx,
-                        initialTime: TimeOfDay(hour: m ~/ 60, minute: m % 60),
-                      );
-                      if (t == null) return;
-                      _s.prefs.reminderMinute = t.hour * 60 + t.minute;
-                      await _refreshReminders();
-                      set(() {});
-                    },
-                  ),
-                ],
-              ),
+                  value: _s.prefs.reminderOn,
+                  onChanged: (on) async {
+                    if (on && !await r.requestPermission()) return;
+                    _s.prefs.reminderOn = on;
+                    await syncReminders(_s);
+                    _s.logger.log('settings.change', {
+                      'key': 'reminder',
+                      'from': !on,
+                      'to': on,
+                    });
+                    set(() {});
+                    if (mounted) setState(() {});
+                  },
+                ),
+                if (_s.prefs.reminderOn)
+                  ...reminderTimeTiles(ctx, _s, (from, to) {
+                    _s.logger.log('settings.change', {
+                      'key': 'reminder_minute',
+                      'from': from,
+                      'to': to,
+                    });
+                    set(() {});
+                  }),
+              ],
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
 
-  /// Once, after the first session: a daily nudge at this time of day (opt-in).
+  /// Once, after the first session: a daily nudge, smart-timed (opt-in).
   Future<void> _offerReminder() async {
     final r = _s.reminders;
     if (r == null || _s.prefs.reminderOffered || _s.prefs.reminderOn) return;
     if (_s.learner.known.isEmpty || !mounted) return;
     _s.prefs.reminderOffered = true;
-    final now = TimeOfDay.now();
-    final minute = now.hour * 60 + now.minute;
-    final clock =
-        '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
     final yes = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('A little every day?'),
-        content: Text(
-          'Reading a few sentences daily works far better than a lot once a week. '
-          'Want a quiet reminder at $clock each day? You can change it in Settings.',
+        content: const Text(
+          'Reading a few sentences daily works far better than a lot once a '
+          'week. Want a quiet reminder? It learns when you usually read and '
+          'skips days you already did. You can set a fixed time in Settings.',
         ),
         actions: [
           TextButton(
@@ -372,8 +342,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (yes != true || !await r.requestPermission()) return;
     _s.prefs
       ..reminderOn = true
-      ..reminderMinute = minute;
-    await r.scheduleDaily(minute, readToday: true);
+      ..reminderMinute = null; // smart
+    await syncReminders(_s);
     _s.logger.log('settings.change', {
       'key': 'reminder',
       'from': false,
@@ -583,12 +553,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       (id) => !_s.learner.stateOf(id).isNew,
     );
 
-    Widget page(List<Widget> children) => Center(
+    Widget page(List<Widget> children, {bool still = false}) => Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 720),
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
-          children: children,
+        child: ScrollConfiguration(
+          // Home fits on one screen: no stretch or bounce that makes it feel like a
+          // scrolling page. It still scrolls when it really doesn't fit (small phone,
+          // large text).
+          behavior: ScrollConfiguration.of(context)
+              .copyWith(overscroll: !still),
+          child: ListView(
+            physics: still ? const ClampingScrollPhysics() : null,
+            padding: EdgeInsets.fromLTRB(20, 16, 20, still ? 12 : 32),
+            children: children,
+          ),
         ),
       ),
     );
@@ -866,7 +844,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             if (practiceWords.isNotEmpty) 'words': '${practiceWords.length}',
           },
         ),
-      ]),
+      ], still: true),
       page([
         Text('Topics', style: theme.textTheme.titleLarge),
         const SizedBox(height: 2),

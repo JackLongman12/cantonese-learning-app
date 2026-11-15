@@ -9,12 +9,12 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../app_services.dart';
-import '../engine/insights.dart';
 import '../platform/sfx.dart';
 import '../platform/speech.dart';
 import '../platform/storage.dart';
 import '../engine/goals.dart';
 import 'goal_picker.dart';
+import 'reminder_sync.dart';
 import 'ruby_text.dart';
 import 'update_ui.dart';
 
@@ -80,17 +80,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _s.logger.log('settings.change', {'key': key, 'from': from, 'to': to});
     setState(() {});
   }
-
-  int _reminderMinute() =>
-      _s.prefs.reminderMinute ??
-      usualStudyMinute(
-        _s.logger.store.readAll(),
-        now: _s.logger.now().toUtc(),
-      ) ??
-      20 * 60;
-
-  String _clock(int m) =>
-      '${(m ~/ 60).toString().padLeft(2, '0')}:${(m % 60).toString().padLeft(2, '0')}';
 
   Future<void> _checkUpdate() async {
     final u = _s.updater;
@@ -225,39 +214,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SwitchListTile(
                     key: const ValueKey('reminder-switch'),
                     title: const Text('Daily reminder'),
-                    subtitle: Text(
-                      p.reminderMinute == null
-                          ? 'At ${_clock(_reminderMinute())}, when you usually read'
-                          : 'At ${_clock(_reminderMinute())}',
-                    ),
+                    subtitle: Text(reminderLabel(_s)),
                     value: p.reminderOn,
                     onChanged: (on) async {
-                      final r = _s.reminders!;
-                      if (on && !await r.requestPermission()) return;
+                      if (on && !await _s.reminders!.requestPermission()) {
+                        return;
+                      }
                       p.reminderOn = on;
-                      on
-                          ? await r.scheduleDaily(_reminderMinute())
-                          : await r.cancel();
+                      await syncReminders(_s);
                       _changed('reminder', !on, on);
                     },
                   ),
-                  ListTile(
-                    title: const Text('Reminder time'),
-                    trailing: Text(_clock(_reminderMinute())),
-                    onTap: () async {
-                      final m = _reminderMinute();
-                      final t = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay(hour: m ~/ 60, minute: m % 60),
-                      );
-                      if (t == null) return;
-                      p.reminderMinute = t.hour * 60 + t.minute;
-                      if (p.reminderOn) {
-                        await _s.reminders!.scheduleDaily(_reminderMinute());
-                      }
-                      _changed('reminder_minute', m, p.reminderMinute);
-                    },
-                  ),
+                  ...reminderTimeTiles(context, _s, (from, to) {
+                    _changed('reminder_minute', from, to);
+                  }),
                 ],
                 if (speech != null) ...[
                   section('Read aloud'),

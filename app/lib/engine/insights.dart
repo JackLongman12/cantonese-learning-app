@@ -10,6 +10,7 @@ int? usualStudyMinute(
   Iterable<Event> events, {
   DateTime? now,
   int minSessions = 3,
+  bool Function(int weekday)? onDays,
 }) {
   final cutoff = (now ?? DateTime.now().toUtc()).subtract(
     const Duration(days: 30),
@@ -17,10 +18,9 @@ int? usualStudyMinute(
   final minutes = <int>[
     for (final e in events)
       if (e.type == 'session.start' && e.tsUtc.isAfter(cutoff))
-        (() {
-          final local = e.tsUtc.add(Duration(minutes: e.tzOffsetMin));
-          return local.hour * 60 + local.minute;
-        })(),
+        if (e.tsUtc.add(Duration(minutes: e.tzOffsetMin)) case final local
+            when onDays == null || onDays(local.weekday))
+          local.hour * 60 + local.minute,
   ];
   if (minutes.length < minSessions) return null;
   // the busiest hour, then the median minute within it
@@ -49,4 +49,30 @@ Set<String> recentSentences(
           e.tsUtc.isAfter(since))
         if (e.payload['sentence_id'] case final String id) id,
   };
+}
+
+/// When the reminder goes out before there is any history: early evening.
+const defaultReminderMinute = 20 * 60;
+
+/// "Smart" reminder times, learned from when you actually start sessions: one for
+/// weekdays and one for weekends (people read at different times on days off), each
+/// falling back to your overall usual time, then to [defaultReminderMinute].
+/// [learned] is false while there is too little history to go on.
+({int weekday, int weekend, bool learned}) smartReminderTimes(
+  Iterable<Event> events, {
+  DateTime? now,
+}) {
+  final list = events.toList();
+  final all = usualStudyMinute(list, now: now);
+  final weekday =
+      usualStudyMinute(list, now: now, onDays: (d) => d <= DateTime.friday) ??
+      all;
+  final weekend =
+      usualStudyMinute(list, now: now, onDays: (d) => d > DateTime.friday) ??
+      all;
+  return (
+    weekday: weekday ?? defaultReminderMinute,
+    weekend: weekend ?? defaultReminderMinute,
+    learned: all != null,
+  );
 }

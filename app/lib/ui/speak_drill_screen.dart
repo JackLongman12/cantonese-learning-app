@@ -477,7 +477,7 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                               minimumSize: const Size(0, 52),
                             ),
                             onPressed: () {
-                              _s.stopAudio?.call();
+                              _s.silence();
                               _s.sound(Sfx.next);
                               _advance();
                             },
@@ -493,7 +493,7 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                               if (_phase == _Phase.listening) {
                                 _s.speech?.stopRecording().ignore();
                               }
-                              _s.stopAudio?.call();
+                              _s.silence();
                               _advance();
                             },
                             child: const Text('Skip'),

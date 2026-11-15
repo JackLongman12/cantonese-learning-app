@@ -111,6 +111,18 @@ class AppServices {
   /// Silences every clip and the word voice (null in tests).
   final Future<void> Function()? stopAudio;
 
+  int _playback = 0;
+
+  /// Changes whenever playback is cancelled; a sequence (your attempt, then the
+  /// native) checks it between clips and stops if it moved.
+  int get playbackToken => _playback;
+
+  /// Next / leaving: stop what is playing and anything queued to play after it.
+  Future<void> silence() async {
+    _playback++;
+    await stopAudio?.call();
+  }
+
   /// On-device recogniser for the read-aloud check (null where unavailable).
   final SpeechEngine? speech;
   final PlayFile? playFile;

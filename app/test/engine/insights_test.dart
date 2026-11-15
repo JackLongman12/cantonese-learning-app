@@ -38,4 +38,33 @@ void main() {
     ];
     expect(usualStudyMinute(old, now: now), isNull);
   });
+
+  test('smart reminder learns weekdays and weekends apart', () {
+    // Tue-Thu 21:10-21:40 Macau time, Sat-Sun mornings 10:00-10:30
+    final events = [
+      start(DateTime.utc(2026, 11, 10, 13, 10)), // Tue 21:10
+      start(DateTime.utc(2026, 11, 11, 13, 40)), // Wed 21:40
+      start(DateTime.utc(2026, 11, 12, 13, 20)), // Thu 21:20
+      start(DateTime.utc(2026, 11, 14, 2, 0)), // Sat 10:00
+      start(DateTime.utc(2026, 11, 15, 2, 30)), // Sun 10:30
+      start(DateTime.utc(2026, 11, 8, 2, 15)), // Sun 10:15
+    ];
+    final t = smartReminderTimes(events, now: now);
+    expect(t.learned, isTrue);
+    expect(t.weekday, 21 * 60 + 15);
+    expect(t.weekend, 10 * 60 + 15);
+  });
+
+  test('smart reminder starts at the default and falls back to overall', () {
+    final none = smartReminderTimes(const [], now: now);
+    expect(none.learned, isFalse);
+    expect(none.weekday, defaultReminderMinute);
+    // weekdays only: weekends use the same time
+    final t = smartReminderTimes([
+      start(DateTime.utc(2026, 11, 10, 13, 10)),
+      start(DateTime.utc(2026, 11, 11, 13, 40)),
+      start(DateTime.utc(2026, 11, 12, 13, 20)),
+    ], now: now);
+    expect(t.weekend, t.weekday);
+  });
 }

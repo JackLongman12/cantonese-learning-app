@@ -53,31 +53,38 @@ class Reminders {
     'Say a sentence or two out loud today?',
   ];
 
-  /// Schedules the next few reminders at [minuteOfDay] local time: one per day for up
-  /// to three days, skipping today when [readToday]. Called on every app open and
-  /// after each session, so a day you already read gets no reminder, and if you stop
-  /// opening the app the reminders stop too instead of nagging.
-  Future<void> scheduleDaily(int minuteOfDay, {bool readToday = false}) async {
+  /// Schedules the next few reminders: one per day for up to three days, at
+  /// [minuteFor] that day's weekday (local time; smart times differ on weekends),
+  /// skipping today when [readToday]. Called on every app open and after each
+  /// session, so a day you already read gets no reminder, and if you stop opening the
+  /// app the reminders stop too instead of nagging. With [reviewsReady] the message
+  /// says how many reviews are waiting.
+  Future<void> schedule({
+    required int Function(int weekday) minuteFor,
+    bool readToday = false,
+    int reviewsReady = 0,
+  }) async {
     if (!supported) return;
     await _init();
     await cancel();
     final now = tz.TZDateTime.now(tz.local);
-    var day = tz.TZDateTime(
-      tz.local,
-      now.year,
-      now.month,
-      now.day,
-      minuteOfDay ~/ 60,
-      minuteOfDay % 60,
-    );
-    if (readToday || !day.isAfter(now)) day = day.add(const Duration(days: 1));
-    for (var i = 0; i < 3; i++) {
-      final at = day.add(Duration(days: i));
+    tz.TZDateTime at(tz.TZDateTime d) {
+      final m = minuteFor(d.weekday);
+      return tz.TZDateTime(tz.local, d.year, d.month, d.day, m ~/ 60, m % 60);
+    }
+
+    final today = tz.TZDateTime(tz.local, now.year, now.month, now.day);
+    final times = [for (var i = 0; i < 4; i++) at(today.add(Duration(days: i)))]
+        .where((t) => t.isAfter(now) && !(readToday && t.day == now.day))
+        .take(3);
+    for (final (i, time) in times.indexed) {
       await _plugin.zonedSchedule(
         id: _id + i,
         title: 'DuckLearn',
-        body: _bodies[(at.day + i) % _bodies.length],
-        scheduledDate: at,
+        body: i == 0 && reviewsReady > 0
+            ? '$reviewsReady reviews are ready when you are.'
+            : _bodies[(time.day + i) % _bodies.length],
+        scheduledDate: time,
         notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
             'daily_reading',

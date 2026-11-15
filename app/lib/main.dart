@@ -100,7 +100,13 @@ Future<AppServices> _bootstrap() async {
     // the learner's own recording; resolves when it ends (to play the native after)
     playFile: (path) async {
       await _filePlayer.stop();
-      final ended = _filePlayer.onPlayerComplete.first.then<void>((_) {});
+      // a stop (Next, leaving) ends the wait too
+      final ended = Future.any<void>([
+        _filePlayer.onPlayerComplete.first.then<void>((_) {}),
+        _filePlayer.onPlayerStateChanged
+            .firstWhere((s) => s == PlayerState.stopped)
+            .then<void>((_) {}),
+      ]);
       await _filePlayer.play(DeviceFileSource(path));
       await Future.any<void>([
         ended,
@@ -169,7 +175,7 @@ class StopAudioOnLeave extends NavigatorObserver {
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     if (route is PageRoute) {
-      services.stopAudio?.call();
+      services.silence();
       services.speech?.cancel();
     }
   }

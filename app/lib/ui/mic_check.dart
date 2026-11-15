@@ -32,9 +32,12 @@ Future<void> playComparison(
   String? nativeText,
 ) async {
   final file = File(recordingPath(Directory.systemTemp));
+  final token = s.playbackToken;
   try {
     file.writeAsBytesSync(writeWav16(samples));
     await s.playFile?.call(file.path);
+    // moved on (Next, or left the screen) while yours played: the native stays quiet
+    if (s.playbackToken != token) return;
     final path = nativeText == null
         ? null
         : s.content.audioPath('yue', nativeText);

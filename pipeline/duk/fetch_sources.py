@@ -84,6 +84,12 @@ SOURCES = [
         unzip=True,
     ),
     Source(
+        "rime_cantonese",
+        "https://raw.githubusercontent.com/rime/rime-cantonese/main/jyut6ping3.words.dict.yaml",
+        "CC BY 4.0 (rime-cantonese / CanCLID)",
+        "jyut6ping3.words.dict.yaml",
+    ),
+    Source(
         "osm_macau",
         _OVERPASS,
         "ODbL 1.0 (© OpenStreetMap contributors)",

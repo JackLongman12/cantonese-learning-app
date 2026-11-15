@@ -54,10 +54,21 @@ def main(argv: list[str] | None = None) -> int:
                 report += fetch(only=rest or None)
             print("\n".join(report))
         elif args.cmd == "annotate":
-            from .annotate import annotate
+            from .annotate import annotate, load_word_readings, spoken_readings
+            from .reference import load_reference
 
             content = load_content(paths.CONTENT)
-            ann = annotate(args.text, args.lang, overrides=content.overrides.get(args.lang))
+            ref = load_reference(paths.RAW)
+            ann = annotate(
+                args.text,
+                args.lang,
+                overrides=content.overrides.get(args.lang),
+                prior=ref.prior("yue") if ref else None,
+                spoken=spoken_readings(),
+                words=load_word_readings(
+                    paths.RAW / "rime_cantonese" / "jyut6ping3.words.dict.yaml"
+                ),
+            )
             for tok in ann.tokens:
                 mark = {"flag": " ?", "override": " *", "fixed": " *"}.get(tok.status, "")
                 note = (

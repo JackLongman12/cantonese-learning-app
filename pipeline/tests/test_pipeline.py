@@ -64,6 +64,34 @@ def test_mandarin_is_gone():
         annotate("你好", "cmn")
 
 
+def test_spoken_reading_wins_over_citation():
+    # owner, 2026-11-16: tones must be the ones people actually say
+    ann = annotate("我喺澳門出世", "yue", spoken={"澳門": "ou3 mun2"})
+    assert ann.readings[2:4] == ["ou3", "mun2"]
+
+
+def test_spoken_counts_break_ties_but_not_lazy_sounds():
+    from duk.annotate import _lazy
+
+    assert _lazy("ling4", "ning4") and _lazy("aam1", "ngaam1") and _lazy("laai2", "naai5")
+    assert not _lazy("ngaam1", "ngaam1") and not _lazy("nei5", "lei5")
+    # a lazy spoken form is never shown, even when it is the most common one
+    ann = annotate("啱唔啱", "yue", spoken={"啱": "aam1"})
+    assert ann.readings[0] == "ngaam1"
+
+
+def test_formal_reading_does_not_break_ties_in_sentences():
+    # Unihan lists mun4 first; that must not decide between two sources any more
+    ann = annotate("公園", "yue", prior={"園": "jyun4"})
+    assert ann.readings[1] == "jyun2"
+
+
+def test_word_dictionary_sides_with_one_source():
+    ann = annotate("食完飯去食糖水", "yue", words={"糖水": "tong4 seoi2"})
+    assert ann.readings[5] == "tong4"
+    assert ann.tokens[5].status == OK
+
+
 def test_words_are_token_spans():
     ann = annotate("我去銀行", "yue")
     assert any(w.text == "銀行" and w.length == 2 for w in ann.words)
@@ -131,15 +159,15 @@ def test_flags_reach_review_queue_until_fixed(tmp_path):
     (tmp_path / "c").mkdir()
     root = _tree(
         tmp_path / "c",
-        "- {id: sent-test-001, yue: 要搭幾號巴士, en: Which bus, register: spoken}\n",
+        "- {id: sent-test-001, yue: 鳳爪蒸得好腍, en: Soft, register: spoken}\n",
     )
     out = tmp_path / "out" / "content.db"
     r = build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False)
-    assert r.flags and "搭" in (out.parent / "review_queue.md").read_text("utf-8")
+    assert r.flags and "腍" in (out.parent / "review_queue.md").read_text("utf-8")
 
     (root / "scenarios" / "a.yaml").write_text(
         "scenario: {id: scn-test-a, title: Test, region: macau}\nsentences:\n"
-        "  - {id: sent-test-001, yue: 要搭幾號巴士, en: Which bus, register: spoken, fix_yue: {搭: daap3}}\n",
+        "  - {id: sent-test-001, yue: 鳳爪蒸得好腍, en: Soft, register: spoken, fix_yue: {腍: nam4}}\n",
         "utf-8",
     )
     assert not build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False).flags
@@ -147,12 +175,12 @@ def test_flags_reach_review_queue_until_fixed(tmp_path):
 
 def test_reviewed_readings_are_locked_against_drift(tmp_path):
     (tmp_path / "c").mkdir()
-    line = "- {id: sent-test-001, yue: 要搭幾號巴士, en: Which bus, register: spoken, reviewed: true%s}\n"
-    root = _tree(tmp_path / "c", line % ", fix_yue: {搭: daap3}")
+    line = "- {id: sent-test-001, yue: 鳳爪蒸得好腍, en: Soft, register: spoken, reviewed: true%s}\n"
+    root = _tree(tmp_path / "c", line % ", fix_yue: {腍: nam4}")
     out = tmp_path / "out" / "content.db"
     build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False)
     lock = json.loads((root / "readings.lock.json").read_text("utf-8"))
-    assert lock["sent-test-001:yue"]["readings"] == ["jiu3", "daap3", "gei2", "hou6", "baa1", "si2"]
+    assert lock["sent-test-001:yue"]["readings"][-1] == "nam4"
 
     # Removing the pin would silently change an approved reading: the build must refuse.
     (root / "scenarios" / "a.yaml").write_text(

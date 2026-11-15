@@ -266,6 +266,7 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
   /// "Got it" or "Again": the card itself is graded, and each character too, so street
   /// names count towards reading everywhere else.
   void _grade(bool gotIt) {
+    _s.silence(); // a comparison still playing stops with the card
     final exposure = '${_s.logger.sessionId}-card-$_index';
     final outcomes = _s.signals.outcomes(
       shown: _levels,
