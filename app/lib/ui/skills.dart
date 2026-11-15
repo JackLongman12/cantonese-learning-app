@@ -123,7 +123,7 @@ List<Widget> extraSkillTiles(
 ) => [
   _Tile(
     key: const ValueKey('open-radicals'),
-    emoji: '💧',
+    icon: Icons.account_tree_rounded,
     title: 'Radicals',
     subtitle: '氵 → 河 海 洗',
     onTap: () => push(RadicalsScreen(services: s)),
@@ -131,7 +131,11 @@ List<Widget> extraSkillTiles(
   for (final sk in s.content.skills())
     _Tile(
       key: ValueKey('open-skill-${sk.id}'),
-      emoji: s.content.skillEntries(sk.id).firstOrNull?.emoji ?? '📘',
+      icon: switch (sk.id) {
+        'particles' => Icons.chat_bubble_outline_rounded,
+        'measure-words' => Icons.straighten_rounded,
+        _ => Icons.menu_book_rounded,
+      },
       title: sk.title,
       subtitle: sk.subtitle,
       onTap: () => push(SkillScreen(services: s, skill: sk)),
@@ -141,12 +145,12 @@ List<Widget> extraSkillTiles(
 class _Tile extends StatelessWidget {
   const _Tile({
     super.key,
-    required this.emoji,
+    required this.icon,
     required this.title,
     required this.subtitle,
     required this.onTap,
   });
-  final String emoji;
+  final IconData icon;
   final String title;
   final String subtitle;
   final VoidCallback onTap;
@@ -163,7 +167,7 @@ class _Tile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(emoji, style: const TextStyle(fontSize: 24)),
+              Icon(icon, color: theme.colorScheme.primary),
               const SizedBox(height: 8),
               Text(title, style: theme.textTheme.titleSmall),
               Text(subtitle, style: chineseStyle('yue', fontSize: 14)),

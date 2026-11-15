@@ -123,3 +123,37 @@ List<ItemState> weakCharacters(
   }
   return (newChars: introduced.length, sentences: sentences);
 }
+
+/// This week's accuracy: share of sentences read without needing any help, and the
+/// average share of sounds said right in read-aloud attempts. Null when there is no
+/// data yet.
+({int? readingPct, int? speakingPct}) weekAccuracy(
+  Iterable<Event> events,
+  DateTime nowUtc,
+) {
+  final since = nowUtc.subtract(const Duration(days: 7));
+  var read = 0, clean = 0, attempts = 0;
+  var scoreSum = 0.0;
+  for (final e in events) {
+    if (e.tsUtc.isBefore(since)) continue;
+    if (e.type == 'item.done' &&
+        e.payload['skipped'] != true &&
+        e.payload['mode'] != 'speak') {
+      read++;
+      if (((e.payload['reveals'] as num?) ?? 0) == 0) clean++;
+    } else if (e.type == 'speech.attempt') {
+      final tokens = (e.payload['per_token'] as List?) ?? const [];
+      if (tokens.isEmpty) continue;
+      // same leniency as the live check: a tone slip counts as right
+      final ok = tokens
+          .where((t) => t is Map && (t['v'] == 'ok' || t['v'] == 'tone'))
+          .length;
+      scoreSum += ok / tokens.length;
+      attempts++;
+    }
+  }
+  return (
+    readingPct: read == 0 ? null : (100 * clean / read).round(),
+    speakingPct: attempts == 0 ? null : (100 * scoreSum / attempts).round(),
+  );
+}

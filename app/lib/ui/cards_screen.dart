@@ -350,7 +350,7 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
         'items_done': _queue.length,
       });
       _s.sound(Sfx.finish);
-      widget.onComplete?.call();
+      _complete();
       setState(() => _index++);
       return;
     }
@@ -359,6 +359,20 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
       _index++;
       _present();
     });
+  }
+
+  @override
+  void dispose() {
+    if (_known + _again >= 3) _complete();
+    super.dispose();
+  }
+
+  bool _completed = false;
+
+  void _complete() {
+    if (_completed) return;
+    _completed = true;
+    widget.onComplete?.call();
   }
 
   @override
@@ -404,6 +418,7 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                             child: MicCheck(
                               key: ValueKey('mic-${_card.id}-$_index'),
                               services: _s,
+                              nativeText: _card.zh,
                               expected: [
                                 for (final t in _card.tokens)
                                   if (t.reading != null) t.reading!,
@@ -565,6 +580,13 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                             color: scheme.onSurfaceVariant,
                           ),
                         ),
+                        if (_s.speech != null && !_s.prefs.quietNow)
+                          Center(
+                            child: CantSpeakButton(
+                              services: _s,
+                              onQuiet: () => setState(() {}),
+                            ),
+                          ),
                       ] else ...[
                         if (_micPct case final pct?)
                           Padding(

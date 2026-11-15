@@ -7,6 +7,7 @@ import '../app_services.dart';
 import '../data/content_db.dart';
 import 'mascot.dart';
 import 'reader_screen.dart';
+import 'speak_drill_screen.dart';
 
 class TopicScreen extends StatefulWidget {
   const TopicScreen({
@@ -91,6 +92,26 @@ class _TopicScreenState extends State<TopicScreen> {
                                 ),
                                 icon: const Icon(Icons.play_arrow_rounded),
                                 label: const Text('Practise sentences'),
+                              ),
+                              const SizedBox(height: 8),
+                              // rapid speaking: the mic runs by itself, line after line
+                              FilledButton.tonalIcon(
+                                key: const ValueKey('speak-topic'),
+                                onPressed: () => _open(
+                                  SpeakDrillScreen(
+                                    services: _s,
+                                    title: 'Speak: ${sc.title}',
+                                    sentences: pickSpeakLines(
+                                      _s,
+                                      _s.content.sentences(sc.id, widget.lang),
+                                    ),
+                                  ),
+                                  {'screen': 'speak', 'scenario_id': sc.id},
+                                ),
+                                icon: const Icon(
+                                  Icons.record_voice_over_rounded,
+                                ),
+                                label: const Text('Speak'),
                               ),
                             ],
                           ),

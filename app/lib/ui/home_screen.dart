@@ -11,19 +11,20 @@ import 'package:material_ui/material_ui.dart';
 import '../app_services.dart';
 import '../data/content_db.dart';
 import '../engine/item_state.dart';
+import '../engine/adaptive.dart';
 import '../engine/path.dart';
 import '../engine/weak_spots.dart';
 import 'cards_screen.dart';
 import 'logo.dart';
 import 'mascot.dart';
 import 'paste_reader_screen.dart';
-import 'practice_words_screen.dart';
 import 'reader_screen.dart';
 import 'practice_screens.dart';
 import 'skills.dart';
 import '../platform/home_widget_sync.dart';
 import '../platform/sfx.dart';
 import 'settings_screen.dart';
+import 'speak_drill_screen.dart';
 import 'stories_screen.dart';
 import 'topic_screen.dart';
 import 'word_sheet.dart';
@@ -103,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _checkClipboard();
+      unawaited(_refreshReminders());
       // reopening the app from the background counts as opening it
       final last = _lastUpdateCheck;
       if (last == null ||
@@ -183,6 +185,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     int sentences,
     List<SoundMixup> sounds,
     List<ItemState> chars,
+    SessionPlan session,
+    ({int? readingPct, int? speakingPct}) accuracy,
   })?
   _insights;
 
@@ -192,6 +196,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     int sentences,
     List<SoundMixup> sounds,
     List<ItemState> chars,
+    SessionPlan session,
+    ({int? readingPct, int? speakingPct}) accuracy,
   })
   _overview() {
     if (_insights case final i?) return i;
@@ -202,6 +208,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       sentences: w.sentences,
       sounds: weakSounds(events),
       chars: weakCharacters(_s.learner.known, _lang),
+      session: adaptSession(events, _s.logger.now().toUtc()),
+      accuracy: weekAccuracy(events, _s.logger.now().toUtc()),
     );
   }
 
@@ -227,6 +235,89 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _insights = null;
     if (mounted) setState(() {});
     await _offerReminder();
+    unawaited(_refreshReminders());
+  }
+
+  /// Read anything today? (a reminder is then skipped for today)
+  bool get _readToday {
+    final now = _s.logger.now().toLocal();
+    return _s.learner.known.any((x) {
+      final l = x.lastReview?.toLocal();
+      return l != null &&
+          l.year == now.year &&
+          l.month == now.month &&
+          l.day == now.day;
+    });
+  }
+
+  /// Keeps the next reminders in step with today's reading (called on open/return).
+  Future<void> _refreshReminders() async {
+    final r = _s.reminders;
+    final m = _s.prefs.reminderMinute;
+    if (r == null || !_s.prefs.reminderOn || m == null) return;
+    await r.scheduleDaily(m, readToday: _readToday);
+  }
+
+  /// Reminder on/off and time, from the bell on Today.
+  Future<void> _reminderSheet() async {
+    final r = _s.reminders!;
+    await showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, set) {
+          final m = _s.prefs.reminderMinute ?? 20 * 60;
+          final clock =
+              '${(m ~/ 60).toString().padLeft(2, '0')}:${(m % 60).toString().padLeft(2, '0')}';
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SwitchListTile(
+                    key: const ValueKey('reminder-toggle'),
+                    title: const Text('Gentle reminder'),
+                    subtitle: const Text(
+                      'Only on days you have not read yet. It stops by itself if '
+                      'you take a break.',
+                    ),
+                    value: _s.prefs.reminderOn,
+                    onChanged: (on) async {
+                      if (on && !await r.requestPermission()) return;
+                      _s.prefs.reminderOn = on;
+                      _s.prefs.reminderMinute ??= m;
+                      on ? await _refreshReminders() : await r.cancel();
+                      _s.logger.log('settings.change', {
+                        'key': 'reminder',
+                        'from': !on,
+                        'to': on,
+                      });
+                      set(() {});
+                      if (mounted) setState(() {});
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Time'),
+                    trailing: Text(clock),
+                    onTap: () async {
+                      final t = await showTimePicker(
+                        context: ctx,
+                        initialTime: TimeOfDay(hour: m ~/ 60, minute: m % 60),
+                      );
+                      if (t == null) return;
+                      _s.prefs.reminderMinute = t.hour * 60 + t.minute;
+                      await _refreshReminders();
+                      set(() {});
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   /// Once, after the first session: a daily nudge at this time of day (opt-in).
@@ -264,7 +355,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _s.prefs
       ..reminderOn = true
       ..reminderMinute = minute;
-    await r.scheduleDaily(minute);
+    await r.scheduleDaily(minute, readToday: true);
     _s.logger.log('settings.change', {
       'key': 'reminder',
       'from': false,
@@ -364,6 +455,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final due = states
         .where((x) => x.due != null && !x.due!.isAfter(now))
         .length;
+    // learned: met and then read again without help (moves the level from day one;
+    // "known well" below is the slower three-week measure)
+    final learned = states
+        .where((x) => x.reps >= 2 && (x.stability ?? 0) >= 1)
+        .length;
     final totalChars = itemsByScenario.values.expand((x) => x).toSet().length;
     final path = _pathOrder(scenarios, itemsByScenario);
     final upNextId = upNext(
@@ -397,22 +493,59 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final cardsDue = _lang == 'yue'
         ? dueCards(_s, _s.content.decks())
         : const <CardRow>[];
+    final reviewCount = due + overview.chars.length + practiseWords.length;
     final plan = <_PlanStep>[
-      if (due > 0 || done.contains('review'))
+      // Review: due characters, weak spots and words to practise in one session of
+      // sentences, then any flashcards that are due.
+      if (reviewCount > 0 || cardsDue.isNotEmpty || done.contains('review'))
         _PlanStep(
           id: 'review',
           icon: Icons.history_edu_rounded,
-          title: 'Review ${due > 0 ? '$due ' : ''}characters',
-          detail: 'Sentences with characters you have met, before they fade.',
+          title: 'Review',
+          detail: [
+            if (due > 0) '$due due',
+            if (overview.chars.isNotEmpty) '${overview.chars.length} weak',
+            if (practiseWords.isNotEmpty) '${practiseWords.length} words',
+            if (cardsDue.isNotEmpty) '${cardsDue.length} cards',
+          ].join(' · '),
           done: done.contains('review'),
-          start: () => _open(
-            title: 'Review',
-            sentences: _s.content.allSentences(_lang),
-            mode: 'review',
-            count: due.clamp(5, 15),
-            maxNew: 0,
-            onComplete: () => finished('review'),
-          ),
+          start: () async {
+            final focus = {for (final c in overview.chars) c.itemId};
+            final wordSentences = {
+              for (final w in practiseWords) ?w.sentenceId,
+            };
+            final all = _s.content.allSentences(_lang);
+            final weakLines = [
+              for (final x in all)
+                if (wordSentences.contains(x.id) ||
+                    x.itemIds.any(focus.contains))
+                  x,
+            ];
+            if (due > 0 || weakLines.isNotEmpty) {
+              await _open(
+                title: 'Review',
+                // weak spots and flagged words first, then whatever is due
+                sentences: [
+                  ...weakLines,
+                  ...all.where((x) => !weakLines.contains(x)),
+                ],
+                mode: 'review',
+                count: overview.session.count,
+                maxNew: 0,
+                onComplete: () => finished('review'),
+              );
+            }
+            if (cardsDue.isNotEmpty && mounted) {
+              await _push(
+                CardSessionScreen(
+                  services: _s,
+                  deck: const DeckRow('due', 'Cards due', 'both', '', 0),
+                  cards: cardsDue.take(20).toList(),
+                  onComplete: () => finished('review'),
+                ),
+              );
+            }
+          },
         ),
       if (nextTopic != null)
         _PlanStep(
@@ -429,79 +562,45 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               mode: 'path',
               scenarioId: nextTopic.id,
               // a first session is short: finish it, feel the win, come back
-              count: met == 0 ? 5 : 8,
-              maxNew: met == 0 ? 4 : 5,
+              count: met == 0 ? 5 : overview.session.count,
+              maxNew: met == 0 ? 4 : overview.session.maxNew,
               onComplete: () => finished('learn'),
             );
           },
         ),
-      if (overview.chars.length >= 3 || done.contains('weak'))
-        _PlanStep(
-          id: 'weak',
-          icon: Icons.fitness_center_rounded,
-          title: 'Fix weak spots',
-          detail: 'Sentences with the characters you keep needing help with.',
-          done: done.contains('weak'),
-          start: () {
-            final ids = {for (final c in overview.chars) c.itemId};
-            final lines = _s.content
-                .allSentences(_lang)
-                .where((x) => x.itemIds.any(ids.contains))
-                .toList();
-            return _open(
-              title: 'Weak spots',
-              sentences: lines,
-              mode: 'weak',
-              count: 8,
-              maxNew: 2,
-              onComplete: () => finished('weak'),
-            );
-          },
-        ),
-      if (practiseWords.isNotEmpty || done.contains('words'))
-        _PlanStep(
-          id: 'words',
-          icon: Icons.record_voice_over_rounded,
-          title: practiseWords.isEmpty
-              ? 'Practise words'
-              : 'Practise ${practiseWords.length} ${practiseWords.length == 1 ? 'word' : 'words'}',
-          detail: 'Words you needed help with, read aloud in their sentences.',
-          done: done.contains('words'),
-          start: () => _push(
-            PracticeWordsScreen(
-              services: _s,
-              words: practiseWords.take(10).toList(),
-              onComplete: () => finished('words'),
+      _PlanStep(
+        id: 'speak',
+        icon: Icons.record_voice_over_rounded,
+        title: 'Speak 10 sentences',
+        detail: 'Read each line aloud; the mic checks you, line after line.',
+        done: done.contains('speak'),
+        start: () => _push(
+          SpeakDrillScreen(
+            services: _s,
+            title: 'Speak',
+            mode: SpeakMode.read,
+            sentences: pickSpeakLines(
+              _s,
+              met < 20 && nextTopic != null
+                  ? _s.content.sentences(nextTopic.id, _lang)
+                  : _s.content.allSentences(_lang),
             ),
+            onComplete: () => finished('speak'),
           ),
         ),
-      if (cardsDue.isNotEmpty || done.contains('cards'))
-        _PlanStep(
-          id: 'cards',
-          icon: Icons.style_rounded,
-          title: cardsDue.isEmpty
-              ? 'Flashcards'
-              : 'Review ${cardsDue.length} flashcards',
-          detail: 'Dishes, streets and stations you are learning.',
-          done: done.contains('cards'),
-          start: () => _push(
-            CardSessionScreen(
-              services: _s,
-              deck: const DeckRow('due', 'Cards due', 'both', '', 0),
-              cards: cardsDue.take(20).toList(),
-              onComplete: () => finished('cards'),
-            ),
-          ),
-        ),
+      ),
     ];
+    // learn something before speaking it; the rest after
+    const order = ['review', 'learn', 'speak'];
+    plan.sort((a, b) => order.indexOf(a.id).compareTo(order.indexOf(b.id)));
     final nextStep = plan.where((x) => !x.done).firstOrNull;
 
     void startDaily() => _open(
       title: met == 0 ? 'First steps' : "Today's reading",
       sentences: _s.content.allSentences(_lang),
       mode: 'daily',
-      count: _s.prefs.sessionLength,
-      maxNew: (_s.prefs.sessionLength / 2).ceil().clamp(3, 12),
+      count: overview.session.count,
+      maxNew: overview.session.maxNew,
     );
 
     final pages = <Widget>[
@@ -516,20 +615,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
         _TodayCard(
           due: due,
-          known: solid,
+          known: learned,
           isFirstTime: met == 0,
           hasContent: scenarios.isNotEmpty,
           onQuack: () => _s.sound(Sfx.quack),
           onStart: startDaily,
-          length: _s.prefs.sessionLength,
-          onLength: (n) {
-            _s.logger.log('settings.change', {
-              'key': 'session_length',
-              'from': _s.prefs.sessionLength,
-              'to': n,
-            });
-            setState(() => _s.prefs.sessionLength = n);
-          },
         ),
         if (_clip != null) ...[
           const SizedBox(height: 12),
@@ -604,9 +694,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         for (final step in plan) _PlanTile(step: step),
         const SizedBox(height: 16),
         _WeekCard(newChars: overview.newChars, sentences: overview.sentences),
-        if (overview.sounds.isNotEmpty || overview.chars.isNotEmpty) ...[
+        if (overview.sounds.isNotEmpty ||
+            overview.chars.isNotEmpty ||
+            overview.accuracy.readingPct != null) ...[
           const SizedBox(height: 12),
           _WeakSpotsCard(
+            readingPct: overview.accuracy.readingPct,
+            speakingPct: overview.accuracy.speakingPct,
+            wordsToPractise: practiseWords.length,
+            cardsDue: cardsDue.length,
             sounds: overview.sounds,
             chars: overview.chars,
             onChar: (c) => sayOrExplain(context, _s, c, _lang),
@@ -654,6 +750,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ]),
       page([
         Text('Topics', style: theme.textTheme.titleLarge),
+        const SizedBox(height: 2),
+        Text(
+          'Everything is open. Steps are only a suggested order for beginners.',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
         const SizedBox(height: 10),
         // filter by kind of situation: fewer tiles to scan at once
         SingleChildScrollView(
@@ -727,6 +830,32 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           'Short skills that make reading easier, and flashcards.',
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Card(
+          key: const ValueKey('practice-speak'),
+          margin: EdgeInsets.zero,
+          color: theme.colorScheme.primaryContainer,
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
+            leading: const Icon(Icons.record_voice_over_rounded, size: 32),
+            title: Text('Speak', style: theme.textTheme.titleMedium),
+            subtitle: const Text(
+              'Rapid speaking: 10 lines, the mic runs by itself. '
+              'Switch between reading and repeating after the audio.',
+            ),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => _push(
+              SpeakDrillScreen(
+                services: _s,
+                title: 'Speak',
+                sentences: pickSpeakLines(_s, _s.content.allSentences(_lang)),
+              ),
+            ),
           ),
         ),
         const SizedBox(height: 16),
@@ -869,6 +998,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             overflow: TextOverflow.ellipsis,
           ),
         ),
+        if (_s.reminders != null)
+          IconButton(
+            key: const ValueKey('reminder-bell'),
+            tooltip: 'Reminder',
+            onPressed: _reminderSheet,
+            icon: Icon(
+              _s.prefs.reminderOn
+                  ? Icons.notifications_active_rounded
+                  : Icons.notifications_none_rounded,
+            ),
+          ),
         IconButton(
           key: const ValueKey('open-settings'),
           tooltip: 'Settings',
@@ -939,10 +1079,18 @@ class _WeekCard extends StatelessWidget {
 /// What you find hard: sounds you mix up reading aloud, characters you keep needing.
 class _WeakSpotsCard extends StatelessWidget {
   const _WeakSpotsCard({
+    required this.readingPct,
+    required this.speakingPct,
+    required this.wordsToPractise,
+    required this.cardsDue,
     required this.sounds,
     required this.chars,
     required this.onChar,
   });
+  final int? readingPct;
+  final int? speakingPct;
+  final int wordsToPractise;
+  final int cardsDue;
   final List<SoundMixup> sounds;
   final List<ItemState> chars;
   final ValueChanged<String> onChar;
@@ -965,7 +1113,34 @@ class _WeakSpotsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Your weak spots', style: theme.textTheme.titleSmall),
+            Text(
+              'How you are doing this week',
+              style: theme.textTheme.titleSmall,
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                _Metric(
+                  key: const ValueKey('metric-reading'),
+                  value: readingPct == null ? '–' : '$readingPct%',
+                  label: 'read without help',
+                ),
+                _Metric(
+                  key: const ValueKey('metric-speaking'),
+                  value: speakingPct == null ? '–' : '$speakingPct%',
+                  label: 'sounds said right',
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                _Metric(value: '${chars.length}', label: 'weak characters'),
+                _Metric(value: '$wordsToPractise', label: 'words to practise'),
+                _Metric(value: '$cardsDue', label: 'cards due'),
+              ],
+            ),
+            const SizedBox(height: 4),
             if (chars.isNotEmpty) ...[
               const SizedBox(height: 6),
               Text(
@@ -1018,6 +1193,36 @@ class _WeakSpotsCard extends StatelessWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _Metric extends StatelessWidget {
+  const _Metric({super.key, required this.value, required this.label});
+  final String value;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            value,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1082,8 +1287,6 @@ class _TodayCard extends StatelessWidget {
     required this.isFirstTime,
     required this.hasContent,
     required this.onStart,
-    required this.length,
-    required this.onLength,
     this.onQuack,
   });
 
@@ -1094,8 +1297,6 @@ class _TodayCard extends StatelessWidget {
   final bool isFirstTime;
   final bool hasContent;
   final VoidCallback onStart;
-  final int length;
-  final ValueChanged<int> onLength;
 
   @override
   Widget build(BuildContext context) {

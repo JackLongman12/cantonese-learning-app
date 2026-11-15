@@ -222,18 +222,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 ),
                 SwitchListTile(
-                  key: const ValueKey('set-auto-play'),
-                  title: const Text('Play sentences automatically'),
-                  subtitle: const Text(
-                    'Hear each sentence and line as it opens',
-                  ),
-                  value: p.autoPlay,
-                  onChanged: (v) {
-                    p.autoPlay = v;
-                    _changed('auto_play', !v, v);
-                  },
-                ),
-                SwitchListTile(
                   title: const Text('Offer to read copied text'),
                   subtitle: const Text(
                     'When you open the app with Chinese copied',

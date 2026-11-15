@@ -44,7 +44,7 @@ int lenientAccuracy(List<CharScore> scores) {
 
 /// At or above: said right. At or below [failPercent]: counted as not read.
 /// In between the learner decides (the recogniser may have misheard).
-const passPercent = 75;
+const passPercent = 70;
 const failPercent = 55;
 
 class AttemptScore {

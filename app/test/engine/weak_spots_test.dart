@@ -81,4 +81,23 @@ void main() {
     expect(w.newChars, 1);
     expect(w.sentences, 1);
   });
+
+  test('week accuracy for reading and speaking', () {
+    final now = DateTime.utc(2026, 11, 16, 12);
+    final a = weekAccuracy([
+      ev('item.done', {'reveals': 0}, DateTime.utc(2026, 11, 15)),
+      ev('item.done', {'reveals': 2}, DateTime.utc(2026, 11, 15)),
+      ev('speech.attempt', {
+        'per_token': [
+          {'v': 'ok'},
+          {'v': 'tone'},
+          {'v': 'wrong'},
+          {'v': 'ok'},
+        ],
+      }, DateTime.utc(2026, 11, 15)),
+    ], now);
+    expect(a.readingPct, 50);
+    expect(a.speakingPct, 75);
+    expect(weekAccuracy(const [], now).readingPct, isNull);
+  });
 }

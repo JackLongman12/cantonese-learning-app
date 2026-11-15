@@ -112,6 +112,12 @@ class SpeechEngine {
 
   Future<bool> canRecord() => _recorder.hasPermission();
 
+  EndOfSpeech? _end;
+
+  /// Whether the last recording had any speech in it (silence: the learner may be
+  /// unable to speak right now, so it should not be scored as wrong).
+  bool get heardSpeech => _end?.heardSpeech ?? false;
+
   /// Starts recording. [onFinished] fires once, when the learner stops speaking
   /// (see [EndOfSpeech]); [maxLength] caps very long sentences.
   Future<void> startRecording({
@@ -120,6 +126,7 @@ class SpeechEngine {
   }) async {
     _pcm.clear();
     final end = EndOfSpeech(sampleRate: sampleRate, maxLength: maxLength);
+    _end = end;
     var fired = false;
     final stream = await _recorder.startStream(
       const RecordConfig(

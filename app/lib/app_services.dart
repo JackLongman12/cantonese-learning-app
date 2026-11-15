@@ -89,6 +89,9 @@ class AppServices {
     return await voice?.say(text) ?? false;
   }
 
+  /// Silent recordings in a row (two: ask "can't speak right now?").
+  int speechSilences = 0;
+
   /// The "no Cantonese voice" notice is shown once per launch.
   bool voiceNoticeShown = false;
 
@@ -97,7 +100,8 @@ class AppServices {
 
   /// Plays a UI sound unless the learner turned them off.
   void sound(Sfx s) {
-    if (prefs.soundEffects) sfx?.play(s);
+    // only moving on and finishing make a sound: anything more is noise
+    if (prefs.soundEffects && (s == Sfx.next || s == Sfx.finish)) sfx?.play(s);
   }
 
   /// Fade rules, shifted by the learner's "Jyutping help" setting.

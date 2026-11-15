@@ -97,7 +97,16 @@ Future<AppServices> _bootstrap() async {
     playAudio: createPlayAudio(),
     // "Slow": the same clip at 75% (pitch kept), instead of a second recording
     playAudioSlow: createPlayAudio(rate: 0.75),
-    playFile: (path) => _filePlayer.play(DeviceFileSource(path)),
+    // the learner's own recording; resolves when it ends (to play the native after)
+    playFile: (path) async {
+      await _filePlayer.stop();
+      final ended = _filePlayer.onPlayerComplete.first.then<void>((_) {});
+      await _filePlayer.play(DeviceFileSource(path));
+      await Future.any<void>([
+        ended,
+        Future<void>.delayed(const Duration(seconds: 15)),
+      ]);
+    },
     prefs: Prefs(File(p.join(support.path, 'prefs.json'))),
     updater: Updater(),
     sfx: SoundEffects(),

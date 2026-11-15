@@ -61,9 +61,12 @@ SOUNDS = {
     "save": mix(note(784, 120, vol=0.2), note(1175, 160, vol=0.18), 50),
     "good": seq(note(784, 90, vol=0.22), note(988, 90, vol=0.22), note(1319, 220, vol=0.22), gap=5),
     "try": seq(note(523, 110, vol=0.18), note(440, 170, vol=0.16), gap=10),
+    # a short, bright two-note "bling" for finishing an exercise (original: a quick
+    # step up a fourth with a glassy overtone, not any game's or phone's sound)
     "finish": seq(
-        note(523, 110, vol=0.22), note(659, 110, vol=0.22), note(784, 110, vol=0.22),
-        note(1047, 380, vol=0.24), gap=10,
+        note(1568, 70, vol=0.22, attack=2, decay=60, partials=(1.0, 0.35, 0.15, 0.08)),
+        note(2093, 420, vol=0.24, attack=2, decay=260, partials=(1.0, 0.35, 0.15, 0.08)),
+        gap=0,
     ),
     "quack": quack(),
     "mic": note(1047, 70, vol=0.18, decay=60, bend=0.1),

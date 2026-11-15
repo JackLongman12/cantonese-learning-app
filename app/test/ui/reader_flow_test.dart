@@ -71,6 +71,11 @@ void main() {
           .first,
     )).data!;
     await t.pumpWidget(MaterialApp(home: HomeScreen(services: services)));
+    await t.scrollUntilVisible(
+      find.byKey(const ValueKey('stat-met')),
+      200,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
     expect(stat('stat-met'), '0');
     await t.tap(find.byKey(const ValueKey('tab-topics')));
     await t.pumpAndSettle();
@@ -100,7 +105,10 @@ void main() {
     final shown = store.events.lastWhere((e) => e.type == 'item.shown');
     expect((shown.payload['scaffold']! as List).toSet(), {'full'});
 
-    // the sentence plays by itself when it opens, and again on Listen
+    // attempt first: nothing plays until you have tried to read it
+    expect(played, isEmpty);
+    await t.tap(find.text('Listen'));
+    await t.pump();
     expect(played.single, startsWith('audio/'));
     // once it has played, the meaning shows by itself
     await t.pump();
@@ -110,9 +118,6 @@ void main() {
       ),
       isTrue,
     );
-    await t.tap(find.text('Listen'));
-    await t.pump();
-    expect(played, hasLength(2));
 
     // The planner caps new characters per session, so a first session is shorter than
     // the whole topic. Read until it ends.
@@ -139,6 +144,11 @@ void main() {
     // back on the Today tab, where the stats are
     await t.tap(find.byKey(const ValueKey('tab-today')));
     await t.pumpAndSettle();
+    await t.scrollUntilVisible(
+      find.byKey(const ValueKey('stat-met')),
+      200,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
     expect(stat('stat-met'), '${introduced.length}');
 
     final reviews = store.events

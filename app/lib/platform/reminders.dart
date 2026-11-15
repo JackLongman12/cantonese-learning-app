@@ -1,4 +1,5 @@
-/// One gentle daily reminder (Android), at the time the learner usually reads.
+/// A gentle reminder (Android) at the time the learner usually reads, only on days
+/// without reading, and fading out if the app is not opened for a few days.
 /// Inexact delivery: no exact-alarm permission needed, and no nagging if missed.
 library;
 
@@ -44,12 +45,24 @@ class Reminders {
     return await android?.requestNotificationsPermission() ?? true;
   }
 
-  /// Schedules (or reschedules) the daily reminder at [minuteOfDay] local time.
-  Future<void> scheduleDaily(int minuteOfDay) async {
+  /// Gentle, varied wording; never guilt, never a count of missed days.
+  static const _bodies = [
+    'A few lines when you have a moment.',
+    'The characters you met are waiting, no rush.',
+    'Five relaxed minutes of reading?',
+    'Say a sentence or two out loud today?',
+  ];
+
+  /// Schedules the next few reminders at [minuteOfDay] local time: one per day for up
+  /// to three days, skipping today when [readToday]. Called on every app open and
+  /// after each session, so a day you already read gets no reminder, and if you stop
+  /// opening the app the reminders stop too instead of nagging.
+  Future<void> scheduleDaily(int minuteOfDay, {bool readToday = false}) async {
     if (!supported) return;
     await _init();
+    await cancel();
     final now = tz.TZDateTime.now(tz.local);
-    var at = tz.TZDateTime(
+    var day = tz.TZDateTime(
       tz.local,
       now.year,
       now.month,
@@ -57,29 +70,33 @@ class Reminders {
       minuteOfDay ~/ 60,
       minuteOfDay % 60,
     );
-    if (!at.isAfter(now)) at = at.add(const Duration(days: 1));
-    await _plugin.zonedSchedule(
-      id: _id,
-      title: 'A few lines with DuckLearn?',
-      body: 'Five minutes of reading keeps the characters fresh.',
-      scheduledDate: at,
-      notificationDetails: const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'daily_reading',
-          'Daily reading reminder',
-          channelDescription:
-              'One reminder a day, at the time you usually read.',
-          importance: Importance.defaultImportance,
+    if (readToday || !day.isAfter(now)) day = day.add(const Duration(days: 1));
+    for (var i = 0; i < 3; i++) {
+      final at = day.add(Duration(days: i));
+      await _plugin.zonedSchedule(
+        id: _id + i,
+        title: 'DuckLearn',
+        body: _bodies[(at.day + i) % _bodies.length],
+        scheduledDate: at,
+        notificationDetails: const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'daily_reading',
+            'Daily reading reminder',
+            channelDescription:
+                'At most one a day, only on days you have not read yet.',
+            importance: Importance.defaultImportance,
+          ),
         ),
-      ),
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      );
+    }
   }
 
   Future<void> cancel() async {
     if (!supported) return;
     await _init();
-    await _plugin.cancel(id: _id);
+    for (var i = 0; i < 3; i++) {
+      await _plugin.cancel(id: _id + i);
+    }
   }
 }

@@ -335,6 +335,7 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
         MicCheck(
           key: ValueKey('practice-mic-$_index'),
           services: _s,
+          nativeText: _ctx.text,
           expected: _sentenceReadings,
           label: 'Read the sentence aloud',
           onResult: (scores, _) {
@@ -349,6 +350,8 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
             });
           },
         ),
+        if (_s.speech != null && !_s.prefs.quietNow)
+          CantSpeakButton(services: _s, onQuiet: () => setState(() {})),
         const SizedBox(height: 8),
         Row(
           children: [

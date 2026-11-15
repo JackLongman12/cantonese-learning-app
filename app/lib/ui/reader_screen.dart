@@ -4,7 +4,6 @@ library;
 
 import '../engine/pictures.dart';
 
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -19,10 +18,11 @@ import '../events/event_logger.dart';
 import 'mascot.dart';
 import 'ruby_text.dart';
 import 'visual_novel.dart';
+import 'mic_check.dart'
+    show micAuto, noteSilence, playComparison, CantSpeakButton;
 import 'word_sheet.dart';
 import '../engine/pronunciation.dart';
 import '../platform/sfx.dart';
-import '../platform/storage.dart';
 import '../platform/speech.dart';
 
 class ReaderScreen extends StatefulWidget {
@@ -78,7 +78,7 @@ class ReaderScreen extends StatefulWidget {
 }
 
 class _ReaderScreenState extends State<ReaderScreen> {
-  late final List<SentenceRow> _queue;
+  late List<SentenceRow> _queue;
   final Map<String, List<String>> _why = {};
   int _index = 0;
   int _exposure = 0;
@@ -115,18 +115,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
     if (widget.conversation || widget.story || widget.ordered) {
       _queue = [...widget.sentences];
     } else {
-      final picks = _s.planner.plan(
-        candidates: [for (final s in widget.sentences) s.toCandidate()],
-        learner: _s.learner,
-        now: _s.logger.now(),
-        count: widget.count ?? widget.sentences.length,
-        maxNew: widget.maxNew,
-      );
-      final byId = {for (final s in widget.sentences) s.id: s};
-      _queue = [for (final p in picks) byId[p.candidate.id]!];
-      for (final p in picks) {
-        _why[p.candidate.id] = p.reasons;
-      }
+      _queue = _pickMore();
     }
     _s.logger.log('session.start', {
       'mode': widget.mode,
@@ -136,6 +125,80 @@ class _ReaderScreenState extends State<ReaderScreen> {
     });
     _index = widget.startAt.clamp(0, _queue.isEmpty ? 0 : _queue.length - 1);
     if (_queue.isNotEmpty) _present();
+  }
+
+  /// The next batch: chosen by the planner, never repeating a sentence already shown.
+  List<SentenceRow> _pickMore({int extraNew = 0}) {
+    final seen = {for (final q in _queueOrEmpty) q.id};
+    final pool = [
+      for (final s in widget.sentences)
+        if (!seen.contains(s.id)) s,
+    ];
+    final picks = _s.planner.plan(
+      candidates: [for (final s in pool) s.toCandidate()],
+      learner: _s.learner,
+      now: _s.logger.now(),
+      count: widget.count ?? pool.length,
+      maxNew: widget.maxNew + extraNew,
+    );
+    final byId = {for (final s in pool) s.id: s};
+    for (final p in picks) {
+      _why[p.candidate.id] = p.reasons;
+    }
+    return [for (final p in picks) byId[p.candidate.id]!];
+  }
+
+  List<SentenceRow> get _queueOrEmpty {
+    try {
+      return _queue;
+    } on Error {
+      return const [];
+    }
+  }
+
+  /// "Keep going": another batch, no cap. Only for planner-picked sessions.
+  bool get _canKeepGoing =>
+      !(widget.conversation || widget.story || widget.ordered);
+
+  void _keepGoing() {
+    // the same mix if possible; otherwise allow a few more new characters
+    var more = _pickMore();
+    if (more.isEmpty) more = _pickMore(extraNew: 8);
+    if (more.isEmpty) {
+      // last resort: unseen sentences with the fewest new characters
+      final seen = {for (final q in _queue) q.id};
+      int newIn(SentenceRow r) =>
+          r.itemIds.where((id) => _s.learner.stateOf(id).isNew).length;
+      more = [
+        for (final r in widget.sentences)
+          if (!seen.contains(r.id)) r,
+      ]..sort((a, b) => newIn(a).compareTo(newIn(b)));
+      more = more.take(widget.count ?? 8).toList();
+    }
+    if (more.isEmpty) return;
+    _s.logger.log('session.more', {'added': more.length});
+    setState(() {
+      final at = _queue.length;
+      _queue = [..._queue, ...more];
+      _finished = false;
+      _index = at;
+      _present();
+    });
+  }
+
+  bool _completed = false;
+
+  void _complete() {
+    if (_completed) return;
+    _completed = true;
+    widget.onComplete?.call();
+  }
+
+  @override
+  void dispose() {
+    // leaving early still counts once a few sentences were read: no pressure to finish
+    if (!_finished && _read >= 3) _complete();
+    super.dispose();
   }
 
   void _present() {
@@ -166,10 +229,16 @@ class _ReaderScreenState extends State<ReaderScreen> {
     _wrongPicks.clear();
     _options = _choicesFor(_sentence);
     _choosing = _options.length >= 2;
-    if (!_choosing && (widget.autoplay || _s.prefs.autoPlay)) {
+    if (!_choosing) {
       final shown = _index;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && _index == shown) _play(slow: false, auto: true);
+        if (!mounted || _index != shown) return;
+        if (micAuto(_s) && _mic == _Mic.idle) {
+          // try reading it first; the audio is the safety net afterwards
+          _readAloud();
+        } else if (widget.autoplay) {
+          _play(slow: false, auto: true);
+        }
       });
     }
     _s.logger.log('item.shown', {
@@ -215,7 +284,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
     }
     _s.sound(Sfx.good);
     setState(() => _choosing = false);
-    if (widget.autoplay || _s.prefs.autoPlay) _play(slow: false, auto: true);
+    if (micAuto(_s) && _mic == _Mic.idle) {
+      _readAloud();
+    } else if (widget.autoplay) {
+      _play(slow: false, auto: true);
+    }
   }
 
   /// Who stands opposite you on the stage: the current speaker, or the last one who spoke.
@@ -312,14 +385,25 @@ class _ReaderScreenState extends State<ReaderScreen> {
     if (_mic == _Mic.recording) {
       setState(() => _mic = _Mic.scoring);
       final samples = await eng.stopRecording();
-      // one file, overwritten each attempt (and removed on the next start)
-      final wav = File(recordingPath(Directory.systemTemp))
-        ..writeAsBytesSync(writeWav16(samples));
-      _myRecording = wav.path;
+      if (!mounted) return;
+      noteSilence(context, _s, heard: eng.heardSpeech);
+      if (!eng.heardSpeech) {
+        setState(() => _mic = _Mic.idle);
+        return;
+      }
       // let the spinner paint before the (sub-second) recognition runs
       await Future<void>.delayed(const Duration(milliseconds: 16));
       _scoreSpeech(eng.recognise(samples, lang: widget.lang));
-      if (mounted) setState(() => _mic = _Mic.idle);
+      if (mounted) {
+        setState(() {
+          _mic = _Mic.idle;
+          _showTranslation = true; // you tried: the meaning is yours to check
+        });
+      }
+      // below the pass mark: hear yours, then the native; the recording is not kept
+      if (soundAccuracy(_speech.values.toList()) < passPercent) {
+        await playComparison(_s, samples, _sentence.text);
+      }
       return;
     }
     if (!eng.installed) {
@@ -437,6 +521,29 @@ class _ReaderScreenState extends State<ReaderScreen> {
       if (o.signal == Signal.reveal) _lapsed.add(o.itemId);
     }
     if (outcomes.isNotEmpty) _read++;
+    // words on the practice list read right here, without help: that counts as a practice
+    if (!skipped) {
+      final offs = tokenOffsets(_sentence.tokens);
+      for (final w in _s.words.practice(widget.lang)) {
+        final at = _sentence.text.indexOf(w.text);
+        if (at < 0) continue;
+        final end = at + w.text.length;
+        final inside = [
+          for (var k = 0; k < _sentence.tokens.length; k++)
+            if (offs[k] >= at && offs[k] < end) k,
+        ];
+        final clean = inside.every(
+          (k) => !_revealedTokens.contains(k) && !(_speech[k]?.isMiss ?? false),
+        );
+        if (clean) {
+          _s.logger.log('word.practice', {
+            'text': w.text,
+            'lang': w.lang,
+            'ok': true,
+          });
+        }
+      }
+    }
     // characters you had to reveal: their words go on the practice list
     if (!skipped) {
       final seen = <int>{};
@@ -464,7 +571,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
         'items_done': _queue.length,
       });
       _s.sound(Sfx.finish);
-      widget.onComplete?.call();
+      _complete();
       setState(() => _finished = true);
       return;
     }
@@ -532,6 +639,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
         practised: _practised.length,
         introduced: _introduced.length,
         checked: _lapsed.length,
+        onKeepGoing: _canKeepGoing ? _keepGoing : null,
         newChars: [
           for (final id in _introduced)
             if (id.split(':') case [_, _, final ch, final r]) (ch, r),
@@ -778,6 +886,19 @@ class _ReaderScreenState extends State<ReaderScreen> {
                           ),
                         ],
                       ),
+                      if (_s.speech != null && !_s.prefs.quietNow)
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: CantSpeakButton(
+                            services: _s,
+                            onQuiet: () {
+                              if (_mic == _Mic.recording) {
+                                _s.speech!.stopRecording().ignore();
+                              }
+                              setState(() => _mic = _Mic.idle);
+                            },
+                          ),
+                        ),
                       if (_speech.isNotEmpty)
                         _SpeechResult(
                           scores: _speech.values.toList(),
@@ -1159,7 +1280,11 @@ class _SummaryScreen extends StatelessWidget {
     required this.introduced,
     required this.checked,
     this.newChars = const [],
+    this.onKeepGoing,
   });
+
+  /// More of the same, if wanted. Stopping is just as fine.
+  final VoidCallback? onKeepGoing;
 
   /// Characters met for the first time: (character, Jyutping).
   final List<(String, String)> newChars;
@@ -1254,13 +1379,29 @@ class _SummaryScreen extends StatelessWidget {
                     ),
                   ],
                   const SizedBox(height: 24),
-                  FilledButton(
-                    key: const ValueKey('done'),
-                    onPressed: () => Navigator.of(context).pop(),
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size(200, 52),
-                    ),
-                    child: const Text('Done'),
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 8,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      FilledButton(
+                        key: const ValueKey('done'),
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size(150, 52),
+                        ),
+                        child: const Text('Done'),
+                      ),
+                      if (onKeepGoing != null)
+                        OutlinedButton(
+                          key: const ValueKey('keep-going'),
+                          onPressed: onKeepGoing,
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size(150, 52),
+                          ),
+                          child: const Text('Keep going'),
+                        ),
+                    ],
                   ),
                 ],
               ),
