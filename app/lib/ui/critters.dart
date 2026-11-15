@@ -79,6 +79,7 @@ void _text(Canvas c, String s, double x, double y, double size, Color color) {
     text: TextSpan(
       text: s,
       style: TextStyle(
+        fontFamily: 'NotoSansHK',
         fontSize: size,
         color: color,
         fontWeight: FontWeight.w600,

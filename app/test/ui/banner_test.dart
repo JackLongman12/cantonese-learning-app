@@ -228,4 +228,130 @@ void main() {
       matchesGoldenFile('../../../docs/ad_9x16.png'),
     );
   });
+
+  // The funny one: a "translation" you should not trust. Readings from the dictionary
+  // (duk annotate): 屌 diu2, 你 nei5, 老 lou5, 母 mou2.
+  testWidgets('mobile ad 9:16, funny', (t) async {
+    await loadFont('NotoSansHK', 'assets/fonts/NotoSansHK.ttf');
+    t.view.devicePixelRatio = 1;
+    t.view.physicalSize = const Size(1080, 1920);
+    addTearDown(t.view.reset);
+    const line = [('屌', 'diu2'), ('你', 'nei5'), ('老', 'lou5'), ('母', 'mou2')];
+    TextStyle sans(double size, Color c, {FontWeight w = FontWeight.w700}) =>
+        TextStyle(
+          fontFamily: 'NotoSansHK',
+          fontSize: size,
+          color: c,
+          fontWeight: w,
+        );
+    await t.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: dukTheme(Brightness.light),
+        home: RepaintBoundary(
+          key: const ValueKey('funny'),
+          child: Material(
+            color: Palette.cream,
+            child: SizedBox(
+              width: 1080,
+              height: 1920,
+              child: Column(
+                children: [
+                  const SizedBox(height: 170),
+                  Text('She smiled and said:', style: sans(64, Palette.bark)),
+                  const SizedBox(height: 60),
+                  // the line, with Jyutping on top, as in the app
+                  Container(
+                    width: 900,
+                    padding: const EdgeInsets.symmetric(vertical: 56),
+                    decoration: BoxDecoration(
+                      color: Palette.oat,
+                      borderRadius: BorderRadius.circular(48),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        for (final (ch, r) in line)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Column(
+                              children: [
+                                Text(
+                                  r,
+                                  style: sans(
+                                    40,
+                                    Palette.terraDeep,
+                                    w: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  ch,
+                                  locale: const Locale('zh', 'HK'),
+                                  style: sans(
+                                    160,
+                                    Palette.bark,
+                                    w: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 34),
+                          child: Text('！', style: sans(110, Palette.bark)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 56),
+                  Text('"I love your dress!"', style: sans(76, Palette.terra)),
+                  const SizedBox(height: 14),
+                  Text(
+                    '...right?',
+                    style: sans(48, Palette.barkSoft, w: FontWeight.w400),
+                  ),
+                  const SizedBox(height: 40),
+                  const Chick(mood: ChickMood.confused, size: 460),
+                  const Spacer(),
+                  Text(
+                    'Learn what they really said.',
+                    style: sans(48, Palette.bark, w: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 36),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const ClipOval(child: DuckLogo(size: 96, tile: true)),
+                      const SizedBox(width: 22),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('DuckLearn', style: sans(56, Palette.bark)),
+                          Text(
+                            'Beginner-friendly Cantonese',
+                            style: sans(
+                              30,
+                              Palette.barkSoft,
+                              w: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 130),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await t.pumpAndSettle();
+    await expectLater(
+      find.byKey(const ValueKey('funny')),
+      matchesGoldenFile('../../../docs/ad_9x16_funny.png'),
+    );
+  });
 }
