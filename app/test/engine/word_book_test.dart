@@ -56,4 +56,20 @@ void main() {
     ]);
     expect(book.highlights('yue', '行路去銀行'), [(0, 2), (3, 5)]);
   });
+
+  test('struggled words go on the practice list until practised twice', () {
+    final book = WordBook.replay([
+      ev('word.flag', {'text': '銀行', 'lang': 'yue', 'reason': 'read'}, minute: 1),
+      ev('word.flag', {'text': '銀行', 'lang': 'yue', 'reason': 'say'}, minute: 2),
+      ev('word.flag', {'text': '巴士', 'lang': 'yue', 'reason': 'say'}, minute: 3),
+      ev('word.practice', {'text': '巴士', 'lang': 'yue', 'ok': true}, minute: 4),
+      ev('word.practice', {'text': '巴士', 'lang': 'yue', 'ok': false}, minute: 5),
+      ev('word.practice', {'text': '銀行', 'lang': 'yue', 'ok': true}, minute: 6),
+      ev('word.practice', {'text': '銀行', 'lang': 'yue', 'ok': true}, minute: 7),
+    ]);
+    // 銀行 cleared by two in a row; 巴士's streak was broken
+    expect(book.practice('yue').map((w) => w.text), ['巴士']);
+    expect(book.practice('yue').single.misses, 2);
+    expect(book.needsPractice('yue', '銀行'), isFalse);
+  });
 }

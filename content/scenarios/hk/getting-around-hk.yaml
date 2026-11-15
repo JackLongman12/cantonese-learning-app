@@ -1,0 +1,421 @@
+# Getting around Hong Kong: MTR, Octopus, minibus, bus, tram, ferry, taxi, walking,
+# the border and the airport. General statements only: no fares, timetables or
+# route numbers (those must come from a listed source, CLAUDE.md rule 3).
+# Drafted by an LLM; reviewed: false until the owner confirms wording and readings.
+scenario:
+  id: scn-hk-getting-around
+  title: Getting around Hong Kong
+  region: hk
+  tags: [transport, hk]
+
+defaults: {register: spoken, source: llm, region: hk}
+
+sentences:
+  - id: sent-hk-around-001
+    yue: 請問港鐵站喺邊？
+    en: "Excuse me, where's the MTR station?"
+    tags: [mtr]
+  - id: sent-hk-around-002
+    yue: 我要喺邊個站轉車？
+    en: "Which station do I change at?"
+    tags: [mtr]
+  - id: sent-hk-around-003
+    yue: 下一個站係邊度？
+    en: "What's the next station?"
+    tags: [mtr]
+  - id: sent-hk-around-004
+    yue: 我應該喺邊個出口出？
+    en: "Which exit should I take?"
+    tags: [mtr]
+  - id: sent-hk-around-005
+    yue: A出口最近。
+    en: "Exit A is closest."
+    tags: [mtr]
+  - id: sent-hk-around-006
+    yue: 車門即將關閉。
+    en: "The doors are closing."
+    notes: "Written-style announcement."
+    register: written
+    tags: [mtr]
+  - id: sent-hk-around-007
+    yue: 請小心月台空隙。
+    en: "Please mind the gap."
+    notes: "Written-style announcement."
+    register: written
+    tags: [mtr]
+  - id: sent-hk-around-008
+    yue: 繁忙時間啲車好迫。
+    en: "Trains are packed at rush hour."
+    tags: [mtr]
+  - id: sent-hk-around-009
+    yue: 我搭錯咗方向。
+    en: "I went the wrong direction."
+    tags: [mtr]
+  - id: sent-hk-around-010
+    yue: 喺對面月台搭返轉頭。
+    en: "Take it back from the opposite platform."
+    tags: [mtr]
+  - id: sent-hk-around-011
+    yue: 班車幾分鐘一班？
+    en: "How often do the trains come?"
+    tags: [mtr]
+  - id: sent-hk-around-012
+    yue: 呢班車去唔去機場？
+    en: "Does this train go to the airport?"
+    tags: [mtr]
+  - id: sent-hk-around-013
+    yue: 我要去中環，搭邊條綫？
+    en: "I'm going to Central, which line do I take?"
+    tags: [mtr]
+  - id: sent-hk-around-014
+    yue: 喺車廂入面唔好食嘢。
+    en: "Don't eat in the train carriage."
+    tags: [mtr]
+  - id: sent-hk-around-015
+    yue: 唔該讓一讓，我落車。
+    en: "Excuse me, I'm getting off."
+    tags: [mtr]
+  - id: sent-hk-around-016
+    yue: 車廂好凍，記得帶件外套。
+    en: "The carriages are cold; bring a jacket."
+    tags: [mtr]
+  - id: sent-hk-around-017
+    yue: 啲人排晒隊等上車。
+    en: "Everyone queues to board."
+    tags: [mtr]
+  - id: sent-hk-around-018
+    yue: 我坐過咗站。
+    en: "I missed my stop."
+    tags: [mtr]
+  - id: sent-hk-around-019
+    yue: 港鐵延誤咗。
+    en: "The MTR is delayed."
+    tags: [mtr]
+  - id: sent-hk-around-020
+    yue: 月台幕門開咗。
+    en: "The platform screen doors are open."
+    tags: [mtr]
+  - id: sent-hk-around-021
+    yue: 八達通冇錢喇。
+    en: "My Octopus card is out of money."
+    tags: [octopus]
+  - id: sent-hk-around-022
+    yue: 喺邊度可以增值？
+    en: "Where can I top up?"
+    tags: [octopus]
+  - id: sent-hk-around-023
+    yue: 我想增值一百蚊。
+    en: "I'd like to top up a hundred dollars."
+    tags: [octopus]
+  - id: sent-hk-around-024
+    yue: 拍八達通入閘。
+    en: "Tap your Octopus to go through the gate."
+    tags: [octopus]
+  - id: sent-hk-around-025
+    yue: 部機讀唔到我張卡。
+    en: "The machine can't read my card."
+    tags: [octopus]
+  - id: sent-hk-around-026
+    yue: 你張八達通餘額唔夠。
+    en: "Your Octopus balance isn't enough."
+    tags: [octopus]
+  - id: sent-hk-around-027
+    yue: 便利店都可以增值。
+    en: "You can top up at convenience stores too."
+    tags: [octopus]
+  - id: sent-hk-around-028
+    yue: 我用手機拍卡。
+    en: "I pay with my phone."
+    tags: [octopus]
+  - id: sent-hk-around-029
+    yue: 小巴收唔收八達通？
+    en: "Does the minibus take Octopus?"
+    tags: [octopus]
+  - id: sent-hk-around-030
+    yue: 我唔見咗張八達通。
+    en: "I lost my Octopus card."
+    tags: [octopus]
+  - id: sent-hk-around-031
+    yue: 紅van定綠van？
+    en: "Red minibus or green minibus?"
+    tags: [minibus]
+  - id: sent-hk-around-032
+    yue: 綠色小巴有固定路線。
+    en: "Green minibuses have fixed routes."
+    tags: [minibus]
+  - id: sent-hk-around-033
+    yue: 前面有落！
+    en: "Getting off ahead!"
+    notes: "What you shout to the minibus driver."
+    tags: [minibus]
+  - id: sent-hk-around-034
+    yue: 街口有落，唔該！
+    en: "Getting off at the corner, thanks!"
+    tags: [minibus]
+  - id: sent-hk-around-035
+    yue: 司機，呢度有落。
+    en: "Driver, getting off here."
+    tags: [minibus]
+  - id: sent-hk-around-036
+    yue: 小巴坐滿咗，等下一架啦。
+    en: "The minibus is full; wait for the next one."
+    tags: [minibus]
+  - id: sent-hk-around-037
+    yue: 請扣好安全帶。
+    en: "Please fasten your seat belt."
+    register: written
+    tags: [minibus]
+  - id: sent-hk-around-038
+    yue: 呢架小巴去唔去旺角？
+    en: "Does this minibus go to Mong Kok?"
+    tags: [minibus]
+  - id: sent-hk-around-039
+    yue: 小巴站喺邊？
+    en: "Where's the minibus stop?"
+    tags: [minibus]
+  - id: sent-hk-around-040
+    yue: 司機揸得好快。
+    en: "The driver drives really fast."
+    tags: [minibus]
+  - id: sent-hk-around-041
+    yue: 呢架巴士去唔去銅鑼灣？
+    en: "Does this bus go to Causeway Bay?"
+    tags: [bus]
+  - id: sent-hk-around-042
+    yue: 巴士站喺對面。
+    en: "The bus stop is across the road."
+    tags: [bus]
+  - id: sent-hk-around-043
+    yue: 我坐上層睇風景。
+    en: "I sit upstairs for the view."
+    tags: [bus]
+  - id: sent-hk-around-044
+    yue: 落車要撳鐘。
+    en: "Press the bell to get off."
+    tags: [bus]
+  - id: sent-hk-around-045
+    yue: 下個站落車。
+    en: "Getting off at the next stop."
+    tags: [bus]
+  - id: sent-hk-around-046
+    yue: 呢架車經唔經過海底隧道？
+    en: "Does this bus go through the Cross-Harbour Tunnel?"
+    tags: [bus]
+  - id: sent-hk-around-047
+    yue: 巴士好耐都未嚟。
+    en: "The bus has been ages."
+    tags: [bus]
+  - id: sent-hk-around-048
+    yue: 用手機睇巴士幾時到。
+    en: "Check on your phone when the bus is coming."
+    tags: [bus]
+  - id: sent-hk-around-049
+    yue: 通宵巴士好少班。
+    en: "Overnight buses are infrequent."
+    tags: [bus]
+  - id: sent-hk-around-050
+    yue: 請讓座俾有需要人士。
+    en: "Please give your seat to those in need."
+    register: written
+    tags: [bus]
+  - id: sent-hk-around-051
+    yue: 叮叮好平又好慢。
+    en: "The tram is cheap and slow."
+    notes: "叮叮 is what everyone calls the Hong Kong tram."
+    tags: [tram]
+  - id: sent-hk-around-052
+    yue: 搭叮叮由後門上車。
+    en: "Board the tram at the back door."
+    tags: [tram]
+  - id: sent-hk-around-053
+    yue: 落叮叮先俾錢。
+    en: "Pay when you get off the tram."
+    tags: [tram]
+  - id: sent-hk-around-054
+    yue: 我鍾意坐叮叮上層。
+    en: "I like sitting upstairs on the tram."
+    tags: [tram]
+  - id: sent-hk-around-055
+    yue: 搭天星小輪過海。
+    en: "Take the Star Ferry across the harbour."
+    tags: [ferry]
+  - id: sent-hk-around-056
+    yue: 碼頭喺邊度？
+    en: "Where's the pier?"
+    tags: [ferry]
+  - id: sent-hk-around-057
+    yue: 去離島要搭船。
+    en: "You take a ferry to the outlying islands."
+    tags: [ferry]
+  - id: sent-hk-around-058
+    yue: 船程大約半個鐘。
+    en: "The ferry ride is about half an hour."
+    tags: [ferry]
+  - id: sent-hk-around-059
+    yue: 尾班船幾點開？
+    en: "When does the last ferry leave?"
+    tags: [ferry]
+  - id: sent-hk-around-060
+    yue: 今日風大，可能會停航。
+    en: "It's windy today; ferries might stop."
+    tags: [ferry]
+  - id: sent-hk-around-061
+    yue: 的士站喺商場門口。
+    en: "The taxi stand is outside the mall."
+    tags: [taxi]
+  - id: sent-hk-around-062
+    yue: 過海的士喺邊度等？
+    en: "Where do I wait for a cross-harbour taxi?"
+    tags: [taxi]
+  - id: sent-hk-around-063
+    yue: 司機，去尖沙咀。
+    en: "Driver, to Tsim Sha Tsui."
+    tags: [taxi]
+  - id: sent-hk-around-064
+    yue: 前面停得喇。
+    en: "You can stop up ahead."
+    tags: [taxi]
+  - id: sent-hk-around-065
+    yue: 唔該開咪錶。
+    en: "Please turn on the meter."
+    tags: [taxi]
+  - id: sent-hk-around-066
+    yue: 收唔收電子支付？
+    en: "Do you take electronic payment?"
+    tags: [taxi]
+  - id: sent-hk-around-067
+    yue: 行李要另外收錢。
+    en: "Luggage costs extra."
+    tags: [taxi]
+  - id: sent-hk-around-068
+    yue: 塞車塞得好犀利。
+    en: "The traffic jam is terrible."
+    tags: [taxi]
+  - id: sent-hk-around-069
+    yue: 邊條路最快？
+    en: "Which way is fastest?"
+    tags: [taxi]
+  - id: sent-hk-around-070
+    yue: 我趕時間，唔該快啲。
+    en: "I'm in a hurry, please be quick."
+    tags: [taxi]
+  - id: sent-hk-around-071
+    yue: 行天橋過去。
+    en: "Go over by the footbridge."
+    tags: [walking]
+  - id: sent-hk-around-072
+    yue: 落樓梯轉右。
+    en: "Go down the stairs and turn right."
+    tags: [walking]
+  - id: sent-hk-around-073
+    yue: 搭扶手電梯上半山。
+    en: "Take the escalator up to Mid-Levels."
+    tags: [walking]
+  - id: sent-hk-around-074
+    yue: 行路大約十分鐘。
+    en: "It's about a ten-minute walk."
+    tags: [walking]
+  - id: sent-hk-around-075
+    yue: 過馬路要小心。
+    en: "Be careful crossing the road."
+    tags: [walking]
+  - id: sent-hk-around-076
+    yue: 綠燈先好過馬路。
+    en: "Only cross on the green light."
+    tags: [walking]
+  - id: sent-hk-around-077
+    yue: 直行，第二個街口轉左。
+    en: "Go straight, turn left at the second corner."
+    tags: [walking]
+  - id: sent-hk-around-078
+    yue: 我迷路喇。
+    en: "I'm lost."
+    tags: [walking]
+  - id: sent-hk-around-079
+    yue: 用地圖搵吓先。
+    en: "Let's check the map first."
+    tags: [walking]
+  - id: sent-hk-around-080
+    yue: 落雨行有蓋行人路。
+    en: "When it rains, take the covered walkway."
+    tags: [walking]
+  - id: sent-hk-around-081
+    yue: 去深圳喺邊度過關？
+    en: "Where do I cross the border to Shenzhen?"
+    tags: [border]
+  - id: sent-hk-around-082
+    yue: 過關要帶回鄉證。
+    en: "Bring your Home Return Permit for the border."
+    tags: [border]
+  - id: sent-hk-around-083
+    yue: 搭機場快綫去機場。
+    en: "Take the Airport Express to the airport."
+    tags: [border]
+  - id: sent-hk-around-084
+    yue: 去澳門可以搭船或者坐巴士過橋。
+    en: "To Macau you can take a ferry or a bus over the bridge."
+    tags: [border]
+  - id: sent-hk-around-085
+    yue: 港珠澳大橋巴士喺邊度搭？
+    en: "Where do I catch the bridge bus to Macau?"
+    tags: [border]
+  - id: sent-hk-around-086
+    yue: 高鐵站喺西九龍。
+    en: "The high-speed rail station is in West Kowloon."
+    tags: [border]
+  - id: sent-hk-around-087
+    yue: 旺角人好多。
+    en: "Mong Kok is very crowded."
+    tags: [places]
+  - id: sent-hk-around-088
+    yue: 我哋喺銅鑼灣等。
+    en: "Let's meet in Causeway Bay."
+    tags: [places]
+  - id: sent-hk-around-089
+    yue: 去山頂可以搭纜車。
+    en: "You can take the tram up to the Peak."
+    tags: [places]
+  - id: sent-hk-around-090
+    yue: 九龍同港島隔住個海。
+    en: "Kowloon and Hong Kong Island are across the harbour."
+    tags: [places]
+  - id: sent-hk-around-091
+    yue: 香港嘅港鐵比澳門輕軌大好多。
+    en: "Hong Kong's MTR is much bigger than Macau's LRT."
+    tags: [compare]
+  - id: sent-hk-around-092
+    yue: 澳門啲人講「巴士」，香港都係。
+    en: "People in Macau say 巴士, and so does Hong Kong."
+    tags: [compare]
+  - id: sent-hk-around-093
+    yue: 香港行路比澳門快。
+    en: "People walk faster in Hong Kong than in Macau."
+    tags: [compare]
+  - id: sent-hk-around-094
+    yue: 我喺澳門好少搭巴士上層。
+    en: "In Macau I rarely sit on the top deck."
+    tags: [compare]
+  - id: sent-hk-around-095
+    yue: 去香港我會用八達通，喺澳門用澳門通。
+    en: "In Hong Kong I use Octopus, in Macau I use Macau Pass."
+    tags: [compare]
+  - id: sent-hk-around-096
+    yue: 香港啲的士司機講嘢好快。
+    en: "Hong Kong taxi drivers talk really fast."
+    tags: [compare]
+  - id: sent-hk-around-097
+    yue: 落機之後先去搭機場快綫。
+    en: "After landing, take the Airport Express."
+    tags: [compare]
+  - id: sent-hk-around-098
+    yue: 我第一次自己搭小巴。
+    en: "It's my first time taking a minibus by myself."
+    tags: [compare]
+  - id: sent-hk-around-099
+    yue: 喺香港搭車好方便。
+    en: "Getting around Hong Kong is very convenient."
+    tags: [compare]
+  - id: sent-hk-around-100
+    yue: 下次一齊去香港玩。
+    en: "Let's go to Hong Kong together next time."
+    tags: [compare]

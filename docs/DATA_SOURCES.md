@@ -18,6 +18,9 @@ The owner has approved downloading existing material instead of building from sc
 | CC-Canto + Canto readings (CC BY-SA 3.0, Pleco) | `https://cantonese.org/cccanto-170202.zip`, `cccedict-canto-readings-150923.zip` | Cantonese meanings first, Jyutping for CEDICT words |
 | OpenStreetMap via Overpass (ODbL 1.0) | `https://overpass-api.de/api/interpreter` (query in `fetch_sources.py`) | flashcard decks: Macau streets (`name:zh` + `name:pt`), LRT stations, HK MTR stations and streets (`name:en`); street-ending patterns are counted from this data. Top 400 streets by number of mapped segments. Re-fetching changes the hash (OSM is live), which is expected. Simplified duplicates are dropped. |
 | UI sounds | synthesised by `tool/make_sfx.py` | no third-party audio |
+| Cantonese Wikipedia (zh-yue), CC BY-SA | `https://zh-yue.wikipedia.org/w/api.php` (categories in `content/decks/food.yaml`) | food deck: dish names and English article titles. The API rate-limits bursts (HTTP 429): one request per category, 3 s apart, retries with back-off |
+| Wikimedia Commons photos (CC BY / CC BY-SA / CC0 / PD) | thumbnails via the article's page image | food card photos, only when the licence is free; author and licence shown on each card |
+| Irasutoya (いらすとや) | `irasutoya.com` Blogger feed search; links in `content/characters.yaml` | conversation characters. Free for non-commercial use, no count limit, credit optional; **redistributing the files is not allowed**, nor aggressive uses. So the images are downloaded by `duk characters` into git-ignored folders, bundled into the app only, kept out of committed screenshots, and not used for the swearing topic |
 
 Everything below is still unverified.
 

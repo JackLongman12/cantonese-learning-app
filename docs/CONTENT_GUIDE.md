@@ -144,3 +144,18 @@ Planned decks: `signs`, `emergency` (typhoon/rainstorm signals, hospital), `menu
 - Polyphones resolved by a word match or an explicit override; otherwise the build reports them in `build/review_queue.md`.
 - Simplified and Traditional lines of a pair align in meaning (flag length mismatch over 30%).
 - No sentence with `reviewed: true` changes text without resetting `reviewed`.
+
+
+## Food deck (`content/decks/food.yaml`)
+
+`deck` (id, title, region, description), `categories` (Cantonese Wikipedia category name →
+`all` or a list of page titles to keep), `exclude` (titles to drop: category pages,
+restaurants, brands). `duk fetch --only food` downloads names, English titles and free
+photos; `duk build` makes one card per dish (`card:food:<name>`, permanent), English from
+the dictionary first, else the English article title.
+
+## Conversation characters (`content/characters.yaml`)
+
+Speaker role → Irasutoya title, image link and post link. `duk characters` downloads them
+(git-ignored). Add a role here when a conversation introduces a new speaker; the app
+falls back to a coloured initial when a picture is missing.

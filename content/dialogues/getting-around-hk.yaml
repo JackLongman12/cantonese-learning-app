@@ -1,0 +1,43 @@
+# Conversations for getting around Hong Kong.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-hk-getting-around
+dialogues:
+  - id: dlg-hk-around-01
+    title: "Lost in the MTR"
+    lines:
+      - ["你", "唔該，請問去銅鑼灣要喺邊度轉車？", "Excuse me, where do I change for Causeway Bay?"]
+      - ["路人", "你喺下個站轉車就得。", "Change at the next station."]
+      - ["你", "要行好遠㗎？", "Is it a long walk?"]
+      - ["路人", "唔使，喺對面月台。", "No, it's across the platform."]
+      - ["你", "唔該晒。", "Thanks a lot."]
+  - id: dlg-hk-around-02
+    title: "Getting off a minibus"
+    lines:
+      - ["你", "司機，前面有落！", "Driver, getting off ahead!"]
+      - ["司機", "邊度呀？", "Where?"]
+      - ["你", "街口有落，唔該！", "At the corner, thanks!"]
+      - ["司機", "得，停喇。", "OK, stopping."]
+  - id: dlg-hk-around-03
+    title: "Topping up Octopus"
+    lines:
+      - ["你", "唔該，我想增值八達通。", "I'd like to top up my Octopus, please."]
+      - ["店員", "增值幾多？", "How much?"]
+      - ["你", "一百蚊。", "A hundred dollars."]
+      - ["店員", "放張卡喺度。", "Put your card here."]
+      - ["店員", "得喇，餘額一百二十蚊。", "Done, the balance is a hundred and twenty."]
+  - id: dlg-hk-around-04
+    title: "Taking a taxi across the harbour"
+    lines:
+      - ["你", "司機，去尖沙咀，過海。", "Driver, to Tsim Sha Tsui, across the harbour."]
+      - ["司機", "你想行邊條隧道？", "Which tunnel do you want?"]
+      - ["你", "邊條快啲？", "Which is faster?"]
+      - ["司機", "我睇吓交通先。", "Let me check the traffic first."]
+      - ["你", "好，行快嗰條，唔該。", "OK, the faster one, please."]
+  - id: dlg-hk-around-05
+    title: "Meeting a friend from Macau"
+    lines:
+      - ["朋友", "你喺邊呀？我到咗銅鑼灣喇。", "Where are you? I'm in Causeway Bay."]
+      - ["你", "我仲喺巴士度，塞緊車。", "Still on the bus, stuck in traffic."]
+      - ["朋友", "不如你落車行過嚟？", "Why not get off and walk?"]
+      - ["你", "好，我下個站落車。", "OK, I'll get off at the next stop."]
+      - ["朋友", "我喺港鐵站E出口等你。", "I'll wait at MTR exit E."]

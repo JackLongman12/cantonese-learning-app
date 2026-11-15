@@ -36,8 +36,41 @@ class SavedWord {
   String get key => '$lang:$text';
 }
 
+/// A word the app noticed you struggled with: you revealed its reading when you were
+/// meant to read it, or read-aloud heard it wrong. Cleared after two correct practices
+/// in a row.
+class PracticeWord {
+  PracticeWord({
+    required this.text,
+    required this.lang,
+    required this.flaggedAt,
+    this.reading,
+    this.sentenceId,
+    this.context,
+    this.contextEn,
+  });
+  final String text;
+  final String lang;
+  DateTime flaggedAt;
+  String? reading;
+  String? sentenceId;
+  String? context;
+  String? contextEn;
+
+  /// Why: 'read' (couldn't read it) and/or 'say' (said it wrong).
+  final reasons = <String>{};
+  int misses = 0;
+
+  /// Correct practices in a row; two clears the word.
+  int streak = 0;
+}
+
+/// Correct practices in a row that take a word off the practice list.
+const practiceClearStreak = 2;
+
 class WordBook {
   final _words = <String, SavedWord>{};
+  final _practice = <String, PracticeWord>{};
   final _seen = <String>{};
 
   static WordBook replay(Iterable<Event> events) {
@@ -52,18 +85,48 @@ class WordBook {
   }
 
   void apply(Event e) {
-    if (e.type != 'word.save' && e.type != 'word.remove') return;
+    const types = {'word.save', 'word.remove', 'word.flag', 'word.practice'};
+    if (!types.contains(e.type)) return;
     if (!_seen.add(e.id)) return;
     final text = e.payload['text'];
     final lang = e.payload['lang'];
     if (text is! String || lang is! String || text.isEmpty) return;
     final key = '$lang:$text';
+    String? str(String k) =>
+        e.payload[k] is String ? e.payload[k] as String : null;
+    if (e.type == 'word.flag') {
+      final w = _practice.putIfAbsent(
+        key,
+        () => PracticeWord(text: text, lang: lang, flaggedAt: e.tsUtc),
+      );
+      w
+        ..flaggedAt = e.tsUtc
+        ..reading = str('reading') ?? w.reading
+        ..sentenceId = str('sentence_id') ?? w.sentenceId
+        ..context = str('context') ?? w.context
+        ..contextEn = str('context_en') ?? w.contextEn
+        ..streak = 0
+        ..misses += 1;
+      if (str('reason') case final r?) w.reasons.add(r);
+      return;
+    }
+    if (e.type == 'word.practice') {
+      final w = _practice[key];
+      if (w == null) return;
+      if (e.payload['ok'] == true) {
+        w.streak += 1;
+        if (w.streak >= practiceClearStreak) _practice.remove(key);
+      } else {
+        w
+          ..streak = 0
+          ..misses += 1;
+      }
+      return;
+    }
     if (e.type == 'word.remove') {
       _words.remove(key);
       return;
     }
-    String? str(String k) =>
-        e.payload[k] is String ? e.payload[k] as String : null;
     _words[key] = SavedWord(
       text: text,
       lang: lang,
@@ -77,6 +140,17 @@ class WordBook {
   }
 
   bool contains(String lang, String text) => _words.containsKey('$lang:$text');
+
+  bool needsPractice(String lang, String text) =>
+      _practice.containsKey('$lang:$text');
+
+  /// Words to practise, most missed first.
+  List<PracticeWord> practice(String lang) =>
+      _practice.values.where((w) => w.lang == lang).toList()..sort(
+        (a, b) => b.misses != a.misses
+            ? b.misses.compareTo(a.misses)
+            : b.flaggedAt.compareTo(a.flaggedAt),
+      );
 
   /// Newest first.
   List<SavedWord> words(String lang) =>

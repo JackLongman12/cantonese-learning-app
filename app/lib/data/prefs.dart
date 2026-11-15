@@ -58,8 +58,6 @@ class Prefs {
   set autoPlay(bool v) => _set('auto_play', v);
 
   /// Stories start in read-along mode.
-  bool get readAlong => _data['read_along'] == true;
-  set readAlong(bool v) => _set('read_along', v);
 
   /// Offer to read copied Chinese text when the app opens.
   bool get clipboardPrompt => _data['clipboard_prompt'] != false;

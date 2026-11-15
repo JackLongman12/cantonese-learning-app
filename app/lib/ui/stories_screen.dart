@@ -32,8 +32,6 @@ class StoriesScreen extends StatefulWidget {
 }
 
 class _StoriesScreenState extends State<StoriesScreen> {
-  late bool _readAlong = _s.prefs.readAlong;
-
   AppServices get _s => widget.services;
 
   Future<void> _open(DialogueRow story, String lang) async {
@@ -41,7 +39,6 @@ class _StoriesScreenState extends State<StoriesScreen> {
       'screen': 'reader',
       'mode': 'story',
       'dialogue_id': story.id,
-      'read_along': _readAlong,
     });
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -52,7 +49,6 @@ class _StoriesScreenState extends State<StoriesScreen> {
           lang: lang,
           mode: 'story',
           story: true,
-          autoplay: _readAlong,
         ),
       ),
     );
@@ -89,17 +85,6 @@ class _StoriesScreenState extends State<StoriesScreen> {
                   'Read whole stories, a line at a time. Reading lots of mostly-familiar '
                   'text is how reading gets fast.',
                   style: theme.textTheme.bodyMedium,
-                ),
-                SwitchListTile(
-                  key: const ValueKey('read-along'),
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text('Read along'),
-                  subtitle: const Text(
-                    'Each line plays as it appears. Turn off to test yourself.',
-                  ),
-                  value: _readAlong,
-                  onChanged: (v) =>
-                      setState(() => _s.prefs.readAlong = _readAlong = v),
                 ),
                 const SizedBox(height: 4),
                 if (stories.isEmpty)

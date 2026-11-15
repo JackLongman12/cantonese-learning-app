@@ -44,9 +44,9 @@ void main() {
     expect(prefs.helpShift, 1);
     expect(s.scaffold.shift, 1);
     expect(find.text('普通话'), findsNothing); // Cantonese only
-    await t.tap(find.byKey(const ValueKey('set-read-along')));
+    await t.tap(find.byKey(const ValueKey('set-auto-play')));
     await t.pump();
-    expect(prefs.readAlong, isTrue);
+    expect(prefs.autoPlay, isFalse);
     expect(const ScaffoldPolicy(shift: 1).shift, 1);
   }, skip: !File(dbPath).existsSync());
 }

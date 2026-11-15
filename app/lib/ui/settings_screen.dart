@@ -158,23 +158,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     style: chineseStyle(p.lang, fontSize: 22 * p.textScale),
                   ),
                 ),
-                ListTile(
-                  title: const Text("Today's reading length"),
-                  trailing: SegmentedButton<int>(
-                    showSelectedIcon: false,
-                    segments: const [
-                      ButtonSegment(value: 5, label: Text('5')),
-                      ButtonSegment(value: 15, label: Text('15')),
-                      ButtonSegment(value: 30, label: Text('30')),
-                    ],
-                    selected: {p.sessionLength},
-                    onSelectionChanged: (v) {
-                      final from = p.sessionLength;
-                      p.sessionLength = v.first;
-                      _changed('session_length', from, v.first);
-                    },
-                  ),
-                ),
                 SwitchListTile(
                   key: const ValueKey('set-auto-meaning'),
                   title: const Text('Show meaning after listening'),
@@ -210,16 +193,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onChanged: (v) {
                     p.autoPlay = v;
                     _changed('auto_play', !v, v);
-                  },
-                ),
-                SwitchListTile(
-                  key: const ValueKey('set-read-along'),
-                  title: const Text('Read along in stories'),
-                  subtitle: const Text('Play each line as it appears'),
-                  value: p.readAlong,
-                  onChanged: (v) {
-                    p.readAlong = v;
-                    _changed('read_along', !v, v);
                   },
                 ),
                 SwitchListTile(

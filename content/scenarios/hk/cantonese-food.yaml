@@ -1,0 +1,441 @@
+# Cantonese food: dim sum, siu mei, cha chaan teng, congee and noodles, tong sui,
+# Macau snacks, tastes and cooking. Dish names match the food flashcards.
+# Drafted by an LLM; reviewed: false until the owner confirms wording and readings.
+scenario:
+  id: scn-cantonese-food
+  title: Cantonese food
+  region: both
+  tags: [food]
+
+defaults: {register: spoken, source: llm, region: both}
+
+sentences:
+  # --- yum cha ---------------------------------------------------------------------
+  - id: sent-food-001
+    yue: 今個星期日一齊去飲茶好唔好？
+    en: "Shall we go for yum cha together this Sunday?"
+    tags: [yum-cha]
+  - id: sent-food-002
+    yue: 飲茶一定要叫蝦餃同燒賣。
+    en: "At yum cha you have to order har gow and siu mai."
+    tags: [yum-cha]
+  - id: sent-food-003
+    yue: 呢度啲蝦餃皮好薄。
+    en: "The har gow skins here are really thin."
+    tags: [yum-cha]
+  - id: sent-food-004
+    yue: 我想叫一籠叉燒包。
+    en: "I'd like a basket of char siu bao."
+    tags: [yum-cha]
+  - id: sent-food-005
+    yue: 鳳爪蒸得好腍。
+    en: "The chicken feet are steamed really soft."
+    tags: [yum-cha]
+  - id: sent-food-006
+    yue: 我唔食鳳爪，你食啦。
+    en: "I don't eat chicken feet; you have them."
+    tags: [yum-cha]
+  - id: sent-food-007
+    yue: 腸粉要牛肉定蝦？
+    en: "Beef or shrimp rice rolls?"
+    tags: [yum-cha]
+  - id: sent-food-008
+    yue: 蘿蔔糕要煎香啲先好食。
+    en: "Turnip cake is best pan-fried until fragrant."
+    tags: [yum-cha]
+  - id: sent-food-009
+    yue: 糯米雞好飽肚。
+    en: "Lo mai gai is very filling."
+    tags: [yum-cha]
+  - id: sent-food-010
+    yue: 我最鍾意食流沙包。
+    en: "Custard lava buns are my favourite."
+    tags: [yum-cha]
+  - id: sent-food-011
+    yue: 春卷炸得好脆。
+    en: "The spring rolls are fried nice and crispy."
+    tags: [yum-cha]
+  - id: sent-food-012
+    yue: 豉汁排骨好送飯。
+    en: "Spare ribs in black bean sauce go great with rice."
+    tags: [yum-cha]
+  - id: sent-food-013
+    yue: 飲咩茶呀？普洱定鐵觀音？
+    en: "Which tea? Pu'er or Tieguanyin?"
+    tags: [yum-cha]
+  - id: sent-food-014
+    yue: 唔該加水。
+    en: "More hot water for the tea, please."
+    notes: "Leaving the teapot lid open also asks for more water."
+    tags: [yum-cha]
+  - id: sent-food-015
+    yue: 我哋要個點心紙。
+    en: "Can we have an order sheet for dim sum?"
+    tags: [yum-cha]
+  - id: sent-food-016
+    yue: 啲點心仲未嚟。
+    en: "The dim sum still hasn't come."
+    tags: [yum-cha]
+  - id: sent-food-017
+    yue: 呢籠係咪我哋㗎？
+    en: "Is this basket ours?"
+    tags: [yum-cha]
+  - id: sent-food-018
+    yue: 馬拉糕好鬆軟。
+    en: "The Malay sponge cake is light and fluffy."
+    tags: [yum-cha]
+  - id: sent-food-019
+    yue: 早啲去，唔係冇位。
+    en: "Go early or there won't be seats."
+    tags: [yum-cha]
+  - id: sent-food-020
+    yue: 一盅兩件，慢慢傾。
+    en: "A cup of tea and two dim sum, and a long chat."
+    notes: "一盅兩件 is the classic way to describe yum cha."
+    tags: [yum-cha]
+
+  # --- siu mei and rice -------------------------------------------------------------
+  - id: sent-food-021
+    yue: 燒鵝飯要髀位。
+    en: "Roast goose rice, leg piece please."
+    tags: [siu-mei]
+  - id: sent-food-022
+    yue: 叉燒要半肥瘦。
+    en: "Char siu, half fat half lean."
+    tags: [siu-mei]
+  - id: sent-food-023
+    yue: 雙拼飯：叉燒同燒肉。
+    en: "Two-meat rice, char siu and roast pork."
+    tags: [siu-mei]
+  - id: sent-food-024
+    yue: 燒肉個皮好脆。
+    en: "The roast pork skin is really crispy."
+    tags: [siu-mei]
+  - id: sent-food-025
+    yue: 白切雞要點薑蓉。
+    en: "Have the white cut chicken with ginger dip."
+    tags: [siu-mei]
+  - id: sent-food-026
+    yue: 斬半隻豉油雞。
+    en: "Chop half a soy sauce chicken."
+    tags: [siu-mei]
+  - id: sent-food-027
+    yue: 唔該多啲汁。
+    en: "More sauce, please."
+    tags: [siu-mei]
+  - id: sent-food-028
+    yue: 飯少啲，肉多啲。
+    en: "Less rice, more meat."
+    tags: [siu-mei]
+  - id: sent-food-029
+    yue: 外賣一個叉燒飯。
+    en: "One char siu rice to take away."
+    tags: [siu-mei]
+  - id: sent-food-030
+    yue: 兩餸飯平靚正。
+    en: "Two-dish rice is cheap and good."
+    tags: [rice]
+  - id: sent-food-031
+    yue: 冬天最啱食煲仔飯。
+    en: "Winter is the best time for claypot rice."
+    tags: [rice]
+  - id: sent-food-032
+    yue: 煲仔飯最好食係飯焦。
+    en: "The best part of claypot rice is the crust at the bottom."
+    tags: [rice]
+  - id: sent-food-033
+    yue: 臘味煲仔飯要等二十分鐘。
+    en: "Cured meat claypot rice takes twenty minutes."
+    tags: [rice]
+  - id: sent-food-034
+    yue: 我今日想食碟頭飯。
+    en: "I feel like a rice plate today."
+    tags: [rice]
+  - id: sent-food-035
+    yue: 揚州炒飯好香口。
+    en: "Yangzhou fried rice is really tasty."
+    tags: [rice]
+
+  # --- cha chaan teng ---------------------------------------------------------------
+  - id: sent-food-036
+    yue: 一個菠蘿油，一杯熱奶茶。
+    en: "A pineapple bun with butter and a hot milk tea."
+    tags: [cha-chaan-teng]
+  - id: sent-food-037
+    yue: 菠蘿包入面其實冇菠蘿。
+    en: "There's actually no pineapple in a pineapple bun."
+    tags: [cha-chaan-teng]
+  - id: sent-food-038
+    yue: 奶茶要茶走。
+    en: "Milk tea with condensed milk instead."
+    notes: "茶走 = with condensed milk instead of evaporated milk and sugar."
+    tags: [cha-chaan-teng]
+  - id: sent-food-039
+    yue: 要杯凍鴛鴦。
+    en: "An iced yuenyeung, please."
+    notes: "鴛鴦 = coffee mixed with milk tea."
+    tags: [cha-chaan-teng]
+  - id: sent-food-040
+    yue: 西多士要多啲煉奶。
+    en: "French toast with extra condensed milk."
+    tags: [cha-chaan-teng]
+  - id: sent-food-041
+    yue: 我要個火腿通粉。
+    en: "I'll have ham macaroni soup."
+    tags: [cha-chaan-teng]
+  - id: sent-food-042
+    yue: 餐蛋麵加多個蛋。
+    en: "Luncheon meat and egg noodles, with an extra egg."
+    tags: [cha-chaan-teng]
+  - id: sent-food-043
+    yue: 焗豬扒飯要等耐少少。
+    en: "Baked pork chop rice takes a bit longer."
+    tags: [cha-chaan-teng]
+  - id: sent-food-044
+    yue: 雞尾包入面有椰絲。
+    en: "Cocktail buns have coconut inside."
+    tags: [cha-chaan-teng]
+  - id: sent-food-045
+    yue: 今日個常餐係乜嘢？
+    en: "What's today's set breakfast?"
+    tags: [cha-chaan-teng]
+  - id: sent-food-046
+    yue: 下午茶有咩餐？
+    en: "What afternoon tea sets are there?"
+    tags: [cha-chaan-teng]
+  - id: sent-food-047
+    yue: 檸檬茶少冰。
+    en: "Lemon tea, less ice."
+    tags: [cha-chaan-teng]
+  - id: sent-food-048
+    yue: 熱檸水唔該。
+    en: "Hot lemon water, please."
+    tags: [cha-chaan-teng]
+  - id: sent-food-049
+    yue: 雞蛋仔要即叫即整先好食。
+    en: "Egg waffles are best made to order."
+    tags: [snacks]
+  - id: sent-food-050
+    yue: 我要一串咖喱魚蛋。
+    en: "One skewer of curry fish balls, please."
+    tags: [snacks]
+
+  # --- congee and noodles -----------------------------------------------------------
+  - id: sent-food-051
+    yue: 皮蛋瘦肉粥加油炸鬼。
+    en: "Century egg and pork congee with a fried dough stick."
+    tags: [congee]
+  - id: sent-food-052
+    yue: 病咗就食白粥啦。
+    en: "When you're sick, have plain congee."
+    tags: [congee]
+  - id: sent-food-053
+    yue: 艇仔粥啲料好多。
+    en: "Sampan congee has lots of toppings."
+    tags: [congee]
+  - id: sent-food-054
+    yue: 及第粥有豬潤同粉腸。
+    en: "Kap dai congee has pork liver and intestine."
+    tags: [congee]
+  - id: sent-food-055
+    yue: 腸粉加啲甜醬同麻醬。
+    en: "Rice rolls with sweet sauce and sesame sauce."
+    tags: [congee]
+  - id: sent-food-056
+    yue: 一碗細蓉。
+    en: "A small bowl of wonton noodles."
+    notes: "細蓉 is the old name for a small bowl of wonton noodles."
+    tags: [noodles]
+  - id: sent-food-057
+    yue: 雲吞麵要走青。
+    en: "Wonton noodles without spring onions."
+    notes: "走青 = no spring onion or coriander."
+    tags: [noodles]
+  - id: sent-food-058
+    yue: 牛腩麵要爽腩。
+    en: "Beef brisket noodles, the firmer brisket."
+    tags: [noodles]
+  - id: sent-food-059
+    yue: 乾炒牛河好考功夫。
+    en: "Dry-fried beef ho fun takes real skill."
+    tags: [noodles]
+  - id: sent-food-060
+    yue: 車仔麵可以自己揀餸。
+    en: "With cart noodles you pick your own toppings."
+    tags: [noodles]
+  - id: sent-food-061
+    yue: 米線定河粉？
+    en: "Rice vermicelli or flat rice noodles?"
+    tags: [noodles]
+  - id: sent-food-062
+    yue: 碗麵好大碗。
+    en: "That bowl of noodles is huge."
+    tags: [noodles]
+
+  # --- home cooking and soup ---------------------------------------------------------
+  - id: sent-food-063
+    yue: 阿媽今晚煲咗湯。
+    en: "Mum made soup tonight."
+    tags: [home]
+  - id: sent-food-064
+    yue: 老火湯要煲幾個鐘。
+    en: "Slow-cooked soup takes a few hours."
+    tags: [home]
+  - id: sent-food-065
+    yue: 蒸水蛋好滑。
+    en: "The steamed egg is very smooth."
+    tags: [home]
+  - id: sent-food-066
+    yue: 今晚食蒸肉餅同炒菜心。
+    en: "Tonight it's steamed pork patty and stir-fried choy sum."
+    tags: [home]
+  - id: sent-food-067
+    yue: 蒸魚唔好蒸太耐。
+    en: "Don't steam the fish too long."
+    tags: [home]
+  - id: sent-food-068
+    yue: 番茄炒蛋好易整。
+    en: "Tomato and egg stir-fry is easy to make."
+    tags: [home]
+  - id: sent-food-069
+    yue: 屋企成日有剩餸。
+    en: "There are always leftovers at home."
+    tags: [home]
+  - id: sent-food-070
+    yue: 落少啲鹽。
+    en: "Use less salt."
+    tags: [home]
+  - id: sent-food-071
+    yue: 飯煮好未？
+    en: "Is the rice ready yet?"
+    tags: [home]
+  - id: sent-food-072
+    yue: 飲多碗湯先走啦。
+    en: "Have another bowl of soup before you go."
+    tags: [home]
+
+  # --- tong sui and sweets ---------------------------------------------------------
+  - id: sent-food-073
+    yue: 食完飯去食糖水。
+    en: "Let's have dessert soup after dinner."
+    tags: [tong-sui]
+  - id: sent-food-074
+    yue: 紅豆沙定綠豆沙？
+    en: "Red bean or mung bean soup?"
+    tags: [tong-sui]
+  - id: sent-food-075
+    yue: 芝麻糊要熱嘅。
+    en: "Black sesame soup, hot please."
+    tags: [tong-sui]
+  - id: sent-food-076
+    yue: 楊枝甘露好清甜。
+    en: "Mango pomelo sago is light and sweet."
+    tags: [tong-sui]
+  - id: sent-food-077
+    yue: 雙皮奶好滑。
+    en: "The double-skin milk pudding is very smooth."
+    tags: [tong-sui]
+  - id: sent-food-078
+    yue: 薑汁撞奶要趁熱食。
+    en: "Ginger milk curd should be eaten warm."
+    tags: [tong-sui]
+  - id: sent-food-079
+    yue: 夏天食西米露好消暑。
+    en: "Sago soup is refreshing in summer."
+    tags: [tong-sui]
+  - id: sent-food-080
+    yue: 我唔食得太甜。
+    en: "I can't have things too sweet."
+    tags: [tong-sui]
+
+  # --- Macau ------------------------------------------------------------------------
+  - id: sent-food-081
+    yue: 嚟澳門一定要食葡撻。
+    en: "You have to have Portuguese egg tarts in Macau."
+    region: macau
+    tags: [macau]
+  - id: sent-food-082
+    yue: 葡撻要趁熱食。
+    en: "Eat the egg tarts while they're hot."
+    region: macau
+    tags: [macau]
+  - id: sent-food-083
+    yue: 豬扒包係澳門出名嘅小食。
+    en: "The pork chop bun is a famous Macau snack."
+    region: macau
+    tags: [macau]
+  - id: sent-food-084
+    yue: 買幾盒杏仁餅做手信。
+    en: "Buy a few boxes of almond cookies as souvenirs."
+    region: macau
+    tags: [macau]
+  - id: sent-food-085
+    yue: 木糠布甸好香。
+    en: "Serradura smells really good."
+    region: macau
+    tags: [macau]
+  - id: sent-food-086
+    yue: 我哋去食葡國菜好唔好？
+    en: "Shall we go for Portuguese food?"
+    region: macau
+    tags: [macau]
+  - id: sent-food-087
+    yue: 免治飯係澳門土生菜。
+    en: "Minchi is a Macanese dish."
+    region: macau
+    tags: [macau]
+  - id: sent-food-088
+    yue: 呢間牛雜好出名。
+    en: "This place is famous for its beef offal."
+    region: macau
+    tags: [macau]
+
+  # --- tastes and opinions ---------------------------------------------------------
+  - id: sent-food-089
+    yue: 好好味呀！
+    en: "Delicious!"
+    tags: [taste]
+  - id: sent-food-090
+    yue: 有啲淡，冇乜味。
+    en: "It's a bit bland."
+    tags: [taste]
+  - id: sent-food-091
+    yue: 太鹹喇。
+    en: "Too salty."
+    tags: [taste]
+  - id: sent-food-092
+    yue: 呢個辣唔辣㗎？
+    en: "Is this spicy?"
+    tags: [taste]
+  - id: sent-food-093
+    yue: 我食唔到辣。
+    en: "I can't eat spicy food."
+    tags: [taste]
+  - id: sent-food-094
+    yue: 好油膩，食唔落。
+    en: "Too greasy, I can't eat it."
+    tags: [taste]
+  - id: sent-food-095
+    yue: 啲肉好嚡。
+    en: "The meat is tough and dry."
+    tags: [taste]
+  - id: sent-food-096
+    yue: 呢啲菜好新鮮。
+    en: "These vegetables are really fresh."
+    tags: [taste]
+  - id: sent-food-097
+    yue: 我飽到食唔落喇。
+    en: "I'm too full to eat any more."
+    tags: [taste]
+  - id: sent-food-098
+    yue: 食唔晒可以打包。
+    en: "If you can't finish, you can take it away."
+    tags: [taste]
+  - id: sent-food-099
+    yue: 我有啲嘢唔食得。
+    en: "There are some things I can't eat."
+    tags: [taste]
+  - id: sent-food-100
+    yue: 我對花生敏感。
+    en: "I'm allergic to peanuts."
+    tags: [taste]

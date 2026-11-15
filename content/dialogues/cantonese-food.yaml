@@ -1,0 +1,46 @@
+# Conversations for the Cantonese food topic.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+scenario: scn-cantonese-food
+dialogues:
+  - id: dlg-food-01
+    title: "Yum cha with a friend"
+    lines:
+      - ["朋友", "你想食咩點心？", "What dim sum do you want?"]
+      - ["你", "蝦餃同燒賣先啦。", "Har gow and siu mai first."]
+      - ["朋友", "要唔要叉燒包？", "Want char siu bao too?"]
+      - ["你", "好呀，再加一碟腸粉。", "Sure, and a plate of rice rolls."]
+      - ["朋友", "飲咩茶？", "Which tea?"]
+      - ["你", "普洱啦。", "Pu'er."]
+  - id: dlg-food-02
+    title: "At the siu mei shop"
+    lines:
+      - ["伙計", "食咩呀？", "What'll it be?"]
+      - ["你", "燒鵝飯，要髀位。", "Roast goose rice, a leg piece."]
+      - ["伙計", "髀位要加十蚊。", "The leg costs ten dollars extra."]
+      - ["你", "得，唔該多啲汁。", "Fine, more sauce please."]
+      - ["伙計", "堂食定拎走？", "Eat in or take away?"]
+      - ["你", "拎走。", "Take away."]
+  - id: dlg-food-03
+    title: "Choosing dessert"
+    lines:
+      - ["朋友", "食完飯去食糖水好唔好？", "Dessert soup after dinner?"]
+      - ["你", "好呀，我想食芝麻糊。", "Sure, I want black sesame soup."]
+      - ["朋友", "我要楊枝甘露。", "I'll have mango pomelo sago."]
+      - ["你", "你唔怕太甜咩？", "Isn't that too sweet for you?"]
+      - ["朋友", "叫少甜就得啦。", "I'll ask for less sweet."]
+  - id: dlg-food-04
+    title: "Egg tarts in Macau"
+    lines:
+      - ["店員", "葡撻啱啱出爐。", "The egg tarts just came out of the oven."]
+      - ["你", "要六個，唔該。", "Six, please."]
+      - ["店員", "使唔使盒？", "Do you need a box?"]
+      - ["你", "要，我買嚟做手信。", "Yes, they're souvenirs."]
+      - ["店員", "趁熱食最好味。", "They're best eaten warm."]
+  - id: dlg-food-05
+    title: "Cooking at home"
+    lines:
+      - ["室友", "今晚食咩好？", "What should we eat tonight?"]
+      - ["你", "蒸個水蛋，炒個菜心。", "Steamed egg and stir-fried choy sum."]
+      - ["室友", "要唔要煲湯？", "Should we make soup?"]
+      - ["你", "唔夠時間喇，聽日先煲。", "Not enough time; tomorrow."]
+      - ["室友", "好，我去煮飯。", "OK, I'll cook the rice."]

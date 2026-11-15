@@ -392,17 +392,6 @@ class _ReaderScreenState extends State<ReaderScreen> {
     });
   }
 
-  /// Shadowing: hear the native line, then recording starts straight away.
-  Future<void> _shadow() async {
-    if (_s.speech == null || _mic != _Mic.idle) return;
-    _s.logger.log('item.audio', {
-      'exposure_id': _exposureId,
-      'scope': 'shadow',
-    });
-    await _play(slow: false);
-    if (mounted && _mic == _Mic.idle) await _readAloud();
-  }
-
   void _toast(String text) => ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(
@@ -749,18 +738,6 @@ class _ReaderScreenState extends State<ReaderScreen> {
                           ),
                         ],
                       ),
-                      if (_s.speech != null &&
-                          _mic == _Mic.idle &&
-                          _speech.isEmpty)
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: TextButton.icon(
-                            key: const ValueKey('shadow'),
-                            onPressed: _shadow,
-                            icon: const Icon(Icons.repeat_rounded, size: 18),
-                            label: const Text('Shadow: listen, then say it'),
-                          ),
-                        ),
                       if (_speech.isNotEmpty)
                         _SpeechResult(
                           scores: _speech.values.toList(),

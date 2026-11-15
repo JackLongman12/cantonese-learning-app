@@ -362,24 +362,25 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ),
           ),
         ],
-        if (_continueTopic(scenarios) case final last?) ...[
-          const SizedBox(height: 12),
-          Card(
-            margin: EdgeInsets.zero,
-            child: ListTile(
-              key: const ValueKey('continue-topic'),
-              leading: CircleAvatar(
-                backgroundColor: theme.colorScheme.primaryContainer,
-                foregroundColor: theme.colorScheme.onPrimaryContainer,
-                child: const Icon(Icons.replay_rounded),
+        if (_resumable() == null)
+          if (_continueTopic(scenarios) case final last?) ...[
+            const SizedBox(height: 12),
+            Card(
+              margin: EdgeInsets.zero,
+              child: ListTile(
+                key: const ValueKey('continue-topic'),
+                leading: CircleAvatar(
+                  backgroundColor: theme.colorScheme.primaryContainer,
+                  foregroundColor: theme.colorScheme.onPrimaryContainer,
+                  child: const Icon(Icons.replay_rounded),
+                ),
+                title: Text('Continue: ${last.title}'),
+                subtitle: const Text('Straight back into its sentences'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => _openTopic(last, practise: true),
               ),
-              title: Text('Continue: ${last.title}'),
-              subtitle: const Text('Straight back into its sentences'),
-              trailing: const Icon(Icons.chevron_right_rounded),
-              onTap: () => _openTopic(last, practise: true),
             ),
-          ),
-        ],
+          ],
         const SizedBox(height: 12),
         IntrinsicHeight(
           child: Row(
@@ -419,7 +420,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
+      ]),
+      page([
+        _header(theme),
         const SizedBox(height: 20),
+        if (_lang == 'yue')
+          DeckSection(services: _s, onChanged: () => setState(() {})),
         Text('Reading skills', style: theme.textTheme.titleMedium),
         const SizedBox(height: 8),
         Row(
@@ -448,12 +454,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ],
           ],
         ),
-      ]),
-      page([
-        _header(theme),
-        const SizedBox(height: 20),
-        if (_lang == 'yue')
-          DeckSection(services: _s, onChanged: () => setState(() {})),
+        const SizedBox(height: 24),
         Text('Topics', style: theme.textTheme.titleMedium),
         const SizedBox(height: 4),
         Text(

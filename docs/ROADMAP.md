@@ -2,7 +2,7 @@
 
 Work top to bottom. Do not start a phase until the previous phase's "Done when" list is met. Tick boxes as tasks land and keep the **Status** line current.
 
-**Status (2026-11-15):** App is named **DuckLearn**; **Cantonese only** (Mandarin dropped); Android arm64 is the release target (Windows releases paused, macOS later). Home has bottom tabs: Today, Topics (with flashcard decks of real Macau/HK names from OpenStreetMap), Stories, Words ("My words": long-press any character for dictionary meanings from CC-Canto/CC-CEDICT and save it with its sentence), Read (paste/share). Thirteen 100-sentence Macau topics, 65 conversations, 6 stories. Sentences auto-play on open; read-aloud stops when you finish and shows a sound-accuracy percent; soft synthesised UI sounds; settings screen; daily reminder; home-screen widget; auto-update from public GitHub Releases. HK topics and owner review of LLM-written content are the biggest content gaps.
+**Status (2026-11-15):** App is named **DuckLearn**; **Cantonese only** (Mandarin dropped). Words are underlined as whole words (context segmentation checked against the dictionary); conversations play as a visual novel (Irasutoya characters, pick your line on your turn, backlog); food deck of 169 dishes with Commons photos; 16 topics incl. swearing, Cantonese food and Getting around Hong Kong; Android arm64 is the release target (Windows releases paused, macOS later). Home has bottom tabs: Today, Topics (with flashcard decks of real Macau/HK names from OpenStreetMap), Stories, Words ("My words": long-press any character for dictionary meanings from CC-Canto/CC-CEDICT and save it with its sentence), Read (paste/share). Thirteen 100-sentence Macau topics, 65 conversations, 6 stories. Sentences auto-play on open; read-aloud stops when you finish and shows a sound-accuracy percent; soft synthesised UI sounds; settings screen; daily reminder; home-screen widget; auto-update from public GitHub Releases. HK topics and owner review of LLM-written content are the biggest content gaps.
 
 ## Product principle: serve the unmet need, not a Duolingo copy
 
@@ -113,8 +113,9 @@ Goal: prove the three risky things (readings, audio, ruby rendering) on 20 sente
 | Weather and emergencies (typhoon, rainstorm, police, fire) | `scenarios/macau/weather-and-emergencies.yaml` | 100 | 0 |
 | Signs and notices (written register) | `scenarios/macau/signs-and-notices.yaml` | 100 | 0 |
 | Casinos, hotels and tourism spots in Macau | `scenarios/macau/hotels-and-sightseeing.yaml` | 100 | 0 |
-| Getting around Hong Kong (MTR, minibus, Octopus) | to write | 0 | 0 |
+| Getting around Hong Kong (MTR, minibus, Octopus, tram, ferry, taxi, border) | `scenarios/hk/getting-around-hk.yaml` + 5 conversations | 100 | 0 |
 | Hong Kong daily life (茶餐廳, shopping, districts) | to write | 0 | 0 |
+| Cantonese food (yum cha, siu mei, cha chaan teng, congee, tong sui, Macau snacks, tastes) | `scenarios/hk/cantonese-food.yaml` + 5 conversations | 100 | 0 |
 | Numbers, time, dates and prices | `scenarios/macau/numbers-and-time.yaml` | 100 | 0 |
 | Swearing and rude Cantonese (粗口: the big five, insults, euphemisms, DLLM/on9, when not to) — owner's request; no group slurs; 撚 = lan2 per CC-Canto | `scenarios/hk/swearing.yaml` + 5 conversations | 100 | 0 |
 
@@ -136,6 +137,8 @@ check them by eye → `duk tts` → `duk bundle`. The owner then confirms wordin
 - [x] 2.6 Releases: `tool/release.sh` builds signed Android APKs + Windows zip on the dev PC and publishes a GitHub Release (CI signing was not set up: the key stays on the PC). macOS later.
 - [x] 2.7 Auto-update on launch (Android + Windows), from public GitHub Releases. Content packs separate from the app: not yet.
 - [ ] 2.8 Error diagnosis and targeted drills (DESIGN §2.6).
+- [ ] 2.9 Conversation branches written by hand: on your turn, several acceptable answers (not just one right line and two from other conversations), each leading to its own reply.
+- [ ] 2.10 Character expressions (happy, confused, annoyed) per line in the visual-novel stage.
 
 **Done when:** a push to main reaches the phone as an update without a cable; Macau place deck usable on a walk.
 
