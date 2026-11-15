@@ -3,9 +3,7 @@
 library;
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
@@ -21,7 +19,6 @@ import 'paste_reader_screen.dart';
 import 'reader_screen.dart';
 import 'practice_screens.dart';
 import 'skills.dart';
-import '../platform/home_widget_sync.dart';
 import '../platform/sfx.dart';
 import 'settings_screen.dart';
 import 'speak_drill_screen.dart';
@@ -32,7 +29,6 @@ import 'words_screen.dart';
 import 'update_ui.dart';
 import '../platform/updater.dart';
 import 'ruby_text.dart';
-import 'theme.dart';
 
 /// An item counts as solid once its memory lasts three weeks.
 const _solidStabilityDays = 21.0;
@@ -70,9 +66,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   StreamSubscription<String>? _shareSub;
   UpdateInfo? _update;
 
-  /// Chinese text waiting on the clipboard: '' = some text (Android, unread), null = none.
-  String? _clip;
-
   AppServices get _s => widget.services;
 
   @override
@@ -87,8 +80,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       final launch = await _s.shares.takeLaunchText();
       if (launch != null && mounted) {
         await _openReader(launch, source: 'share');
-      } else {
-        await _checkClipboard();
       }
     });
   }
@@ -103,7 +94,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _checkClipboard();
       unawaited(_refreshReminders());
       // reopening the app from the background counts as opening it
       final last = _lastUpdateCheck;
@@ -125,30 +115,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (mounted && info != null) setState(() => _update = info);
   }
 
-  /// Offer to read copied Chinese text. On Android reading the clipboard shows a system
-  /// notice, so we only ask whether there is text and read it when the learner taps.
-  Future<void> _checkClipboard() async {
-    if (!_s.prefs.clipboardPrompt) {
-      if (_clip != null) setState(() => _clip = null);
-      return;
-    }
-    String? clip;
-    try {
-      if (Platform.isAndroid) {
-        clip = await Clipboard.hasStrings() ? '' : null;
-      } else {
-        final t = (await Clipboard.getData(Clipboard.kTextPlain))?.text?.trim();
-        final han = RegExp(r'[\u3400-\u9fff]').allMatches(t ?? '').length;
-        clip = (t != null && han >= 2 && t != _s.prefs.lastClipboardOffer)
-            ? t
-            : null;
-      }
-    } on Object {
-      clip = null;
-    }
-    if (mounted && clip != _clip) setState(() => _clip = clip);
-  }
-
   Future<void> _openReader(String? text, {required String source}) async {
     _s.logger.log('nav.screen', {'screen': 'free_reader', 'source': source});
     await Navigator.of(context).push(
@@ -162,15 +128,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ),
     );
     if (mounted) setState(() {});
-  }
-
-  Future<void> _readClipboard() async {
-    final t = _clip == null || _clip!.isEmpty
-        ? (await Clipboard.getData(Clipboard.kTextPlain))?.text?.trim()
-        : _clip;
-    _s.prefs.lastClipboardOffer = t;
-    setState(() => _clip = null);
-    if (t != null && t.isNotEmpty) await _openReader(t, source: 'clipboard');
   }
 
   Future<void> _push(Widget screen) async {
@@ -467,7 +424,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       itemsByScenario,
       (id) => !_s.learner.stateOf(id).isNew,
     );
-    unawaited(syncHomeWidget(due: due, known: solid));
 
     Widget page(List<Widget> children) => Center(
       child: ConstrainedBox(
@@ -613,43 +569,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             onLater: () => setState(() => _update = null),
             onUpdate: () => runUpdate(context, _s, u),
           ),
-        _TodayCard(
-          due: due,
-          known: learned,
-          isFirstTime: met == 0,
-          hasContent: scenarios.isNotEmpty,
-          onQuack: () => _s.sound(Sfx.quack),
-          onStart: startDaily,
-        ),
-        if (_clip != null) ...[
-          const SizedBox(height: 12),
-          Card(
-            margin: EdgeInsets.zero,
-            color: theme.colorScheme.tertiaryContainer,
-            child: ListTile(
-              key: const ValueKey('read-clipboard'),
-              leading: const Icon(Icons.content_paste_go_rounded),
-              title: const Text('Read what you copied'),
-              subtitle: _clip!.isEmpty
-                  ? null
-                  : Text(
-                      _clip!.replaceAll('\n', ' '),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: chineseStyle(_lang, fontSize: 14),
-                    ),
-              trailing: IconButton(
-                tooltip: 'Not now',
-                icon: const Icon(Icons.close_rounded),
-                onPressed: () {
-                  _s.prefs.lastClipboardOffer = _clip;
-                  setState(() => _clip = null);
-                },
-              ),
-              onTap: _readClipboard,
-            ),
-          ),
-        ],
+        _TodayCard(known: learned, onQuack: () => _s.sound(Sfx.quack)),
         if (_resumable() case final r?) ...[
           const SizedBox(height: 12),
           Card(
@@ -693,59 +613,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         const SizedBox(height: 16),
         for (final step in plan) _PlanTile(step: step),
         const SizedBox(height: 16),
-        _WeekCard(newChars: overview.newChars, sentences: overview.sentences),
-        if (overview.sounds.isNotEmpty ||
-            overview.chars.isNotEmpty ||
-            overview.accuracy.readingPct != null) ...[
-          const SizedBox(height: 12),
-          _WeakSpotsCard(
-            readingPct: overview.accuracy.readingPct,
-            speakingPct: overview.accuracy.speakingPct,
-            wordsToPractise: practiseWords.length,
-            cardsDue: cardsDue.length,
-            sounds: overview.sounds,
-            chars: overview.chars,
-            onChar: (c) => sayOrExplain(context, _s, c, _lang),
-          ),
-        ],
-        const SizedBox(height: 12),
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: _Stat(
-                  key: const ValueKey('stat-met'),
-                  value: '$met',
-                  label: 'met',
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _Stat(
-                  key: const ValueKey('stat-solid'),
-                  value: '$solid',
-                  label: 'known well',
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _Stat(
-                  value: totalChars == 0
-                      ? '–'
-                      : '${(100 * solid / totalChars).round()}%',
-                  label: 'readable',
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'Characters you have met, can read reliably, and the share of all content you can read.',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+        _WeakSpotsCard(
+          met: met,
+          learned: learned,
+          readablePct: totalChars == 0
+              ? null
+              : (100 * solid / totalChars).round(),
+          newThisWeek: overview.newChars,
+          readingPct: overview.accuracy.readingPct,
+          speakingPct: overview.accuracy.speakingPct,
+          wordsToPractise: practiseWords.length,
+          cardsDue: cardsDue.length,
+          sounds: overview.sounds,
+          chars: overview.chars,
+          onChar: (c) => sayOrExplain(context, _s, c, _lang),
         ),
       ]),
       page([
@@ -1023,62 +904,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 }
 
-/// What the week gave you. No daily dots or streaks: they turn learning into
-/// attendance and push quick, poor sessions just to keep a record going.
-class _WeekCard extends StatelessWidget {
-  const _WeekCard({required this.newChars, required this.sentences});
-  final int newChars;
-  final int sentences;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    Widget stat(String value, String label) => Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            value,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          Text(
-            label,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: scheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
-    return Card(
-      key: const ValueKey('week-card'),
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('This week', style: theme.textTheme.titleSmall),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                stat('$newChars', 'new characters'),
-                stat('$sentences', 'sentences read'),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 /// What you find hard: sounds you mix up reading aloud, characters you keep needing.
 class _WeakSpotsCard extends StatelessWidget {
   const _WeakSpotsCard({
+    required this.met,
+    required this.learned,
+    required this.readablePct,
+    required this.newThisWeek,
     required this.readingPct,
     required this.speakingPct,
     required this.wordsToPractise,
@@ -1087,6 +919,10 @@ class _WeakSpotsCard extends StatelessWidget {
     required this.chars,
     required this.onChar,
   });
+  final int met;
+  final int learned;
+  final int? readablePct;
+  final int newThisWeek;
   final int? readingPct;
   final int? speakingPct;
   final int wordsToPractise;
@@ -1113,13 +949,33 @@ class _WeakSpotsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'How you are doing this week',
-              style: theme.textTheme.titleSmall,
-            ),
+            Text('Your progress', style: theme.textTheme.titleSmall),
             const SizedBox(height: 10),
             Row(
               children: [
+                _Metric(
+                  key: const ValueKey('stat-met'),
+                  value: '$met',
+                  label: 'characters met',
+                ),
+                _Metric(value: '$learned', label: 'learned'),
+                _Metric(
+                  value: readablePct == null ? '–' : '$readablePct%',
+                  label: 'of all content readable',
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'This week',
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                _Metric(value: '$newThisWeek', label: 'new characters'),
                 _Metric(
                   key: const ValueKey('metric-reading'),
                   value: readingPct == null ? '–' : '$readingPct%',
@@ -1281,120 +1137,65 @@ class _PlanTile extends StatelessWidget {
 }
 
 class _TodayCard extends StatelessWidget {
-  const _TodayCard({
-    required this.due,
-    required this.known,
-    required this.isFirstTime,
-    required this.hasContent,
-    required this.onStart,
-    this.onQuack,
-  });
+  const _TodayCard({required this.known, this.onQuack});
 
-  final VoidCallback? onQuack;
-
-  final int due;
+  /// Characters learned (read without help after meeting them).
   final int known;
-  final bool isFirstTime;
-  final bool hasContent;
-  final VoidCallback onStart;
+  final VoidCallback? onQuack;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final String headline;
-    final String detail;
-    if (isFirstTime) {
-      headline = 'Start reading';
-      detail =
-          'Your plan for today is below: short real-life sentences, Jyutping '
-          'over every new character, fading as you learn it.';
-    } else if (due > 0) {
-      headline = '$due ${due == 1 ? 'character' : 'characters'} to review';
-      detail = 'Start with them, then something new. Your plan is below.';
-    } else {
-      headline = 'All caught up';
-      detail = 'Nothing is due. Carry on with the next step below.';
-    }
+    final lv = readingLevel(known);
     return Card(
+      key: const ValueKey('today-card'),
+      margin: EdgeInsets.zero,
       color: scheme.primaryContainer,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        padding: const EdgeInsets.fromLTRB(12, 10, 16, 10),
+        child: Row(
           children: [
-            // headline beside the mascot; controls get the full width below
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        headline,
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          color: scheme.onPrimaryContainer,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        detail,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: scheme.onPrimaryContainer,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  key: const ValueKey('mascot'),
-                  onTap: onQuack,
-                  child: DuckMascot(
-                    size: 92,
-                    stage: DuckStage.forKnown(known),
-                    mood: due == 0 && !isFirstTime
-                        ? DuckMood.sleepy
-                        : DuckMood.happy,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            _GrowthLine(known: known),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Stat extends StatelessWidget {
-  const _Stat({super.key, required this.value, required this.label});
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              value,
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w600,
+            GestureDetector(
+              key: const ValueKey('mascot'),
+              onTap: onQuack,
+              child: DuckMascot(
+                size: 64,
+                stage: DuckStage.forKnown(known),
+                mood: DuckMood.happy,
               ),
             ),
-            Text(
-              label,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Level ${lv.level}',
+                    key: const ValueKey('reading-level'),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: scheme.onPrimaryContainer,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: lv.need == 0 ? 1 : lv.have / lv.need,
+                      minHeight: 6,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    lv.need == 0
+                        ? '$known characters learned'
+                        : '${lv.need - lv.have} more characters learned to level ${lv.level + 1}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: scheme.onPrimaryContainer,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -1533,80 +1334,6 @@ class _TopicTile extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// "小鴨 Duckling · 18 more to grow": the mascot grows with characters known well.
-class _GrowthLine extends StatelessWidget {
-  const _GrowthLine({required this.known});
-  final int known;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final stage = DuckStage.forKnown(known);
-    final next = stage.next;
-    final lv = readingLevel(known);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                'Level ${lv.level}',
-                key: const ValueKey('reading-level'),
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: theme.colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: lv.need == 0 ? 1 : lv.have / lv.need,
-                    minHeight: 6,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                lv.need == 0 ? 'top level' : '${lv.have}/${lv.need}',
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onPrimaryContainer,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: '${stage.zh} ',
-                  style: const TextStyle(
-                    fontFamily: brushFont,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                TextSpan(text: stage.en),
-                if (next != null)
-                  TextSpan(
-                    text:
-                        ' · ${next.from - known} more known characters to become a ${next.en.toLowerCase()}',
-                  ),
-              ],
-            ),
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onPrimaryContainer,
-            ),
-          ),
-        ],
       ),
     );
   }

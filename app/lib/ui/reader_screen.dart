@@ -360,11 +360,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
     try {
       await (slow ? (_s.playAudioSlow ?? _s.playAudio) : _s.playAudio)(path);
       // the meaning appears once the line has been heard (setting, on by default)
-      if (mounted &&
-          _s.prefs.autoMeaning &&
-          !_showTranslation &&
-          _exposure == shownAt &&
-          !_finished) {
+      if (mounted && !_showTranslation && _exposure == shownAt && !_finished) {
         _s.logger.log('item.reveal', {
           'exposure_id': _exposureId,
           'what': 'translation',

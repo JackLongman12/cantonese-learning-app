@@ -43,10 +43,6 @@ class Prefs {
   double get textScale => (_data['text_scale'] as num?)?.toDouble() ?? 1.0;
   set textScale(double v) => _set('text_scale', v);
 
-  /// Show the English after a sentence's audio finishes (on by default).
-  bool get autoMeaning => _data['auto_meaning'] != false;
-  set autoMeaning(bool v) => _set('auto_meaning', v);
-
   /// Steps of Today's plan finished on [day] ('2026-11-15').
   Set<String> planDone(String day) {
     final m = _data['plan_done'];
@@ -86,10 +82,6 @@ class Prefs {
 
   /// Stories start in read-along mode.
 
-  /// Offer to read copied Chinese text when the app opens.
-  bool get clipboardPrompt => _data['clipboard_prompt'] != false;
-  set clipboardPrompt(bool v) => _set('clipboard_prompt', v);
-
   /// Daily reminder: off by default; null minute = use the learned usual time.
   bool get reminderOn => _data['reminder_on'] == true;
   set reminderOn(bool v) => _set('reminder_on', v);
@@ -100,10 +92,6 @@ class Prefs {
   Map<String, Object?>? get resume =>
       (_data['resume'] as Map?)?.cast<String, Object?>();
   set resume(Map<String, Object?>? v) => _set('resume', v);
-
-  /// Clipboard text already offered, so the same copy is not suggested twice.
-  String? get lastClipboardOffer => _data['last_clipboard'] as String?;
-  set lastClipboardOffer(String? v) => _set('last_clipboard', v);
 
   void _set(String key, Object? value) {
     _data[key] = value;
