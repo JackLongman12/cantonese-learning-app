@@ -22,7 +22,7 @@ void main() {
     final decks = db.decks();
     expect(
       decks.map((d) => d.id),
-      containsAll(['mo-streets', 'mo-lrt', 'hk-mtr', 'hk-streets']),
+      containsAll(['food', 'mo-streets', 'mo-lrt', 'hk-mtr', 'hk-streets']),
     );
     final streets = db.cards('mo-streets');
     expect(streets.length, greaterThan(100));
@@ -34,6 +34,19 @@ void main() {
       expect(c.tokens.map((t) => t.surface).join(), c.zh);
     }
     expect(db.streetPatterns('macau').map((p) => p.zh), contains('街'));
+    // food deck: dish names with credited photos
+    final food = db.cards('food');
+    expect(food.length, greaterThan(100));
+    expect(food.where((c) => c.image != null).length, greaterThan(80));
+    for (final c in food.where((c) => c.image != null)) {
+      expect(c.credit, startsWith('Photo: '));
+      expect(
+        File('assets/cards/${c.image}').existsSync(),
+        isTrue,
+        reason: c.zh,
+      );
+    }
+    expect(db.decks().first.id, 'food');
   }, skip: hasDb ? false : 'run the pipeline first');
 
   testWidgets('flip a card and grade it', (t) async {

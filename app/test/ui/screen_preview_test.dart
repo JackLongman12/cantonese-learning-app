@@ -13,6 +13,8 @@ import 'package:duk/engine/memory.dart';
 import 'package:duk/events/event_logger.dart';
 import 'package:duk/events/event_store.dart';
 import 'package:duk/main.dart';
+import 'package:duk/ui/cards_screen.dart';
+import 'package:duk/ui/theme.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -186,6 +188,31 @@ void main() {
     await expectLater(
       find.byType(MaterialApp),
       matchesGoldenFile('goldens/preview_phone_conversation_line.png'),
+    );
+  }, skip: !hasDb);
+
+  testWidgets('preview food card', (t) async {
+    await t.binding.setSurfaceSize(const Size(400, 860));
+    addTearDown(() => t.binding.setSurfaceSize(null));
+    final s = await services(() => DateTime.utc(2026, 11, 15, 9));
+    final deck = s.content.decks().firstWhere((d) => d.id == 'food');
+    await t.pumpWidget(
+      MaterialApp(
+        theme: dukTheme(Brightness.light),
+        home: CardSessionScreen(services: s, deck: deck),
+      ),
+    );
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('flip')));
+    await t.pumpAndSettle();
+    // dish photos are Commons images under free licences; decode before the snapshot
+    for (final e in find.byType(Image).evaluate()) {
+      await t.runAsync(() => precacheImage((e.widget as Image).image, e));
+    }
+    await t.pumpAndSettle();
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('goldens/preview_phone_food_card.png'),
     );
   }, skip: !hasDb);
 }

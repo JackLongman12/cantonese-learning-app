@@ -48,7 +48,7 @@ void main() {
     'tags use the Android versionCode, so installed split builds see updates',
     () {
       const apk = 'DuckLearn-android-arm64.apk';
-    // build 21 installs as versionCode 2021 (arm64 split); release b2022 is newer
+      // build 21 installs as versionCode 2021 (arm64 split); release b2022 is newer
       expect(normaliseBuild(2021), 2021);
       expect(
         normaliseBuild(21),

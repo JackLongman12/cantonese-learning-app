@@ -1,0 +1,33 @@
+# Food flashcards: dish names from Cantonese Wikipedia (zh-yue) categories, with the
+# article's photo when Wikimedia Commons lists a free licence (credited on the card).
+# English: the English Wikipedia article title, else the dictionary meaning.
+# Edit this file to add or drop dishes; `duk fetch --only food` then `duk build`.
+deck:
+  id: food
+  title: Cantonese dishes
+  region: both
+  description: Dim sum, siu mei, cha chaan teng, tong sui, Macau snacks, with photos
+categories:
+  # whole category
+  點心: all
+  燒味: all
+  香港包: all
+  澳門小食: all
+  糖水: all
+  粥: all
+  廣東菜: all
+  # mixed categories: only these
+  飯: [煲仔飯, 叉燒煎蛋飯, 荷葉飯, 叉燒飯, 鴨髀湯飯, 盅飯, 碟頭飯, 兩餸飯, 飯盒, 豬油撈飯, 葡萄牙海鮮飯, 海南雞飯]
+  麪條嘢食: [龍蝦伊麪, 雲吞麪]
+  小食: [格仔餅, 燉蛋, 魷魚絲, 咖喱角, 山楂餅, 嘉應子, 陳皮梅, 臭豆腐, 紮蹄, 炒栗子, 煨番薯, 魚皮花生, 蝦餅]
+exclude:
+  # category pages, restaurants, brands, shops, joke pages
+  - 廣東菜
+  - 廣府菜
+  - 客家菜
+  - 點心
+  - 燒味
+  - 一樂燒鵝
+  - 粥舖
+  - 生命麪包
+  - 無厘頭鳩芝麻糊

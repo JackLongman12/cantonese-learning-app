@@ -465,9 +465,15 @@ class CardRow {
     required this.note,
     required this.flagged,
     required this.tokens,
+    this.image,
+    this.credit = '',
   });
   final String id;
   final String deckId;
+
+  /// Photo file in assets/cards/ (food deck), and its licence credit.
+  final String? image;
+  final String credit;
   final String zh;
 
   /// Portuguese (Macau) or English (Hong Kong) name, as on the sign.
@@ -490,7 +496,7 @@ extension DeckQueries on ContentDb {
         for (final r in _db.select(
           'SELECT d.id, d.title, d.region, d.description, COUNT(c.id) AS n '
           'FROM deck d JOIN card c ON c.deck_id = d.id GROUP BY d.id '
-          "ORDER BY d.region = 'macau' DESC, d.rowid",
+          "ORDER BY d.id = 'food' DESC, d.region = 'macau' DESC, d.rowid",
         ))
           DeckRow(
             r['id'] as String,
@@ -526,7 +532,8 @@ extension DeckQueries on ContentDb {
     }
     return [
       for (final r in _db.select(
-        'SELECT id, zh, alt, note, flagged FROM card WHERE deck_id = ? ORDER BY rank',
+        'SELECT id, zh, alt, note, flagged, image, credit FROM card '
+        'WHERE deck_id = ? ORDER BY rank',
         [deckId],
       ))
         CardRow(
@@ -537,6 +544,8 @@ extension DeckQueries on ContentDb {
           note: r['note'] as String,
           flagged: (r['flagged'] as int) == 1,
           tokens: tokens[r['id'] as String] ?? const [],
+          image: r['image'] as String?,
+          credit: r['credit'] as String? ?? '',
         ),
     ];
   }

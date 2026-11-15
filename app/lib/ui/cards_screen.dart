@@ -36,11 +36,11 @@ class DeckSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Names on the street', style: theme.textTheme.titleMedium),
+        Text('Flashcards', style: theme.textTheme.titleMedium),
         const SizedBox(height: 4),
         Text(
-          'Flashcards of real street and station names from the map. '
-          'Most important first.',
+          'Cantonese dishes with photos, and real street and station names '
+          'from the map.',
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -89,7 +89,9 @@ class _DeckTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final icon = deck.id.contains('streets')
+    final icon = deck.id == 'food'
+        ? Icons.restaurant_rounded
+        : deck.id.contains('streets')
         ? Icons.signpost_rounded
         : Icons.train_rounded;
     return Card(
@@ -311,6 +313,24 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                 : ListView(
                     padding: const EdgeInsets.all(20),
                     children: [
+                      // the dish's photo, so the word and the food stick together
+                      if (_card.image case final img?)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: AspectRatio(
+                              aspectRatio: 4 / 3,
+                              child: Image.asset(
+                                'assets/cards/$img',
+                                key: const ValueKey('card-photo'),
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, _, _) =>
+                                    const SizedBox.shrink(),
+                              ),
+                            ),
+                          ),
+                        ),
                       Card(
                         margin: EdgeInsets.zero,
                         child: Padding(
@@ -376,6 +396,17 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                             key: const ValueKey('card-alt'),
                             textAlign: TextAlign.center,
                             style: theme.textTheme.titleLarge,
+                          ),
+                        if (_card.credit.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              _card.credit,
+                              textAlign: TextAlign.center,
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
+                              ),
+                            ),
                           ),
                         if (_card.note.isNotEmpty)
                           Padding(

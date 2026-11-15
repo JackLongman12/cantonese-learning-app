@@ -23,7 +23,8 @@ from .content import Content, ContentError, load_content
 from .reference import load_reference
 from .words import refine_words
 
-SCHEMA_VERSION = 6  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry; 6: decks
+SCHEMA_VERSION = 7  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry; 6: decks;
+# 7: card image + credit, food deck
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -83,7 +84,8 @@ CREATE TABLE deck(
   source TEXT NOT NULL);
 CREATE TABLE card(
   id TEXT PRIMARY KEY, deck_id TEXT NOT NULL REFERENCES deck(id), zh TEXT NOT NULL,
-  alt TEXT NOT NULL, note TEXT NOT NULL, rank INTEGER NOT NULL, flagged INTEGER NOT NULL);
+  alt TEXT NOT NULL, note TEXT NOT NULL, rank INTEGER NOT NULL, flagged INTEGER NOT NULL,
+  image TEXT, credit TEXT NOT NULL DEFAULT '');
 CREATE TABLE card_token(
   card_id TEXT NOT NULL, idx INTEGER NOT NULL, surface TEXT NOT NULL, kind TEXT NOT NULL,
   reading TEXT, item_id TEXT, flagged INTEGER NOT NULL, PRIMARY KEY(card_id, idx)) WITHOUT ROWID;
@@ -144,6 +146,7 @@ def build(
     priors = {"yue": ref.prior("yue") if ref else {}}
     # dictionary words, to keep only real words as underlined groups
     vocab = None
+    _entries = None
     if with_lexicon:
         from .dictionary import load_dictionary
         from .words import vocabulary
@@ -273,6 +276,33 @@ def build(
 
     from .osm_decks import DECKS, load_decks
 
+    flagged_cards = 0
+
+    def add_card(cid, deck, zh, alt, note, rank, image=None, credit=""):
+        nonlocal flagged_cards
+        try:
+            ann = annotate(zh, "yue", overrides=content.overrides.get("yue"), prior=priors["yue"])
+        except ValueError as e:
+            result.warnings.append(f"{cid}: {e}")
+            return
+        flagged = bool(ann.flags)
+        flagged_cards += flagged
+        if flagged:
+            result.flags.append((cid, "yue", ann))
+        db.execute(
+            "INSERT OR IGNORE INTO card VALUES(?,?,?,?,?,?,?,?,?)",
+            (cid, deck, zh, alt, note, rank, int(flagged), image, credit),
+        )
+        for idx, t in enumerate(ann.tokens):
+            item_id = None
+            if t.kind == HAN and t.reading:
+                item_id = char_item_id("yue", t.surface, t.reading)
+                item_rows.setdefault(item_id, ("char_reading", "yue", t.surface, t.reading))
+            db.execute(
+                "INSERT OR IGNORE INTO card_token VALUES(?,?,?,?,?,?,?)",
+                (cid, idx, t.surface, t.kind, t.reading, item_id, int(t.status == FLAG)),
+            )  # fmt: skip
+
     decks = load_decks(raw_root)
     if decks is None:
         result.warnings.append("OSM extracts missing (run `duk fetch`): no flashcard decks")
@@ -282,36 +312,40 @@ def build(
                 "INSERT INTO deck VALUES(?,?,?,?,?)",
                 (did, title, region, desc, "OpenStreetMap (ODbL)"),
             )
-        flagged_cards = 0
         for c in decks.cards:
-            try:
-                ann = annotate(
-                    c.zh, "yue", overrides=content.overrides.get("yue"), prior=priors["yue"]
-                )
-            except ValueError as e:
-                result.warnings.append(f"{c.id}: {e}")
-                continue
-            flagged = bool(ann.flags)
-            flagged_cards += flagged
-            if flagged:
-                result.flags.append((c.id, "yue", ann))
-            db.execute(
-                "INSERT INTO card VALUES(?,?,?,?,?,?,?)",
-                (c.id, c.deck, c.zh, c.alt, c.note, c.rank, int(flagged)),
-            )
-            for idx, t in enumerate(ann.tokens):
-                item_id = None
-                if t.kind == HAN and t.reading:
-                    item_id = char_item_id("yue", t.surface, t.reading)
-                    item_rows.setdefault(item_id, ("char_reading", "yue", t.surface, t.reading))
-                db.execute(
-                    "INSERT INTO card_token VALUES(?,?,?,?,?,?,?)",
-                    (c.id, idx, t.surface, t.kind, t.reading, item_id, int(t.status == FLAG)),
-                )  # fmt: skip
+            add_card(c.id, c.deck, c.zh, c.alt, c.note, c.rank)
         db.executemany("INSERT INTO street_pattern VALUES(?,?,?,?,?)", decks.patterns)
         result.warnings.append(
             f"decks: {len(decks.cards)} cards, {flagged_cards} with an unconfirmed reading"
         )
+
+    from .wiki_food import load_food_deck
+
+    food = load_food_deck(raw_root)
+    if food is None:
+        result.warnings.append("food pages missing (run `duk fetch --only food`): no food deck")
+    else:
+        import yaml
+
+        d = yaml.safe_load((content_root / "decks" / "food.yaml").read_text("utf-8"))["deck"]
+        db.execute(
+            "INSERT INTO deck VALUES(?,?,?,?,?)",
+            (d["id"], d["title"], d["region"], d["description"],
+             "Cantonese Wikipedia; photos Wikimedia Commons"),
+        )  # fmt: skip
+        # English: the dictionary's meaning first (plain), else the English article title
+        meanings = {}
+        for e in _entries or []:
+            meanings.setdefault(e.trad, e.en.split(";")[0].strip())
+        cats = list(
+            yaml.safe_load((content_root / "decks" / "food.yaml").read_text("utf-8"))["categories"]
+            or {}
+        )
+        food.sort(key=lambda c: (cats.index(c.category) if c.category in cats else 99, c.zh))
+        for rank, c in enumerate(food):
+            add_card(f"card:food:{c.zh}", "food", c.zh, meanings.get(c.zh) or c.en, "", rank,
+                     c.image, c.credit)  # fmt: skip
+        result.warnings.append(f"food deck: {len(food)} dishes")
 
     for item_id, (kind, lang, key, reading) in item_rows.items():
         db.execute(

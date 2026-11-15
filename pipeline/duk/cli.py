@@ -37,7 +37,16 @@ def main(argv: list[str] | None = None) -> int:
         if args.cmd == "fetch":
             from .fetch_sources import fetch
 
-            print("\n".join(fetch(only=args.only)))
+            only = args.only or None
+            report = []
+            if not only or "food" in only:
+                from .wiki_food import fetch_food
+
+                report += fetch_food()
+            rest = [x for x in (only or []) if x != "food"]
+            if not only or rest:
+                report += fetch(only=rest or None)
+            print("\n".join(report))
         elif args.cmd == "annotate":
             from .annotate import annotate
 
@@ -91,7 +100,21 @@ def main(argv: list[str] | None = None) -> int:
             for name in wanted:
                 if not (dest / "audio" / name).exists():
                     shutil.copy2(paths.AUDIO / name, dest / "audio" / name)
-            print(f"bundled content.db and {len(wanted)} audio files -> {dest}")
+            # card photos (freely licensed, credited on each card)
+            with sqlite3.connect(paths.CONTENT_DB) as check:
+                images = {
+                    r[0] for r in check.execute("SELECT image FROM card WHERE image IS NOT NULL")
+                }
+            img_dest = paths.ROOT / "app" / "assets" / "cards"
+            img_dest.mkdir(parents=True, exist_ok=True)
+            for stale in img_dest.glob("*.jpg"):
+                if stale.name not in images:
+                    stale.unlink()
+            for name in images:
+                src = paths.RAW / "food" / "img" / name
+                if src.exists() and not (img_dest / name).exists():
+                    shutil.copy2(src, img_dest / name)
+            print(f"bundled content.db, {len(wanted)} audio files, {len(images)} photos -> {dest}")
     except ContentError as e:
         print("Content problems:", file=sys.stderr)
         for p in e.problems:

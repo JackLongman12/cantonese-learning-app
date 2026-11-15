@@ -266,7 +266,9 @@ void main() {
           await t.tap(find.text(lines[k].text));
           await t.pumpAndSettle();
           expect(
-            store.events.lastWhere((e) => e.type == 'conv.choice').payload['correct'],
+            store.events
+                .lastWhere((e) => e.type == 'conv.choice')
+                .payload['correct'],
             isTrue,
           );
         } else {
