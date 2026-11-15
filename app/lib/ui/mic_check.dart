@@ -38,10 +38,7 @@ Future<void> playComparison(
     await s.playFile?.call(file.path);
     // moved on (Next, or left the screen) while yours played: the native stays quiet
     if (s.playbackToken != token) return;
-    final path = nativeText == null
-        ? null
-        : s.content.audioPath('yue', nativeText);
-    if (path != null) await s.playAudio(path);
+    if (nativeText != null) await s.saySentence(nativeText);
   } on Object {
     // playback failed: nothing to keep anyway
   } finally {

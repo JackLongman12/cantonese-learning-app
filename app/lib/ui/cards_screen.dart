@@ -253,8 +253,7 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
   }
 
   Future<void> _play() async {
-    final path = _s.content.audioPath('yue', _card.zh);
-    if (path != null) await _s.playAudio(path);
+    await _s.saySentence(_card.zh);
   }
 
   void _flip() {

@@ -132,8 +132,7 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
   }
 
   Future<void> _playNative() async {
-    final path = _s.content.audioPath('yue', _line.text);
-    if (path != null) await _s.playAudio(path);
+    await _s.saySentence(_line.text);
   }
 
   Future<void> _listen() async {

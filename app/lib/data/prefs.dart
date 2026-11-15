@@ -76,6 +76,11 @@ class Prefs {
   bool get autoPlay => _data['auto_play'] != false;
   set autoPlay(bool v) => _set('auto_play', v);
 
+  /// Sentences in the phone's own Cantonese voice (on by default): it reads tones the
+  /// way people say them, like the word you tap. Off: the recorded voice.
+  bool get phoneVoice => _data['phone_voice'] != false;
+  set phoneVoice(bool v) => _set('phone_voice', v);
+
   /// Stories start in read-along mode.
 
   /// Daily reminder: off by default; null minute = use the learned usual time.

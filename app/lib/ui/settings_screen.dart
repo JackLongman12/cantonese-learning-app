@@ -209,6 +209,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _changed('sound_effects', !v, v);
                   },
                 ),
+                SwitchListTile(
+                  key: const ValueKey('set-phone-voice'),
+                  title: const Text("Sentences in the phone's voice"),
+                  subtitle: const Text(
+                    'The same voice as a tapped word, with everyday tones. '
+                    'Off: the recorded voice (some tones sound formal)',
+                  ),
+                  value: p.phoneVoice,
+                  onChanged: (v) {
+                    _s.silence();
+                    p.phoneVoice = v;
+                    _changed('phone_voice', !v, v);
+                  },
+                ),
                 if (_s.reminders != null) ...[
                   section('Reminder'),
                   SwitchListTile(

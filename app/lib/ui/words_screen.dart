@@ -89,8 +89,7 @@ class _WordsScreenState extends State<WordsScreen> {
   }
 
   Future<void> _play(String text) async {
-    final path = _s.content.audioPath(_lang, text);
-    if (path != null) await _s.playAudio(path);
+    await _s.saySentence(text);
   }
 
   Future<void> _push(Widget screen) async {

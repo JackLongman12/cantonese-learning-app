@@ -339,11 +339,10 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
           children: [
             Expanded(
               child: TextButton.icon(
-                onPressed: () {
-                  final path = _s.content.audioPath('yue', _ctx.text);
-                  path != null
-                      ? _s.playAudio(path)
-                      : sayOrExplain(context, _s, _w.text, 'yue');
+                onPressed: () async {
+                  if (!await _s.saySentence(_ctx.text) && context.mounted) {
+                    await sayOrExplain(context, _s, _w.text, 'yue');
+                  }
                 },
                 icon: const Icon(Icons.volume_up_rounded),
                 label: const Text('Hear it'),

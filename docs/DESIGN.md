@@ -212,6 +212,7 @@ If an event older than one already applied arrives (merged from another device),
 
 ## 6. Audio
 
+- **Sentences play in the phone's own Cantonese voice by default** (owner, 2026-11-16: Android's Google "Cantonese (Hong Kong)" voice says everyday tones, e.g. 澳門 ou3 mun2; the recorded edge-tts voice reads some words in a formal tone and ignores our Jyutping). Settings → "Sentences in the phone's voice" switches back to the recorded clips, which are also the fallback where no Cantonese voice is installed (most Windows PCs). Checked 2026-11-16: the edge-tts endpoint rejects custom SSML (`<phoneme>`, `<sub>`), so the recorded voice cannot be told a reading.
 - **Primary TTS: Azure Speech** (zh-HK and zh-CN neural voices), chosen by a bake-off that the owner rates (see ROADMAP Phase 0). Candidates to compare: Azure, Google Cloud, a local model on the RTX 4060 (CosyVoice family), ElevenLabs.
 - Content audio is **pre-generated** in the pipeline: 2 voices per language, normal + slow (SSML rate, not time-stretch).
 - **Verification loop:** synthesise → ASR back-transcribe → compare → flag mismatches. Fix with SSML phoneme where supported, else a *TTS-only* homophone substitution (display text unchanged).

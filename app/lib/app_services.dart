@@ -135,13 +135,15 @@ class AppServices {
   /// Daily reminder (Android; null in tests).
   final Reminders? reminders;
 
-  /// Device text-to-speech for single words (null in tests).
+  /// Device text-to-speech: tapped words, and sentences unless the learner picks the
+  /// recorded voice (null in tests).
   final WordVoice? voice;
 
-  /// Says a word: the recorded clip when there is one (card names, sentences),
-  /// otherwise the device's Cantonese voice. False if neither is available.
+  /// Says a word: the device's Cantonese voice (unless the learner picked the recorded
+  /// voice), else a recorded clip of it. False if neither is available.
   Future<bool> sayWord(String text, String lang) async {
     if (micBusy) return true;
+    if (prefs.phoneVoice && (await voice?.say(text) ?? false)) return true;
     final path = content.audioPath(lang, text);
     if (path != null) {
       await playAudio(path);
@@ -149,6 +151,26 @@ class AppServices {
     }
     return await voice?.say(text) ?? false;
   }
+
+  /// Plays a sentence (or a card name): the phone's Cantonese voice when the learner
+  /// keeps that setting and one is installed, otherwise the recorded clip. False if
+  /// neither exists.
+  Future<bool> saySentence(String text, {bool slow = false}) async {
+    if (micBusy) return true;
+    final v = voice;
+    if (prefs.phoneVoice && v != null && await v.sayLine(text, slow: slow)) {
+      return true;
+    }
+    final path = content.audioPath('yue', text);
+    if (path == null) return false;
+    await (slow ? (playAudioSlow ?? playAudio) : playAudio)(path);
+    return true;
+  }
+
+  /// Can [saySentence] play [text]?
+  Future<bool> canSay(String text) async =>
+      content.audioPath('yue', text) != null ||
+      (prefs.phoneVoice && (await voice?.available ?? false));
 
   /// Home's plan and tools, for finish screens deep in the app (null until Home shows).
   HomeLink? home;

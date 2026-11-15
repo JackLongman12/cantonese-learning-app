@@ -344,24 +344,25 @@ class _ReaderScreenState extends State<ReaderScreen> {
 
   Future<void> _play({required bool slow, bool auto = false}) async {
     if (!auto) _s.logger.touch();
-    final path = _s.content.audioPath(widget.lang, _sentence.text);
+    final available = await _s.canSay(_sentence.text);
+    if (!mounted) return;
     if (!auto) _audioPlays++;
     _s.logger.log('item.audio', {
       'exposure_id': _exposureId,
       'scope': 'sentence',
       'rate': slow ? 'slow' : 'normal',
       'nth': _audioPlays,
-      'available': path != null,
+      'available': available,
       if (auto) 'auto': true,
     });
-    if (path == null) {
+    if (!available) {
       if (auto) return;
       _toast('No audio for this sentence yet');
       return;
     }
     final shownAt = _exposure;
     try {
-      await (slow ? (_s.playAudioSlow ?? _s.playAudio) : _s.playAudio)(path);
+      await _s.saySentence(_sentence.text, slow: slow);
       // the meaning appears once the line has been heard (setting, on by default)
       if (mounted && !_showTranslation && _exposure == shownAt && !_finished) {
         _s.logger.log('item.reveal', {
