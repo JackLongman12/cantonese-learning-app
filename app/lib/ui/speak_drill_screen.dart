@@ -18,6 +18,8 @@ import '../engine/pictures.dart';
 import '../engine/pronunciation.dart';
 import '../engine/scaffold.dart';
 import '../platform/sfx.dart';
+import 'critters.dart';
+import 'finish.dart';
 import 'mic_check.dart' show heardReadings, noteSilence, playComparison;
 import 'reader_screen.dart' show ModelDownloadDialog;
 import 'ruby_text.dart';
@@ -267,28 +269,21 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
     final scheme = theme.colorScheme;
     if (_phase == _Phase.done) {
       return Scaffold(
-        appBar: AppBar(title: Text(widget.title)),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '$_right of ${widget.sentences.length} said right',
-                  key: const ValueKey('speak-done'),
-                  style: theme.textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 8),
-                const Text('Words you missed are on your practice list.'),
-                const SizedBox(height: 20),
-                FilledButton(
-                  key: const ValueKey('done'),
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Done'),
-                ),
-              ],
-            ),
+        appBar: AppBar(
+          title: Text(widget.title),
+          automaticallyImplyLeading: false,
+        ),
+        body: SafeArea(
+          child: FinishView(
+            services: _s,
+            mood: _right == widget.sentences.length
+                ? ChickMood.proud
+                : ChickMood.happy,
+            title: '$_right of ${widget.sentences.length} said right',
+            titleKey: const ValueKey('speak-done'),
+            subtitle: _right == widget.sentences.length
+                ? null
+                : 'Words you missed are on your practice list.',
           ),
         ),
       );
@@ -313,15 +308,10 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
     };
     return Scaffold(
       appBar: AppBar(
+        leading: closeToHome(context),
         title: Text(widget.title),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(4),
-          child: LinearProgressIndicator(
-            value: widget.sentences.isEmpty
-                ? 1
-                : _index / widget.sentences.length,
-            minHeight: 4,
-          ),
+        bottom: duckBar(
+          widget.sentences.isEmpty ? 1 : _index / widget.sentences.length,
         ),
       ),
       body: SafeArea(
@@ -418,14 +408,30 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                       style: theme.textTheme.bodyLarge,
                     ),
                   const SizedBox(height: 24),
-                  Center(
-                    child: Text(
-                      label,
-                      key: const ValueKey('speak-status'),
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: color,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // a missed line: a puzzled chick, not a telling-off
+                      if (_phase == _Phase.wrong)
+                        const Padding(
+                          padding: EdgeInsets.only(right: 6),
+                          child: Chick(mood: ChickMood.confused, size: 44),
+                        ),
+                      if (_phase == _Phase.right)
+                        const Padding(
+                          padding: EdgeInsets.only(right: 6),
+                          child: Chick(mood: ChickMood.happy, size: 44),
+                        ),
+                      Flexible(
+                        child: Text(
+                          label,
+                          key: const ValueKey('speak-status'),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: color,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                   if (_phase == _Phase.listening)
                     const Padding(

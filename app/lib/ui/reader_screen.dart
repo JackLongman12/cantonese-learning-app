@@ -15,10 +15,11 @@ import '../data/content_db.dart';
 import '../engine/scaffold.dart';
 import '../engine/signals.dart';
 import '../events/event_logger.dart';
-import 'mascot.dart';
 import 'ruby_text.dart';
 import 'visual_novel.dart';
 import 'mic_check.dart' show noteSilence, playComparison;
+import 'critters.dart';
+import 'finish.dart';
 import 'word_sheet.dart';
 import '../engine/pronunciation.dart';
 import '../platform/sfx.dart';
@@ -621,6 +622,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
     }
     if (_finished) {
       return _SummaryScreen(
+        services: _s,
         title: widget.title,
         read: _read,
         practiced: _practiced.length,
@@ -648,6 +650,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
         autofocus: true,
         child: Scaffold(
           appBar: AppBar(
+            leading: closeToHome(context),
             title: Text(widget.title),
             actions: [
               IconButton(
@@ -656,13 +659,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 icon: const Icon(Icons.help_outline_rounded),
               ),
             ],
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(4),
-              child: LinearProgressIndicator(
-                value: _index / _queue.length,
-                minHeight: 4,
-              ),
-            ),
+            bottom: duckBar(_index / _queue.length),
           ),
           // Swipe left for the next sentence: one-thumb reading on a phone.
           body: GestureDetector(
@@ -1227,7 +1224,7 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const DuckMascot(size: 110, mood: DuckMood.sleepy),
+            const Chick(mood: ChickMood.sleepy, size: 110),
             const SizedBox(height: 12),
             Text(
               'Nothing to read here right now',
@@ -1247,6 +1244,7 @@ class _EmptyState extends StatelessWidget {
 
 class _SummaryScreen extends StatelessWidget {
   const _SummaryScreen({
+    required this.services,
     required this.title,
     required this.read,
     required this.practiced,
@@ -1255,6 +1253,8 @@ class _SummaryScreen extends StatelessWidget {
     this.newChars = const [],
     this.onKeepGoing,
   });
+
+  final AppServices services;
 
   /// More of the same, if wanted. Stopping is just as fine.
   final VoidCallback? onKeepGoing;
@@ -1270,116 +1270,81 @@ class _SummaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     Widget stat(String value, String label) => Expanded(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Text(
-                value,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+        decoration: BoxDecoration(
+          color: scheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            Text(value, style: theme.textTheme.titleLarge),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: scheme.onSurfaceVariant,
               ),
-              const SizedBox(height: 2),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodySmall,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
     return Scaffold(
       appBar: AppBar(title: Text(title), automaticallyImplyLeading: false),
       body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+        child: FinishView(
+          services: services,
+          // read it all without help: proud, with stars
+          mood: checked == 0 && read > 0 ? ChickMood.proud : ChickMood.happy,
+          title: checked == 0 ? 'All read without help' : 'Nice reading',
+          subtitle: checked == 0
+              ? null
+              : 'The $checked ${checked == 1 ? 'character' : 'characters'} you checked will come back sooner.',
+          onKeepGoing: onKeepGoing,
+          children: [
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                stat('$read', 'sentences read'),
+                const SizedBox(width: 8),
+                stat('$introduced', 'new characters'),
+                const SizedBox(width: 8),
+                stat('$practiced', 'practiced'),
+              ],
+            ),
+            if (newChars.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              Wrap(
+                key: const ValueKey('new-chars'),
+                spacing: 6,
+                runSpacing: 6,
+                alignment: WrapAlignment.center,
                 children: [
-                  const DuckMascot(size: 130, mood: DuckMood.cheer),
-                  const SizedBox(height: 12),
-                  Text('Nice paddling!', style: theme.textTheme.headlineSmall),
-                  const SizedBox(height: 6),
-                  Text(
-                    checked == 0
-                        ? 'You read everything without checking. Nice.'
-                        : 'The $checked ${checked == 1 ? 'character' : 'characters'} you checked will come back sooner.',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      stat('$read', 'sentences read'),
-                      const SizedBox(width: 8),
-                      stat('$introduced', 'new characters'),
-                      const SizedBox(width: 8),
-                      stat('$practiced', 'characters practiced'),
-                    ],
-                  ),
-                  if (newChars.isNotEmpty) ...[
-                    const SizedBox(height: 16),
-                    Text('New characters', style: theme.textTheme.titleSmall),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      key: const ValueKey('new-chars'),
-                      spacing: 6,
-                      runSpacing: 6,
-                      alignment: WrapAlignment.center,
-                      children: [
-                        for (final (ch, r) in newChars.take(16))
-                          Chip(
-                            label: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(r, style: theme.textTheme.labelSmall),
-                                Text(
-                                  ch,
-                                  style: chineseStyle('yue', fontSize: 20),
-                                ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                  ],
-                  const SizedBox(height: 24),
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 8,
-                    alignment: WrapAlignment.center,
-                    children: [
-                      FilledButton(
-                        key: const ValueKey('done'),
-                        onPressed: () => Navigator.of(context).pop(),
-                        style: FilledButton.styleFrom(
-                          minimumSize: const Size(150, 52),
-                        ),
-                        child: const Text('Done'),
+                  for (final (ch, r) in newChars.take(16))
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
                       ),
-                      if (onKeepGoing != null)
-                        OutlinedButton(
-                          key: const ValueKey('keep-going'),
-                          onPressed: onKeepGoing,
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size(150, 52),
-                          ),
-                          child: const Text('Keep going'),
-                        ),
-                    ],
-                  ),
+                      decoration: BoxDecoration(
+                        color: scheme.surfaceContainerLow,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(r, style: theme.textTheme.labelSmall),
+                          Text(ch, style: chineseStyle('yue', fontSize: 20)),
+                        ],
+                      ),
+                    ),
                 ],
               ),
-            ),
-          ),
+            ],
+          ],
         ),
       ),
     );

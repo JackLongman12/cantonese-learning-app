@@ -23,6 +23,19 @@ typedef PlayAudio = Future<void> Function(String assetRelativePath);
 /// Plays a file on disk (the learner's own recording).
 typedef PlayFile = Future<void> Function(String path);
 
+/// What a finish screen needs from Home: the next step of today's plan, starting it,
+/// and opening one of the tools. Each goes back to Home first.
+class HomeLink {
+  const HomeLink({
+    required this.next,
+    required this.startNext,
+    required this.openTool,
+  });
+  final ({String title, int number})? Function() next;
+  final void Function() startNext;
+  final void Function(String tool) openTool;
+}
+
 class AppServices {
   AppServices({
     required this.content,
@@ -108,6 +121,9 @@ class AppServices {
     }
     return await voice?.say(text) ?? false;
   }
+
+  /// Home's plan and tools, for finish screens deep in the app (null until Home shows).
+  HomeLink? home;
 
   /// Silent recordings in a row (two: ask "can't speak right now?").
   int speechSilences = 0;

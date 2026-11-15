@@ -8,7 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import '../app_services.dart';
 import '../engine/annotator.dart';
 import '../engine/scaffold.dart';
-import 'mascot.dart';
+import 'critters.dart';
 import 'ruby_text.dart';
 import 'word_sheet.dart';
 
@@ -170,7 +170,7 @@ class _PasteReaderScreenState extends State<PasteReaderScreen> {
       children: [
         Row(
           children: [
-            const DuckMascot(size: 72),
+            const Chick(mood: ChickMood.innocent, size: 72),
             const SizedBox(width: 12),
             Expanded(
               child: Text(

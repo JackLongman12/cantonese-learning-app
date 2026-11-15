@@ -15,7 +15,6 @@ import '../engine/path.dart';
 import '../engine/weak_spots.dart';
 import 'cards_screen.dart';
 import 'goal_picker.dart';
-import 'logo.dart';
 import 'paste_reader_screen.dart';
 import 'reader_screen.dart';
 import 'practice_screens.dart';
@@ -24,6 +23,8 @@ import '../platform/sfx.dart';
 import 'settings_screen.dart';
 import 'speak_drill_screen.dart';
 import 'stories_screen.dart';
+import 'critters.dart';
+import 'finish.dart';
 import 'tiles.dart';
 import 'topic_screen.dart';
 import 'word_sheet.dart';
@@ -453,6 +454,99 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (mounted) setState(() {});
   }
 
+  /// Today's plan as last built (the finish screens ask what comes next).
+  List<_PlanStep> _lastPlan = const [];
+  String _lastDay = '';
+
+  /// Set while jumping Home from a finish screen: a step's own follow-up waits.
+  bool _jumping = false;
+
+  _PlanStep? get _nextUndone {
+    final done = _s.prefs.planDone(_lastDay);
+    return _lastPlan.where((p) => !done.contains(p.id)).firstOrNull;
+  }
+
+  /// Back to Home, rebuild, then do [then] (from a finish screen anywhere).
+  void _fromAnywhere(void Function() then) {
+    _jumping = true;
+    Navigator.of(context).popUntil((r) => r.isFirst);
+    setState(() {});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) then();
+      _jumping = false;
+    });
+  }
+
+  Future<void> _openTool(String id) async {
+    _s.sound(Sfx.tap);
+    _s.logger.log('nav.screen', {'screen': 'tool-$id', 'source': 'tools'});
+    switch (id) {
+      case 'topics':
+        setState(() => _tab = 1);
+      case 'stories':
+        setState(() => _tab = 2);
+      case 'cards':
+        await _push(
+          _ToolPage(
+            title: 'Flashcards',
+            children: [
+              DeckSection(services: _s, onChanged: () => setState(() {})),
+            ],
+          ),
+        );
+      case 'speak':
+        await _push(
+          SpeakDrillScreen(
+            services: _s,
+            title: 'Speak',
+            sentences: pickSpeakLines(_s, _s.content.allSentences(_lang)),
+          ),
+        );
+      case 'words':
+        await _push(
+          Scaffold(
+            appBar: AppBar(title: const Text('My words')),
+            body: SafeArea(
+              child: WordsScreen(services: _s, lang: _lang),
+            ),
+          ),
+        );
+      case 'skills':
+        await _push(
+          _ToolPage(
+            title: 'Reading skills',
+            children: [
+              Builder(
+                builder: (context) => TileGrid(
+                  children: [
+                    AppTile(
+                      key: const ValueKey('open-families'),
+                      icon: Icons.hub_rounded,
+                      title: 'Sound families',
+                      subtitle: '青 → 清 晴 請',
+                      subtitleStyle: chineseStyle('yue', fontSize: 14),
+                      onTap: () =>
+                          _push(SoundFamiliesScreen(services: _s, lang: _lang)),
+                    ),
+                    AppTile(
+                      key: const ValueKey('open-spoken-written'),
+                      icon: Icons.compare_arrows_rounded,
+                      title: 'Spoken vs written',
+                      subtitle: '佢係 · 他是',
+                      subtitleStyle: chineseStyle('yue', fontSize: 14),
+                      onTap: () => _push(const SpokenWrittenScreen()),
+                    ),
+                    ...extraSkillTiles(context, _s, _push),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+    }
+    if (mounted) setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -550,7 +644,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 onComplete: () => finished('review'),
               );
             }
-            if (cardsDue.isNotEmpty && mounted) {
+            if (cardsDue.isNotEmpty && mounted && !_jumping) {
               await _push(
                 CardSessionScreen(
                   services: _s,
@@ -568,7 +662,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           icon: Icons.flag_rounded,
           title: 'Learn: ${nextTopic.title}',
           detail: goal.id == 'all'
-              ? 'New sentences from the next topic on your path.'
+              ? 'New sentences, next on your path'
               : 'Next for your goal: ${goal.title.toLowerCase()}.',
           done: done.contains('learn'),
           start: () {
@@ -588,8 +682,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _PlanStep(
         id: 'speak',
         icon: Icons.record_voice_over_rounded,
-        title: 'Speak 10 sentences',
-        detail: 'Read each line aloud; the mic checks you, line after line.',
+        title: 'Speak',
+        detail: '10 lines, tap the mic and say them',
         done: done.contains('speak'),
         start: () => _push(
           SpeakDrillScreen(
@@ -614,6 +708,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     const order = ['review', 'learn', 'speak'];
     plan.sort((a, b) => order.indexOf(a.id).compareTo(order.indexOf(b.id)));
     final nextStep = plan.where((x) => !x.done).firstOrNull;
+    _lastPlan = plan;
+    _lastDay = day;
+    _s.home = HomeLink(
+      next: () {
+        final n = _nextUndone;
+        if (n == null) return null;
+        return (title: n.title, number: _lastPlan.indexOf(n) + 1);
+      },
+      startNext: () => _fromAnywhere(() => _nextUndone?.start()),
+      openTool: (id) => _fromAnywhere(() => _openTool(id)),
+    );
 
     void startDaily() => _open(
       title: met == 0 ? 'First steps' : "Today's reading",
@@ -626,7 +731,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final pages = <Widget>[
       page([
         _header(theme),
-        const SizedBox(height: 20),
+        const SizedBox(height: 8),
         if (_update case final u?)
           UpdateBanner(
             info: u,
@@ -673,10 +778,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ),
           ),
         ],
-        const SizedBox(height: 12),
-        for (final step in plan) _PlanTile(step: step),
-        const SizedBox(height: 8),
-        // your goal shapes the plan; asked once, changeable here any time
         if (_s.prefs.goal == null)
           Card(
             key: const ValueKey('goal-ask'),
@@ -708,15 +809,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           Row(
             key: const ValueKey('goal-row'),
             children: [
-              Icon(
-                Icons.flag_rounded,
-                size: 18,
-                color: theme.colorScheme.primary,
+              Chick(
+                mood: nextStep == null && plan.isNotEmpty
+                    ? ChickMood.sleepy
+                    : ChickMood.innocent,
+                size: 64,
+                sway: true,
               ),
-              const SizedBox(width: 6),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Goal: ${goal.title}',
+                  nextStep == null && plan.isNotEmpty
+                      ? 'All done today'
+                      : 'Goal: ${goal.title}',
                   style: theme.textTheme.titleSmall,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -730,21 +835,23 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ),
             ],
           ),
-        const SizedBox(height: 16),
-        _WeakSpotsCard(
-          met: met,
-          learned: learned,
-          readablePct: totalChars == 0
-              ? null
-              : (100 * solid / totalChars).round(),
-          newThisWeek: overview.newChars,
-          readingPct: overview.accuracy.readingPct,
-          speakingPct: overview.accuracy.speakingPct,
-          wordsToPractice: practiceWords.length,
-          cardsDue: cardsDue.length,
-          sounds: overview.sounds,
-          chars: overview.chars,
-          onChar: (c) => sayOrExplain(context, _s, c, _lang),
+        const SizedBox(height: 8),
+        for (final (i, step) in plan.indexed)
+          _PlanTile(step: step, number: i + 1, current: step == nextStep),
+        const SizedBox(height: 14),
+        Text(
+          'Or pick something',
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 8),
+        ToolGrid(
+          onTap: _openTool,
+          badges: {
+            if (cardsDue.isNotEmpty) 'cards': '${cardsDue.length} due',
+            if (practiceWords.isNotEmpty) 'words': '${practiceWords.length}',
+          },
         ),
       ]),
       page([
@@ -823,40 +930,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         const SizedBox(height: 24),
       ]),
       StoriesScreen(key: ValueKey('stories-$_lang'), services: _s, lang: _lang),
-      WordsScreen(
-        key: ValueKey('words-$_lang'),
-        services: _s,
-        lang: _lang,
-        onSpeak: () => _push(
-          SpeakDrillScreen(
-            services: _s,
-            title: 'Speak',
-            sentences: pickSpeakLines(_s, _s.content.allSentences(_lang)),
-          ),
-        ),
-        skills: [
-          AppTile(
-            key: const ValueKey('open-families'),
-            icon: Icons.hub_rounded,
-            title: 'Sound families',
-            subtitle: '青 → 清 晴 請',
-            subtitleStyle: chineseStyle('yue', fontSize: 14),
-            onTap: () => _push(SoundFamiliesScreen(services: _s, lang: _lang)),
-          ),
-          AppTile(
-            key: const ValueKey('open-spoken-written'),
-            icon: Icons.compare_arrows_rounded,
-            title: 'Spoken vs written',
-            subtitle: '佢係 · 他是',
-            subtitleStyle: chineseStyle('yue', fontSize: 14),
-            onTap: () => _push(const SpokenWrittenScreen()),
-          ),
-          ...extraSkillTiles(context, _s, _push),
-        ],
-      ),
       page([
-        if (_lang == 'yue')
-          DeckSection(services: _s, onChanged: () => setState(() {})),
+        Text('Progress', style: theme.textTheme.titleLarge),
+        const SizedBox(height: 12),
+        _WeakSpotsCard(
+          met: met,
+          learned: learned,
+          readablePct: totalChars == 0
+              ? null
+              : (100 * solid / totalChars).round(),
+          newThisWeek: overview.newChars,
+          readingPct: overview.accuracy.readingPct,
+          speakingPct: overview.accuracy.speakingPct,
+          wordsToPractice: practiceWords.length,
+          cardsDue: cardsDue.length,
+          sounds: overview.sounds,
+          chars: overview.chars,
+          onChar: (c) => sayOrExplain(context, _s, c, _lang),
+        ),
       ]),
     ];
 
@@ -870,29 +961,36 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         children: [
           if (_tab == 0)
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 720),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    key: const ValueKey('start-daily'),
-                    onPressed: scenarios.isEmpty
-                        ? null
-                        : nextStep?.start ?? startDaily,
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size(0, 56),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // a duckling joins mama for every step finished today
+                    DuckFamily(ducklings: plan.where((p) => p.done).length),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        key: const ValueKey('start-daily'),
+                        onPressed: scenarios.isEmpty
+                            ? null
+                            : nextStep?.start ?? startDaily,
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size(0, 56),
+                        ),
+                        icon: const Icon(Icons.play_arrow_rounded),
+                        label: Text(
+                          nextStep != null
+                              ? (nextStep.id == 'learn' && met == 0
+                                    ? 'Start'
+                                    : 'Start: ${nextStep.title}')
+                              : 'Read more',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ),
-                    icon: const Icon(Icons.play_arrow_rounded),
-                    label: Text(
-                      nextStep != null
-                          ? (nextStep.id == 'learn' && met == 0
-                                ? 'Start'
-                                : 'Next: ${nextStep.title}')
-                          : 'All done today. Read more',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
+                  ],
                 ),
               ),
             ),
@@ -912,14 +1010,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             destinations: const [
               NavigationDestination(
                 key: ValueKey('tab-today'),
-                icon: Icon(Icons.wb_sunny_outlined),
-                selectedIcon: Icon(Icons.wb_sunny_rounded),
-                label: 'Today',
+                icon: Icon(Icons.home_outlined),
+                selectedIcon: Icon(Icons.home_rounded),
+                label: 'Home',
               ),
               NavigationDestination(
                 key: ValueKey('tab-topics'),
-                icon: Icon(Icons.grid_view_outlined),
-                selectedIcon: Icon(Icons.grid_view_rounded),
+                icon: Icon(Icons.map_outlined),
+                selectedIcon: Icon(Icons.map_rounded),
                 label: 'Topics',
               ),
               NavigationDestination(
@@ -929,16 +1027,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 label: 'Stories',
               ),
               NavigationDestination(
-                key: ValueKey('tab-words'),
-                icon: Icon(Icons.fitness_center_outlined),
-                selectedIcon: Icon(Icons.fitness_center_rounded),
-                label: 'Train',
-              ),
-              NavigationDestination(
-                key: ValueKey('tab-cards'),
-                icon: Icon(Icons.style_outlined),
-                selectedIcon: Icon(Icons.style_rounded),
-                label: 'Cards',
+                key: ValueKey('tab-progress'),
+                icon: Icon(Icons.insert_chart_outlined_rounded),
+                selectedIcon: Icon(Icons.insert_chart_rounded),
+                label: 'Progress',
               ),
             ],
           ),
@@ -947,16 +1039,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  static const _tabNames = ['today', 'topics', 'stories', 'words', 'cards'];
+  static const _tabNames = ['today', 'topics', 'stories', 'progress'];
 
   Widget _header(ThemeData theme) {
     return Row(
       children: [
-        const DuckLogo(size: 40, tile: true),
-        const SizedBox(width: 10),
         Expanded(
           child: Text(
-            'DuckLearn',
+            'Today',
             style: theme.textTheme.titleLarge,
             overflow: TextOverflow.ellipsis,
           ),
@@ -1184,38 +1274,88 @@ class _PlanStep {
 }
 
 class _PlanTile extends StatelessWidget {
-  const _PlanTile({required this.step});
+  const _PlanTile({
+    required this.step,
+    required this.number,
+    required this.current,
+  });
   final _PlanStep step;
+  final int number;
+  final bool current;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return Card(
-      key: ValueKey('plan-${step.id}'),
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-        leading: CircleAvatar(
-          backgroundColor: step.done ? scheme.primary : scheme.primaryContainer,
-          foregroundColor: step.done
-              ? scheme.onPrimary
-              : scheme.onPrimaryContainer,
-          child: Icon(step.done ? Icons.check_rounded : step.icon),
-        ),
-        title: Text(
-          step.title,
-          style: theme.textTheme.titleSmall?.copyWith(
-            decoration: step.done ? TextDecoration.lineThrough : null,
-            color: step.done ? scheme.onSurfaceVariant : null,
+    final fg = current ? scheme.onPrimaryContainer : null;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: current ? scheme.primaryContainer : scheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          key: ValueKey('plan-${step.id}'),
+          borderRadius: BorderRadius.circular(12),
+          onTap: step.start,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            child: Row(
+              children: [
+                EggMarker(number: number, current: current, done: step.done),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        step.title,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: step.done ? scheme.onSurfaceVariant : fg,
+                        ),
+                      ),
+                      if (!step.done && step.detail.isNotEmpty)
+                        Text(
+                          step.detail,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: fg ?? scheme.onSurfaceVariant,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                if (current) Icon(Icons.play_arrow_rounded, color: fg),
+              ],
+            ),
           ),
         ),
-        subtitle: Text(step.detail),
-        trailing: const Icon(Icons.chevron_right_rounded),
-        onTap: step.start,
       ),
     );
   }
+}
+
+/// A plain page for a tool opened from Home (flashcards, skills).
+class _ToolPage extends StatelessWidget {
+  const _ToolPage({required this.title, required this.children});
+  final String title;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Text(title)),
+    body: SafeArea(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 720),
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+            children: children,
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 /// Icons chosen from the scenario id so new topics get a sensible default.

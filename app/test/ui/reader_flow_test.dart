@@ -71,11 +71,8 @@ void main() {
           .first,
     )).data!;
     await t.pumpWidget(MaterialApp(home: HomeScreen(services: services)));
-    await t.scrollUntilVisible(
-      find.byKey(const ValueKey('stat-met')),
-      200,
-      scrollable: find.byType(Scrollable).hitTestable().first,
-    );
+    await t.tap(find.byKey(const ValueKey('tab-progress')));
+    await t.pumpAndSettle();
     expect(stat('stat-met'), '0');
     await t.tap(find.byKey(const ValueKey('tab-topics')));
     await t.pumpAndSettle();
@@ -131,24 +128,17 @@ void main() {
     expect(read, greaterThan(0));
     // the session ends on a summary screen
     expect(find.byKey(const ValueKey('done')), findsOneWidget);
+    // Home goes straight back to the home screen
     await t.tap(find.byKey(const ValueKey('done')));
-    await t.pumpAndSettle();
-    // back from the topic page to home
-    await t.pageBack();
     await t.pumpAndSettle();
     final introduced = {
       for (final e in store.events.where((e) => e.type == 'review.applied'))
         e.payload['item_id']! as String,
     };
     expect(introduced.length, lessThanOrEqualTo(12));
-    // back on the Today tab, where the stats are
-    await t.tap(find.byKey(const ValueKey('tab-today')));
+    // the Progress tab has the numbers
+    await t.tap(find.byKey(const ValueKey('tab-progress')));
     await t.pumpAndSettle();
-    await t.scrollUntilVisible(
-      find.byKey(const ValueKey('stat-met')),
-      200,
-      scrollable: find.byType(Scrollable).hitTestable().first,
-    );
     expect(stat('stat-met'), '${introduced.length}');
 
     final reviews = store.events

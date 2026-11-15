@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
 import '../data/content_db.dart';
-import 'mascot.dart';
+import 'critters.dart';
 import 'reader_screen.dart';
 import 'speak_drill_screen.dart';
 import 'tiles.dart';
@@ -117,7 +117,7 @@ class _TopicScreenState extends State<TopicScreen> {
                             ],
                           ),
                         ),
-                        const DuckMascot(size: 84),
+                        const Chick(mood: ChickMood.curious, size: 84),
                       ],
                     ),
                   ),

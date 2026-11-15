@@ -116,8 +116,6 @@ class _WordsScreenState extends State<WordsScreen> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
           children: [
-            Text('Train', style: theme.textTheme.titleLarge),
-            const SizedBox(height: 12),
             TileGrid(
               children: [
                 if (widget.onSpeak != null)

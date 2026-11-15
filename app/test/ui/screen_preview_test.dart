@@ -110,9 +110,13 @@ void main() {
       await t.tap(find.byKey(const ValueKey('tab-topics')));
       await t.pumpAndSettle();
       await shot('topics');
-      await t.tap(find.byKey(const ValueKey('tab-cards')));
+      await t.tap(find.byKey(const ValueKey('tab-today')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const ValueKey('tool-cards')));
       await t.pumpAndSettle();
       await shot('cards');
+      await t.pageBack();
+      await t.pumpAndSettle();
       await t.tap(find.byKey(const ValueKey('tab-topics')));
       await t.pumpAndSettle();
       await t.scrollUntilVisible(

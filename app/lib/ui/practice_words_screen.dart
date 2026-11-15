@@ -16,6 +16,8 @@ import '../engine/pronunciation.dart';
 import '../engine/scaffold.dart';
 import '../engine/word_book.dart';
 import '../platform/sfx.dart';
+import 'critters.dart';
+import 'finish.dart';
 import 'mic_check.dart';
 import 'ruby_text.dart';
 import 'word_sheet.dart';
@@ -138,40 +140,22 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
     final done = _index >= widget.words.length;
     return Scaffold(
       appBar: AppBar(
+        leading: done ? const SizedBox.shrink() : closeToHome(context),
         title: const Text('Practice words'),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(4),
-          child: LinearProgressIndicator(
-            value: widget.words.isEmpty ? 1 : _index / widget.words.length,
-            minHeight: 4,
-          ),
-        ),
+        bottom: done
+            ? null
+            : duckBar(widget.words.isEmpty ? 1 : _index / widget.words.length),
       ),
       body: SafeArea(
         child: done
-            ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '$_right of ${widget.words.length} right',
-                        key: const ValueKey('practice-done'),
-                        style: theme.textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Words come off the list after two right in a row.',
-                      ),
-                      const SizedBox(height: 20),
-                      FilledButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Done'),
-                      ),
-                    ],
-                  ),
-                ),
+            ? FinishView(
+                services: _s,
+                mood: _right == widget.words.length
+                    ? ChickMood.proud
+                    : ChickMood.happy,
+                title: '$_right of ${widget.words.length} right',
+                titleKey: const ValueKey('practice-done'),
+                subtitle: 'Words come off the list after two right in a row.',
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,

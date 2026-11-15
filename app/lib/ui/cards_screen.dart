@@ -17,6 +17,8 @@ import '../engine/pronunciation.dart';
 import '../engine/scaffold.dart';
 import '../events/event_logger.dart';
 import '../platform/sfx.dart';
+import 'critters.dart';
+import 'finish.dart';
 import 'mic_check.dart';
 import 'ruby_text.dart';
 import 'tiles.dart';
@@ -41,8 +43,6 @@ class DeckSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Flashcards', style: theme.textTheme.titleLarge),
-        const SizedBox(height: 4),
         Text(
           'Cantonese dishes with photos, and real street and station names '
           'from the map.',
@@ -432,14 +432,11 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
               ),
             ),
       appBar: AppBar(
+        leading: done ? const SizedBox.shrink() : closeToHome(context),
         title: Text(widget.deck.title),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(4),
-          child: LinearProgressIndicator(
-            value: _queue.isEmpty ? 1 : _index / _queue.length,
-            minHeight: 4,
-          ),
-        ),
+        bottom: done
+            ? null
+            : duckBar(_queue.isEmpty ? 1 : _index / _queue.length),
       ),
       body: SafeArea(
         child: Center(
@@ -448,14 +445,11 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
             child: _queue.isEmpty
                 ? const _Message('Nothing due in this deck. Come back later.')
                 : done
-                ? _Message(
-                    '$_known known · $_again to see again soon',
-                    key: const ValueKey('deck-done'),
-                    action: FilledButton(
-                      key: const ValueKey('done'),
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Done'),
-                    ),
+                ? FinishView(
+                    services: _s,
+                    mood: _again == 0 ? ChickMood.proud : ChickMood.happy,
+                    title: '$_known known · $_again to see again soon',
+                    titleKey: const ValueKey('deck-done'),
                   )
                 : ListView(
                     padding: const EdgeInsets.all(20),
@@ -670,9 +664,8 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
 }
 
 class _Message extends StatelessWidget {
-  const _Message(this.text, {super.key, this.action});
+  const _Message(this.text);
   final String text;
-  final Widget? action;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -685,7 +678,6 @@ class _Message extends StatelessWidget {
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        if (action != null) ...[const SizedBox(height: 20), action!],
       ],
     ),
   );
