@@ -9,6 +9,7 @@ import '../app_services.dart';
 import '../data/content_db.dart';
 import '../engine/word_book.dart';
 import '../platform/sfx.dart';
+import 'paste_reader_screen.dart';
 import 'practice_words_screen.dart';
 import 'reader_screen.dart';
 import 'ruby_text.dart';
@@ -203,6 +204,25 @@ class _WordsScreenState extends State<WordsScreen> {
                   style: theme.textTheme.bodySmall,
                 ),
               ),
+            ListTile(
+              key: const ValueKey('open-free-reader'),
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.chrome_reader_mode_rounded),
+              title: const Text('Read your own text'),
+              subtitle: const Text(
+                'Paste a message, menu or sign. Or share it to DuckLearn.',
+              ),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) =>
+                        PasteReaderScreen(services: _s, lang: _lang),
+                  ),
+                );
+                if (mounted) setState(() {});
+              },
+            ),
             const SizedBox(height: 16),
             if (words.isNotEmpty)
               FilledButton.icon(

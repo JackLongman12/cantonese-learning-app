@@ -466,10 +466,54 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
       ]),
       page([
-        _header(theme),
-        const SizedBox(height: 20),
-        if (_lang == 'yue')
-          DeckSection(services: _s, onChanged: () => setState(() {})),
+        Text('Topics', style: theme.textTheme.titleMedium),
+        const SizedBox(height: 4),
+        Text(
+          'Each topic has sentences and conversations. Characters you meet anywhere count everywhere.',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 12),
+        if (scenarios.isEmpty)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 24),
+            child: Text('No content yet.', textAlign: TextAlign.center),
+          ),
+        // two columns: half the scrolling on a phone
+        LayoutBuilder(
+          builder: (context, box) {
+            final cols = box.maxWidth >= 560 ? 3 : 2;
+            final w = (box.maxWidth - 10 * (cols - 1)) / cols;
+            return Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                for (final (step, sc) in _pathOrder(
+                  scenarios,
+                  itemsByScenario,
+                ).indexed)
+                  SizedBox(
+                    width: w,
+                    child: _TopicTile(
+                      step: sc.id == 'scn-swearing' ? null : step + 1,
+                      next: sc.id == upNextId,
+                      scenario: sc,
+                      total: itemsByScenario[sc.id]?.length ?? 0,
+                      met: (itemsByScenario[sc.id] ?? const {})
+                          .where((id) => !_s.learner.stateOf(id).isNew)
+                          .length,
+                      onTap: () {
+                        _s.sound(Sfx.tap);
+                        _openTopic(sc);
+                      },
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
+        const SizedBox(height: 16),
         Text('Reading skills', style: theme.textTheme.titleMedium),
         const SizedBox(height: 8),
         Row(
@@ -499,42 +543,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ],
         ),
         const SizedBox(height: 24),
-        Text('Topics', style: theme.textTheme.titleMedium),
-        const SizedBox(height: 4),
-        Text(
-          'Each topic has sentences and conversations. Characters you meet anywhere count everywhere.',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 12),
-        if (scenarios.isEmpty)
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 24),
-            child: Text('No content yet.', textAlign: TextAlign.center),
-          ),
-        for (final (step, sc) in _pathOrder(scenarios, itemsByScenario).indexed)
-          _TopicTile(
-            step: sc.id == 'scn-swearing' ? null : step + 1,
-            next: sc.id == upNextId,
-            scenario: sc,
-            total: itemsByScenario[sc.id]?.length ?? 0,
-            met: (itemsByScenario[sc.id] ?? const {})
-                .where((id) => !_s.learner.stateOf(id).isNew)
-                .length,
-            onTap: () {
-              _s.sound(Sfx.tap);
-              _openTopic(sc);
-            },
-          ),
+      ]),
+      page([
+        if (_lang == 'yue')
+          DeckSection(services: _s, onChanged: () => setState(() {})),
       ]),
       StoriesScreen(key: ValueKey('stories-$_lang'), services: _s, lang: _lang),
       WordsScreen(key: ValueKey('words-$_lang'), services: _s, lang: _lang),
-      PasteReaderScreen(
-        key: ValueKey('read-$_lang'),
-        services: _s,
-        lang: _lang,
-      ),
     ];
 
     return Scaffold(
@@ -568,6 +583,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             label: 'Topics',
           ),
           NavigationDestination(
+            key: ValueKey('tab-cards'),
+            icon: Icon(Icons.style_outlined),
+            selectedIcon: Icon(Icons.style_rounded),
+            label: 'Cards',
+          ),
+          NavigationDestination(
             key: ValueKey('tab-stories'),
             icon: Icon(Icons.auto_stories_outlined),
             selectedIcon: Icon(Icons.auto_stories_rounded),
@@ -579,24 +600,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             selectedIcon: Icon(Icons.bookmarks_rounded),
             label: 'Words',
           ),
-          NavigationDestination(
-            key: ValueKey('tab-read'),
-            icon: Icon(Icons.chrome_reader_mode_outlined),
-            selectedIcon: Icon(Icons.chrome_reader_mode_rounded),
-            label: 'Read',
-          ),
         ],
       ),
     );
   }
 
-  static const _tabNames = [
-    'today',
-    'topics',
-    'stories',
-    'words',
-    'free_reader',
-  ];
+  static const _tabNames = ['today', 'topics', 'cards', 'stories', 'words'];
 
   Widget _header(ThemeData theme) {
     return Row(
@@ -832,79 +841,82 @@ class _TopicTile extends StatelessWidget {
     final scheme = theme.colorScheme;
     final fraction = total == 0 ? 0.0 : met / total;
     return Card(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: EdgeInsets.zero,
+      shape: next
+          ? RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+              side: BorderSide(color: scheme.tertiary, width: 2),
+            )
+          : null,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
-          child: Row(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                backgroundColor: scheme.secondaryContainer,
-                foregroundColor: scheme.onSecondaryContainer,
-                child: Icon(_topicIcon(scenario.id)),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        if (step != null)
-                          Text(
-                            'Step $step · ',
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              color: scheme.onSurfaceVariant,
-                            ),
-                          ),
-                        Expanded(
-                          child: Text(
-                            scenario.title,
-                            style: theme.textTheme.titleSmall,
-                          ),
-                        ),
-                        if (next)
-                          Container(
-                            key: const ValueKey('up-next-chip'),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: scheme.tertiaryContainer,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              'Up next',
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: scheme.onTertiaryContainer,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(
-                        value: fraction,
-                        minHeight: 6,
-                        backgroundColor: scheme.surfaceContainerHighest,
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundColor: scheme.secondaryContainer,
+                    foregroundColor: scheme.onSecondaryContainer,
+                    child: Icon(_topicIcon(scenario.id), size: 18),
+                  ),
+                  const Spacer(),
+                  if (next)
+                    Container(
+                      key: const ValueKey('up-next-chip'),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
                       ),
-                    ),
-                    const SizedBox(height: 4),
+                      decoration: BoxDecoration(
+                        color: scheme.tertiaryContainer,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        'Up next',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: scheme.onTertiaryContainer,
+                        ),
+                      ),
+                    )
+                  else if (step != null)
                     Text(
-                      '$met of $total characters met · ${scenario.sentenceCount} sentences',
-                      style: theme.textTheme.bodySmall?.copyWith(
+                      'Step $step',
+                      style: theme.textTheme.labelSmall?.copyWith(
                         color: scheme.onSurfaceVariant,
                       ),
                     ),
-                  ],
+                ],
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 40,
+                child: Text(
+                  scenario.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleSmall,
                 ),
               ),
-              const SizedBox(width: 8),
-              Icon(Icons.chevron_right_rounded, color: scheme.onSurfaceVariant),
+              const SizedBox(height: 6),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: fraction,
+                  minHeight: 5,
+                  backgroundColor: scheme.surfaceContainerHighest,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '$met / $total characters',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
             ],
           ),
         ),

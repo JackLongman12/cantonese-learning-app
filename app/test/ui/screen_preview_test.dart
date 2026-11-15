@@ -105,6 +105,12 @@ void main() {
       // Day 1: first session, everything new.
       await t.tap(find.byKey(const ValueKey('tab-topics')));
       await t.pumpAndSettle();
+      await shot('topics');
+      await t.tap(find.byKey(const ValueKey('tab-cards')));
+      await t.pumpAndSettle();
+      await shot('cards');
+      await t.tap(find.byKey(const ValueKey('tab-topics')));
+      await t.pumpAndSettle();
       await t.scrollUntilVisible(
         find.text('Getting around Macau'),
         200,
