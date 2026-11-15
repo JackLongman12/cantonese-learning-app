@@ -121,11 +121,14 @@ def main(argv: list[str] | None = None) -> int:
                         "SELECT zh FROM card",
                         "SELECT trad FROM dict_entry",
                         "SELECT key FROM item",
+                        "SELECT zh || example FROM skill_entry",
+                        "SELECT semantic FROM char_info WHERE semantic IS NOT NULL",
+                        "SELECT phonetic FROM char_info WHERE phonetic IS NOT NULL",
                     ):
                         for (t,) in check.execute(q):
                             chars.update(t)
                 chars.update(chr(c) for c in range(0x20, 0x7F))
-                chars.update("，。！？、：；「」『』（）《》…—～·")
+                chars.update("，。！？、：；「」『』（）《》…—～·→←↔")
                 opts = subset.Options()
                 opts.layout_features = ["*"]
                 opts.name_IDs = ["*"]

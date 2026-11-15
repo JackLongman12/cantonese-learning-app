@@ -582,3 +582,124 @@ extension DeckQueries on ContentDb {
     }
   }
 }
+
+class SkillRow {
+  const SkillRow(this.id, this.title, this.subtitle);
+  final String id;
+  final String title;
+  final String subtitle;
+}
+
+class SkillEntry {
+  const SkillEntry({
+    required this.id,
+    required this.zh,
+    required this.reading,
+    required this.emoji,
+    required this.meaning,
+    required this.example,
+    required this.exampleEn,
+  });
+  final String id;
+  final String zh;
+  final String? reading;
+  final String emoji;
+  final String meaning;
+  final String example;
+  final String exampleEn;
+}
+
+/// A meaning component (radical) and the characters in the app that use it.
+class RadicalGroup {
+  const RadicalGroup(this.component, this.hint, this.chars);
+  final String component;
+
+  /// What it stands for, from Make Me a Hanzi ('water').
+  final String hint;
+  final List<({String char, String reading, String definition})> chars;
+}
+
+extension SkillQueries on ContentDb {
+  List<SkillRow> skills() {
+    try {
+      return [
+        for (final r in _db.select(
+          'SELECT id, title, subtitle FROM skill ORDER BY rowid',
+        ))
+          SkillRow(
+            r['id'] as String,
+            r['title'] as String,
+            r['subtitle'] as String,
+          ),
+      ];
+    } on SqliteException {
+      return const [];
+    }
+  }
+
+  List<SkillEntry> skillEntries(String skillId) => [
+    for (final r in _db.select(
+      'SELECT id, zh, reading, emoji, meaning, example, example_en FROM skill_entry '
+      'WHERE skill_id = ? ORDER BY rank',
+      [skillId],
+    ))
+      SkillEntry(
+        id: r['id'] as String,
+        zh: r['zh'] as String,
+        reading: r['reading'] as String?,
+        emoji: r['emoji'] as String,
+        meaning: r['meaning'] as String,
+        example: r['example'] as String,
+        exampleEn: r['example_en'] as String,
+      ),
+  ];
+
+  /// Meaning components of the characters in the content, most used first.
+  List<RadicalGroup> radicals({int limit = 30, int perGroup = 8}) {
+    final groups =
+        <
+          String,
+          List<({String char, String reading, String definition, String hint})>
+        >{};
+    try {
+      for (final r in _db.select(
+        'SELECT c.char, c.semantic, c.hint, c.definition, i.reading, i.n_sentences '
+        'FROM char_info c JOIN item i ON i.key = c.char '
+        "WHERE i.kind = 'char_reading' AND c.semantic IS NOT NULL AND c.hint IS NOT NULL "
+        "AND length(c.hint) < 20 ORDER BY i.n_sentences DESC",
+      )) {
+        (groups[r['semantic'] as String] ??= []).add((
+          char: r['char'] as String,
+          reading: r['reading'] as String? ?? '',
+          definition: (r['definition'] as String? ?? '').split(';').first,
+          hint: r['hint'] as String,
+        ));
+      }
+    } on SqliteException {
+      return const [];
+    }
+    final sorted = groups.entries.toList()
+      ..sort((a, b) => b.value.length.compareTo(a.value.length));
+    return [
+      for (final e in sorted.take(limit))
+        RadicalGroup(
+          e.key,
+          // the hint most of its characters give
+          (e.value
+                  .map((x) => x.hint)
+                  .fold(
+                    <String, int>{},
+                    (m, h) => m..update(h, (v) => v + 1, ifAbsent: () => 1),
+                  )
+                ..removeWhere((_, _) => false))
+              .entries
+              .reduce((a, b) => a.value >= b.value ? a : b)
+              .key,
+          [
+            for (final c in e.value.take(perGroup))
+              (char: c.char, reading: c.reading, definition: c.definition),
+          ],
+        ),
+    ];
+  }
+}

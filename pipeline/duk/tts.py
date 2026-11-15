@@ -68,6 +68,11 @@ def synthesise_all(
         "SELECT 1 FROM sqlite_master WHERE type='table' AND name='card'"
     ).fetchone()
     cards = db.execute("SELECT zh FROM card ORDER BY id").fetchall() if has_cards else []
+    has_skills = db.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='skill_entry'"
+    ).fetchone()
+    if has_skills:
+        cards += db.execute("SELECT example FROM skill_entry ORDER BY id").fetchall()
     for (text,) in cards[:limit]:
         for voice in VOICES["yue"][:voices_per_lang]:
             h = audio_hash("yue", voice, "normal", text)

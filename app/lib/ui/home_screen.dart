@@ -19,6 +19,7 @@ import 'paste_reader_screen.dart';
 import 'practice_words_screen.dart';
 import 'reader_screen.dart';
 import 'practice_screens.dart';
+import 'skills.dart';
 import '../platform/home_widget_sync.dart';
 import '../platform/sfx.dart';
 import 'settings_screen.dart';
@@ -44,6 +45,25 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late String _lang = _s.prefs.lang;
   int _tab = 0;
+  String _topicFilter = 'All';
+
+  /// Topic groups for the filter chips (matched against topic ids).
+  static const _topicGroups = <String, List<String>?>{
+    'All': null,
+    'Getting around': ['getting-around', 'tourism'],
+    'Food': ['food'],
+    'Daily life': [
+      'home',
+      'shopping',
+      'health',
+      'weather',
+      'numbers',
+      'messaging',
+      'signs',
+    ],
+    'Work & papers': ['gov', 'work'],
+    'People & culture': ['chat', 'swearing'],
+  };
   StreamSubscription<String>? _shareSub;
   UpdateInfo? _update;
 
@@ -512,12 +532,28 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
       ]),
       page([
-        Text('Topics', style: theme.textTheme.titleMedium),
-        const SizedBox(height: 4),
-        Text(
-          'Each topic has sentences and conversations. Characters you meet anywhere count everywhere.',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+        Text('Topics', style: theme.textTheme.titleLarge),
+        const SizedBox(height: 10),
+        // filter by kind of situation: fewer tiles to scan at once
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for (final c in _topicGroups.keys)
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: ChoiceChip(
+                    key: ValueKey('topic-filter-$c'),
+                    label: Text(c),
+                    selected: _topicFilter == c,
+                    showCheckmark: false,
+                    onSelected: (_) {
+                      _s.sound(Sfx.tap);
+                      setState(() => _topicFilter = c);
+                    },
+                  ),
+                ),
+            ],
           ),
         ),
         const SizedBox(height: 12),
@@ -531,6 +567,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           builder: (context, box) {
             final cols = box.maxWidth >= 560 ? 3 : 2;
             final w = (box.maxWidth - 10 * (cols - 1)) / cols;
+            final group = _topicGroups[_topicFilter];
             return Wrap(
               spacing: 10,
               runSpacing: 10,
@@ -539,33 +576,46 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   scenarios,
                   itemsByScenario,
                 ).indexed)
-                  SizedBox(
-                    width: w,
-                    child: _TopicTile(
-                      step: sc.id == 'scn-swearing' ? null : step + 1,
-                      next: sc.id == upNextId,
-                      scenario: sc,
-                      total: itemsByScenario[sc.id]?.length ?? 0,
-                      met: (itemsByScenario[sc.id] ?? const {})
-                          .where((id) => !_s.learner.stateOf(id).isNew)
-                          .length,
-                      onTap: () {
-                        _s.sound(Sfx.tap);
-                        _openTopic(sc);
-                      },
+                  if (group == null || group.any((g) => sc.id.contains(g)))
+                    SizedBox(
+                      width: w,
+                      child: _TopicTile(
+                        step: sc.id == 'scn-swearing' ? null : step + 1,
+                        next: sc.id == upNextId,
+                        scenario: sc,
+                        total: itemsByScenario[sc.id]?.length ?? 0,
+                        met: (itemsByScenario[sc.id] ?? const {})
+                            .where((id) => !_s.learner.stateOf(id).isNew)
+                            .length,
+                        onTap: () {
+                          _s.sound(Sfx.tap);
+                          _openTopic(sc);
+                        },
+                      ),
                     ),
-                  ),
               ],
             );
           },
         ),
+        const SizedBox(height: 24),
+      ]),
+      page([
+        Text('Practice', style: theme.textTheme.titleLarge),
+        const SizedBox(height: 4),
+        Text(
+          'Short skills that make reading easier, and flashcards.',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
         const SizedBox(height: 16),
         Text('Reading skills', style: theme.textTheme.titleMedium),
         const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: _SkillTile(
+        LayoutBuilder(
+          builder: (context, box) {
+            final w = (box.maxWidth - 10) / 2;
+            final skills = <Widget>[
+              _SkillTile(
                 key: const ValueKey('open-families'),
                 icon: Icons.hub_rounded,
                 title: 'Sound families',
@@ -573,24 +623,23 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 onTap: () =>
                     _push(SoundFamiliesScreen(services: _s, lang: _lang)),
               ),
-            ),
-            if (_lang == 'yue') ...[
-              const SizedBox(width: 10),
-              Expanded(
-                child: _SkillTile(
-                  key: const ValueKey('open-spoken-written'),
-                  icon: Icons.compare_arrows_rounded,
-                  title: 'Spoken vs written',
-                  subtitle: '佢係 · 他是',
-                  onTap: () => _push(const SpokenWrittenScreen()),
-                ),
+              _SkillTile(
+                key: const ValueKey('open-spoken-written'),
+                icon: Icons.compare_arrows_rounded,
+                title: 'Spoken vs written',
+                subtitle: '佢係 · 他是',
+                onTap: () => _push(const SpokenWrittenScreen()),
               ),
-            ],
-          ],
+              ...extraSkillTiles(context, _s, _push),
+            ];
+            return Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [for (final t in skills) SizedBox(width: w, child: t)],
+            );
+          },
         ),
         const SizedBox(height: 24),
-      ]),
-      page([
         if (_lang == 'yue')
           DeckSection(services: _s, onChanged: () => setState(() {})),
       ]),
@@ -664,7 +713,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 key: ValueKey('tab-cards'),
                 icon: Icon(Icons.style_outlined),
                 selectedIcon: Icon(Icons.style_rounded),
-                label: 'Cards',
+                label: 'Practice',
               ),
               NavigationDestination(
                 key: ValueKey('tab-stories'),

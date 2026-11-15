@@ -23,8 +23,9 @@ from .content import Content, ContentError, load_content
 from .reference import load_reference
 from .words import refine_words
 
-SCHEMA_VERSION = 8  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry; 6: decks;
-# 7: card image + credit, food deck; 8: slim dict_entry (Cantonese only)
+SCHEMA_VERSION = 9  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
+# 6: decks; 7: card image + credit, food deck; 8: slim dict_entry (Cantonese only);
+# 9: char_info.hint, skill / skill_entry
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -61,7 +62,12 @@ CREATE TABLE place(
   nearby TEXT NOT NULL, example TEXT, reviewed INTEGER NOT NULL, flagged INTEGER NOT NULL);
 CREATE TABLE char_info(
   char TEXT PRIMARY KEY, yue TEXT, cmn TEXT, simplified TEXT, traditional TEXT,
-  phonetic TEXT, semantic TEXT, definition TEXT);
+  phonetic TEXT, semantic TEXT, definition TEXT, hint TEXT);
+CREATE TABLE skill(id TEXT PRIMARY KEY, title TEXT NOT NULL, subtitle TEXT NOT NULL);
+CREATE TABLE skill_entry(
+  skill_id TEXT NOT NULL, id TEXT PRIMARY KEY, zh TEXT NOT NULL, reading TEXT,
+  emoji TEXT NOT NULL, meaning TEXT NOT NULL, example TEXT NOT NULL, example_en TEXT NOT NULL,
+  rank INTEGER NOT NULL);
 CREATE TABLE family(component TEXT NOT NULL, member TEXT NOT NULL,
   PRIMARY KEY(component, member)) WITHOUT ROWID;
 CREATE TABLE lex_char(
@@ -345,6 +351,32 @@ def build(
                      c.image, c.credit)  # fmt: skip
         result.warnings.append(f"food deck: {len(food)} dishes")
 
+    # Reading-skill lessons (content/skills/*.yaml): particles, measure words, ...
+    import yaml
+
+    for path in (
+        sorted((content_root / "skills").glob("*.yaml"))
+        if (content_root / "skills").exists()
+        else []
+    ):
+        doc = yaml.safe_load(path.read_text("utf-8")) or {}
+        sid = doc["skill"]
+        db.execute("INSERT INTO skill VALUES(?,?,?)", (sid, doc["title"], doc.get("subtitle", "")))
+        for rank, e in enumerate(doc.get("entries") or []):
+            try:
+                ann = annotate(
+                    e["zh"], "yue", overrides=content.overrides.get("yue"), prior=priors["yue"]
+                )
+                reading = " ".join(r for r in ann.readings if r)
+            except ValueError as err:
+                problems.append(f"{e.get('id')}: {err}")
+                continue
+            db.execute(
+                "INSERT INTO skill_entry VALUES(?,?,?,?,?,?,?,?,?)",
+                (sid, e["id"], e["zh"], reading or None, e.get("emoji", ""), e["meaning"],
+                 e["example"], e["example_en"], rank),
+            )  # fmt: skip
+
     for item_id, (kind, lang, key, reading) in item_rows.items():
         db.execute(
             "INSERT INTO item VALUES(?,?,?,?,?,?)",
@@ -355,7 +387,7 @@ def build(
     if ref is None:
         result.warnings.append("reference data missing (run `duk fetch`): char_info/family empty")
     else:
-        db.executemany("INSERT INTO char_info VALUES(?,?,?,?,?,?,?,?)", ref.char_rows())
+        db.executemany("INSERT INTO char_info VALUES(?,?,?,?,?,?,?,?,?)", ref.char_rows())
         db.executemany("INSERT INTO family VALUES(?,?)", ref.family_rows())
 
     if with_lexicon:

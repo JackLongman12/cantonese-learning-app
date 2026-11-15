@@ -1,0 +1,23 @@
+# Sentence-final particles: the small words at the end of spoken Cantonese that carry
+# tone of voice. Everywhere in WhatsApp and speech, rarely taught.
+# Drafted by an LLM; reviewed: false until the owner confirms meanings and examples.
+skill: particles
+title: Sentence particles
+subtitle: 啦 喎 㗎 咩
+entries:
+  - {id: prt-laa1, zh: 啦, emoji: "👉", meaning: "Softens a request or suggestion: 'come on', 'go ahead'.", example: 快啲食啦。, example_en: "Eat up, come on."}
+  - {id: prt-laa3, zh: 喇, emoji: "✅", meaning: "Something has changed or is now the case: 'now', 'already'.", example: 我到喇。, example_en: "I'm here now."}
+  - {id: prt-aa3, zh: 呀, emoji: "💬", meaning: "Softens a statement or question; makes it sound friendly.", example: 你去邊呀？, example_en: "Where are you going?"}
+  - {id: prt-me1, zh: 咩, emoji: "😮", meaning: "Surprised question: 'really?', 'isn't it?'.", example: 你唔知咩？, example_en: "You didn't know?"}
+  - {id: prt-wo3, zh: 喎, emoji: "📢", meaning: "Passing on news or noticing something: 'I see', 'you know', 'I heard'.", example: 佢話今日唔嚟喎。, example_en: "He says he's not coming today."}
+  - {id: prt-gaa3, zh: 㗎, emoji: "❗", meaning: "Firm explanation, or a question asking for one.", example: 呢度唔可以泊車㗎。, example_en: "You can't park here, you know."}
+  - {id: prt-ge3, zh: 嘅, emoji: "🔗", meaning: "Possession ('s, of), and at the end: stating a fact firmly.", example: 呢本係我嘅書。, example_en: "This is my book."}
+  - {id: prt-lo1, zh: 囉, emoji: "🤷", meaning: "Obvious conclusion: 'then', 'of course', 'that's it'.", example: 唔鍾意就唔好買囉。, example_en: "If you don't like it, don't buy it then."}
+  - {id: prt-ze1, zh: 啫, emoji: "🤏", meaning: "Playing something down: 'only', 'just'.", example: 小事啫。, example_en: "It's only a small thing."}
+  - {id: prt-zaa3, zh: 咋, emoji: "☝️", meaning: "'Only', 'just', often a bit surprised.", example: 五蚊咋？, example_en: "Only five dollars?"}
+  - {id: prt-aa1, zh: 吖, emoji: "🙂", meaning: "Friendly suggestion or agreement: 'sure', 'why not'.", example: 好吖，一齊去吖。, example_en: "Sure, let's go together."}
+  - {id: prt-maa3, zh: 嘛, emoji: "🙄", meaning: "'Obviously', 'that's why'.", example: 佢都話咗唔得嘛。, example_en: "He already said no, didn't he."}
+  - {id: prt-gwaa3, zh: 啩, emoji: "🤔", meaning: "Guessing: 'probably', 'I suppose'.", example: 佢應該到咗啩。, example_en: "He's probably arrived by now."}
+  - {id: prt-ne1, zh: 呢, emoji: "❓", meaning: "'What about…?', or a question that keeps the talk going.", example: 你呢？, example_en: "What about you?"}
+  - {id: prt-mei6, zh: 未, emoji: "⏳", meaning: "At the end of a question: 'yet?'.", example: 你食咗飯未？, example_en: "Have you eaten yet?"}
+  - {id: prt-maa3-written, zh: 嗎, emoji: "📝", meaning: "Written yes/no question; in speech Cantonese uses 呀 or 咩 instead.", example: 你好嗎？, example_en: "How are you? (written style)"}

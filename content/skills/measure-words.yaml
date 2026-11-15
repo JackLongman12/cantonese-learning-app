@@ -1,0 +1,27 @@
+# Measure words (量詞): Cantonese uses them far more than English, and often instead of
+# 'the' (隻貓好得意 = the cat is cute).
+# Drafted by an LLM; reviewed: false until the owner confirms them.
+skill: measure-words
+title: Measure words
+subtitle: 個 隻 張 條
+entries:
+  - {id: mw-go3, zh: 個, emoji: "🍎", meaning: "General: people, many things.", example: 一個蘋果，兩個人。, example_en: "One apple, two people."}
+  - {id: mw-zek3, zh: 隻, emoji: "🐱", meaning: "Animals; one of a pair (hand, shoe); also many everyday things.", example: 呢隻貓好得意。, example_en: "This cat is so cute."}
+  - {id: mw-bun2, zh: 本, emoji: "📚", meaning: "Books and magazines.", example: 我買咗兩本書。, example_en: "I bought two books."}
+  - {id: mw-zoeng1, zh: 張, emoji: "🎫", meaning: "Flat things: paper, tickets, tables, beds, photos.", example: 一張車飛。, example_en: "One ticket."}
+  - {id: mw-gaa3, zh: 架, emoji: "🚌", meaning: "Vehicles and machines.", example: 嗰架巴士去關閘。, example_en: "That bus goes to the Border Gate."}
+  - {id: mw-tiu4, zh: 條, emoji: "🐟", meaning: "Long, thin things: roads, fish, rivers, trousers, keys.", example: 呢條街好多餐廳。, example_en: "This street has lots of restaurants."}
+  - {id: mw-gin6, zh: 件, emoji: "👕", meaning: "Clothes (tops), and matters or things that happen.", example: 呢件衫幾錢？, example_en: "How much is this shirt?"}
+  - {id: mw-deoi3, zh: 對, emoji: "👟", meaning: "Pairs: shoes, socks, chopsticks.", example: 一對波鞋。, example_en: "A pair of trainers."}
+  - {id: mw-bui1, zh: 杯, emoji: "🥤", meaning: "Cups and glasses of a drink.", example: 一杯凍檸茶。, example_en: "An iced lemon tea."}
+  - {id: mw-wun2, zh: 碗, emoji: "🍜", meaning: "Bowls of food.", example: 一碗雲吞麵。, example_en: "A bowl of wonton noodles."}
+  - {id: mw-zeon1, zh: 樽, emoji: "🍼", meaning: "Bottles.", example: 兩樽水。, example_en: "Two bottles of water."}
+  - {id: mw-gaan1, zh: 間, emoji: "🏪", meaning: "Rooms, shops, schools, companies.", example: 呢間舖頭幾點開？, example_en: "When does this shop open?"}
+  - {id: mw-bou6, zh: 部, emoji: "📱", meaning: "Machines and devices: phones, cars, computers.", example: 我部電話冇電。, example_en: "My phone is out of battery."}
+  - {id: mw-nap1, zh: 粒, emoji: "🍬", meaning: "Small round things: sweets, pills, grains.", example: 食兩粒藥。, example_en: "Take two pills."}
+  - {id: mw-fan6, zh: 份, emoji: "📰", meaning: "Copies and portions: newspapers, documents, a set meal, a job.", example: 一份報紙。, example_en: "A newspaper."}
+  - {id: mw-zi1, zh: 支, emoji: "🖊️", meaning: "Stick-shaped things: pens, bottles, umbrellas.", example: 借支筆嚟用吓。, example_en: "Lend me a pen for a moment."}
+  - {id: mw-baau1, zh: 包, emoji: "🧻", meaning: "Packets and bags.", example: 一包紙巾。, example_en: "A packet of tissues."}
+  - {id: mw-wai2, zh: 位, emoji: "🙇", meaning: "Polite for people: guests, customers.", example: 幾多位呀？, example_en: "How many people? (in a restaurant)"}
+  - {id: mw-di1, zh: 啲, emoji: "🫘", meaning: "'Some', and 'the' for many things.", example: 啲餸好好食。, example_en: "The dishes are delicious."}
+  - {id: mw-ci3, zh: 次, emoji: "🔁", meaning: "Times (occurrences).", example: 我去過三次澳門。, example_en: "I've been to Macau three times."}

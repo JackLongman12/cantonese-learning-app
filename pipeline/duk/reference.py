@@ -18,6 +18,7 @@ class CharRef:
     traditional: list[str] = field(default_factory=list)
     phonetic: str | None = None
     semantic: str | None = None
+    hint: str | None = None  # what the meaning component stands for ('water')
     definition: str | None = None
 
 
@@ -36,6 +37,7 @@ class Reference:
                 r.phonetic,
                 r.semantic,
                 r.definition,
+                r.hint,
             )
 
     def prior(self, lang: str) -> dict[str, str]:
@@ -115,4 +117,5 @@ def load_reference(raw_root: Path) -> Reference | None:
             r = ref(ch)
             r.phonetic = ety.get("phonetic") or None
             r.semantic = ety.get("semantic") or None
+            r.hint = (ety.get("hint") or "").strip() or None
     return Reference(chars)
