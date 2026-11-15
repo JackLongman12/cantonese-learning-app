@@ -29,6 +29,10 @@ class WordVoice {
     return _ready = false;
   }
 
+  Future<void> stop() async {
+    if (_ready == true) await _tts.stop();
+  }
+
   /// False when no Cantonese voice is installed.
   Future<bool> say(String text) async {
     if (!await _init()) return false;

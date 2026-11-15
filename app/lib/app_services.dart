@@ -31,6 +31,7 @@ class AppServices {
     required this.memory,
     required this.playAudio,
     this.playAudioSlow,
+    this.stopAudio,
     this.speech,
     this.playFile,
     Prefs? prefs,
@@ -58,6 +59,9 @@ class AppServices {
 
   /// Plays a clip at reduced speed (null in tests: falls back to [playAudio]).
   final PlayAudio? playAudioSlow;
+
+  /// Silences every clip and the word voice (null in tests).
+  final Future<void> Function()? stopAudio;
 
   /// On-device recogniser for the read-aloud check (null where unavailable).
   final SpeechEngine? speech;

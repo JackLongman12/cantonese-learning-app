@@ -14,7 +14,8 @@ class SoundEffects {
         ..setAudioContext(
           AudioContextConfig(
             focus: AudioContextConfigFocus.mixWithOthers,
-            respectSilence: true, // silent mode on iOS/macOS mutes them
+            // media channel, like the sentences: respectSilence would make them
+            // ringtone sounds, which a phone on silent or vibrate mutes
           ).build(),
         )
         ..setVolume(0.6);

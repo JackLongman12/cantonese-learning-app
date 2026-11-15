@@ -101,7 +101,11 @@ Future<AppServices> _bootstrap() async {
     prefs: Prefs(File(p.join(support.path, 'prefs.json'))),
     updater: Updater(),
     sfx: SoundEffects(),
-    voice: WordVoice(),
+    stopAudio: () async {
+      await stopAllAudio();
+      await _voice.stop();
+    },
+    voice: _voice,
     reminders: Platform.isAndroid ? Reminders() : null,
     speech: (Platform.isAndroid || Platform.isWindows || Platform.isMacOS)
         ? SpeechEngine(modelDir)
@@ -113,12 +117,28 @@ Future<AppServices> _bootstrap() async {
 /// one still playing.
 final _filePlayer = AudioPlayer();
 
+/// Every player that speaks Cantonese, so leaving a screen can silence them all.
+final _players = <AudioPlayer>[_filePlayer];
+
+Future<void> stopAllAudio() async {
+  for (final p in _players) {
+    await p.stop();
+  }
+}
+
 PlayAudio createPlayAudio({double rate = 1.0}) {
   final player = AudioPlayer();
+  _players.add(player);
   return (path) async {
     await player.stop();
-    // listen before playing so a very short clip's end is not missed
-    final ended = player.onPlayerComplete.first.then<void>((_) {});
+    // listen before playing so a very short clip's end is not missed; a stop (leaving
+    // the screen) also ends the wait
+    final ended = Future.any<void>([
+      player.onPlayerComplete.first.then<void>((_) {}),
+      player.onPlayerStateChanged
+          .firstWhere((s) => s == PlayerState.stopped)
+          .then<void>((_) {}),
+    ]);
     await player.setSource(AssetSource('content/$path'));
     if (rate != 1.0) await player.setPlaybackRate(rate);
     await player.resume();
@@ -130,6 +150,19 @@ PlayAudio createPlayAudio({double rate = 1.0}) {
   };
 }
 
+final _voice = WordVoice();
+
+/// Leaving a screen (Android back or the app's back arrow) stops its audio at once.
+class StopAudioOnLeave extends NavigatorObserver {
+  StopAudioOnLeave(this.services);
+  final AppServices services;
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    if (route is PageRoute) services.stopAudio?.call();
+  }
+}
+
 class DukApp extends StatelessWidget {
   const DukApp({super.key, required this.services});
   final AppServices services;
@@ -138,6 +171,7 @@ class DukApp extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp(
     title: 'DuckLearn',
     debugShowCheckedModeBanner: false,
+    navigatorObservers: [StopAudioOnLeave(services)],
     theme: dukTheme(Brightness.light),
     darkTheme: dukTheme(Brightness.dark),
     home: _FirstRun(services: services),
