@@ -134,7 +134,7 @@ void main() {
         ),
       );
       await t.pumpAndSettle();
-      await t.tap(find.byKey(const ValueKey('practise')));
+      await t.tap(find.byKey(const ValueKey('practice')));
       await t.pumpAndSettle();
       await shot('reader_new');
       while (find.byKey(const ValueKey('next')).evaluate().isNotEmpty) {
@@ -202,7 +202,7 @@ void main() {
       find.byType(MaterialApp),
       matchesGoldenFile('goldens/preview_phone_conversation.png'),
     );
-    // pick your line: it appears in your colour, with the other person dimmed
+    // pick your line: it appears in your color, with the other person dimmed
     await t.tap(find.text('通粉，唔該。'));
     await t.pumpAndSettle();
     await expectLater(

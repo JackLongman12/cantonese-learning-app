@@ -1,4 +1,4 @@
-/// One topic: practise its sentences, or read one of its conversations.
+/// One topic: practice its sentences, or read one of its conversations.
 library;
 
 import 'package:material_ui/material_ui.dart';
@@ -8,6 +8,7 @@ import '../data/content_db.dart';
 import 'mascot.dart';
 import 'reader_screen.dart';
 import 'speak_drill_screen.dart';
+import 'tiles.dart';
 
 class TopicScreen extends StatefulWidget {
   const TopicScreen({
@@ -72,7 +73,7 @@ class _TopicScreenState extends State<TopicScreen> {
                               ),
                               const SizedBox(height: 12),
                               FilledButton.icon(
-                                key: const ValueKey('practise'),
+                                key: const ValueKey('practice'),
                                 onPressed: () => _open(
                                   ReaderScreen(
                                     services: _s,
@@ -91,7 +92,7 @@ class _TopicScreenState extends State<TopicScreen> {
                                   },
                                 ),
                                 icon: const Icon(Icons.play_arrow_rounded),
-                                label: const Text('Practise sentences'),
+                                label: const Text('Practice sentences'),
                               ),
                               const SizedBox(height: 8),
                               // rapid speaking: the mic runs by itself, line after line
@@ -142,44 +143,37 @@ class _TopicScreenState extends State<TopicScreen> {
                     ),
                   ),
                 ),
-                for (final (i, d) in dialogues.indexed)
-                  Card(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    child: ListTile(
-                      key: ValueKey('dlg-${d.id}'),
-                      leading: CircleAvatar(
-                        backgroundColor: theme.colorScheme.secondaryContainer,
-                        foregroundColor: theme.colorScheme.onSecondaryContainer,
-                        child: Text('${i + 1}'),
-                      ),
-                      title: Text(d.title),
-                      subtitle: Text(
-                        d.level >= 3
-                            ? '${d.lines} lines · Advanced'
-                            : '${d.lines} lines',
-                      ),
-                      trailing: const Icon(Icons.forum_rounded),
-                      onTap: () => _open(
-                        ReaderScreen(
-                          services: _s,
-                          title: d.title,
-                          sentences: _s.content.dialogueLines(
-                            d.id,
-                            widget.lang,
+                TileGrid(
+                  children: [
+                    for (final d in dialogues)
+                      AppTile(
+                        key: ValueKey('dlg-${d.id}'),
+                        icon: Icons.forum_rounded,
+                        title: d.title,
+                        subtitle: '${d.lines} lines',
+                        badge: d.level >= 3 ? 'Advanced' : null,
+                        onTap: () => _open(
+                          ReaderScreen(
+                            services: _s,
+                            title: d.title,
+                            sentences: _s.content.dialogueLines(
+                              d.id,
+                              widget.lang,
+                            ),
+                            lang: widget.lang,
+                            mode: 'conversation',
+                            scenarioId: sc.id,
+                            conversation: true,
                           ),
-                          lang: widget.lang,
-                          mode: 'conversation',
-                          scenarioId: sc.id,
-                          conversation: true,
+                          {
+                            'screen': 'reader',
+                            'mode': 'conversation',
+                            'dialogue_id': d.id,
+                          },
                         ),
-                        {
-                          'screen': 'reader',
-                          'mode': 'conversation',
-                          'dialogue_id': d.id,
-                        },
                       ),
-                    ),
-                  ),
+                  ],
+                ),
               ],
             ),
           ),

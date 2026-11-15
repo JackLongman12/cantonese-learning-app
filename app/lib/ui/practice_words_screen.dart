@@ -1,8 +1,8 @@
-/// Practise the words the app noticed you struggled with, in the sentence they came
+/// Practice the words the app noticed you struggled with, in the sentence they came
 /// from: in Cantonese the context decides the reading and the meaning. The sentence
-/// shows with its usual help, the practised word is highlighted with its Jyutping
+/// shows with its usual help, the practiced word is highlighted with its Jyutping
 /// hidden, and the meaning of the sentence is there to lean on. Read the whole
-/// sentence aloud; the mic grades the practised word. Without a mic, check the reading
+/// sentence aloud; the mic grades the practiced word. Without a mic, check the reading
 /// and say whether you got it. Two right in a row takes a word off the list.
 library;
 
@@ -74,7 +74,7 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
     );
   }
 
-  /// Token range of the practised word inside the sentence.
+  /// Token range of the practiced word inside the sentence.
   (int, int) get _range {
     final i = _ctx.text.indexOf(_w.text);
     if (i < 0) return (0, _ctx.tokens.length);
@@ -96,7 +96,7 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
       if (t.kind == 'han' && t.reading != null) t.reading!,
   ];
 
-  /// Which entries of [_sentenceReadings] belong to the practised word.
+  /// Which entries of [_sentenceReadings] belong to the practiced word.
   Set<int> get _wordPositions {
     final (a, b) = _range;
     final out = <int>{};
@@ -138,7 +138,7 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
     final done = _index >= widget.words.length;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Practise words'),
+        title: const Text('Practice words'),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
@@ -218,7 +218,7 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
                                         surface: _ctx.tokens[k].surface,
                                         kind: _ctx.tokens[k].kind,
                                         reading: _ctx.tokens[k].reading,
-                                        // the practised word: no help until you check
+                                        // the practiced word: no help until you check
                                         level:
                                             k >= a &&
                                                 k < b &&

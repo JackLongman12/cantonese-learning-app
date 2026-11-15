@@ -25,9 +25,9 @@ void main() {
     expect(picks, ['b', 'a', 'c']);
   });
 
-  test('progress counts learnt and due', () {
+  test('progress counts learned and due', () {
     final p = deckProgress(order, stateOf, now);
-    expect(p.learnt, 2);
+    expect(p.learned, 2);
     expect(p.due, 1);
   });
 }

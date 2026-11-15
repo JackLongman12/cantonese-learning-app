@@ -58,7 +58,7 @@ sentences:
 
   - id: sent-mo-around-007
     yue: 過關要排幾耐隊呀？
-    en: How long is the queue to cross the border?
+    en: How long is the line to cross the border?
     register: spoken
     tags: [border]
     source: llm
@@ -167,7 +167,7 @@ sentences:
   - {id: sent-mo-around-079, yue: 今日關閘好多人。, en: "The Border Gate is very crowded today.", pattern: border}
   - {id: sent-mo-around-080, yue: 過關要帶咩證件？, en: "What documents do I need to cross the border?", pattern: border}
   - {id: sent-mo-around-081, yue: 我唔記得帶證件。, en: "I forgot to bring my ID.", pattern: border, region: both}
-  - {id: sent-mo-around-082, yue: 排呢條隊啱唔啱？, en: "Is this the right queue?", pattern: border, region: both}
+  - {id: sent-mo-around-082, yue: 排呢條隊啱唔啱？, en: "Is this the right line?", pattern: border, region: both}
   - {id: sent-mo-around-083, yue: 自助過關喺邊邊？, en: "Which side is the self-service channel?", pattern: border}
   - {id: sent-mo-around-084, yue: 去香港搭船定搭巴士好？, en: "Is it better to take the ferry or the bus to Hong Kong?", pattern: to-hk}
   - {id: sent-mo-around-085, yue: 船飛喺邊度買？, en: "Where do I buy ferry tickets?", pattern: to-hk}

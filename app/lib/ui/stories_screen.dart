@@ -8,6 +8,7 @@ import '../app_services.dart';
 import '../data/content_db.dart';
 import '../engine/scaffold.dart';
 import 'reader_screen.dart';
+import 'tiles.dart';
 
 /// Share of a story's characters the learner reads without full help.
 double storyCoverage(AppServices s, List<SentenceRow> lines) {
@@ -58,7 +59,6 @@ class _StoriesScreenState extends State<StoriesScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
     final stories = _s.content.stories(widget.lang);
     final coverage = {
       for (final st in stories)
@@ -72,74 +72,67 @@ class _StoriesScreenState extends State<StoriesScreen> {
           (best, st) =>
               best == null || coverage[st.id]! > coverage[best.id]! ? st : best,
         );
-    return Scaffold(
-      appBar: AppBar(title: const Text('Stories')),
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 720),
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
-              children: [
-                Text(
-                  'Read whole stories, a line at a time. Reading lots of mostly-familiar '
-                  'text is how reading gets fast.',
-                  style: theme.textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 4),
-                if (stories.isEmpty)
-                  const Text('No stories in this language yet.'),
-                for (final st in stories)
-                  Card(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    child: InkWell(
-                      key: ValueKey('story-${st.id}'),
-                      onTap: () => _open(st, widget.lang),
-                      child: Padding(
-                        padding: const EdgeInsets.all(14),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    st.title,
-                                    style: theme.textTheme.titleMedium,
-                                  ),
-                                ),
-                                if (st.id == next?.id)
-                                  Chip(
-                                    label: const Text('Good next read'),
-                                    backgroundColor: scheme.primaryContainer,
-                                    visualDensity: VisualDensity.compact,
-                                  ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(4),
-                              child: LinearProgressIndicator(
-                                value: coverage[st.id],
-                                minHeight: 6,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Level ${st.level} · ${st.lines} lines · '
-                              'you can read ${(100 * coverage[st.id]!).round()}%',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: scheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+    final levels = {for (final st in stories) st.level}.toList()..sort();
+    Widget tile(DialogueRow st) => AppTile(
+      key: ValueKey('story-${st.id}'),
+      icon: Icons.auto_stories_rounded,
+      title: st.title,
+      subtitle:
+          '${st.lines} lines · you know ${(100 * coverage[st.id]!).round()}%',
+      progress: coverage[st.id],
+      onTap: () => _open(st, widget.lang),
+    );
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 720),
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+          children: [
+            Text('Stories', style: theme.textTheme.titleLarge),
+            if (stories.isEmpty)
+              const Padding(
+                padding: EdgeInsets.only(top: 12),
+                child: Text('No stories yet.'),
+              ),
+            if (next != null) ...[
+              const SizedBox(height: 12),
+              Card(
+                key: const ValueKey('story-next'),
+                margin: EdgeInsets.zero,
+                color: theme.colorScheme.primaryContainer,
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 6,
                   ),
-              ],
-            ),
-          ),
+                  leading: const Icon(Icons.auto_stories_rounded, size: 32),
+                  title: Text('Read next: ${next.title}'),
+                  subtitle: Text(
+                    'Level ${next.level} · you know '
+                    '${(100 * coverage[next.id]!).round()}% of it',
+                  ),
+                  trailing: const Icon(Icons.play_arrow_rounded),
+                  onTap: () => _open(next, widget.lang),
+                ),
+              ),
+            ],
+            for (final lv in levels) ...[
+              Padding(
+                padding: const EdgeInsets.only(top: 20, bottom: 10),
+                child: Text(switch (lv) {
+                  1 => 'Level 1 · short and easy',
+                  2 => 'Level 2',
+                  _ => 'Level $lv · longer',
+                }, style: theme.textTheme.titleMedium),
+              ),
+              TileGrid(
+                children: [
+                  for (final st in stories)
+                    if (st.level == lv) tile(st),
+                ],
+              ),
+            ],
+          ],
         ),
       ),
     );

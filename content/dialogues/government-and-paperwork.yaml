@@ -18,7 +18,7 @@ dialogues:
       - ["你", "掛號，幾時寄到？", "Registered. When will it arrive?"]
       - ["職員", "大概兩三日。", "About two or three days."]
   - id: dlg-mo-gov-03
-    title: "Taking a queue number"
+    title: "Taking a number"
     lines:
       - ["你", "唔該，喺邊度攞籌？", "Excuse me, where do I take a number?"]
       - ["職員", "嗰部機度，揀二號服務。", "At that machine, choose service two."]

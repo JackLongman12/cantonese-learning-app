@@ -62,9 +62,9 @@ sentences:
   - {id: sent-mo-tour-050, yue: 賭場入面唔可以影相。, en: "You can't take photos inside the casino.", pattern: casino}
   - {id: sent-mo-tour-051, yue: 我第一次嚟澳門。, en: "It's my first time in Macau.", pattern: visitor}
   - {id: sent-mo-tour-052, yue: 我嚟玩三日。, en: "I'm here for three days.", pattern: visitor, region: both}
-  - {id: sent-mo-tour-053, yue: 我同朋友嚟旅行。, en: "I'm travelling with friends.", pattern: visitor, region: both}
+  - {id: sent-mo-tour-053, yue: 我同朋友嚟旅行。, en: "I'm traveling with friends.", pattern: visitor, region: both}
   - {id: sent-mo-tour-054, yue: 你可唔可以幫我影張相？, en: "Could you take a photo of me?", pattern: visitor, region: both}
-  - {id: sent-mo-tour-055, yue: 呢度係咪排隊入去？, en: "Is this the queue to get in?", pattern: sights, region: both}
+  - {id: sent-mo-tour-055, yue: 呢度係咪排隊入去？, en: "Is this the line to get in?", pattern: sights, region: both}
   - {id: sent-mo-tour-056, yue: 洗手間喺邊？, en: "Where's the toilet?", pattern: basic, region: both}
   - {id: sent-mo-tour-057, yue: 附近有冇便利店？, en: "Is there a convenience store nearby?", pattern: basic, region: both}
   - {id: sent-mo-tour-058, yue: 我想買杯嘢飲。, en: "I'd like to buy a drink.", pattern: basic, region: both}
@@ -85,7 +85,7 @@ sentences:
   - {id: sent-mo-tour-073, yue: 有冇健身室？, en: "Is there a gym?", pattern: facilities, region: both}
   - {id: sent-mo-tour-074, yue: 泳池幾點開？, en: "What time does the pool open?", pattern: facilities, region: both}
   - {id: sent-mo-tour-075, yue: 有冇水療？, en: "Is there a spa?", pattern: facilities, region: both}
-  - {id: sent-mo-tour-076, yue: 我想用商務中心。, en: "I'd like to use the business centre.", pattern: facilities, region: both}
+  - {id: sent-mo-tour-076, yue: 我想用商務中心。, en: "I'd like to use the business center.", pattern: facilities, region: both}
   - {id: sent-mo-tour-077, yue: 前台喺邊？, en: "Where's the front desk?", pattern: facilities, region: both}
   - {id: sent-mo-tour-078, yue: 我唔見咗張房卡。, en: "I've lost my key card.", pattern: room, region: both}
   - {id: sent-mo-tour-079, yue: 我將張卡留咗喺房入面。, en: "I left my key card in the room.", pattern: room, region: both}

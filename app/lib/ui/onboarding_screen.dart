@@ -138,11 +138,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   tip(
                     Icons.touch_app_rounded,
-                    'Tap a character to hear its word (and see a hidden reading).',
+                    'Tap a word to hear it and see its reading and meaning.',
                   ),
                   tip(
                     Icons.translate_rounded,
-                    'Long-press for the meaning, and save the word to My words.',
+                    'Save words you want to keep to My words from there.',
                   ),
                   tip(
                     Icons.mic_rounded,

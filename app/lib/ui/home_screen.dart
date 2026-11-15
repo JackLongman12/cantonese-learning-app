@@ -16,7 +16,6 @@ import '../engine/weak_spots.dart';
 import 'cards_screen.dart';
 import 'goal_picker.dart';
 import 'logo.dart';
-import 'mascot.dart';
 import 'paste_reader_screen.dart';
 import 'reader_screen.dart';
 import 'practice_screens.dart';
@@ -25,6 +24,7 @@ import '../platform/sfx.dart';
 import 'settings_screen.dart';
 import 'speak_drill_screen.dart';
 import 'stories_screen.dart';
+import 'tiles.dart';
 import 'topic_screen.dart';
 import 'word_sheet.dart';
 import 'words_screen.dart';
@@ -220,15 +220,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  Future<void> _openTopic(ScenarioRow sc, {bool practise = false}) async {
+  Future<void> _openTopic(ScenarioRow sc, {bool practice = false}) async {
     _s.prefs.setLastTopic(_lang, sc.id);
     _s.logger.log('nav.screen', {
-      'screen': practise ? 'reader' : 'topic',
+      'screen': practice ? 'reader' : 'topic',
       'scenario_id': sc.id,
     });
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => practise
+        builder: (_) => practice
             ? ReaderScreen(
                 services: _s,
                 title: sc.title,
@@ -504,13 +504,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final nextTopic = scenarios.where((x) => x.id == upNextId).firstOrNull;
     final goal = goalById(_s.prefs.goal);
     final overview = _overview();
-    final practiseWords = _s.words.practice(_lang);
+    final practiceWords = _s.words.practice(_lang);
     final cardsDue = _lang == 'yue'
         ? dueCards(_s, _s.content.decks())
         : const <CardRow>[];
-    final reviewCount = due + overview.chars.length + practiseWords.length;
+    final reviewCount = due + overview.chars.length + practiceWords.length;
     final plan = <_PlanStep>[
-      // Review: due characters, weak spots and words to practise in one session of
+      // Review: due characters, weak spots and words to practice in one session of
       // sentences, then any flashcards that are due.
       if (reviewCount > 0 || cardsDue.isNotEmpty || done.contains('review'))
         _PlanStep(
@@ -520,14 +520,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           detail: [
             if (due > 0) '$due due',
             if (overview.chars.isNotEmpty) '${overview.chars.length} weak',
-            if (practiseWords.isNotEmpty) '${practiseWords.length} words',
+            if (practiceWords.isNotEmpty) '${practiceWords.length} words',
             if (cardsDue.isNotEmpty) '${cardsDue.length} cards',
           ].join(' · '),
           done: done.contains('review'),
           start: () async {
             final focus = {for (final c in overview.chars) c.itemId};
             final wordSentences = {
-              for (final w in practiseWords) ?w.sentenceId,
+              for (final w in practiceWords) ?w.sentenceId,
             };
             final all = _s.content.allSentences(_lang);
             final weakLines = [
@@ -633,7 +633,48 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             onLater: () => setState(() => _update = null),
             onUpdate: () => runUpdate(context, _s, u),
           ),
-        _TodayCard(known: learned, onQuack: () => _s.sound(Sfx.quack)),
+        if (_resumable() case final r?) ...[
+          const SizedBox(height: 12),
+          Card(
+            margin: EdgeInsets.zero,
+            color: theme.colorScheme.secondaryContainer,
+            child: ListTile(
+              key: const ValueKey('resume'),
+              leading: const Icon(Icons.play_circle_outline_rounded),
+              title: Text('Resume: ${r.title}'),
+              subtitle: Text('${r.index + 1} of ${r.lines.length}'),
+              trailing: IconButton(
+                tooltip: 'Discard',
+                icon: const Icon(Icons.close_rounded),
+                onPressed: () => setState(() => _s.prefs.resume = null),
+              ),
+              onTap: () async {
+                _s.logger.log('nav.screen', {
+                  'screen': 'reader',
+                  'mode': 'resume',
+                });
+                await Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => ReaderScreen(
+                      services: _s,
+                      title: r.title,
+                      sentences: r.lines,
+                      lang: _lang,
+                      mode: r.mode,
+                      ordered: true,
+                      conversation: r.conversation,
+                      story: r.story,
+                      startAt: r.index,
+                    ),
+                  ),
+                );
+                if (mounted) setState(() {});
+              },
+            ),
+          ),
+        ],
+        const SizedBox(height: 12),
+        for (final step in plan) _PlanTile(step: step),
         const SizedBox(height: 8),
         // your goal shapes the plan; asked once, changeable here any time
         if (_s.prefs.goal == null)
@@ -689,48 +730,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ),
             ],
           ),
-        if (_resumable() case final r?) ...[
-          const SizedBox(height: 12),
-          Card(
-            margin: EdgeInsets.zero,
-            color: theme.colorScheme.secondaryContainer,
-            child: ListTile(
-              key: const ValueKey('resume'),
-              leading: const Icon(Icons.play_circle_outline_rounded),
-              title: Text('Resume: ${r.title}'),
-              subtitle: Text('${r.index + 1} of ${r.lines.length}'),
-              trailing: IconButton(
-                tooltip: 'Discard',
-                icon: const Icon(Icons.close_rounded),
-                onPressed: () => setState(() => _s.prefs.resume = null),
-              ),
-              onTap: () async {
-                _s.logger.log('nav.screen', {
-                  'screen': 'reader',
-                  'mode': 'resume',
-                });
-                await Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => ReaderScreen(
-                      services: _s,
-                      title: r.title,
-                      sentences: r.lines,
-                      lang: _lang,
-                      mode: r.mode,
-                      ordered: true,
-                      conversation: r.conversation,
-                      story: r.story,
-                      startAt: r.index,
-                    ),
-                  ),
-                );
-                if (mounted) setState(() {});
-              },
-            ),
-          ),
-        ],
-        const SizedBox(height: 16),
-        for (final step in plan) _PlanTile(step: step),
         const SizedBox(height: 16),
         _WeakSpotsCard(
           met: met,
@@ -741,7 +740,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           newThisWeek: overview.newChars,
           readingPct: overview.accuracy.readingPct,
           speakingPct: overview.accuracy.speakingPct,
-          wordsToPractise: practiseWords.length,
+          wordsToPractice: practiceWords.length,
           cardsDue: cardsDue.length,
           sounds: overview.sounds,
           chars: overview.chars,
@@ -823,78 +822,42 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
         const SizedBox(height: 24),
       ]),
+      StoriesScreen(key: ValueKey('stories-$_lang'), services: _s, lang: _lang),
+      WordsScreen(
+        key: ValueKey('words-$_lang'),
+        services: _s,
+        lang: _lang,
+        onSpeak: () => _push(
+          SpeakDrillScreen(
+            services: _s,
+            title: 'Speak',
+            sentences: pickSpeakLines(_s, _s.content.allSentences(_lang)),
+          ),
+        ),
+        skills: [
+          AppTile(
+            key: const ValueKey('open-families'),
+            icon: Icons.hub_rounded,
+            title: 'Sound families',
+            subtitle: '青 → 清 晴 請',
+            subtitleStyle: chineseStyle('yue', fontSize: 14),
+            onTap: () => _push(SoundFamiliesScreen(services: _s, lang: _lang)),
+          ),
+          AppTile(
+            key: const ValueKey('open-spoken-written'),
+            icon: Icons.compare_arrows_rounded,
+            title: 'Spoken vs written',
+            subtitle: '佢係 · 他是',
+            subtitleStyle: chineseStyle('yue', fontSize: 14),
+            onTap: () => _push(const SpokenWrittenScreen()),
+          ),
+          ...extraSkillTiles(context, _s, _push),
+        ],
+      ),
       page([
-        Text('Practice', style: theme.textTheme.titleLarge),
-        const SizedBox(height: 4),
-        Text(
-          'Short skills that make reading easier, and flashcards.',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Card(
-          key: const ValueKey('practice-speak'),
-          margin: EdgeInsets.zero,
-          color: theme.colorScheme.primaryContainer,
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
-            ),
-            leading: const Icon(Icons.record_voice_over_rounded, size: 32),
-            title: Text('Speak', style: theme.textTheme.titleMedium),
-            subtitle: const Text(
-              'Rapid speaking: 10 lines, the mic runs by itself. '
-              'Switch between reading and repeating after the audio.',
-            ),
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => _push(
-              SpeakDrillScreen(
-                services: _s,
-                title: 'Speak',
-                sentences: pickSpeakLines(_s, _s.content.allSentences(_lang)),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text('Reading skills', style: theme.textTheme.titleMedium),
-        const SizedBox(height: 8),
-        LayoutBuilder(
-          builder: (context, box) {
-            final w = (box.maxWidth - 10) / 2;
-            final skills = <Widget>[
-              _SkillTile(
-                key: const ValueKey('open-families'),
-                icon: Icons.hub_rounded,
-                title: 'Sound families',
-                subtitle: '青 → 清 晴 請',
-                onTap: () =>
-                    _push(SoundFamiliesScreen(services: _s, lang: _lang)),
-              ),
-              _SkillTile(
-                key: const ValueKey('open-spoken-written'),
-                icon: Icons.compare_arrows_rounded,
-                title: 'Spoken vs written',
-                subtitle: '佢係 · 他是',
-                onTap: () => _push(const SpokenWrittenScreen()),
-              ),
-              ...extraSkillTiles(context, _s, _push),
-            ];
-            return Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: [for (final t in skills) SizedBox(width: w, child: t)],
-            );
-          },
-        ),
-        const SizedBox(height: 24),
         if (_lang == 'yue')
           DeckSection(services: _s, onChanged: () => setState(() {})),
       ]),
-      StoriesScreen(key: ValueKey('stories-$_lang'), services: _s, lang: _lang),
-      WordsScreen(key: ValueKey('words-$_lang'), services: _s, lang: _lang),
     ];
 
     return Scaffold(
@@ -960,12 +923,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 label: 'Topics',
               ),
               NavigationDestination(
-                key: ValueKey('tab-cards'),
-                icon: Icon(Icons.style_outlined),
-                selectedIcon: Icon(Icons.style_rounded),
-                label: 'Practice',
-              ),
-              NavigationDestination(
                 key: ValueKey('tab-stories'),
                 icon: Icon(Icons.auto_stories_outlined),
                 selectedIcon: Icon(Icons.auto_stories_rounded),
@@ -973,9 +930,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ),
               NavigationDestination(
                 key: ValueKey('tab-words'),
-                icon: Icon(Icons.bookmarks_outlined),
-                selectedIcon: Icon(Icons.bookmarks_rounded),
-                label: 'Words',
+                icon: Icon(Icons.fitness_center_outlined),
+                selectedIcon: Icon(Icons.fitness_center_rounded),
+                label: 'Train',
+              ),
+              NavigationDestination(
+                key: ValueKey('tab-cards'),
+                icon: Icon(Icons.style_outlined),
+                selectedIcon: Icon(Icons.style_rounded),
+                label: 'Cards',
               ),
             ],
           ),
@@ -984,7 +947,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  static const _tabNames = ['today', 'topics', 'cards', 'stories', 'words'];
+  static const _tabNames = ['today', 'topics', 'stories', 'words', 'cards'];
 
   Widget _header(ThemeData theme) {
     return Row(
@@ -1032,7 +995,7 @@ class _WeakSpotsCard extends StatelessWidget {
     required this.newThisWeek,
     required this.readingPct,
     required this.speakingPct,
-    required this.wordsToPractise,
+    required this.wordsToPractice,
     required this.cardsDue,
     required this.sounds,
     required this.chars,
@@ -1044,7 +1007,7 @@ class _WeakSpotsCard extends StatelessWidget {
   final int newThisWeek;
   final int? readingPct;
   final int? speakingPct;
-  final int wordsToPractise;
+  final int wordsToPractice;
   final int cardsDue;
   final List<SoundMixup> sounds;
   final List<ItemState> chars;
@@ -1111,7 +1074,7 @@ class _WeakSpotsCard extends StatelessWidget {
             Row(
               children: [
                 _Metric(value: '${chars.length}', label: 'weak characters'),
-                _Metric(value: '$wordsToPractise', label: 'words to practise'),
+                _Metric(value: '$wordsToPractice', label: 'words to practice'),
                 _Metric(value: '$cardsDue', label: 'cards due'),
               ],
             ),
@@ -1255,75 +1218,6 @@ class _PlanTile extends StatelessWidget {
   }
 }
 
-class _TodayCard extends StatelessWidget {
-  const _TodayCard({required this.known, this.onQuack});
-
-  /// Characters learned (read without help after meeting them).
-  final int known;
-  final VoidCallback? onQuack;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final lv = readingLevel(known);
-    return Card(
-      key: const ValueKey('today-card'),
-      margin: EdgeInsets.zero,
-      color: scheme.primaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 10, 16, 10),
-        child: Row(
-          children: [
-            GestureDetector(
-              key: const ValueKey('mascot'),
-              onTap: onQuack,
-              child: DuckMascot(
-                size: 64,
-                stage: DuckStage.forKnown(known),
-                mood: DuckMood.happy,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Level ${lv.level}',
-                    key: const ValueKey('reading-level'),
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: scheme.onPrimaryContainer,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: lv.need == 0 ? 1 : lv.have / lv.need,
-                      minHeight: 6,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    lv.need == 0
-                        ? '$known characters learned'
-                        : '${lv.need - lv.have} more characters learned to level ${lv.level + 1}',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: scheme.onPrimaryContainer,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 /// Icons chosen from the scenario id so new topics get a sensible default.
 IconData _topicIcon(String id) {
   const byKeyword = {
@@ -1450,43 +1344,6 @@ class _TopicTile extends StatelessWidget {
                   color: scheme.onSurfaceVariant,
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SkillTile extends StatelessWidget {
-  const _SkillTile({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-  });
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      margin: EdgeInsets.zero,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(icon, color: theme.colorScheme.primary),
-              const SizedBox(height: 8),
-              Text(title, style: theme.textTheme.titleSmall),
-              Text(subtitle, style: chineseStyle('yue', fontSize: 14)),
             ],
           ),
         ),

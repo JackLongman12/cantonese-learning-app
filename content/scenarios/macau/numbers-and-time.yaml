@@ -71,7 +71,7 @@ sentences:
   - {id: sent-mo-num-059, yue: 一公斤。, en: "One kilogram.", pattern: amount, region: both}
   - {id: sent-mo-num-060, yue: 五百克。, en: "Five hundred grams.", pattern: amount, region: both}
   - {id: sent-mo-num-061, yue: 三十度。, en: "Thirty degrees.", pattern: amount, region: both}
-  - {id: sent-mo-num-062, yue: 一米七。, en: "One metre seventy.", pattern: amount, region: both}
+  - {id: sent-mo-num-062, yue: 一米七。, en: "One meter seventy.", pattern: amount, region: both}
   - {id: sent-mo-num-063, yue: 你幾多歲？, en: "How old are you?", pattern: age, region: both}
   - {id: sent-mo-num-064, yue: 我二十八歲。, en: "I'm twenty-eight.", pattern: age, region: both}
   - {id: sent-mo-num-065, yue: 佢三十幾歲。, en: "They're in their thirties.", pattern: age, region: both}

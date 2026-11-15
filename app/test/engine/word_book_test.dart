@@ -57,7 +57,7 @@ void main() {
     expect(book.highlights('yue', '行路去銀行'), [(0, 2), (3, 5)]);
   });
 
-  test('struggled words go on the practice list until practised twice', () {
+  test('struggled words go on the practice list until practiced twice', () {
     final book = WordBook.replay([
       ev('word.flag', {
         'text': '銀行',

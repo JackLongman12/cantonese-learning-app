@@ -49,7 +49,7 @@ sentences:
     tags: [yum-cha]
   - id: sent-food-010
     yue: 我最鍾意食流沙包。
-    en: "Custard lava buns are my favourite."
+    en: "Custard lava buns are my favorite."
     tags: [yum-cha]
   - id: sent-food-011
     yue: 春卷炸得好脆。
@@ -275,7 +275,7 @@ sentences:
   # --- home cooking and soup ---------------------------------------------------------
   - id: sent-food-063
     yue: 阿媽今晚煲咗湯。
-    en: "Mum made soup tonight."
+    en: "Mom made soup tonight."
     tags: [home]
   - id: sent-food-064
     yue: 老火湯要煲幾個鐘。

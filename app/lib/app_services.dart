@@ -29,8 +29,8 @@ class AppServices {
     required this.logger,
     required this.learner,
     required this.memory,
-    required this.playAudio,
-    this.playAudioSlow,
+    required PlayAudio playAudio,
+    PlayAudio? playAudioSlow,
     this.stopAudio,
     this.speech,
     this.playFile,
@@ -42,8 +42,12 @@ class AppServices {
     this.voice,
     this.signals = const SignalPolicy(),
     this.planner = const Planner(),
-  }) : prefs = prefs ?? Prefs.memory(),
+  }) : _playAudio = playAudio, // ignore: prefer_initializing_formals
+       _playAudioSlow = playAudioSlow, // ignore: prefer_initializing_formals
+       prefs = prefs ?? Prefs.memory(),
        shares = shares ?? ShareInbox() {
+    // starting the mic silences whatever is playing
+    speech?.beforeRecording = () async => stopAudio?.call();
     logger.addListener(learner.apply);
     logger.addListener((e) => words.apply(e));
   }
@@ -55,10 +59,25 @@ class AppServices {
   final EventLogger logger;
   final LearnerModel learner;
   final Memory memory;
-  final PlayAudio playAudio;
+  final PlayAudio _playAudio;
+  final PlayAudio? _playAudioSlow;
+
+  /// True while the mic records: nothing plays then (it would be recorded too).
+  bool get micBusy => speech?.recording ?? false;
+
+  /// Plays a clip, unless the mic is recording.
+  PlayAudio get playAudio => (path) async {
+    if (micBusy) return;
+    await _playAudio(path);
+  };
 
   /// Plays a clip at reduced speed (null in tests: falls back to [playAudio]).
-  final PlayAudio? playAudioSlow;
+  PlayAudio? get playAudioSlow => _playAudioSlow == null
+      ? null
+      : (path) async {
+          if (micBusy) return;
+          await _playAudioSlow(path);
+        };
 
   /// Silences every clip and the word voice (null in tests).
   final Future<void> Function()? stopAudio;
@@ -81,6 +100,7 @@ class AppServices {
   /// Says a word: the recorded clip when there is one (card names, sentences),
   /// otherwise the device's Cantonese voice. False if neither is available.
   Future<bool> sayWord(String text, String lang) async {
+    if (micBusy) return true;
     final path = content.audioPath(lang, text);
     if (path != null) {
       await playAudio(path);

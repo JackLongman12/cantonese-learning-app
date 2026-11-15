@@ -10,7 +10,7 @@ dialogues:
       - ["你", "發燒成三日，食咗退燒藥都冇用。", "I've had a fever for three days; the fever medicine hasn't helped."]
       - ["醫生", "仲有冇其他徵狀？咳唔咳？", "Any other symptoms? Coughing?"]
       - ["你", "有啲咳，夜晚咳到瞓唔到。", "A bit; at night I cough so much I can't sleep."]
-      - ["醫生", "最近有冇去過邊度旅行？", "Have you travelled anywhere recently?"]
+      - ["醫生", "最近有冇去過邊度旅行？", "Have you traveled anywhere recently?"]
       - ["你", "上個禮拜返咗內地探親。", "Last week I went to the mainland to visit relatives."]
       - ["醫生", "我幫你聽吓個肺先，深呼吸。", "Let me listen to your lungs first. Deep breath."]
       - ["醫生", "右邊有啲聲，可能係肺炎，要照X光。", "There's a sound on the right; it might be pneumonia. You need an X-ray."]

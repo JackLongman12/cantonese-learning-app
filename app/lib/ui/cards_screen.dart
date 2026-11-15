@@ -19,6 +19,7 @@ import '../events/event_logger.dart';
 import '../platform/sfx.dart';
 import 'mic_check.dart';
 import 'ruby_text.dart';
+import 'tiles.dart';
 import 'word_sheet.dart';
 
 /// Deck tiles for the Topics tab (Cantonese only: these are Cantonese names).
@@ -40,7 +41,7 @@ class DeckSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Flashcards', style: theme.textTheme.titleMedium),
+        Text('Flashcards', style: theme.textTheme.titleLarge),
         const SizedBox(height: 4),
         Text(
           'Cantonese dishes with photos, and real street and station names '
@@ -75,29 +76,33 @@ class DeckSection extends StatelessWidget {
               ),
             ),
           ),
-        for (final d in decks)
-          _DeckTile(
-            deck: d,
-            progress: deckProgress(
-              [for (final c in services.content.cards(d.id)) c.id],
-              services.learner.stateOf,
-              now,
-            ),
-            onTap: () async {
-              services.sound(Sfx.tap);
-              services.logger.log('nav.screen', {
-                'screen': 'deck',
-                'deck_id': d.id,
-              });
-              await Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) =>
-                      CardSessionScreen(services: services, deck: d),
+        TileGrid(
+          children: [
+            for (final d in decks)
+              _DeckTile(
+                deck: d,
+                progress: deckProgress(
+                  [for (final c in services.content.cards(d.id)) c.id],
+                  services.learner.stateOf,
+                  now,
                 ),
-              );
-              onChanged();
-            },
-          ),
+                onTap: () async {
+                  services.sound(Sfx.tap);
+                  services.logger.log('nav.screen', {
+                    'screen': 'deck',
+                    'deck_id': d.id,
+                  });
+                  await Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) =>
+                          CardSessionScreen(services: services, deck: d),
+                    ),
+                  );
+                  onChanged();
+                },
+              ),
+          ],
+        ),
         const SizedBox(height: 20),
       ],
     );
@@ -127,67 +132,23 @@ class _DeckTile extends StatelessWidget {
     required this.onTap,
   });
   final DeckRow deck;
-  final ({int learnt, int due}) progress;
+  final ({int learned, int due}) progress;
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final icon = deck.id == 'food'
+  Widget build(BuildContext context) => AppTile(
+    key: ValueKey('deck-${deck.id}'),
+    icon: deck.id == 'food'
         ? Icons.restaurant_rounded
         : deck.id.contains('streets')
         ? Icons.signpost_rounded
-        : Icons.train_rounded;
-    return Card(
-      key: ValueKey('deck-${deck.id}'),
-      margin: const EdgeInsets.only(bottom: 10),
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: scheme.tertiaryContainer,
-                foregroundColor: scheme.onTertiaryContainer,
-                child: Icon(icon),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(deck.title, style: theme.textTheme.titleSmall),
-                    const SizedBox(height: 6),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(
-                        value: deck.count == 0
-                            ? 0
-                            : progress.learnt / deck.count,
-                        minHeight: 6,
-                        backgroundColor: scheme.surfaceContainerHighest,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${progress.learnt} of ${deck.count} seen'
-                      '${progress.due > 0 ? ' · ${progress.due} due' : ''}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: scheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.chevron_right_rounded, color: scheme.onSurfaceVariant),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+        : Icons.train_rounded,
+    title: deck.title,
+    subtitle: '${progress.learned} of ${deck.count} seen',
+    badge: progress.due > 0 ? '${progress.due} due' : null,
+    progress: deck.count == 0 ? 0 : progress.learned / deck.count,
+    onTap: onTap,
+  );
 }
 
 class CardSessionScreen extends StatefulWidget {

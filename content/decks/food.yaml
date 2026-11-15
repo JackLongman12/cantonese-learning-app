@@ -1,5 +1,5 @@
 # Food flashcards: dish names from Cantonese Wikipedia (zh-yue) categories, with the
-# article's photo when Wikimedia Commons lists a free licence (credited on the card).
+# article's photo when Wikimedia Commons lists a free license (credited on the card).
 # English: the English Wikipedia article title, else the dictionary meaning.
 # Edit this file to add or drop dishes; `duk fetch --only food` then `duk build`.
 deck:

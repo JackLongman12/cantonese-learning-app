@@ -30,6 +30,9 @@ class SpeechEngine {
   String? _lang;
   final _recorder = AudioRecorder();
   StreamSubscription<Uint8List>? _sub;
+
+  /// Runs before each recording starts (the app stops any audio playing).
+  Future<void> Function()? beforeRecording;
   final _pcm = BytesBuilder(copy: false);
 
   static const sampleRate = 16000;
@@ -124,6 +127,7 @@ class SpeechEngine {
     void Function()? onFinished,
     Duration maxLength = const Duration(seconds: 20),
   }) async {
+    await beforeRecording?.call();
     _pcm.clear();
     final end = EndOfSpeech(sampleRate: sampleRate, maxLength: maxLength);
     _end = end;

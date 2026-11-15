@@ -69,10 +69,12 @@ void main() {
       final s = make(db, prefs, store);
       await t.pumpWidget(
         MaterialApp(
-          home: StoriesScreen(services: s, lang: 'yue'),
+          home: Scaffold(
+            body: StoriesScreen(services: s, lang: 'yue'),
+          ),
         ),
       );
-      expect(find.text('Good next read'), findsOneWidget);
+      expect(find.byKey(const ValueKey('story-next')), findsOneWidget);
       await t.tap(find.byKey(const ValueKey('story-sty-breakfast-yue')));
       await t.pumpAndSettle();
       for (var i = 0; i < 3; i++) {

@@ -29,18 +29,18 @@ List<String> pickCards({
   return out;
 }
 
-/// (learnt, due) for a deck: learnt = seen at least once.
-({int learnt, int due}) deckProgress(
+/// (learned, due) for a deck: learned = seen at least once.
+({int learned, int due}) deckProgress(
   List<String> ids,
   ItemState Function(String id) stateOf,
   DateTime now,
 ) {
-  var learnt = 0, due = 0;
+  var learned = 0, due = 0;
   for (final id in ids) {
     final s = stateOf(id);
     if (s.isNew) continue;
-    learnt++;
+    learned++;
     if (s.due != null && !s.due!.isAfter(now)) due++;
   }
-  return (learnt: learnt, due: due);
+  return (learned: learned, due: due);
 }

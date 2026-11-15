@@ -10,16 +10,16 @@ defaults: {register: spoken, source: llm}
 
 # `pattern` groups variations of one sentence frame so the planner spreads them out.
 sentences:
-  - {id: sent-mo-home-001, yue: 我想租屋。, en: "I'm looking for a flat to rent.", pattern: rent, region: both}
-  - {id: sent-mo-home-002, yue: 呢個單位租幾多錢一個月？, en: "How much a month is this flat?", pattern: rent, region: both}
+  - {id: sent-mo-home-001, yue: 我想租屋。, en: "I'm looking for an apartment to rent.", pattern: rent, region: both}
+  - {id: sent-mo-home-002, yue: 呢個單位租幾多錢一個月？, en: "How much a month is this apartment?", pattern: rent, region: both}
   - {id: sent-mo-home-003, yue: 包唔包水電？, en: "Are water and electricity included?", pattern: rent, region: both}
   - {id: sent-mo-home-004, yue: 要俾幾多個月按金？, en: "How many months' deposit?", pattern: rent, region: both}
   - {id: sent-mo-home-005, yue: 租約簽幾耐？, en: "How long is the lease?", pattern: rent, region: both}
-  - {id: sent-mo-home-006, yue: 可唔可以約個時間睇樓？, en: "Can we arrange a time to view the flat?", pattern: view, region: both}
+  - {id: sent-mo-home-006, yue: 可唔可以約個時間睇樓？, en: "Can we arrange a time to view the apartment?", pattern: view, region: both}
   - {id: sent-mo-home-007, yue: 呢度有幾多個房？, en: "How many bedrooms are there?", pattern: view, region: both}
   - {id: sent-mo-home-008, yue: 有冇冷氣？, en: "Is there air conditioning?", pattern: view, region: both}
   - {id: sent-mo-home-009, yue: 有冇傢俬？, en: "Is it furnished?", pattern: view, region: both}
-  - {id: sent-mo-home-010, yue: 有冇電梯？, en: "Is there a lift?", pattern: view, region: both}
+  - {id: sent-mo-home-010, yue: 有冇電梯？, en: "Is there an elevator?", pattern: view, region: both}
   - {id: sent-mo-home-011, yue: 喺幾多樓呀？, en: "Which floor is it on?", pattern: view, region: both}
   - {id: sent-mo-home-012, yue: 呢度近唔近巴士站？, en: "Is it near a bus stop?", pattern: view, region: both}
   - {id: sent-mo-home-013, yue: 附近有冇街市？, en: "Is there a market nearby?", pattern: view, region: both}
@@ -50,9 +50,9 @@ sentences:
   - {id: sent-mo-home-038, yue: 管理費幾多錢？, en: "How much is the management fee?", pattern: bills, region: both}
   - {id: sent-mo-home-039, yue: 管理處喺邊度？, en: "Where's the management office?", pattern: building, region: both}
   - {id: sent-mo-home-040, yue: 樓下有保安。, en: "There's a security guard downstairs.", pattern: building, region: both}
-  - {id: sent-mo-home-041, yue: 垃圾房喺邊？, en: "Where's the rubbish room?", pattern: building, region: both}
-  - {id: sent-mo-home-042, yue: 幾點收垃圾？, en: "What time is the rubbish collected?", pattern: building, region: both}
-  - {id: sent-mo-home-043, yue: 隔籬好嘈。, en: "The neighbours are very noisy.", pattern: neighbours, region: both}
+  - {id: sent-mo-home-041, yue: 垃圾房喺邊？, en: "Where's the garbage room?", pattern: building, region: both}
+  - {id: sent-mo-home-042, yue: 幾點收垃圾？, en: "What time is the garbage collected?", pattern: building, region: both}
+  - {id: sent-mo-home-043, yue: 隔籬好嘈。, en: "The neighbors are very noisy.", pattern: neighbours, region: both}
   - {id: sent-mo-home-044, yue: 樓上漏水落嚟。, en: "Water is leaking down from upstairs.", pattern: neighbours, region: both}
   - {id: sent-mo-home-045, yue: 唔該細聲啲。, en: "Please keep it down.", pattern: neighbours, region: both}
   - {id: sent-mo-home-046, yue: 早晨！, en: "Good morning!", pattern: neighbours, region: both}
@@ -67,7 +67,7 @@ sentences:
   - {id: sent-mo-home-055, yue: 我去洗衫。, en: "I'm going to do the laundry.", pattern: chores, region: both}
   - {id: sent-mo-home-056, yue: 幫手晾衫。, en: "Help hang the clothes out.", pattern: chores, region: both}
   - {id: sent-mo-home-057, yue: 收衫喇，就快落雨。, en: "Bring the laundry in, it's about to rain.", pattern: chores, region: both}
-  - {id: sent-mo-home-058, yue: 我去倒垃圾。, en: "I'm taking the rubbish out.", pattern: chores, region: both}
+  - {id: sent-mo-home-058, yue: 我去倒垃圾。, en: "I'm taking the trash out.", pattern: chores, region: both}
   - {id: sent-mo-home-059, yue: 洗碗啦。, en: "Do the dishes.", pattern: chores, region: both}
   - {id: sent-mo-home-060, yue: 我煮飯，你洗碗。, en: "I'll cook, you wash up.", pattern: chores, region: both}
   - {id: sent-mo-home-061, yue: 拖下地啦。, en: "Mop the floor, will you.", pattern: chores, region: both}
@@ -109,4 +109,4 @@ sentences:
   - {id: sent-mo-home-097, yue: 大廈有冇泳池？, en: "Does the building have a pool?", pattern: building, region: both}
   - {id: sent-mo-home-098, yue: 大廈有會所。, en: "The building has a clubhouse.", pattern: building, region: both}
   - {id: sent-mo-home-099, yue: 地方唔大，但係好光猛。, en: "It's not big, but it's very bright.", pattern: view, region: both}
-  - {id: sent-mo-home-100, yue: 我好鍾意呢個單位。, en: "I really like this flat.", pattern: view, region: both}
+  - {id: sent-mo-home-100, yue: 我好鍾意呢個單位。, en: "I really like this apartment.", pattern: view, region: both}

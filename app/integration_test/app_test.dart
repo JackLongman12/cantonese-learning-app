@@ -69,7 +69,7 @@ void main() {
       ),
     );
     await t.pumpAndSettle();
-    await t.tap(find.byKey(const ValueKey('practise')));
+    await t.tap(find.byKey(const ValueKey('practice')));
     await t.pumpAndSettle();
     expect(find.byKey(const ValueKey('ruby-0')), findsOneWidget);
 

@@ -12,7 +12,7 @@ stories:
       - ["我即刻跳起身，刷牙洗面。", "I jump straight up, brush my teeth and wash my face."]
       - ["冇時間食早餐喇。", "There's no time for breakfast."]
       - ["我拎住手機同銀包就出門口。", "I grab my phone and wallet and head out the door."]
-      - ["樓下巴士站已經排咗好長龍。", "There's already a long queue at the bus stop downstairs."]
+      - ["樓下巴士站已經排咗好長龍。", "There's already a long line at the bus stop downstairs."]
       - ["第一架巴士太迫，我上唔到。", "The first bus is too packed; I can't get on."]
       - ["第二架終於嚟喇，我企喺門口。", "The second one finally comes; I stand by the door."]
       - ["車上面好多人睇緊手機。", "Lots of people on the bus are looking at their phones."]
@@ -53,7 +53,7 @@ stories:
     lines:
       - ["我琴晚開始喉嚨痛，今朝仲有啲發燒。", "My throat started hurting last night, and this morning I have a slight fever."]
       - ["我打電話去公司請病假。", "I call the office to take sick leave."]
-      - ["附近有間診所，我去咗排隊。", "There's a clinic nearby, so I go and queue."]
+      - ["附近有間診所，我去咗排隊。", "There's a clinic nearby, so I go and line up."]
       - ["姑娘問我要身份證，幫我登記。", "The nurse asks for my ID card and registers me."]
       - ["佢幫我探熱，三十八度。", "She takes my temperature: thirty-eight degrees."]
       - ["等咗差唔多一個鐘，終於輪到我。", "After waiting nearly an hour, it's finally my turn."]
@@ -65,7 +65,7 @@ stories:
       - ["佢仲提我：「呢幾日唔好飲凍嘢。」", "She also reminds me: \"No cold drinks these next few days.\""]
       - ["返到屋企，我食完藥就瞓覺。", "Back home, I take the medicine and go to sleep."]
       - ["一覺瞓醒，已經夜晚喇。", "When I wake up, it's already night."]
-      - ["阿媽煲咗粥，叫我食啲先再食藥。", "Mum has made congee and tells me to eat some before the medicine."]
+      - ["阿媽煲咗粥，叫我食啲先再食藥。", "Mom has made congee and tells me to eat some before the medicine."]
       - ["飲住熱粥，我覺得舒服好多。", "Eating hot congee, I feel much better."]
 
   - id: sty-new-job-yue
@@ -111,7 +111,7 @@ stories:
       - ["夜晚我哋一齊去睇煙花。", "In the evening we all go to watch the fireworks."]
       - ["海邊迫滿晒人，但係煙花好靚。", "The waterfront is packed, but the fireworks are beautiful."]
       - ["返到屋企，我數吓啲利是，好滿足。", "Back home, I count my red packets, very satisfied."]
-      - ["阿媽話：「啲錢記住儲起佢呀。」", "Mum says: \"Remember to save that money.\""]
+      - ["阿媽話：「啲錢記住儲起佢呀。」", "Mom says: \"Remember to save that money.\""]
 
   - id: sty-wedding-yue
     lang: yue
@@ -162,7 +162,7 @@ stories:
     title: "Mid-Autumn night"
     lines:
       - ["中秋節嗰晚，屋企人一齊食團圓飯。", "On Mid-Autumn night, the family has a reunion dinner together."]
-      - ["阿媽整咗成枱餸，有雞有魚。", "Mum has cooked a whole table of dishes, chicken and fish."]
+      - ["阿媽整咗成枱餸，有雞有魚。", "Mom has cooked a whole table of dishes, chicken and fish."]
       - ["食完飯，阿爸切月餅俾大家食。", "After dinner, Dad cuts mooncakes for everyone."]
       - ["我鍾意食蓮蓉，細佬鍾意食冰皮。", "I like lotus seed paste; my little brother likes snow skin."]
       - ["月餅好甜，一定要配茶。", "Mooncakes are very sweet; you need tea with them."]

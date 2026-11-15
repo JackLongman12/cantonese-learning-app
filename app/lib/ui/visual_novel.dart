@@ -27,7 +27,7 @@ const speakerRoles = {
   '職員': 'Staff',
   '經紀': 'Agent',
   '業主': 'Landlord',
-  '鄰居': 'Neighbour',
+  '鄰居': 'Neighbor',
   '速遞員': 'Courier',
   '室友': 'Flatmate',
   '同事': 'Colleague',
@@ -114,7 +114,7 @@ class CharacterSprite extends StatelessWidget {
   }
 }
 
-/// Name plate: "伙計 Waiter" in the speaker's colour, with a small triangle pointing up
+/// Name plate: "伙計 Waiter" in the speaker's color, with a small triangle pointing up
 /// at the person on stage.
 class NamePlate extends StatelessWidget {
   const NamePlate({super.key, required this.speaker, required this.mine});

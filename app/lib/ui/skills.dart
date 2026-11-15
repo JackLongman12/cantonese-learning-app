@@ -10,6 +10,7 @@ import '../data/content_db.dart';
 import '../engine/scaffold.dart';
 import '../platform/sfx.dart';
 import 'ruby_text.dart';
+import 'tiles.dart';
 import 'word_sheet.dart';
 
 /// A picture (emoji) for a meaning-component hint. Pictures only: the meanings come
@@ -156,27 +157,13 @@ class _Tile extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      margin: EdgeInsets.zero,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(icon, color: theme.colorScheme.primary),
-              const SizedBox(height: 8),
-              Text(title, style: theme.textTheme.titleSmall),
-              Text(subtitle, style: chineseStyle('yue', fontSize: 14)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppTile(
+    icon: icon,
+    title: title,
+    subtitle: subtitle,
+    subtitleStyle: chineseStyle('yue', fontSize: 14),
+    onTap: onTap,
+  );
 }
 
 /// Meaning components: the part of a character that hints at what it is about.

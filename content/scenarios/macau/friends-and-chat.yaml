@@ -98,7 +98,7 @@ sentences:
   - {id: sent-mo-chat-086, yue: 我哋影張相啦。, en: "Let's take a photo.", pattern: photo, region: both}
   - {id: sent-mo-chat-087, yue: 可唔可以幫我哋影張相？, en: "Could you take a photo of us?", pattern: photo, region: both}
   - {id: sent-mo-chat-088, yue: 你屋企人好嗎？, en: "How's your family?", pattern: family, region: both}
-  - {id: sent-mo-chat-089, yue: 我媽咪好鍾意煮嘢食。, en: "My mum loves cooking.", pattern: family, region: both}
+  - {id: sent-mo-chat-089, yue: 我媽咪好鍾意煮嘢食。, en: "My mom loves cooking.", pattern: family, region: both}
   - {id: sent-mo-chat-090, yue: 我爸爸喺香港返工。, en: "My dad works in Hong Kong.", pattern: family, region: both}
   - {id: sent-mo-chat-091, yue: 我細佬讀緊大學。, en: "My younger brother is at university.", pattern: family, region: both}
   - {id: sent-mo-chat-092, yue: 我家姐結咗婚。, en: "My older sister is married.", pattern: family, region: both}

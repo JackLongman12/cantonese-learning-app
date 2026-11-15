@@ -15,7 +15,7 @@ sentences:
   - {id: sent-mo-gov-003, yue: 我想存錢。, en: "I'd like to deposit money.", pattern: bank, region: both}
   - {id: sent-mo-gov-004, yue: 我想攞錢。, en: "I'd like to withdraw money.", pattern: bank, region: both}
   - {id: sent-mo-gov-005, yue: 我想過數俾人。, en: "I'd like to transfer money to someone.", pattern: bank, region: both}
-  - {id: sent-mo-gov-006, yue: 呢張支票我想入數。, en: "I'd like to pay in this cheque.", pattern: bank, region: both}
+  - {id: sent-mo-gov-006, yue: 呢張支票我想入數。, en: "I'd like to deposit this check.", pattern: bank, region: both}
   - {id: sent-mo-gov-007, yue: 部櫃員機食咗我張卡。, en: "The cash machine swallowed my card.", pattern: bank, region: both}
   - {id: sent-mo-gov-008, yue: 我唔記得密碼。, en: "I've forgotten my PIN.", pattern: bank, region: both}
   - {id: sent-mo-gov-009, yue: 我想改地址。, en: "I'd like to change my address.", pattern: forms, region: both}
@@ -24,10 +24,10 @@ sentences:
   - {id: sent-mo-gov-012, yue: 使唔使影相？, en: "Do I need a photo?", pattern: id, region: both}
   - {id: sent-mo-gov-013, yue: 要等幾耐先攞到？, en: "How long until I can collect it?", pattern: id, region: both}
   - {id: sent-mo-gov-014, yue: 使唔使預約？, en: "Do I need an appointment?", pattern: office, region: both}
-  - {id: sent-mo-gov-015, yue: 喺邊度攞籌？, en: "Where do I take a queue number?", pattern: office, region: both}
+  - {id: sent-mo-gov-015, yue: 喺邊度攞籌？, en: "Where do I take a number?", pattern: office, region: both}
   - {id: sent-mo-gov-016, yue: 而家叫到幾多號？, en: "What number are they calling now?", pattern: office, region: both}
   - {id: sent-mo-gov-017, yue: 我係一百二十三號。, en: "I'm number 123.", pattern: office, region: both}
-  - {id: sent-mo-gov-018, yue: 請問呢度係咪排隊？, en: "Excuse me, is this the queue?", pattern: office, region: both}
+  - {id: sent-mo-gov-018, yue: 請問呢度係咪排隊？, en: "Excuse me, is this the line?", pattern: office, region: both}
   - {id: sent-mo-gov-019, yue: 呢份表點填？, en: "How do I fill in this form?", pattern: forms, region: both}
   - {id: sent-mo-gov-020, yue: 呢度要簽名。, en: "You need to sign here.", pattern: forms, region: both}
   - {id: sent-mo-gov-021, yue: 用中文定英文填？, en: "Do I fill it in in Chinese or English?", pattern: forms, region: both}

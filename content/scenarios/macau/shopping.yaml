@@ -18,7 +18,7 @@ sentences:
   - {id: sent-mo-shop-006, yue: 太貴喇，我唔要喇。, en: "Too expensive, I'll leave it.", pattern: bargain, region: both}
   - {id: sent-mo-shop-007, yue: 我睇下先。, en: "I'm just looking.", pattern: browse, region: both}
   - {id: sent-mo-shop-008, yue: 我諗下先。, en: "Let me think about it.", pattern: browse, region: both}
-  - {id: sent-mo-shop-009, yue: 有冇其他顏色？, en: "Any other colours?", pattern: options, region: both}
+  - {id: sent-mo-shop-009, yue: 有冇其他顏色？, en: "Any other colors?", pattern: options, region: both}
   - {id: sent-mo-shop-010, yue: 有冇大啲嘅？, en: "Do you have a bigger one?", pattern: options, region: both}
   - {id: sent-mo-shop-011, yue: 有冇細啲嘅？, en: "Do you have a smaller one?", pattern: options, region: both}
   - {id: sent-mo-shop-012, yue: 有冇細碼？, en: "Do you have a small size?", pattern: options, region: both}

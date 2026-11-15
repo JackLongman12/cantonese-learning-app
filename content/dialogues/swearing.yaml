@@ -18,12 +18,12 @@ dialogues:
       - ["朋友", "教練都唔知做乜鬼。", "The coach has no idea what he's doing either."]
       - ["你", "頂唔順，我去攞啤酒。", "Can't take it, I'm getting a beer."]
   - id: dlg-sw-03
-    title: "Someone cuts the queue"
+    title: "Someone cuts in line"
     lines:
-      - ["路人", "喂，你打尖呀！", "Hey, you're cutting the queue!"]
+      - ["路人", "喂，你打尖呀！", "Hey, you're cutting in line!"]
       - ["你", "唔好意思，我唔知有人排緊。", "Sorry, I didn't know people were queuing."]
       - ["路人", "你黐線㗎？咁長條人龍睇唔到？", "Are you crazy? You can't see that long line?"]
-      - ["你", "講嘢斯文啲啦，我而家去排囉。", "Watch your language, I'm going to queue now."]
+      - ["你", "講嘢斯文啲啦，我而家去排囉。", "Watch your language, I'm going to line up now."]
   - id: dlg-sw-04
     title: "Reading a forum post"
     lines:

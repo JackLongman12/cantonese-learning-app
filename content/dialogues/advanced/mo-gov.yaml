@@ -15,6 +15,6 @@ dialogues:
       - ["職員", "要列印出嚟，或者喺網上預約再嚟過。", "It needs to be printed, or book online and come back."]
       - ["你", "附近有冇地方可以列印？", "Is there anywhere nearby I can print it?"]
       - ["職員", "樓下有間文具舖，你可以去試吓。", "There's a stationery shop downstairs; you could try there."]
-      - ["你", "我印完返嚟，使唔使再排隊？", "When I come back with it, do I have to queue again?"]
+      - ["你", "我印完返嚟，使唔使再排隊？", "When I come back with it, do I have to line up again?"]
       - ["職員", "你拎住呢張籌，返嚟直接搵我。", "Keep this ticket and come straight back to me."]
       - ["你", "唔該晒，你幫咗我好大忙。", "Thanks so much, you've been a huge help."]

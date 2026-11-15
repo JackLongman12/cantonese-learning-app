@@ -16,7 +16,7 @@ dialogues:
       - ["店員", "想搵啲咩呀？", "What are you looking for?"]
       - ["你", "我想試下呢件衫。", "I'd like to try this top."]
       - ["店員", "你著咩碼？", "What size are you?"]
-      - ["你", "中碼，有冇其他顏色？", "Medium. Any other colours?"]
+      - ["你", "中碼，有冇其他顏色？", "Medium. Any other colors?"]
       - ["店員", "仲有黑色同白色。", "There's also black and white."]
   - id: dlg-mo-shop-03
     title: "Exchanging shoes"

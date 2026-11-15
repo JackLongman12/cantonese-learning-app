@@ -144,7 +144,7 @@ class WordBook {
   bool needsPractice(String lang, String text) =>
       _practice.containsKey('$lang:$text');
 
-  /// Words to practise, most missed first.
+  /// Words to practice, most missed first.
   List<PracticeWord> practice(String lang) =>
       _practice.values.where((w) => w.lang == lang).toList()..sort(
         (a, b) => b.misses != a.misses

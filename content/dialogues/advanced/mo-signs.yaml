@@ -6,7 +6,7 @@ dialogues:
     title: "Reading the notices in a building"
     level: 3
     lines:
-      - ["鄰居", "你睇唔睇到升降機門口張告示？", "Did you see the notice by the lift?"]
+      - ["鄰居", "你睇唔睇到升降機門口張告示？", "Did you see the notice by the elevator?"]
       - ["你", "見到，但係有啲字我唔識讀。", "I saw it, but there were some characters I couldn't read."]
       - ["鄰居", "佢話聽日停水，由朝早九點到下晝五點。", "It says the water's off tomorrow, from nine in the morning to five in the afternoon."]
       - ["你", "停水？點解嘅？", "Water off? Why?"]

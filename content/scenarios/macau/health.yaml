@@ -86,7 +86,7 @@ sentences:
   - {id: sent-mo-health-074, yue: 我睇嘢唔清楚。, en: "I can't see clearly.", pattern: eyes, region: both}
   - {id: sent-mo-health-075, yue: 我皮膚出咗啲紅點。, en: "I've got red spots on my skin.", pattern: skin, region: both}
   - {id: sent-mo-health-076, yue: 好痕呀。, en: "It's really itchy.", pattern: skin, region: both}
-  - {id: sent-mo-health-077, yue: 我曬傷咗。, en: "I got sunburnt.", pattern: skin, region: both}
+  - {id: sent-mo-health-077, yue: 我曬傷咗。, en: "I got sunburned.", pattern: skin, region: both}
   - {id: sent-mo-health-078, yue: 我好攰。, en: "I'm really tired.", pattern: feel, region: both}
   - {id: sent-mo-health-079, yue: 我冇胃口。, en: "I have no appetite.", pattern: feel, region: both}
   - {id: sent-mo-health-080, yue: 我好似感冒咗。, en: "I think I've caught a cold.", pattern: feel, region: both}

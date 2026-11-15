@@ -24,7 +24,7 @@ sentences:
   - {id: sent-mo-sign-011, yue: 禁止泊車, en: "No parking", pattern: prohibit, region: both}
   - {id: sent-mo-sign-012, yue: 請勿觸摸, en: "Please do not touch", pattern: please, region: both}
   - {id: sent-mo-sign-013, yue: 請勿餵飼動物, en: "Please do not feed the animals", pattern: please, region: both}
-  - {id: sent-mo-sign-014, yue: 請排隊, en: "Please queue", pattern: please, region: both}
+  - {id: sent-mo-sign-014, yue: 請排隊, en: "Please line up", pattern: please, region: both}
   - {id: sent-mo-sign-015, yue: 請保持安靜, en: "Please keep quiet", pattern: please, region: both}
   - {id: sent-mo-sign-016, yue: 請保持清潔, en: "Please keep this place clean", pattern: please, region: both}
   - {id: sent-mo-sign-017, yue: 請關門, en: "Please close the door", pattern: please, region: both}
@@ -35,14 +35,14 @@ sentences:
   - {id: sent-mo-sign-022, yue: 暫停服務, en: "Out of service", pattern: service, region: both}
   - {id: sent-mo-sign-023, yue: 維修中, en: "Under maintenance", pattern: service, region: both}
   - {id: sent-mo-sign-024, yue: 施工中, en: "Works in progress", pattern: service, region: both}
-  - {id: sent-mo-sign-025, yue: 閒人免進, en: "No unauthorised entry", pattern: prohibit, region: both}
+  - {id: sent-mo-sign-025, yue: 閒人免進, en: "No unauthorized entry", pattern: prohibit, region: both}
   - {id: sent-mo-sign-026, yue: 員工專用, en: "Staff only", pattern: prohibit, region: both}
   - {id: sent-mo-sign-027, yue: 私人地方, en: "Private property", pattern: prohibit, region: both}
   - {id: sent-mo-sign-028, yue: 緊急出口, en: "Emergency exit", pattern: direction, region: both}
   - {id: sent-mo-sign-029, yue: 走火通道, en: "Fire escape", pattern: direction, region: both}
   - {id: sent-mo-sign-030, yue: 滅火筒, en: "Fire extinguisher", pattern: safety, region: both}
-  - {id: sent-mo-sign-031, yue: 火警時請勿使用升降機, en: "Do not use the lift in case of fire", pattern: safety, region: both}
-  - {id: sent-mo-sign-032, yue: 升降機, en: "Lift", pattern: building, region: both}
+  - {id: sent-mo-sign-031, yue: 火警時請勿使用升降機, en: "Do not use the elevator in case of fire", pattern: safety, region: both}
+  - {id: sent-mo-sign-032, yue: 升降機, en: "Elevator", pattern: building, region: both}
   - {id: sent-mo-sign-033, yue: 扶手電梯, en: "Escalator", pattern: building, region: both}
   - {id: sent-mo-sign-034, yue: 請緊握扶手, en: "Please hold the handrail", pattern: please, region: both}
   - {id: sent-mo-sign-035, yue: 營業中, en: "Open", pattern: shop, region: both}
@@ -59,7 +59,7 @@ sentences:
   - {id: sent-mo-sign-046, yue: 招聘, en: "Now hiring", pattern: notice, region: both}
   - {id: sent-mo-sign-047, yue: 請人, en: "Staff wanted", pattern: notice, region: both}
   - {id: sent-mo-sign-048, yue: 吉舖招租, en: "Shop for rent", pattern: notice, region: both}
-  - {id: sent-mo-sign-049, yue: 單位出租, en: "Flat for rent", pattern: notice, region: both}
+  - {id: sent-mo-sign-049, yue: 單位出租, en: "Apartment for rent", pattern: notice, region: both}
   - {id: sent-mo-sign-050, yue: 請按門鐘, en: "Please ring the bell", pattern: please, region: both}
   - {id: sent-mo-sign-051, yue: 請出示證件, en: "Please show your ID", pattern: please, region: both}
   - {id: sent-mo-sign-052, yue: 請戴口罩, en: "Please wear a mask", pattern: please, region: both}
@@ -83,7 +83,7 @@ sentences:
   - {id: sent-mo-sign-070, yue: 往碼頭, en: "To the ferry terminal", pattern: direction, region: both}
   - {id: sent-mo-sign-071, yue: 往關閘, en: "To the Border Gate", pattern: direction}
   - {id: sent-mo-sign-072, yue: 往機場, en: "To the airport", pattern: direction, region: both}
-  - {id: sent-mo-sign-073, yue: 往市中心, en: "To the city centre", pattern: direction, region: both}
+  - {id: sent-mo-sign-073, yue: 往市中心, en: "To the city center", pattern: direction, region: both}
   - {id: sent-mo-sign-074, yue: 第一座, en: "Block 1", pattern: building, region: both}
   - {id: sent-mo-sign-075, yue: 地下, en: "Ground floor", pattern: building, region: both}
   - {id: sent-mo-sign-076, yue: 二樓, en: "Second floor (2/F)", pattern: building, region: both}
@@ -105,7 +105,7 @@ sentences:
   - {id: sent-mo-sign-092, yue: 掛號處, en: "Registration", pattern: clinic, region: both}
   - {id: sent-mo-sign-093, yue: 收費處, en: "Payment counter", pattern: clinic, region: both}
   - {id: sent-mo-sign-094, yue: 候診區, en: "Waiting area", pattern: clinic, region: both}
-  - {id: sent-mo-sign-095, yue: 請關掉手提電話, en: "Please switch off your mobile phone", pattern: please, region: both}
+  - {id: sent-mo-sign-095, yue: 請關掉手提電話, en: "Please switch off your cell phone", pattern: please, region: both}
   - {id: sent-mo-sign-096, yue: 請勿超越黃線, en: "Do not cross the yellow line", pattern: transport, region: both}
   - {id: sent-mo-sign-097, yue: 請讓座予有需要人士, en: "Please offer your seat to those in need", pattern: transport, region: both}
   - {id: sent-mo-sign-098, yue: 請先落後上, en: "Let passengers off first", pattern: transport, region: both}

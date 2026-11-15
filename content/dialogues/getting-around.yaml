@@ -37,10 +37,10 @@ dialogues:
       - ["店員", "唔遠，行五分鐘左右。", "Not far, about a five-minute walk."]
       - ["你", "唔該晒！", "Thanks so much!"]
   - id: dlg-mo-around-05
-    title: "A long queue at the border"
+    title: "A long line at the border"
     lines:
       - ["朋友", "今日關閘好多人，排咗半個鐘都未到。", "The Border Gate is packed today, half an hour and we're still not through."]
       - ["你", "不如試下自助過關？", "How about trying the self-service channel?"]
       - ["朋友", "我冇登記喎。", "I haven't registered for it."]
-      - ["你", "噉我哋慢慢排啦，過咗關先食嘢。", "Then let's just queue, and eat once we're across."]
+      - ["你", "噉我哋慢慢排啦，過咗關先食嘢。", "Then let's just line up, and eat once we're across."]
       - ["朋友", "好呀，我好肚餓。", "OK, I'm starving."]

@@ -1,4 +1,4 @@
-/// Session size without a "session length" setting: the app watches how you practise
+/// Session size without a "session length" setting: the app watches how you practice
 /// and adapts. Sessions are a starting batch, never a cap ("Keep going" adds more).
 ///
 /// Signals from the last two weeks of sessions:

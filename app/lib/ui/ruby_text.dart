@@ -1,7 +1,7 @@
 /// Chinese text with a reading above each character, at a per-character help level.
 ///
 /// Readings are aligned by token index, never by string position. Punctuation is glued to
-/// its neighbour so a line never starts with "，" or ends with "「".
+/// its neighbor so a line never starts with "，" or ends with "「".
 library;
 
 import 'package:material_ui/material_ui.dart';
@@ -187,8 +187,10 @@ class RubyText extends StatelessWidget {
       }
       return Semantics(
         label: t.surface,
-        hint: onSpeak != null
-            ? 'Tap to hear it, long-press for the meaning'
+        hint: onLookup != null
+            ? 'Tap to hear it and see the meaning'
+            : onSpeak != null
+            ? 'Tap to hear it'
             : canTap
             ? 'Tap to show the reading'
             : onLookup != null
@@ -197,7 +199,12 @@ class RubyText extends StatelessWidget {
         child: GestureDetector(
           key: ValueKey('cell-$i'),
           behavior: HitTestBehavior.opaque,
-          onTap: onSpeak != null && t.isHan
+          onTap: onLookup != null && t.isHan
+              ? () {
+                  onSpeak?.call(i);
+                  onLookup!(i);
+                }
+              : onSpeak != null && t.isHan
               ? () {
                   if (hidden) onReveal?.call(i);
                   onSpeak!(i);

@@ -51,6 +51,9 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
   late SpeakMode _mode = widget.mode;
   int _index = 0;
   _Phase _phase = _Phase.ready;
+
+  /// This line is finished: its meaning shows and Next moves on (never by itself).
+  bool _lineDone = false;
   bool _retried = false;
   int _right = 0;
   Map<int, CharScore> _marks = const {};
@@ -111,6 +114,7 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
     final now = _s.logger.now();
     setState(() {
       _phase = _Phase.ready;
+      _lineDone = false;
       _marks = const {};
       _levels = {
         for (final id in _line.itemIds)
@@ -189,9 +193,9 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
       _phase = ok ? _Phase.right : _Phase.wrong;
     });
     if (ok || _retried) {
+      // done with this line: show what it means; you press Next
       _finishLine(marks);
-      await Future<void>.delayed(Duration(milliseconds: ok ? 900 : 1800));
-      if (mounted) _advance();
+      setState(() => _lineDone = true);
     } else {
       // one more go: hear yours, then the native, then tap to say it again
       _retried = true;
@@ -310,25 +314,6 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        actions: [
-          // switch between reading aloud and repeating after the audio
-          TextButton(
-            key: const ValueKey('speak-mode'),
-            onPressed: () {
-              setState(
-                () => _mode = _mode == SpeakMode.read
-                    ? SpeakMode.repeat
-                    : SpeakMode.read,
-              );
-              _s.logger.log('settings.change', {
-                'key': 'speak_mode',
-                'from': null,
-                'to': _mode.name,
-              });
-            },
-            child: Text(_mode == SpeakMode.read ? 'Repeat mode' : 'Read mode'),
-          ),
-        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
@@ -347,6 +332,47 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
               child: ListView(
                 padding: const EdgeInsets.all(20),
                 children: [
+                  SegmentedButton<SpeakMode>(
+                    key: const ValueKey('speak-mode'),
+                    showSelectedIcon: false,
+                    segments: const [
+                      ButtonSegment(
+                        value: SpeakMode.read,
+                        icon: Icon(Icons.menu_book_rounded),
+                        label: Text('Read it'),
+                      ),
+                      ButtonSegment(
+                        value: SpeakMode.repeat,
+                        icon: Icon(Icons.hearing_rounded),
+                        label: Text('Repeat after me'),
+                      ),
+                    ],
+                    selected: {_mode},
+                    onSelectionChanged: (v) {
+                      final from = _mode;
+                      setState(() => _mode = v.first);
+                      _s.logger.log('settings.change', {
+                        'key': 'speak_mode',
+                        'from': from.name,
+                        'to': _mode.name,
+                      });
+                      // show this line again in the new mode
+                      if (_phase == _Phase.ready && !_lineDone) {
+                        unawaited(_present());
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    _mode == SpeakMode.read
+                        ? 'Read the line yourself; no audio first.'
+                        : 'Hear the line first, then say it back.',
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   if (pic != null)
                     Center(
                       child: Text(pic, style: const TextStyle(fontSize: 48)),
@@ -384,12 +410,13 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    _line.en,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: scheme.onSurfaceVariant,
+                  // the meaning comes after you have said it
+                  if (_lineDone)
+                    Text(
+                      _line.en,
+                      key: const ValueKey('speak-meaning'),
+                      style: theme.textTheme.bodyLarge,
                     ),
-                  ),
                   const SizedBox(height: 24),
                   Center(
                     child: Text(
@@ -415,7 +442,7 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                 children: [
                   IconButton.filledTonal(
                     tooltip: 'Hear it',
-                    onPressed: _playNative,
+                    onPressed: _phase == _Phase.listening ? null : _playNative,
                     icon: const Icon(Icons.volume_up_rounded),
                   ),
                   const SizedBox(width: 8),
@@ -424,7 +451,7 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                       key: const ValueKey('speak-mic'),
                       tooltip: _phase == _Phase.listening ? 'Stop' : 'Speak',
                       iconSize: 32,
-                      onPressed: _phase == _Phase.thinking
+                      onPressed: _phase == _Phase.thinking || _lineDone
                           ? null
                           : _phase == _Phase.listening
                           ? _score
@@ -437,7 +464,20 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                     ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: _hasMic
+                    child: _lineDone
+                        ? FilledButton(
+                            key: const ValueKey('speak-next'),
+                            style: FilledButton.styleFrom(
+                              minimumSize: const Size(0, 52),
+                            ),
+                            onPressed: () {
+                              _s.stopAudio?.call();
+                              _s.sound(Sfx.next);
+                              _advance();
+                            },
+                            child: const Text('Next'),
+                          )
+                        : _hasMic
                         ? OutlinedButton(
                             key: const ValueKey('speak-skip'),
                             style: OutlinedButton.styleFrom(
@@ -453,16 +493,16 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                             child: const Text('Skip'),
                           )
                         : FilledButton(
-                            // no mic: say it aloud yourself, then go on
-                            key: const ValueKey('speak-next'),
+                            // no mic: say it aloud yourself, then see the meaning
+                            key: const ValueKey('speak-said'),
                             style: FilledButton.styleFrom(
                               minimumSize: const Size(0, 52),
                             ),
                             onPressed: () {
                               _finishLine(const {});
-                              _advance();
+                              setState(() => _lineDone = true);
                             },
-                            child: const Text('Said it, next'),
+                            child: const Text('Said it'),
                           ),
                   ),
                 ],

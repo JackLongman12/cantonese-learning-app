@@ -100,7 +100,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
   late ActiveMark _mark;
 
   // session totals for the summary
-  final Set<String> _practised = {};
+  final Set<String> _practiced = {};
   final Set<String> _introduced = {};
   final Set<String> _lapsed = {};
   int _read = 0;
@@ -503,7 +503,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
         'signal': o.signal.name,
         's_before': before.stability,
       });
-      _practised.add(o.itemId);
+      _practiced.add(o.itemId);
       if (o.signal == Signal.introduced) _introduced.add(o.itemId);
       if (o.signal == Signal.reveal) _lapsed.add(o.itemId);
     }
@@ -623,7 +623,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
       return _SummaryScreen(
         title: widget.title,
         read: _read,
-        practised: _practised.length,
+        practiced: _practiced.length,
         introduced: _introduced.length,
         checked: _lapsed.length,
         onKeepGoing: _canKeepGoing ? _keepGoing : null,
@@ -902,8 +902,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
             ),
             _BottomBar(
               isLast: _index + 1 >= _queue.length,
-              onListen: () => _play(slow: false),
-              onSlow: () => _play(slow: true),
+              slowNext: _audioPlays.isOdd,
+              onListen: () async {
+                await _play(slow: _audioPlays.isOdd);
+                if (mounted) setState(() {});
+              },
               onSkip: () => _next(skipped: true),
               onNext: _next,
               mic: _s.speech == null ? null : _mic,
@@ -1022,7 +1025,7 @@ class _BottomBar extends StatelessWidget {
   const _BottomBar({
     required this.isLast,
     required this.onListen,
-    required this.onSlow,
+    required this.slowNext,
     required this.onSkip,
     required this.onNext,
     required this.showShortcuts,
@@ -1032,7 +1035,9 @@ class _BottomBar extends StatelessWidget {
 
   final bool isLast;
   final VoidCallback onListen;
-  final VoidCallback onSlow;
+
+  /// The next tap plays it slower (every second tap).
+  final bool slowNext;
   final VoidCallback onSkip;
   final VoidCallback onNext;
   final bool showShortcuts;
@@ -1055,16 +1060,12 @@ class _BottomBar extends StatelessWidget {
           children: [
             Row(
               children: [
-                // one button: tap to listen, hold for slow
-                Tooltip(
-                  message: 'Tap to listen, hold for slow',
-                  child: FilledButton.tonalIcon(
-                    key: const ValueKey('listen'),
-                    onPressed: onListen,
-                    onLongPress: onSlow,
-                    icon: const Icon(Icons.volume_up_rounded),
-                    label: const Text('Listen'),
-                  ),
+                // one button, no holding: tap to listen, tap again for slower
+                FilledButton.tonalIcon(
+                  key: const ValueKey('listen'),
+                  onPressed: mic == _Mic.recording ? null : onListen,
+                  icon: const Icon(Icons.volume_up_rounded),
+                  label: Text(slowNext ? 'Slower' : 'Listen'),
                 ),
                 if (mic != null) ...[
                   const SizedBox(width: 4),
@@ -1200,7 +1201,7 @@ class _HelpSheet extends StatelessWidget {
               'Faint underline: try to read it. Tap only if you\'re stuck.',
               underline: true,
             ),
-            row('', 'Known', 'No help. Long-press if you ever need to check.'),
+            row('', 'Known', 'No help. Tap a word if you ever need to check.'),
             const SizedBox(height: 4),
             Text(
               'Tapping is fine: it tells the app which characters to bring back sooner. '
@@ -1248,7 +1249,7 @@ class _SummaryScreen extends StatelessWidget {
   const _SummaryScreen({
     required this.title,
     required this.read,
-    required this.practised,
+    required this.practiced,
     required this.introduced,
     required this.checked,
     this.newChars = const [],
@@ -1262,7 +1263,7 @@ class _SummaryScreen extends StatelessWidget {
   final List<(String, String)> newChars;
   final String title;
   final int read;
-  final int practised;
+  final int practiced;
   final int introduced;
   final int checked;
 
@@ -1321,7 +1322,7 @@ class _SummaryScreen extends StatelessWidget {
                       const SizedBox(width: 8),
                       stat('$introduced', 'new characters'),
                       const SizedBox(width: 8),
-                      stat('$practised', 'characters practised'),
+                      stat('$practiced', 'characters practiced'),
                     ],
                   ),
                   if (newChars.isNotEmpty) ...[

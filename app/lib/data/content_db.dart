@@ -480,7 +480,7 @@ class CardRow {
   final String id;
   final String deckId;
 
-  /// Photo file in assets/cards/ (food deck), and its licence credit.
+  /// Photo file in assets/cards/ (food deck), and its license credit.
   final String? image;
   final String credit;
   final String zh;

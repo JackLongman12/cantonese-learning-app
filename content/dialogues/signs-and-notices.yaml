@@ -3,7 +3,7 @@
 scenario: scn-mo-signs
 dialogues:
   - id: dlg-mo-sign-01
-    title: "The lift is out of service"
+    title: "The elevator is out of service"
     lines:
       - ["朋友", "嗰度寫咩呀？", "What does that say?"]
       - ["你", "寫住「暫停服務」。", "It says \"Out of service\"."]

@@ -30,7 +30,7 @@ sentences:
   - {id: sent-mo-wx-018, yue: 會唔會改掛八號風球？, en: "Will they raise signal 8?", pattern: typhoon, region: both}
   - {id: sent-mo-wx-019, yue: 八號風球幾點除？, en: "What time will signal 8 be lowered?", pattern: typhoon, region: both}
   - {id: sent-mo-wx-020, yue: 打風唔使返工。, en: "No work when there's a typhoon.", pattern: typhoon, region: both}
-  - {id: sent-mo-wx-021, yue: 今日停課。, en: "Classes are cancelled today.", pattern: typhoon, region: both}
+  - {id: sent-mo-wx-021, yue: 今日停課。, en: "Classes are canceled today.", pattern: typhoon, region: both}
   - {id: sent-mo-wx-022, yue: 巴士全部停晒。, en: "All the buses have stopped.", pattern: typhoon, region: both}
   - {id: sent-mo-wx-023, yue: 啲船停咗航。, en: "The ferries have stopped running.", pattern: typhoon, region: both}
   - {id: sent-mo-wx-024, yue: 記得買定啲嘢食。, en: "Remember to stock up on food.", pattern: typhoon, region: both}
@@ -49,7 +49,7 @@ sentences:
   - {id: sent-mo-wx-037, yue: 火燭呀！, en: "Fire!", pattern: emergency, region: both}
   - {id: sent-mo-wx-038, yue: 快啲走！, en: "Get out, quick!", pattern: emergency, region: both}
   - {id: sent-mo-wx-039, yue: 走火通道喺邊？, en: "Where's the fire exit?", pattern: emergency, region: both}
-  - {id: sent-mo-wx-040, yue: 唔好用電梯。, en: "Don't use the lift.", pattern: emergency, region: both}
+  - {id: sent-mo-wx-040, yue: 唔好用電梯。, en: "Don't use the elevator.", pattern: emergency, region: both}
   - {id: sent-mo-wx-041, yue: 我要報警。, en: "I need to report this to the police.", pattern: police, region: both}
   - {id: sent-mo-wx-042, yue: 我個銀包俾人偷咗。, en: "My wallet's been stolen.", pattern: police, region: both}
   - {id: sent-mo-wx-043, yue: 我唔見咗部電話。, en: "I've lost my phone.", pattern: police, region: both}
@@ -100,7 +100,7 @@ sentences:
   - {id: sent-mo-wx-088, yue: 今年打咗好多次風。, en: "There have been a lot of typhoons this year.", pattern: typhoon, region: both}
   - {id: sent-mo-wx-089, yue: 啲窗閂好未？, en: "Are the windows shut properly?", pattern: typhoon, region: both}
   - {id: sent-mo-wx-090, yue: 啲衫收咗未？, en: "Has the laundry been brought in?", pattern: typhoon, region: both}
-  - {id: sent-mo-wx-091, yue: 屋企入水。, en: "Water has got into the flat.", pattern: flood, region: both}
+  - {id: sent-mo-wx-091, yue: 屋企入水。, en: "Water has got into the apartment.", pattern: flood, region: both}
   - {id: sent-mo-wx-092, yue: 我哋去高啲嘅地方。, en: "Let's go to higher ground.", pattern: flood, region: both}
   - {id: sent-mo-wx-093, yue: 白車就嚟到。, en: "The ambulance is almost here.", pattern: emergency, region: both}
   - {id: sent-mo-wx-094, yue: 消防員到咗。, en: "The firefighters have arrived.", pattern: emergency, region: both}

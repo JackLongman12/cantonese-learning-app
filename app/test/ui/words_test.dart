@@ -88,10 +88,10 @@ void main() {
       ),
     );
     expect(find.byKey(ValueKey('my-word-$word')), findsOneWidget);
-    expect(find.byKey(const ValueKey('practise-flagged')), findsOneWidget);
+    expect(find.byKey(const ValueKey('practice-flagged')), findsOneWidget);
   }, skip: !hasDb);
 
-  testWidgets('a reading you had to reveal becomes a word to practise', (
+  testWidgets('a reading you had to reveal becomes a word to practice', (
     t,
   ) async {
     await t.binding.setSurfaceSize(const Size(500, 900));
@@ -140,6 +140,9 @@ void main() {
     // no device voice in tests: let the one-time notice go away
     await t.pump(const Duration(seconds: 5));
     await t.pumpAndSettle();
+    // the tap opened the meaning too: close it
+    await t.tapAt(const Offset(5, 5));
+    await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('next')));
     await t.pumpAndSettle();
     final flag = store.events.lastWhere((e) => e.type == 'word.flag');
@@ -148,7 +151,7 @@ void main() {
     expect(word, contains('銀'));
     expect(services.words.needsPractice('yue', word), isTrue);
 
-    // practise it (no mic in tests: check the reading and grade yourself), twice
+    // practice it (no mic in tests: check the reading and grade yourself), twice
     for (var round = 0; round < 2; round++) {
       await t.pumpWidget(
         MaterialApp(
@@ -158,7 +161,7 @@ void main() {
           ),
         ),
       );
-      await t.tap(find.byKey(const ValueKey('practise-flagged')));
+      await t.tap(find.byKey(const ValueKey('practice-flagged')));
       await t.pumpAndSettle();
       while (find
           .byKey(const ValueKey('practice-show'))

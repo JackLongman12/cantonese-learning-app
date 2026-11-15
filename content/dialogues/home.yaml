@@ -3,9 +3,9 @@
 scenario: scn-mo-home
 dialogues:
   - id: dlg-mo-home-01
-    title: "Viewing a flat"
+    title: "Viewing an apartment"
     lines:
-      - ["你", "呢個單位幾錢租？", "How much is the rent for this flat?"]
+      - ["你", "呢個單位幾錢租？", "How much is the rent for this apartment?"]
       - ["經紀", "一萬二一個月，包管理費。", "Twelve thousand a month, management fee included."]
       - ["你", "要俾幾多個月按金？", "How many months' deposit?"]
       - ["經紀", "兩個月按金，一個月上期。", "Two months' deposit and one month in advance."]
@@ -19,7 +19,7 @@ dialogues:
       - ["業主", "我聽日叫師傅上嚟睇。", "I'll get a repairman to come up tomorrow."]
       - ["你", "好，唔該你。", "OK, thank you."]
   - id: dlg-mo-home-03
-    title: "Asking the neighbours to keep it down"
+    title: "Asking the neighbors to keep it down"
     lines:
       - ["你", "唔好意思，夜晚可唔可以細聲啲？", "Sorry, could you keep it down at night?"]
       - ["鄰居", "吵到你咩？對唔住。", "Were we disturbing you? Sorry."]

@@ -69,6 +69,10 @@ void main() {
     await t.pumpAndSettle();
     // no mic here: say it aloud yourself, then go on
     for (var i = 0; i < 3; i++) {
+      expect(find.byKey(const ValueKey('speak-meaning')), findsNothing);
+      await t.tap(find.byKey(const ValueKey('speak-said')));
+      await t.pumpAndSettle();
+      expect(find.byKey(const ValueKey('speak-meaning')), findsOneWidget);
       await t.tap(find.byKey(const ValueKey('speak-next')));
       await t.pumpAndSettle();
     }

@@ -98,7 +98,7 @@ void main() {
       ),
     );
     await t.pumpAndSettle();
-    await t.tap(find.byKey(const ValueKey('practise')));
+    await t.tap(find.byKey(const ValueKey('practice')));
     await t.pumpAndSettle();
 
     // First pass: everything is new, so readings are shown in full.
@@ -207,7 +207,7 @@ void main() {
       ),
     );
     await t.pumpAndSettle();
-    await t.tap(find.byKey(const ValueKey('practise')));
+    await t.tap(find.byKey(const ValueKey('practice')));
     await t.pumpAndSettle();
     final again = store.events.lastWhere((e) => e.type == 'item.shown');
     final ids = (again.payload['item_ids']! as List).cast<String>();
@@ -216,7 +216,6 @@ void main() {
       // met yesterday -> help has faded; never met -> still introduced in full
       expect(levels[i] == 'full', !introduced.contains(ids[i]), reason: ids[i]);
     }
-
   }, skip: !hasDb);
 
   testWidgets(

@@ -10,7 +10,7 @@ entries:
   - {id: mw-bun2, zh: 本, emoji: "📚", meaning: "Books and magazines.", example: 我買咗兩本書。, example_en: "I bought two books."}
   - {id: mw-zoeng1, zh: 張, emoji: "🎫", meaning: "Flat things: paper, tickets, tables, beds, photos.", example: 一張車飛。, example_en: "One ticket."}
   - {id: mw-gaa3, zh: 架, emoji: "🚌", meaning: "Vehicles and machines.", example: 嗰架巴士去關閘。, example_en: "That bus goes to the Border Gate."}
-  - {id: mw-tiu4, zh: 條, emoji: "🐟", meaning: "Long, thin things: roads, fish, rivers, trousers, keys.", example: 呢條街好多餐廳。, example_en: "This street has lots of restaurants."}
+  - {id: mw-tiu4, zh: 條, emoji: "🐟", meaning: "Long, thin things: roads, fish, rivers, pants, keys.", example: 呢條街好多餐廳。, example_en: "This street has lots of restaurants."}
   - {id: mw-gin6, zh: 件, emoji: "👕", meaning: "Clothes (tops), and matters or things that happen.", example: 呢件衫幾錢？, example_en: "How much is this shirt?"}
   - {id: mw-deoi3, zh: 對, emoji: "👟", meaning: "Pairs: shoes, socks, chopsticks.", example: 一對波鞋。, example_en: "A pair of trainers."}
   - {id: mw-bui1, zh: 杯, emoji: "🥤", meaning: "Cups and glasses of a drink.", example: 一杯凍檸茶。, example_en: "An iced lemon tea."}
