@@ -179,9 +179,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   ({
-    List<bool> days,
+    int newChars,
     int sentences,
-    int minutes,
     List<SoundMixup> sounds,
     List<ItemState> chars,
   })?
@@ -189,20 +188,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   /// Week activity and weak spots, from the event log (cached until an exercise ends).
   ({
-    List<bool> days,
+    int newChars,
     int sentences,
-    int minutes,
     List<SoundMixup> sounds,
     List<ItemState> chars,
   })
   _overview() {
     if (_insights case final i?) return i;
     final events = _s.logger.store.readAll().toList();
-    final w = weekActivity(events, _s.logger.now().toLocal());
+    final w = weekProgress(events, _s.logger.now().toUtc());
     return _insights = (
-      days: w.days,
+      newChars: w.newChars,
       sentences: w.sentences,
-      minutes: w.minutes,
       sounds: weakSounds(events),
       chars: weakCharacters(_s.learner.known, _lang),
     );
@@ -606,12 +603,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         const SizedBox(height: 16),
         for (final step in plan) _PlanTile(step: step),
         const SizedBox(height: 16),
-        _WeekCard(
-          today: now.toLocal(),
-          days: overview.days,
-          sentences: overview.sentences,
-          minutes: overview.minutes,
-        ),
+        _WeekCard(newChars: overview.newChars, sentences: overview.sentences),
         if (overview.sounds.isNotEmpty || overview.chars.isNotEmpty) ...[
           const SizedBox(height: 12),
           _WeakSpotsCard(
@@ -891,24 +883,36 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 }
 
-/// The last seven days as dots, plus sentences and minutes: a quiet record, no streak.
+/// What the week gave you. No daily dots or streaks: they turn learning into
+/// attendance and push quick, poor sessions just to keep a record going.
 class _WeekCard extends StatelessWidget {
-  const _WeekCard({
-    required this.today,
-    required this.days,
-    required this.sentences,
-    required this.minutes,
-  });
-  final DateTime today;
-  final List<bool> days;
+  const _WeekCard({required this.newChars, required this.sentences});
+  final int newChars;
   final int sentences;
-  final int minutes;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    const names = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    Widget stat(String value, String label) => Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            value,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: scheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
     return Card(
       key: const ValueKey('week-card'),
       margin: EdgeInsets.zero,
@@ -917,45 +921,13 @@ class _WeekCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Your week', style: theme.textTheme.titleSmall),
-            const SizedBox(height: 10),
+            Text('This week', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 8),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                for (var i = 0; i < 7; i++)
-                  Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 13,
-                        backgroundColor: days[i]
-                            ? scheme.primary
-                            : scheme.surfaceContainerHighest,
-                        child: days[i]
-                            ? Icon(
-                                Icons.check_rounded,
-                                size: 16,
-                                color: scheme.onPrimary,
-                              )
-                            : null,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        names[today.subtract(Duration(days: 6 - i)).weekday -
-                            1],
-                        style: theme.textTheme.labelSmall,
-                      ),
-                    ],
-                  ),
+                stat('$newChars', 'new characters'),
+                stat('$sentences', 'sentences read'),
               ],
-            ),
-            const SizedBox(height: 10),
-            Text(
-              sentences == 0
-                  ? 'Nothing read this week yet.'
-                  : '$sentences sentences read · $minutes min this week',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: scheme.onSurfaceVariant,
-              ),
             ),
           ],
         ),

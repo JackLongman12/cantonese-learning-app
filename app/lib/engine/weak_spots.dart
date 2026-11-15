@@ -104,24 +104,22 @@ List<ItemState> weakCharacters(
   return list.take(top).toList();
 }
 
-/// The last seven days: which days had reading, sentences read, active minutes.
-({List<bool> days, int sentences, int minutes}) weekActivity(
+/// What the last seven days gave you: characters met for the first time and sentences
+/// read. Deliberately no per-day record or streak: progress, not attendance.
+({int newChars, int sentences}) weekProgress(
   Iterable<Event> events,
-  DateTime nowLocal,
+  DateTime nowUtc,
 ) {
-  final today = DateTime(nowLocal.year, nowLocal.month, nowLocal.day);
-  final start = today.subtract(const Duration(days: 6));
-  final days = List<bool>.filled(7, false);
-  var sentences = 0, ms = 0;
+  final since = nowUtc.subtract(const Duration(days: 7));
+  final introduced = <String>{};
+  var sentences = 0;
   for (final e in events) {
-    if (e.type != 'item.done') continue;
-    final local = e.tsUtc.add(Duration(minutes: e.tzOffsetMin));
-    final d = DateTime(local.year, local.month, local.day);
-    if (d.isBefore(start) || d.isAfter(today)) continue;
-    if (e.payload['skipped'] == true) continue;
-    days[d.difference(start).inDays] = true;
-    sentences++;
-    ms += (e.payload['active_ms'] as num?)?.toInt() ?? 0;
+    if (e.tsUtc.isBefore(since)) continue;
+    if (e.type == 'review.applied' && e.payload['signal'] == 'introduced') {
+      if (e.payload['item_id'] case final String id) introduced.add(id);
+    } else if (e.type == 'item.done' && e.payload['skipped'] != true) {
+      sentences++;
+    }
   }
-  return (days: days, sentences: sentences, minutes: (ms / 60000).round());
+  return (newChars: introduced.length, sentences: sentences);
 }

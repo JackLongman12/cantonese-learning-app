@@ -25,6 +25,8 @@ feature is judged against these gaps; anything that is only engagement mechanics
    and every hour spent there is an hour not spent on the Cantonese gap.
 
 The duck mascot is branding and gentle feedback only: no XP, no hearts, no streak guilt.
+No streaks or per-day attendance displays of any kind (owner, 2026-11-16): they push quick, poor
+sessions to keep a record going. Progress is shown as outcomes (new characters, sentences read, weak spots).
 
 ## Pronunciation accuracy (built 2026-11-15: sound check on device; tones by ear)
 

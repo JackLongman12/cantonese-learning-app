@@ -59,18 +59,26 @@ void main() {
     ]);
   });
 
-  test('week activity counts days and sentences', () {
-    final now = DateTime(2026, 11, 16, 20);
-    final w = weekActivity([
-      ev('item.done', {'active_ms': 60000}, DateTime.utc(2026, 11, 16, 2)),
-      ev('item.done', {'active_ms': 60000}, DateTime.utc(2026, 11, 14, 2)),
-      ev('item.done', {'skipped': true}, DateTime.utc(2026, 11, 13, 2)),
-      ev('item.done', {
-        'active_ms': 60000,
-      }, DateTime.utc(2026, 11, 1, 2)), // too old
+  test('the week is measured in progress, not days', () {
+    final now = DateTime.utc(2026, 11, 16, 12);
+    final w = weekProgress([
+      ev('review.applied', {
+        'item_id': 'cr:yue:銀:ngan4',
+        'signal': 'introduced',
+      }, DateTime.utc(2026, 11, 15)),
+      ev('review.applied', {
+        'item_id': 'cr:yue:銀:ngan4',
+        'signal': 'introduced',
+      }, DateTime.utc(2026, 11, 15)),
+      ev('review.applied', {
+        'item_id': 'cr:yue:行:hong4',
+        'signal': 'noReveal',
+      }, DateTime.utc(2026, 11, 15)),
+      ev('item.done', {}, DateTime.utc(2026, 11, 14)),
+      ev('item.done', {'skipped': true}, DateTime.utc(2026, 11, 14)),
+      ev('item.done', {}, DateTime.utc(2026, 11, 1)), // older than a week
     ], now);
-    expect(w.days, [false, false, false, false, true, false, true]);
-    expect(w.sentences, 2);
-    expect(w.minutes, 2);
+    expect(w.newChars, 1);
+    expect(w.sentences, 1);
   });
 }
