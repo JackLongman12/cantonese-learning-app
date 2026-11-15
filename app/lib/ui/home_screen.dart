@@ -75,6 +75,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _shareSub = _s.shares.incoming.listen(
       (t) => _openReader(t, source: 'share'),
     );
+    // while the app is open, look again now and then (a release can land any time)
+    _updateTimer = Timer.periodic(const Duration(minutes: 20), (_) {
+      if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
+        _checkUpdate();
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       unawaited(_checkUpdate());
       final launch = await _s.shares.takeLaunchText();
@@ -88,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _shareSub?.cancel();
+    _updateTimer?.cancel();
     super.dispose();
   }
 
@@ -95,16 +102,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       unawaited(_refreshReminders());
-      // reopening the app from the background counts as opening it
+      // reopening the app from the background counts as opening it: check every
+      // time (only a quick request; at most once every two minutes)
       final last = _lastUpdateCheck;
       if (last == null ||
-          DateTime.now().difference(last) > const Duration(minutes: 30)) {
+          DateTime.now().difference(last) > const Duration(minutes: 2)) {
         _checkUpdate();
       }
     }
   }
 
   DateTime? _lastUpdateCheck;
+  Timer? _updateTimer;
+
+  /// The build already offered in a dialog this run (asked once; the banner stays).
+  int? _offeredBuild;
 
   Future<void> _checkUpdate() async {
     final u = _s.updater;
@@ -112,7 +124,42 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _lastUpdateCheck = DateTime.now();
     final info = await u.check();
     _s.logger.log('update.check', {'channel': 'release', 'found': info?.build});
-    if (mounted && info != null) setState(() => _update = info);
+    if (!mounted || info == null) return;
+    setState(() => _update = info);
+    _offerUpdate();
+  }
+
+  /// Asks once per new build, on whichever tab is open; during an exercise it waits
+  /// until you are back on the home screen.
+  void _offerUpdate() {
+    final info = _update;
+    if (info == null || info.build == _offeredBuild || !mounted) return;
+    if (!(ModalRoute.of(context)?.isCurrent ?? false)) return;
+    _offeredBuild = info.build;
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        key: const ValueKey('update-offer'),
+        title: Text('Update available · ${info.version}'),
+        content: Text(
+          'A new DuckLearn is ready (${(info.assetSize / 1e6).round()} MB). '
+          'Your progress stays as it is.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Later'),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              runUpdate(context, _s, info);
+            },
+            child: const Text('Update now'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _openReader(String? text, {required String source}) async {
@@ -135,6 +182,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         .push(MaterialPageRoute<void>(builder: (_) => screen));
     _insights = null;
     if (mounted) setState(() {});
+    _offerUpdate();
   }
 
   ({
@@ -191,6 +239,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
     _insights = null;
     if (mounted) setState(() {});
+    _offerUpdate();
     await _offerReminder();
     unawaited(_refreshReminders());
   }
