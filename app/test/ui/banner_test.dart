@@ -230,13 +230,16 @@ void main() {
   });
 
   // The funny one: a "translation" you should not trust. Readings from the dictionary
-  // (duk annotate): 屌 diu2, 你 nei5, 老 lou5, 母 mou2.
+  // (duk annotate): 屌 diu2, 你 nei5, 老 lou5, 母 mou2, 冚 ham6, 家 gaa1, 剷 caan2.
   testWidgets('mobile ad 9:16, funny', (t) async {
     await loadFont('NotoSansHK', 'assets/fonts/NotoSansHK.ttf');
     t.view.devicePixelRatio = 1;
     t.view.physicalSize = const Size(1080, 1920);
     addTearDown(t.view.reset);
-    const line = [('屌', 'diu2'), ('你', 'nei5'), ('老', 'lou5'), ('母', 'mou2')];
+    const rows = [
+      [('屌', 'diu2'), ('你', 'nei5'), ('老', 'lou5'), ('母', 'mou2')],
+      [('冚', 'ham6'), ('家', 'gaa1'), ('剷', 'caan2'), ('！', '')],
+    ];
     TextStyle sans(double size, Color c, {FontWeight w = FontWeight.w700}) =>
         TextStyle(
           fontFamily: 'NotoSansHK',
@@ -257,7 +260,7 @@ void main() {
               height: 1920,
               child: Column(
                 children: [
-                  const SizedBox(height: 170),
+                  const SizedBox(height: 130),
                   Text('She smiled and said:', style: sans(64, Palette.bark)),
                   const SizedBox(height: 60),
                   // the line, with Jyutping on top, as in the app
@@ -268,51 +271,53 @@ void main() {
                       color: Palette.oat,
                       borderRadius: BorderRadius.circular(48),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                    child: Column(
                       children: [
-                        for (final (ch, r) in line)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Column(
-                              children: [
-                                Text(
-                                  r,
-                                  style: sans(
-                                    40,
-                                    Palette.terraDeep,
-                                    w: FontWeight.w500,
+                        for (final row in rows)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              for (final (ch, r) in row)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        r,
+                                        style: sans(
+                                          38,
+                                          Palette.terraDeep,
+                                          w: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        ch,
+                                        locale: const Locale('zh', 'HK'),
+                                        style: sans(
+                                          150,
+                                          Palette.bark,
+                                          w: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  ch,
-                                  locale: const Locale('zh', 'HK'),
-                                  style: sans(
-                                    160,
-                                    Palette.bark,
-                                    w: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
+                            ],
                           ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 34),
-                          child: Text('！', style: sans(110, Palette.bark)),
-                        ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 56),
-                  Text('"I love your dress!"', style: sans(76, Palette.terra)),
+                  Text('"I wish your family well!"', style: sans(68, Palette.terra)),
                   const SizedBox(height: 14),
                   Text(
                     '...right?',
                     style: sans(48, Palette.barkSoft, w: FontWeight.w400),
                   ),
                   const SizedBox(height: 40),
-                  const Chick(mood: ChickMood.confused, size: 460),
+                  const Chick(mood: ChickMood.confused, size: 380),
                   const Spacer(),
                   Text(
                     'Learn what they really said.',
