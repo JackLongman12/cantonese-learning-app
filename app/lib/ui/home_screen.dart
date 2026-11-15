@@ -282,6 +282,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ),
     );
 
+    void startDaily() => _open(
+      title: met == 0 ? 'First steps' : "Today's reading",
+      sentences: _s.content.allSentences(_lang),
+      mode: 'daily',
+      count: _s.prefs.sessionLength,
+      maxNew: (_s.prefs.sessionLength / 2).ceil().clamp(3, 12),
+    );
+
     final pages = <Widget>[
       page([
         _header(theme),
@@ -298,13 +306,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           isFirstTime: met == 0,
           hasContent: scenarios.isNotEmpty,
           onQuack: () => _s.sound(Sfx.quack),
-          onStart: () => _open(
-            title: met == 0 ? 'First steps' : "Today's reading",
-            sentences: _s.content.allSentences(_lang),
-            mode: 'daily',
-            count: _s.prefs.sessionLength,
-            maxNew: (_s.prefs.sessionLength / 2).ceil().clamp(3, 12),
-          ),
+          onStart: startDaily,
           length: _s.prefs.sessionLength,
           onLength: (n) {
             _s.logger.log('settings.change', {
@@ -556,49 +558,74 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       body: SafeArea(
         child: IndexedStack(index: _tab, children: pages),
       ),
-      bottomNavigationBar: NavigationBar(
-        key: const ValueKey('nav-bar'),
-        selectedIndex: _tab,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        onDestinationSelected: (i) {
-          if (i == _tab) return;
-          _s.sound(Sfx.tap);
-          _s.logger.log('nav.screen', {
-            'screen': _tabNames[i],
-            'source': 'tab',
-          });
-          setState(() => _tab = i);
-        },
-        destinations: const [
-          NavigationDestination(
-            key: ValueKey('tab-today'),
-            icon: Icon(Icons.wb_sunny_outlined),
-            selectedIcon: Icon(Icons.wb_sunny_rounded),
-            label: 'Today',
-          ),
-          NavigationDestination(
-            key: ValueKey('tab-topics'),
-            icon: Icon(Icons.grid_view_outlined),
-            selectedIcon: Icon(Icons.grid_view_rounded),
-            label: 'Topics',
-          ),
-          NavigationDestination(
-            key: ValueKey('tab-cards'),
-            icon: Icon(Icons.style_outlined),
-            selectedIcon: Icon(Icons.style_rounded),
-            label: 'Cards',
-          ),
-          NavigationDestination(
-            key: ValueKey('tab-stories'),
-            icon: Icon(Icons.auto_stories_outlined),
-            selectedIcon: Icon(Icons.auto_stories_rounded),
-            label: 'Stories',
-          ),
-          NavigationDestination(
-            key: ValueKey('tab-words'),
-            icon: Icon(Icons.bookmarks_outlined),
-            selectedIcon: Icon(Icons.bookmarks_rounded),
-            label: 'Words',
+      // the day's main action sits right above the tabs, under the thumb
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (_tab == 0)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 720),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    key: const ValueKey('start-daily'),
+                    onPressed: scenarios.isNotEmpty ? startDaily : null,
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size(0, 56),
+                    ),
+                    icon: const Icon(Icons.play_arrow_rounded),
+                    label: Text(met == 0 ? 'Start' : "Start today's reading"),
+                  ),
+                ),
+              ),
+            ),
+          NavigationBar(
+            key: const ValueKey('nav-bar'),
+            selectedIndex: _tab,
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+            onDestinationSelected: (i) {
+              if (i == _tab) return;
+              _s.sound(Sfx.tap);
+              _s.logger.log('nav.screen', {
+                'screen': _tabNames[i],
+                'source': 'tab',
+              });
+              setState(() => _tab = i);
+            },
+            destinations: const [
+              NavigationDestination(
+                key: ValueKey('tab-today'),
+                icon: Icon(Icons.wb_sunny_outlined),
+                selectedIcon: Icon(Icons.wb_sunny_rounded),
+                label: 'Today',
+              ),
+              NavigationDestination(
+                key: ValueKey('tab-topics'),
+                icon: Icon(Icons.grid_view_outlined),
+                selectedIcon: Icon(Icons.grid_view_rounded),
+                label: 'Topics',
+              ),
+              NavigationDestination(
+                key: ValueKey('tab-cards'),
+                icon: Icon(Icons.style_outlined),
+                selectedIcon: Icon(Icons.style_rounded),
+                label: 'Cards',
+              ),
+              NavigationDestination(
+                key: ValueKey('tab-stories'),
+                icon: Icon(Icons.auto_stories_outlined),
+                selectedIcon: Icon(Icons.auto_stories_rounded),
+                label: 'Stories',
+              ),
+              NavigationDestination(
+                key: ValueKey('tab-words'),
+                icon: Icon(Icons.bookmarks_outlined),
+                selectedIcon: Icon(Icons.bookmarks_rounded),
+                label: 'Words',
+              ),
+            ],
           ),
         ],
       ),
@@ -742,14 +769,6 @@ class _TodayCard extends StatelessWidget {
                   const SizedBox(width: 6),
                 ],
               ],
-            ),
-            const SizedBox(height: 12),
-            FilledButton.icon(
-              key: const ValueKey('start-daily'),
-              onPressed: hasContent ? onStart : null,
-              style: FilledButton.styleFrom(minimumSize: const Size(0, 52)),
-              icon: const Icon(Icons.play_arrow_rounded),
-              label: Text(isFirstTime ? 'Start' : "Start today's reading"),
             ),
           ],
         ),
