@@ -89,6 +89,8 @@ Future<AppServices> _bootstrap() async {
     learner: learner,
     memory: memory,
     playAudio: createPlayAudio(),
+    // "Slow": the same clip at 75% (pitch kept), instead of a second recording
+    playAudioSlow: createPlayAudio(rate: 0.75),
     playFile: (path) => _filePlayer.play(DeviceFileSource(path)),
     prefs: Prefs(File(p.join(support.path, 'prefs.json'))),
     updater: Updater(),
@@ -105,13 +107,15 @@ Future<AppServices> _bootstrap() async {
 /// one still playing.
 final _filePlayer = AudioPlayer();
 
-PlayAudio createPlayAudio() {
+PlayAudio createPlayAudio({double rate = 1.0}) {
   final player = AudioPlayer();
   return (path) async {
     await player.stop();
     // listen before playing so a very short clip's end is not missed
     final ended = player.onPlayerComplete.first.then<void>((_) {});
-    await player.play(AssetSource('content/$path'));
+    await player.setSource(AssetSource('content/$path'));
+    if (rate != 1.0) await player.setPlaybackRate(rate);
+    await player.resume();
     // resolve when the clip ends (shadowing records right after it); give up after 20 s
     await Future.any<void>([
       ended,

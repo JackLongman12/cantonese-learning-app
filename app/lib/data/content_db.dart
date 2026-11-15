@@ -125,17 +125,13 @@ class ScenarioRow {
 class DictEntry {
   const DictEntry({
     required this.trad,
-    required this.simp,
-    required this.pinyin,
     required this.jyutping,
     required this.en,
     required this.source,
   });
   final String trad;
-  final String simp;
 
-  /// Numbered Pinyin / Jyutping, space separated ('jyutping' may be empty).
-  final String pinyin;
+  /// Jyutping, space separated (may be empty for a few CC-Canto entries).
   final String jyutping;
   final String en;
 
@@ -164,14 +160,12 @@ class ContentDb {
     try {
       return [
         for (final r in _db.select(
-          'SELECT trad, simp, pinyin, jyutping, en, source FROM dict_entry '
+          'SELECT trad, jyutping, en, source FROM dict_entry '
           "WHERE trad = ? ORDER BY source = 'cccanto' DESC, rowid LIMIT 8",
           [text],
         ))
           DictEntry(
             trad: r['trad'] as String,
-            simp: r['simp'] as String,
-            pinyin: r['pinyin'] as String,
             jyutping: r['jyutping'] as String,
             en: r['en'] as String,
             source: r['source'] as String,

@@ -30,6 +30,7 @@ class AppServices {
     required this.learner,
     required this.memory,
     required this.playAudio,
+    this.playAudioSlow,
     this.speech,
     this.playFile,
     Prefs? prefs,
@@ -54,6 +55,9 @@ class AppServices {
   final LearnerModel learner;
   final Memory memory;
   final PlayAudio playAudio;
+
+  /// Plays a clip at reduced speed (null in tests: falls back to [playAudio]).
+  final PlayAudio? playAudioSlow;
 
   /// On-device recogniser for the read-aloud check (null where unavailable).
   final SpeechEngine? speech;

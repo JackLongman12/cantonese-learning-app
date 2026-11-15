@@ -15,6 +15,7 @@ import 'package:duk/events/event_store.dart';
 import 'package:duk/main.dart';
 import 'package:duk/ui/cards_screen.dart';
 import 'package:duk/ui/theme.dart';
+import 'package:duk/ui/visual_novel.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -28,6 +29,9 @@ Future<void> loadFont(String family, String path) async {
 }
 
 void main() {
+  // keep Irasutoya pictures out of committed snapshots (public repo)
+  characterPicturesEnabled = false;
+
   const dbPath = 'assets/content/content.db';
   final hasDb = File(dbPath).existsSync();
 

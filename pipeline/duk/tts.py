@@ -59,7 +59,8 @@ def synthesise_all(
     jobs = []
     for lang, text in rows[:limit]:
         for voice in VOICES[lang][:voices_per_lang]:
-            for rate in RATES:
+            # normal speed only: the app slows playback itself (half the audio size)
+            for rate in ("normal",):
                 h = audio_hash(lang, voice, rate, text)
                 jobs.append((h, lang, voice, rate, text, audio_dir / f"{h}.mp3"))
     # flashcard names: normal speed only (they are two to six syllables)

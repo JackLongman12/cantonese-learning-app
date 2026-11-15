@@ -23,8 +23,8 @@ from .content import Content, ContentError, load_content
 from .reference import load_reference
 from .words import refine_words
 
-SCHEMA_VERSION = 7  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry; 6: decks;
-# 7: card image + credit, food deck
+SCHEMA_VERSION = 8  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry; 6: decks;
+# 7: card image + credit, food deck; 8: slim dict_entry (Cantonese only)
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -75,10 +75,8 @@ CREATE TABLE dialogue(
   lines INTEGER NOT NULL, kind TEXT NOT NULL, lang TEXT NOT NULL, level INTEGER NOT NULL,
   pair_id TEXT);
 CREATE TABLE dict_entry(
-  trad TEXT NOT NULL, simp TEXT NOT NULL, pinyin TEXT NOT NULL, jyutping TEXT NOT NULL,
-  en TEXT NOT NULL, source TEXT NOT NULL);
+  trad TEXT NOT NULL, jyutping TEXT NOT NULL, en TEXT NOT NULL, source TEXT NOT NULL);
 CREATE INDEX dict_trad ON dict_entry(trad);
-CREATE INDEX dict_simp ON dict_entry(simp);
 CREATE TABLE deck(
   id TEXT PRIMARY KEY, title TEXT NOT NULL, region TEXT NOT NULL, description TEXT NOT NULL,
   source TEXT NOT NULL);
@@ -381,11 +379,14 @@ def build(
         if entries is None:
             result.warnings.append("dictionary missing (run `duk fetch`): word meanings empty")
         else:
+            # Cantonese only: keep entries with a Jyutping reading (or from CC-Canto),
+            # meanings shortened; Mandarin-only columns are gone (smaller app)
+            kept = [e for e in entries if e.jyutping or e.source == "cccanto"]
             db.executemany(
-                "INSERT INTO dict_entry VALUES(?,?,?,?,?,?)",
-                ((e.trad, e.simp, e.pinyin, e.jyutping, e.en, e.source) for e in entries),
+                "INSERT INTO dict_entry VALUES(?,?,?,?)",
+                ((e.trad, e.jyutping, e.en[:100], e.source) for e in kept),
             )
-            result.warnings.append(f"dictionary: {len(entries)} entries")
+            result.warnings.append(f"dictionary: {len(kept)} entries")
 
     if problems:
         db.close()

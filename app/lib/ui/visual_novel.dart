@@ -39,6 +39,10 @@ const speakerRoles = {
   '阿明': 'Ah Ming',
 };
 
+/// Off in committed preview snapshots: Irasutoya pictures must not end up in the
+/// public repo (their terms forbid redistributing the files).
+bool characterPicturesEnabled = true;
+
 /// Asset path of a speaker's picture: code points in hex (伙計 -> 4f19-8a08.png), the
 /// same rule as pipeline/duk/characters.py.
 String characterAsset(String speaker) =>
@@ -88,7 +92,7 @@ class CharacterSprite extends StatelessWidget {
               ),
       ),
     );
-    final picture = showPicture
+    final picture = showPicture && characterPicturesEnabled
         ? Image.asset(
             characterAsset(speaker),
             height: height,

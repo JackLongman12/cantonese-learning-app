@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
 from . import paths
 from .content import ContentError, load_content
@@ -93,13 +94,48 @@ def main(argv: list[str] | None = None) -> int:
             dest = paths.ROOT / "app" / "assets" / "content"
             (dest / "audio").mkdir(parents=True, exist_ok=True)
             shutil.copy2(paths.CONTENT_DB, dest / "content.db")
-            wanted = {f.name for f in paths.AUDIO.glob("*.mp3")} if paths.AUDIO.exists() else set()
+            # only clips the database uses (old ones, e.g. slow-speed copies, stay behind)
+            with sqlite3.connect(paths.CONTENT_DB) as check:
+                wanted = {
+                    Path(r[0]).name
+                    for r in check.execute("SELECT path FROM audio")
+                    if (paths.AUDIO / Path(r[0]).name).exists()
+                }
             for stale in dest.glob("audio/*.mp3"):
                 if stale.name not in wanted:
                     stale.unlink()
             for name in wanted:
                 if not (dest / "audio" / name).exists():
                     shutil.copy2(paths.AUDIO / name, dest / "audio" / name)
+            # Reading font cut down to the characters the app uses (content, cards,
+            # dictionary), from the full copy in data/fonts-full (git-ignored). Text with
+            # other characters (pasted) falls back to the phone's own Chinese font.
+            full_font = paths.ROOT / "data" / "fonts-full" / "NotoSansHK.ttf"
+            if full_font.exists():
+                from fontTools import subset
+
+                with sqlite3.connect(paths.CONTENT_DB) as check:
+                    chars: set[str] = set()
+                    for q in (
+                        "SELECT text FROM sentence",
+                        "SELECT zh FROM card",
+                        "SELECT trad FROM dict_entry",
+                        "SELECT key FROM item",
+                    ):
+                        for (t,) in check.execute(q):
+                            chars.update(t)
+                chars.update(chr(c) for c in range(0x20, 0x7F))
+                chars.update("，。！？、：；「」『』（）《》…—～·")
+                opts = subset.Options()
+                opts.layout_features = ["*"]
+                opts.name_IDs = ["*"]
+                font = subset.load_font(str(full_font), opts)
+                sub = subset.Subsetter(opts)
+                sub.populate(text="".join(chars))
+                sub.subset(font)
+                out = paths.ROOT / "app" / "assets" / "fonts" / "NotoSansHK.ttf"
+                subset.save_font(font, str(out), opts)
+                print(f"font: {len(chars)} characters, {out.stat().st_size // 1000} KB")
             # card photos (freely licensed, credited on each card)
             with sqlite3.connect(paths.CONTENT_DB) as check:
                 images = {

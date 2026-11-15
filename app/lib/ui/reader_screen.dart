@@ -261,7 +261,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
 
   Future<void> _play({required bool slow, bool auto = false}) async {
     if (!auto) _s.logger.touch();
-    final path = _s.content.audioPath(widget.lang, _sentence.text, slow: slow);
+    final path = _s.content.audioPath(widget.lang, _sentence.text);
     if (!auto) _audioPlays++;
     _s.logger.log('item.audio', {
       'exposure_id': _exposureId,
@@ -278,7 +278,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
     }
     final shownAt = _exposure;
     try {
-      await _s.playAudio(path);
+      await (slow ? (_s.playAudioSlow ?? _s.playAudio) : _s.playAudio)(path);
       // the meaning appears once the line has been heard (setting, on by default)
       if (mounted &&
           _s.prefs.autoMeaning &&
