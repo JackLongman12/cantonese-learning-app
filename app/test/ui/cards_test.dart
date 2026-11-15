@@ -54,6 +54,7 @@ void main() {
     addTearDown(() => t.binding.setSurfaceSize(null));
     final db = ContentDb.open(dbPath);
     addTearDown(db.close);
+    var now = DateTime.utc(2026, 11, 15, 9);
     final store = MemoryEventStore();
     final memory = Memory();
     final services = AppServices(
@@ -66,6 +67,7 @@ void main() {
         deviceKind: 'windows',
         appVersion: 'test',
         contentVersion: db.contentVersion,
+        clock: () => now,
       ),
       playAudio: (_) async {},
     );
@@ -79,6 +81,7 @@ void main() {
     await t.tap(find.byKey(const ValueKey('flip')));
     await t.pumpAndSettle();
     expect(find.byKey(const ValueKey('card-alt')), findsOneWidget);
+    now = now.add(const Duration(seconds: 6));
     await t.tap(find.byKey(const ValueKey('got-it')));
     await t.pumpAndSettle();
     final reviews = store.events
@@ -98,5 +101,35 @@ void main() {
     );
     final cardId = reviews.last.payload['item_id']! as String;
     expect(services.learner.stateOf(cardId).isNew, isFalse);
+
+    // a card you couldn't read comes back later in the same session and is flagged
+    await t.tap(find.byKey(const ValueKey('flip')));
+    await t.pumpAndSettle();
+    final missed =
+        store.events
+                .lastWhere((e) => e.type == 'item.shown')
+                .payload['card_id']!
+            as String;
+    now = now.add(const Duration(seconds: 6));
+    await t.tap(find.byKey(const ValueKey('again')));
+    await t.pumpAndSettle();
+    final zh = missed.split(':').last;
+    expect(services.words.needsPractice('yue', zh), isTrue);
+    var seenAgain = false;
+    for (var k = 0; k < 5 && !seenAgain; k++) {
+      await t.tap(find.byKey(const ValueKey('flip')));
+      await t.pumpAndSettle();
+      now = now.add(const Duration(seconds: 6));
+      await t.tap(find.byKey(const ValueKey('got-it')));
+      await t.pumpAndSettle();
+      seenAgain =
+          store.events
+              .where(
+                (e) => e.type == 'item.shown' && e.payload['card_id'] == missed,
+              )
+              .length >=
+          2;
+    }
+    expect(seenAgain, isTrue);
   }, skip: !hasDb);
 }

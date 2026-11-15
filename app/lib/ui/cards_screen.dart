@@ -11,9 +11,11 @@ import '../app_services.dart';
 import '../data/content_db.dart';
 import '../engine/deck_planner.dart';
 import '../engine/item_state.dart';
+import '../engine/pronunciation.dart';
 import '../engine/scaffold.dart';
 import '../events/event_logger.dart';
 import '../platform/sfx.dart';
+import 'mic_check.dart';
 import 'ruby_text.dart';
 import 'word_sheet.dart';
 
@@ -46,6 +48,31 @@ class DeckSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
+        if (_dueCards(services, decks) case final due when due.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: FilledButton.icon(
+              key: const ValueKey('review-due-cards'),
+              style: FilledButton.styleFrom(minimumSize: const Size(0, 52)),
+              onPressed: () async {
+                services.sound(Sfx.tap);
+                await Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => CardSessionScreen(
+                      services: services,
+                      deck: const DeckRow('due', 'Cards due', 'both', '', 0),
+                      cards: due.take(20).toList(),
+                    ),
+                  ),
+                );
+                onChanged();
+              },
+              icon: const Icon(Icons.style_rounded),
+              label: Text(
+                'Review ${due.length} due ${due.length == 1 ? 'card' : 'cards'}',
+              ),
+            ),
+          ),
         for (final d in decks)
           _DeckTile(
             deck: d,
@@ -73,6 +100,22 @@ class DeckSection extends StatelessWidget {
       ],
     );
   }
+}
+
+/// Cards from every deck whose review is due now, most overdue first.
+List<CardRow> _dueCards(AppServices s, List<DeckRow> decks) {
+  final now = s.logger.now();
+  final due = <(CardRow, DateTime)>[];
+  for (final d in decks) {
+    for (final c in s.content.cards(d.id)) {
+      final st = s.learner.stateOf(c.id);
+      if (!st.isNew && st.due != null && !st.due!.isAfter(now)) {
+        due.add((c, st.due!));
+      }
+    }
+  }
+  due.sort((a, b) => a.$2.compareTo(b.$2));
+  return [for (final d in due) d.$1];
 }
 
 class _DeckTile extends StatelessWidget {
@@ -150,9 +193,13 @@ class CardSessionScreen extends StatefulWidget {
     super.key,
     required this.services,
     required this.deck,
+    this.cards,
   });
   final AppServices services;
   final DeckRow deck;
+
+  /// Cards to study instead of the deck's own (e.g. everything due, across decks).
+  final List<CardRow>? cards;
 
   @override
   State<CardSessionScreen> createState() => _CardSessionScreenState();
@@ -160,7 +207,15 @@ class CardSessionScreen extends StatefulWidget {
 
 class _CardSessionScreenState extends State<CardSessionScreen> {
   AppServices get _s => widget.services;
-  late final List<CardRow> _all = _s.content.cards(widget.deck.id);
+  late final List<CardRow> _all =
+      widget.cards ?? _s.content.cards(widget.deck.id);
+
+  /// How often each card came back this session ("couldn't read it" -> again soon).
+  final _requeued = <String, int>{};
+
+  /// Read-aloud result for the current card.
+  List<CharScore>? _micScores;
+  int? _micPct;
   late List<CardRow> _queue;
   int _index = 0;
   bool _flipped = false;
@@ -201,6 +256,8 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
         id: _s.scaffold.levelFor(_s.learner.stateOf(id), _s.memory, now),
     };
     _flipped = false;
+    _micScores = null;
+    _micPct = null;
     _revealed.clear();
     _revealedTokens.clear();
     _mark = _s.logger.mark();
@@ -262,6 +319,25 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
       's_before': _s.learner.stateOf(_card.id).stability,
     });
     gotIt ? _known++ : _again++;
+    if (!gotIt) {
+      _s.logger.log('word.flag', {
+        'text': _card.zh,
+        'lang': 'yue',
+        'reason': _micPct != null ? 'say' : 'read',
+        'reading': [
+          for (final t in _card.tokens)
+            if (t.reading != null) t.reading!,
+        ].join(' '),
+        'context': _card.zh,
+        'context_en': _card.alt,
+      });
+      final n = _requeued[_card.id] ?? 0;
+      if (n < 2) {
+        _requeued[_card.id] = n + 1;
+        final at = (_index + 4).clamp(0, _queue.length);
+        _queue.insert(at, _card);
+      }
+    }
     if (_index + 1 >= _queue.length) {
       _s.logger.log('session.end', {
         'reason': 'done',
@@ -284,6 +360,83 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
     final scheme = theme.colorScheme;
     final done = _index >= _queue.length;
     return Scaffold(
+      bottomNavigationBar: done || _queue.isEmpty
+          ? null
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                child: _flipped
+                    ? Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              key: const ValueKey('again'),
+                              onPressed: () => _grade(false),
+                              style: OutlinedButton.styleFrom(
+                                minimumSize: const Size(0, 56),
+                              ),
+                              child: const Text("Couldn't read it"),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: FilledButton(
+                              key: const ValueKey('got-it'),
+                              onPressed: () => _grade(true),
+                              style: FilledButton.styleFrom(
+                                minimumSize: const Size(0, 56),
+                              ),
+                              child: const Text('Read it'),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          Expanded(
+                            child: MicCheck(
+                              key: ValueKey('mic-${_card.id}-$_index'),
+                              services: _s,
+                              expected: [
+                                for (final t in _card.tokens)
+                                  if (t.reading != null) t.reading!,
+                              ],
+                              onResult: (scores, pct) {
+                                final at = _index;
+                                setState(() {
+                                  _micScores = scores;
+                                  _micPct = pct;
+                                });
+                                _flip();
+                                // said right: counts as read, move on by itself
+                                if (pct >= 85) {
+                                  Future<void>.delayed(
+                                    const Duration(milliseconds: 1400),
+                                    () {
+                                      if (mounted && _index == at && _flipped) {
+                                        _grade(true);
+                                      }
+                                    },
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                          if (_s.speech != null) const SizedBox(width: 12),
+                          Expanded(
+                            child: FilledButton(
+                              key: const ValueKey('flip'),
+                              onPressed: _flip,
+                              style: FilledButton.styleFrom(
+                                minimumSize: const Size(0, 56),
+                              ),
+                              child: const Text('Check'),
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
+            ),
       appBar: AppBar(
         title: Text(widget.deck.title),
         bottom: PreferredSize(
@@ -374,22 +527,29 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                       const SizedBox(height: 16),
                       if (!_flipped) ...[
                         Text(
-                          'Read it in your head, then check.',
+                          'Read it aloud, or in your head and check.',
                           textAlign: TextAlign.center,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: scheme.onSurfaceVariant,
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        FilledButton(
-                          key: const ValueKey('flip'),
-                          onPressed: _flip,
-                          style: FilledButton.styleFrom(
-                            minimumSize: const Size(0, 52),
-                          ),
-                          child: const Text('Check'),
-                        ),
                       ] else ...[
+                        if (_micPct case final pct?)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Text(
+                              pct >= 85
+                                  ? 'You said it right ($pct%)'
+                                  : 'Not quite ($pct%): ${_micScores!.where((c) => c.isError).map((c) => "${c.heard ?? '–'} → ${c.expected}").join(', ')}',
+                              key: const ValueKey('card-mic-result'),
+                              textAlign: TextAlign.center,
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                color: pct >= 85
+                                    ? scheme.primary
+                                    : scheme.error,
+                              ),
+                            ),
+                          ),
                         if (_card.alt.isNotEmpty)
                           Text(
                             _card.alt,
@@ -455,32 +615,6 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                             icon: const Icon(Icons.translate_rounded),
                             label: const Text('Word meanings'),
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: OutlinedButton(
-                                key: const ValueKey('again'),
-                                onPressed: () => _grade(false),
-                                style: OutlinedButton.styleFrom(
-                                  minimumSize: const Size(0, 52),
-                                ),
-                                child: const Text("Couldn't read it"),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: FilledButton(
-                                key: const ValueKey('got-it'),
-                                onPressed: () => _grade(true),
-                                style: FilledButton.styleFrom(
-                                  minimumSize: const Size(0, 52),
-                                ),
-                                child: const Text('Read it'),
-                              ),
-                            ),
-                          ],
                         ),
                       ],
                     ],
