@@ -267,7 +267,7 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
                                 : _ok!
                                 ? 'Right!'
                                 : 'Not quite: ${[for (final i in _wordPositions)
-                                    if (i < _scores!.length && _scores![i].isError) "you said ${_scores![i].heard ?? '–'}, it's ${_scores![i].expected}"].join('; ')}',
+                                    if (i < _scores!.length && _scores![i].isMiss) "you said ${_scores![i].heard ?? '–'}, it's ${_scores![i].expected}"].join('; ')}',
                             key: const ValueKey('practice-result'),
                             style: theme.textTheme.titleSmall?.copyWith(
                               color: _ok == true
@@ -341,7 +341,7 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
             final positions = _wordPositions;
             final ok =
                 positions.isNotEmpty &&
-                positions.every((i) => i < scores.length && !scores[i].isError);
+                positions.every((i) => i < scores.length && !scores[i].isMiss);
             _record(ok);
             setState(() {
               _scores = scores;

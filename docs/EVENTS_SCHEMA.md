@@ -47,6 +47,7 @@ Stored one JSON object per line (`.jsonl`), gzip-compressed for sync.
 - `word.remove` `{text, lang}`
 - `word.flag` `{text, lang, reason: read|say, reading?, sentence_id?, context?, context_en?}` — automatic: you revealed a reading you were meant to read, or read-aloud heard the word wrong; it joins the practice list
 - `word.practice` `{text, lang, ok}` — one practice of a flagged word (mic-graded, or self-graded without a mic); two `ok` in a row take it off the list
+- `plan.step` `{step: review|learn|weak|words|cards, day}` — a step of Today's plan was finished
 - `conv.choice` `{exposure_id, sentence_id, correct, tries}` — the learner picked a line on their turn in a conversation (visual-novel mode); wrong options are lines from other conversations of the topic
 - `reader.scrollback` `{from_idx, to_idx}`
 - `speech.attempt` `{exposure_id, engine, expected, heard, per_token: [{ok, tone_ok}], score}`

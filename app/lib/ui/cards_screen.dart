@@ -416,7 +416,18 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                                 });
                                 _flip();
                                 // said right: counts as read, move on by itself
-                                if (pct >= 85) {
+                                // around half wrong: counts as not read
+                                if (pct <= failPercent) {
+                                  Future<void>.delayed(
+                                    const Duration(milliseconds: 1600),
+                                    () {
+                                      if (mounted && _index == at && _flipped) {
+                                        _grade(false);
+                                      }
+                                    },
+                                  );
+                                }
+                                if (pct >= passPercent) {
                                   Future<void>.delayed(
                                     const Duration(milliseconds: 1400),
                                     () {
@@ -559,13 +570,15 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: Text(
-                              pct >= 85
+                              pct >= passPercent
                                   ? 'You said it right ($pct%)'
-                                  : 'Not quite ($pct%): ${_micScores!.where((c) => c.isError).map((c) => "${c.heard ?? '–'} → ${c.expected}").join(', ')}',
+                                  : pct <= failPercent
+                                  ? "Couldn't read it ($pct%): ${_micScores!.where((c) => c.isMiss).map((c) => "${c.heard ?? '–'} → ${c.expected}").join(', ')}"
+                                  : 'Close ($pct%), you decide: ${_micScores!.where((c) => c.isMiss).map((c) => "${c.heard ?? '–'} → ${c.expected}").join(', ')}',
                               key: const ValueKey('card-mic-result'),
                               textAlign: TextAlign.center,
                               style: theme.textTheme.titleSmall?.copyWith(
-                                color: pct >= 85
+                                color: pct >= passPercent
                                     ? scheme.primary
                                     : scheme.error,
                               ),

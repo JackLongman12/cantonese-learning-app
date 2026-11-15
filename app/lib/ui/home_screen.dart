@@ -12,6 +12,7 @@ import '../app_services.dart';
 import '../data/content_db.dart';
 import '../engine/item_state.dart';
 import '../engine/path.dart';
+import '../engine/weak_spots.dart';
 import 'cards_screen.dart';
 import 'logo.dart';
 import 'mascot.dart';
@@ -25,6 +26,7 @@ import '../platform/sfx.dart';
 import 'settings_screen.dart';
 import 'stories_screen.dart';
 import 'topic_screen.dart';
+import 'word_sheet.dart';
 import 'words_screen.dart';
 import 'update_ui.dart';
 import '../platform/updater.dart';
@@ -99,12 +101,23 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) _checkClipboard();
+    if (state == AppLifecycleState.resumed) {
+      _checkClipboard();
+      // reopening the app from the background counts as opening it
+      final last = _lastUpdateCheck;
+      if (last == null ||
+          DateTime.now().difference(last) > const Duration(minutes: 30)) {
+        _checkUpdate();
+      }
+    }
   }
+
+  DateTime? _lastUpdateCheck;
 
   Future<void> _checkUpdate() async {
     final u = _s.updater;
     if (u == null) return;
+    _lastUpdateCheck = DateTime.now();
     final info = await u.check();
     _s.logger.log('update.check', {'channel': 'release', 'found': info?.build});
     if (mounted && info != null) setState(() => _update = info);
@@ -161,7 +174,38 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Future<void> _push(Widget screen) async {
     await Navigator.of(context)
         .push(MaterialPageRoute<void>(builder: (_) => screen));
+    _insights = null;
     if (mounted) setState(() {});
+  }
+
+  ({
+    List<bool> days,
+    int sentences,
+    int minutes,
+    List<SoundMixup> sounds,
+    List<ItemState> chars,
+  })?
+  _insights;
+
+  /// Week activity and weak spots, from the event log (cached until an exercise ends).
+  ({
+    List<bool> days,
+    int sentences,
+    int minutes,
+    List<SoundMixup> sounds,
+    List<ItemState> chars,
+  })
+  _overview() {
+    if (_insights case final i?) return i;
+    final events = _s.logger.store.readAll().toList();
+    final w = weekActivity(events, _s.logger.now().toLocal());
+    return _insights = (
+      days: w.days,
+      sentences: w.sentences,
+      minutes: w.minutes,
+      sounds: weakSounds(events),
+      chars: weakCharacters(_s.learner.known, _lang),
+    );
   }
 
   Future<void> _openTopic(ScenarioRow sc, {bool practise = false}) async {
@@ -183,7 +227,52 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             : TopicScreen(services: _s, scenario: sc, lang: _lang),
       ),
     );
+    _insights = null;
     if (mounted) setState(() {});
+    await _offerReminder();
+  }
+
+  /// Once, after the first session: a daily nudge at this time of day (opt-in).
+  Future<void> _offerReminder() async {
+    final r = _s.reminders;
+    if (r == null || _s.prefs.reminderOffered || _s.prefs.reminderOn) return;
+    if (_s.learner.known.isEmpty || !mounted) return;
+    _s.prefs.reminderOffered = true;
+    final now = TimeOfDay.now();
+    final minute = now.hour * 60 + now.minute;
+    final clock =
+        '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('A little every day?'),
+        content: Text(
+          'Reading a few sentences daily works far better than a lot once a week. '
+          'Want a quiet reminder at $clock each day? You can change it in Settings.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('No thanks'),
+          ),
+          FilledButton(
+            key: const ValueKey('reminder-yes'),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Remind me'),
+          ),
+        ],
+      ),
+    );
+    if (yes != true || !await r.requestPermission()) return;
+    _s.prefs
+      ..reminderOn = true
+      ..reminderMinute = minute;
+    await r.scheduleDaily(minute);
+    _s.logger.log('settings.change', {
+      'key': 'reminder',
+      'from': false,
+      'to': true,
+    });
   }
 
   bool _isLang(ItemState st) => st.itemId.startsWith('cr:$_lang:');
@@ -306,6 +395,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
 
     final nextTopic = scenarios.where((x) => x.id == upNextId).firstOrNull;
+    final overview = _overview();
     final practiseWords = _s.words.practice(_lang);
     final cardsDue = _lang == 'yue'
         ? dueCards(_s, _s.content.decks())
@@ -341,9 +431,33 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               sentences: _s.content.sentences(nextTopic.id, _lang),
               mode: 'path',
               scenarioId: nextTopic.id,
-              count: 8,
-              maxNew: 5,
+              // a first session is short: finish it, feel the win, come back
+              count: met == 0 ? 5 : 8,
+              maxNew: met == 0 ? 4 : 5,
               onComplete: () => finished('learn'),
+            );
+          },
+        ),
+      if (overview.chars.length >= 3 || done.contains('weak'))
+        _PlanStep(
+          id: 'weak',
+          icon: Icons.fitness_center_rounded,
+          title: 'Fix weak spots',
+          detail: 'Sentences with the characters you keep needing help with.',
+          done: done.contains('weak'),
+          start: () {
+            final ids = {for (final c in overview.chars) c.itemId};
+            final lines = _s.content
+                .allSentences(_lang)
+                .where((x) => x.itemIds.any(ids.contains))
+                .toList();
+            return _open(
+              title: 'Weak spots',
+              sentences: lines,
+              mode: 'weak',
+              count: 8,
+              maxNew: 2,
+              onComplete: () => finished('weak'),
             );
           },
         ),
@@ -491,6 +605,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ],
         const SizedBox(height: 16),
         for (final step in plan) _PlanTile(step: step),
+        const SizedBox(height: 16),
+        _WeekCard(
+          today: now.toLocal(),
+          days: overview.days,
+          sentences: overview.sentences,
+          minutes: overview.minutes,
+        ),
+        if (overview.sounds.isNotEmpty || overview.chars.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _WeakSpotsCard(
+            sounds: overview.sounds,
+            chars: overview.chars,
+            onChar: (c) => sayOrExplain(context, _s, c, _lang),
+          ),
+        ],
         const SizedBox(height: 12),
         IntrinsicHeight(
           child: Row(
@@ -758,6 +887,166 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           icon: const Icon(Icons.settings_rounded),
         ),
       ],
+    );
+  }
+}
+
+/// The last seven days as dots, plus sentences and minutes: a quiet record, no streak.
+class _WeekCard extends StatelessWidget {
+  const _WeekCard({
+    required this.today,
+    required this.days,
+    required this.sentences,
+    required this.minutes,
+  });
+  final DateTime today;
+  final List<bool> days;
+  final int sentences;
+  final int minutes;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    const names = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    return Card(
+      key: const ValueKey('week-card'),
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Your week', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                for (var i = 0; i < 7; i++)
+                  Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 13,
+                        backgroundColor: days[i]
+                            ? scheme.primary
+                            : scheme.surfaceContainerHighest,
+                        child: days[i]
+                            ? Icon(
+                                Icons.check_rounded,
+                                size: 16,
+                                color: scheme.onPrimary,
+                              )
+                            : null,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        names[today.subtract(Duration(days: 6 - i)).weekday -
+                            1],
+                        style: theme.textTheme.labelSmall,
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text(
+              sentences == 0
+                  ? 'Nothing read this week yet.'
+                  : '$sentences sentences read · $minutes min this week',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// What you find hard: sounds you mix up reading aloud, characters you keep needing.
+class _WeakSpotsCard extends StatelessWidget {
+  const _WeakSpotsCard({
+    required this.sounds,
+    required this.chars,
+    required this.onChar,
+  });
+  final List<SoundMixup> sounds;
+  final List<ItemState> chars;
+  final ValueChanged<String> onChar;
+
+  static String _explain(SoundMixup m) => switch (m.kind) {
+    'tone' => 'tone ${m.expected} said as ${m.heard}',
+    'start' => 'starts with ${m.expected}, said as ${m.heard}',
+    _ => 'ends in ${m.expected}, said as ${m.heard}',
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Card(
+      key: const ValueKey('weak-spots'),
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Your weak spots', style: theme.textTheme.titleSmall),
+            if (chars.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Text(
+                'Characters you keep needing help with (tap to hear):',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final c in chars)
+                    ActionChip(
+                      onPressed: () => onChar(c.itemId.split(':')[2]),
+                      label: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            c.itemId.split(':')[3],
+                            style: theme.textTheme.labelSmall,
+                          ),
+                          Text(
+                            c.itemId.split(':')[2],
+                            style: chineseStyle('yue', fontSize: 20),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ],
+            if (sounds.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Text(
+                'Sounds you mix up when reading aloud:',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
+              for (final m in sounds)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    '• ${_explain(m)} (${m.count}×), e.g. ${m.examples.first}',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

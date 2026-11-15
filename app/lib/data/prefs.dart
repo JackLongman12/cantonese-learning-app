@@ -62,6 +62,10 @@ class Prefs {
     'steps': [...planDone(day), step],
   });
 
+  /// The daily reminder was offered once after the first session.
+  bool get reminderOffered => _data['reminder_offered'] == true;
+  set reminderOffered(bool v) => _set('reminder_offered', v);
+
   /// First-run setup done (how much you can read; how the reader works).
   bool get onboarded => _data['onboarded'] == true;
   set onboarded(bool v) => _set('onboarded', v);

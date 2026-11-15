@@ -385,16 +385,18 @@ class _ReaderScreenState extends State<ReaderScreen> {
           {'expected': c.expected, 'heard': c.heard, 'v': c.verdict.name},
       ],
     });
-    _s.sound(soundAccuracy(score.chars) >= 85 ? Sfx.good : Sfx.tryAgain);
+    _s.sound(
+      soundAccuracy(score.chars) >= passPercent ? Sfx.good : Sfx.tryAgain,
+    );
     // words said wrong go on the practice list
     final seenWords = <int>{};
-    for (final e in byToken.entries.where((e) => e.value.isError)) {
+    for (final e in byToken.entries.where((e) => e.value.isMiss)) {
       if (seenWords.add(s.wordRange(e.key).$1)) flagWord(_s, s, e.key, 'say');
     }
     setState(() {
       _speech = byToken;
       // A mispronounced character is a reading lapse, exactly like tapping to reveal.
-      for (final e in byToken.entries.where((e) => e.value.isError)) {
+      for (final e in byToken.entries.where((e) => e.value.isMiss)) {
         final id = s.tokens[e.key].itemId;
         if (id != null) {
           _revealed.add(id);
@@ -530,6 +532,10 @@ class _ReaderScreenState extends State<ReaderScreen> {
         practised: _practised.length,
         introduced: _introduced.length,
         checked: _lapsed.length,
+        newChars: [
+          for (final id in _introduced)
+            if (id.split(':') case [_, _, final ch, final r]) (ch, r),
+        ],
       );
     }
     return CallbackShortcuts(
@@ -1152,8 +1158,11 @@ class _SummaryScreen extends StatelessWidget {
     required this.practised,
     required this.introduced,
     required this.checked,
+    this.newChars = const [],
   });
 
+  /// Characters met for the first time: (character, Jyutping).
+  final List<(String, String)> newChars;
   final String title;
   final int read;
   final int practised;
@@ -1218,6 +1227,32 @@ class _SummaryScreen extends StatelessWidget {
                       stat('$practised', 'characters practised'),
                     ],
                   ),
+                  if (newChars.isNotEmpty) ...[
+                    const SizedBox(height: 16),
+                    Text('New characters', style: theme.textTheme.titleSmall),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      key: const ValueKey('new-chars'),
+                      spacing: 6,
+                      runSpacing: 6,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        for (final (ch, r) in newChars.take(16))
+                          Chip(
+                            label: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(r, style: theme.textTheme.labelSmall),
+                                Text(
+                                  ch,
+                                  style: chineseStyle('yue', fontSize: 20),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
                   const SizedBox(height: 24),
                   FilledButton(
                     key: const ValueKey('done'),
@@ -1240,17 +1275,8 @@ class _SummaryScreen extends StatelessWidget {
 enum _Mic { idle, recording, scoring }
 
 /// "4 of 5 right · 1 tone off" plus what was said instead.
-/// Share of characters whose sound was right; a heard tone slip counts half.
-/// Tones the recogniser "corrects" silently can't be seen, so this measures sounds.
-int soundAccuracy(List<CharScore> scores) {
-  if (scores.isEmpty) return 0;
-  var pts = 0.0;
-  for (final c in scores) {
-    if (c.verdict == Verdict.ok) pts += 1;
-    if (c.verdict == Verdict.tone) pts += 0.5;
-  }
-  return (100 * pts / scores.length).round();
-}
+/// Share of characters whose sound was right (tone slips forgiven).
+int soundAccuracy(List<CharScore> scores) => lenientAccuracy(scores);
 
 class _AccuracyBadge extends StatelessWidget {
   const _AccuracyBadge({required this.percent});
@@ -1259,7 +1285,7 @@ class _AccuracyBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final good = percent >= 85;
+    final good = percent >= passPercent;
     final mid = percent >= 60;
     final bg = good
         ? scheme.primaryContainer

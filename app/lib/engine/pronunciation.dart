@@ -28,7 +28,24 @@ class CharScore {
   final String? heard;
 
   bool get isError => verdict == Verdict.tone || verdict == Verdict.wrong;
+
+  /// The sound itself was wrong or not heard. Tone slips are not counted: people say
+  /// tones differently and the recogniser is not reliable on them.
+  bool get isMiss => verdict == Verdict.wrong || verdict == Verdict.missed;
 }
+
+/// Percent of characters said right, counting a tone slip as right (lenient: the
+/// recogniser makes mistakes, and real speakers vary their tones).
+int lenientAccuracy(List<CharScore> scores) {
+  if (scores.isEmpty) return 0;
+  final ok = scores.where((c) => !c.isMiss).length;
+  return (100 * ok / scores.length).round();
+}
+
+/// At or above: said right. At or below [failPercent]: counted as not read.
+/// In between the learner decides (the recogniser may have misheard).
+const passPercent = 75;
+const failPercent = 55;
 
 class AttemptScore {
   const AttemptScore(this.chars);

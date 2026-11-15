@@ -95,7 +95,7 @@ class _MicCheckState extends State<MicCheck> {
           {'expected': c.expected, 'heard': c.heard, 'v': c.verdict.name},
       ],
     });
-    _s.sound(pct >= 85 ? Sfx.good : Sfx.tryAgain);
+    _s.sound(pct >= passPercent ? Sfx.good : Sfx.tryAgain);
     if (mounted) setState(() => _state = _State.idle);
     widget.onResult(score.chars, pct);
   }
