@@ -158,3 +158,25 @@ class _VoicePickerState extends State<_VoicePicker> {
     );
   }
 }
+
+/// The voice switch in every exercise's top bar: change voice mid-practice.
+class VoiceButton extends StatelessWidget {
+  const VoiceButton(this.services, {super.key});
+  final AppServices services;
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+    key: const ValueKey('voice-button'),
+    tooltip: 'Voice: ${voiceLabel(services)}',
+    icon: const Icon(Icons.record_voice_over_rounded),
+    onPressed: () => showVoicePicker(
+      context,
+      services,
+      onChanged: (from, to) => services.logger.log('settings.change', {
+        'key': 'voice',
+        'from': from,
+        'to': to,
+      }),
+    ),
+  );
+}

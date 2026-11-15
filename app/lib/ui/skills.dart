@@ -3,6 +3,8 @@
 /// meaning, and an example sentence with Jyutping that you can hear.
 library;
 
+import 'voice_picker.dart';
+
 import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
@@ -177,7 +179,10 @@ class RadicalsScreen extends StatelessWidget {
     final scheme = theme.colorScheme;
     final groups = services.content.radicals();
     return Scaffold(
-      appBar: AppBar(title: const Text('Radicals')),
+      appBar: AppBar(
+        title: const Text('Radicals'),
+        actions: [VoiceButton(services)],
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
@@ -282,7 +287,10 @@ class SkillScreen extends StatelessWidget {
     final entries = services.content.skillEntries(skill.id);
     final annotator = services.content.annotator('yue');
     return Scaffold(
-      appBar: AppBar(title: Text(skill.title)),
+      appBar: AppBar(
+        title: Text(skill.title),
+        actions: [VoiceButton(services)],
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),

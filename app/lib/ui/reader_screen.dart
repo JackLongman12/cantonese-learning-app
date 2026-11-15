@@ -2,6 +2,7 @@
 /// from what the learner did, not asked for.
 library;
 
+import 'voice_picker.dart';
 import '../engine/pictures.dart';
 
 import 'dart:math';
@@ -666,6 +667,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
             leading: closeToHome(context),
             title: Text(widget.title),
             actions: [
+              VoiceButton(_s),
               IconButton(
                 tooltip: 'How reading help works',
                 onPressed: _showHelp,

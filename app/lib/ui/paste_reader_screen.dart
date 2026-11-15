@@ -2,6 +2,8 @@
 /// readings over only the characters this learner doesn't know yet.
 library;
 
+import 'voice_picker.dart';
+
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -144,6 +146,7 @@ class _PasteReaderScreenState extends State<PasteReaderScreen> {
       appBar: AppBar(
         title: const Text('Read anything'),
         actions: [
+          VoiceButton(_s),
           if (!_editing)
             IconButton(
               tooltip: 'Edit text',

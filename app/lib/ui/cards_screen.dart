@@ -4,6 +4,7 @@
 /// sign, and the audio.
 library;
 
+import 'voice_picker.dart';
 import '../engine/pictures.dart';
 
 import 'package:flutter/services.dart';
@@ -437,6 +438,7 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
       appBar: AppBar(
         leading: done ? const SizedBox.shrink() : closeToHome(context),
         title: Text(widget.deck.title),
+        actions: [if (!done) VoiceButton(_s)],
         bottom: done
             ? null
             : duckBar(_queue.isEmpty ? 1 : _index / _queue.length),

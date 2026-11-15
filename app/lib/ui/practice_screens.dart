@@ -3,6 +3,8 @@
 /// - Spoken vs written: written Cantonese next to standard written Chinese.
 library;
 
+import 'voice_picker.dart';
+
 import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
@@ -44,7 +46,10 @@ class SoundFamiliesScreen extends StatelessWidget {
           .compareTo(a.members.where((m) => known(m.char, m.reading)).length),
     );
     return Scaffold(
-      appBar: AppBar(title: const Text('Sound families')),
+      appBar: AppBar(
+        title: const Text('Sound families'),
+        actions: [VoiceButton(services)],
+      ),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(

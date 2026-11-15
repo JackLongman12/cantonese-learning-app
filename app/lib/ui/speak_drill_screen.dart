@@ -8,6 +8,8 @@
 /// without help, and words said wrong go on the practice list.
 library;
 
+import 'voice_picker.dart';
+
 import 'dart:async';
 
 import 'package:material_ui/material_ui.dart';
@@ -309,6 +311,7 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
       appBar: AppBar(
         leading: closeToHome(context),
         title: Text(widget.title),
+        actions: [VoiceButton(_s)],
         bottom: duckBar(
           widget.sentences.isEmpty ? 1 : _index / widget.sentences.length,
         ),

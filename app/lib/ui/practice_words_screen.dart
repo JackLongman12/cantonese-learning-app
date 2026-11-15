@@ -6,6 +6,7 @@
 /// and say whether you got it. Two right in a row takes a word off the list.
 library;
 
+import 'voice_picker.dart';
 import '../engine/pictures.dart';
 
 import 'package:material_ui/material_ui.dart';
@@ -142,6 +143,7 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
       appBar: AppBar(
         leading: done ? const SizedBox.shrink() : closeToHome(context),
         title: const Text('Practice words'),
+        actions: [if (!done) VoiceButton(_s)],
         bottom: done
             ? null
             : duckBar(widget.words.isEmpty ? 1 : _index / widget.words.length),
