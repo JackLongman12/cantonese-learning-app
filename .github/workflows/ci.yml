@@ -31,7 +31,7 @@ jobs:
           channel: stable
       # content.db is a build output: build it so the end-to-end reader test runs.
       - run: pip install -e pipeline
-      - run: python -m duk build && python -m duk bundle
+      - run: python -m duk build && python -m duk bundle --no-audio
       - run: mkdir -p app/assets/content/audio
       - working-directory: app
         run: flutter pub get && flutter analyze && flutter test --exclude-tags golden

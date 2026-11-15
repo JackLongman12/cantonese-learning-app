@@ -26,7 +26,12 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("build", help="build build/content.db and the review queue")
     t = sub.add_parser("tts", help="synthesise audio for every sentence in content.db")
     t.add_argument("--limit", type=int, default=None)
-    sub.add_parser("bundle", help="copy content.db and audio into the app's assets")
+    bundle = sub.add_parser("bundle", help="copy content.db and audio into the app's assets")
+    bundle.add_argument(
+        "--no-audio",
+        action="store_true",
+        help="allow a build without audio (CI, which cannot synthesise speech)",
+    )
     args = ap.parse_args(argv)
 
     try:
@@ -85,7 +90,7 @@ def main(argv: list[str] | None = None) -> int:
 
             with sqlite3.connect(paths.CONTENT_DB) as check:
                 n_audio = check.execute("SELECT COUNT(*) FROM audio").fetchone()[0]
-            if n_audio == 0:
+            if n_audio == 0 and not args.no_audio:
                 print(
                     "content.db has no audio rows: run `duk tts` after `duk build`", file=sys.stderr
                 )

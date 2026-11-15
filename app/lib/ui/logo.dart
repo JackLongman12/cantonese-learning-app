@@ -1,5 +1,5 @@
 /// DuckLearn mark: a white duck's face, winking, with a yellow beak and anime blush, the
-/// round head centred on a terracotta tile. Drawn in code so the app, the launcher
+/// round head centred on a terracotta tile (no tuft: just the face). Drawn in code so the app, the launcher
 /// icons and every size stay identical.
 library;
 
@@ -68,15 +68,6 @@ class _FacePainter extends CustomPainter {
         ..scale(0.75)
         ..translate(-60, -60);
     }
-
-    // tuft above the head (the head itself is the centred circle)
-    final tuft = Path()
-      ..moveTo(54, 22)
-      ..relativeQuadraticBezierTo(2, -10, 8, -2)
-      ..relativeQuadraticBezierTo(3, -8, 8, 0);
-    canvas
-      ..drawPath(tuft, _line(_white, 5))
-      ..drawPath(tuft, _line(_edge.withValues(alpha: 0.8), 1.2));
 
     // head
     canvas
