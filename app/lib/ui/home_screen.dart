@@ -1278,18 +1278,23 @@ class _PlanTile extends StatelessWidget {
           key: ValueKey('plan-${step.id}'),
           borderRadius: BorderRadius.circular(12),
           onTap: step.start,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          // every plan tile the same height, done or not
+          child: Container(
+            height: 64,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               children: [
                 EggMarker(number: number, current: current, done: step.done),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         step.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.titleSmall?.copyWith(
                           color: step.done ? scheme.onSurfaceVariant : fg,
                         ),

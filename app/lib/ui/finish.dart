@@ -51,8 +51,10 @@ class ToolGrid extends StatelessWidget {
           runSpacing: 8,
           children: [
             for (final t in tools.where((t) => !hide.contains(t.id)))
+              // every tile the same size, with or without a count under it
               SizedBox(
                 width: w,
+                height: big ? 104 : 76,
                 child: Material(
                   color: scheme.surfaceContainerLow,
                   borderRadius: BorderRadius.circular(12),
@@ -61,8 +63,9 @@ class ToolGrid extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => onTap(t.id),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: big ? 18 : 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
                             t.icon,

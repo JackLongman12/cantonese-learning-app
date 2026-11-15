@@ -137,7 +137,7 @@ check them by eye → `duk tts` → `duk bundle`. The owner then confirms wordin
 ## Phase 2 — Breadth: cards, places, updates
 
 - [ ] 2.1 Place import from open data (Macau first), `content/places/`, special-reading overrides. (Names now come from OSM for decks; coordinates/districts not yet.)
-- [x] 2.2 Flashcards (first version): decks of real names from OpenStreetMap (Macau streets with Portuguese, Macau LRT, HK MTR, HK streets with English). Each card is its own FSRS item (`card:<deck>:<zh>`) and also grades its characters. Street-ending hints ("大馬路 is usually Avenida") are counted from the map data. Still to do: templates beyond read-the-sign (listening, Portuguese → Chinese), menu/sign decks.
+- [x] 2.2 Flashcards (first version): decks of real names from OpenStreetMap (Macau streets with Portuguese, Macau LRT, HK MTR, HK streets with English). Each card is its own FSRS item (`card:<deck>:<zh>`) and also grades its characters. Each visit is a fresh shuffled set (2026-11-16): up to 8 new cards picked at random from the next unseen ones, the rest your weakest seen cards (lowest recall first), and cards from the set you just did are skipped unless nothing else is left, so a deck never says "nothing due". Street-ending hints ("大馬路 is usually Avenida") are counted from the map data. Still to do: templates beyond read-the-sign (listening, Portuguese → Chinese), menu/sign decks.
 - [ ] 2.3 Map mode with offline tiles for Macau and HK.
 - [ ] 2.4 Scenario browser and trip mode (`goal.set`).
 - [x] ~~2.5 Mandarin track~~ **Dropped by the owner (2026-11-15):** Mandarin reading is well served by other apps; DuckLearn is Cantonese only. Mandarin content, Pinyin display, the language switch, Noto Sans SC and the pypinyin/jieba dependencies were removed.

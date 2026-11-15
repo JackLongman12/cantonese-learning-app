@@ -6,6 +6,8 @@ library;
 
 import '../engine/pictures.dart';
 
+import 'dart:math';
+
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -203,7 +205,10 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
       for (final id in pickCards(
         deckOrder: [for (final c in _all) c.id],
         stateOf: _s.learner.stateOf,
+        recall: (st) => _s.memory.retrievability(st, _s.logger.now()),
         now: _s.logger.now(),
+        // a fresh shuffle each visit; fixed in tests so previews stay stable
+        random: ambientMotion ? null : Random(0),
       ))
         byId[id]!,
     ];
@@ -443,7 +448,7 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 600),
             child: _queue.isEmpty
-                ? const _Message('Nothing due in this deck. Come back later.')
+                ? const _Message('No cards in this deck yet.')
                 : done
                 ? FinishView(
                     services: _s,
