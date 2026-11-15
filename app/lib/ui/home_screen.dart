@@ -848,6 +848,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         const SizedBox(height: 8),
         ToolGrid(
           onTap: _openTool,
+          // Topics and Stories are tabs; the rest as four big tiles
+          hide: const {'topics', 'stories'},
+          columns: 2,
           badges: {
             if (cardsDue.isNotEmpty) 'cards': '${cardsDue.length} due',
             if (practiceWords.isNotEmpty) 'words': '${practiceWords.length}',

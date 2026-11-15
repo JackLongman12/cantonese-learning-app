@@ -20,8 +20,20 @@ const tools = [
 
 /// Six small tiles, three to a row.
 class ToolGrid extends StatelessWidget {
-  const ToolGrid({super.key, required this.onTap, this.badges = const {}});
+  const ToolGrid({
+    super.key,
+    required this.onTap,
+    this.badges = const {},
+    this.hide = const {},
+    this.columns = 3,
+  });
   final ValueChanged<String> onTap;
+
+  /// Tools left out here (Home has Topics and Stories as tabs already).
+  final Set<String> hide;
+
+  /// Tiles per row; with 2 they are bigger.
+  final int columns;
 
   /// A small count under a tool's name ("8 due").
   final Map<String, String> badges;
@@ -32,12 +44,13 @@ class ToolGrid extends StatelessWidget {
     final scheme = theme.colorScheme;
     return LayoutBuilder(
       builder: (context, box) {
-        final w = (box.maxWidth - 2 * 8) / 3;
+        final w = (box.maxWidth - (columns - 1) * 8) / columns;
+        final big = columns <= 2;
         return Wrap(
           spacing: 8,
           runSpacing: 8,
           children: [
-            for (final t in tools)
+            for (final t in tools.where((t) => !hide.contains(t.id)))
               SizedBox(
                 width: w,
                 child: Material(
@@ -48,12 +61,12 @@ class ToolGrid extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => onTap(t.id),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.symmetric(vertical: big ? 18 : 10),
                       child: Column(
                         children: [
                           Icon(
                             t.icon,
-                            size: 22,
+                            size: big ? 28 : 22,
                             color: scheme.onSurfaceVariant,
                           ),
                           const SizedBox(height: 4),
