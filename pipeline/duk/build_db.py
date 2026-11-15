@@ -21,6 +21,7 @@ from . import __version__, paths
 from .annotate import FLAG, HAN, Annotation, annotate
 from .content import Content, ContentError, load_content
 from .reference import load_reference
+from .words import refine_words
 
 SCHEMA_VERSION = 6  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry; 6: decks
 
@@ -141,6 +142,15 @@ def build(
 
     ref = load_reference(raw_root)
     priors = {"yue": ref.prior("yue") if ref else {}}
+    # dictionary words, to keep only real words as underlined groups
+    vocab = None
+    if with_lexicon:
+        from .dictionary import load_dictionary
+        from .words import vocabulary
+
+        _entries = load_dictionary(raw_root)
+        if _entries is not None:
+            vocab = vocabulary(_entries, content.overrides.get("yue", {}))
 
     for sc in content.scenarios:
         db.execute(
@@ -214,7 +224,7 @@ def build(
                     (sid, idx, t.surface, t.kind, t.reading, item_id,
                      int(t.status == FLAG and not s.reviewed)),
                 )  # fmt: skip
-            for w in ann.words:
+            for w in refine_words(ann.words, vocab):
                 wid = word_item_id(lang, w.text)
                 reading = " ".join(
                     t.reading or "?" for t in ann.tokens[w.start : w.start + w.length]

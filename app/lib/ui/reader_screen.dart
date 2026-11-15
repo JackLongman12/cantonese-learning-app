@@ -410,11 +410,9 @@ class _ReaderScreenState extends State<ReaderScreen> {
   /// Says the dictionary word around token [i] (or the character alone).
   Future<void> _speakWord(int i) async {
     final s = _sentence;
-    final pos = tokenOffsets(s.tokens)[i];
-    final found = _s.content.wordsAt(s.text, pos, widget.lang);
-    final word = found.isEmpty
-        ? s.tokens[i].surface
-        : s.text.substring(found.first.start, found.first.end);
+    // the word as segmented in this sentence (context), not just the longest match
+    final (a, b) = s.wordRange(i);
+    final word = [for (var k = a; k < b; k++) s.tokens[k].surface].join();
     _s.logger.log('item.audio', {
       'exposure_id': _exposureId,
       'scope': 'word',
@@ -619,6 +617,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                           lang: widget.lang,
                           onReveal: _reveal,
                           onSpeak: _speakWord,
+                          wordOf: s.wordOf,
                           onLookup: (i) {
                             _reveal(i);
                             showWordLookup(

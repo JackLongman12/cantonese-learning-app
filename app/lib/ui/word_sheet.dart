@@ -71,8 +71,15 @@ Future<void> showWordLookup(
   required SentenceRow sentence,
   required int tokenIndex,
 }) {
-  final pos = tokenOffsets(sentence.tokens)[tokenIndex];
+  final offs = tokenOffsets(sentence.tokens);
+  final pos = offs[tokenIndex];
   final found = services.content.wordsAt(sentence.text, pos, lang);
+  // the word this sentence actually uses goes first (行 in 銀行 is hong4, not hang4)
+  final (ws, we) = sentence.wordRange(tokenIndex);
+  final cs = offs[ws];
+  final ce = we < offs.length ? offs[we] : sentence.text.length;
+  final ctx = found.indexWhere((f) => f.start == cs && f.end == ce);
+  if (ctx > 0) found.insert(0, found.removeAt(ctx));
   services.logger.log('reader.lookup', {
     'char': sentence.tokens[tokenIndex].surface,
     'in_sentence': sentence.id,

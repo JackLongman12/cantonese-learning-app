@@ -67,6 +67,7 @@ class RubyText extends StatelessWidget {
     this.onReveal,
     this.onLookup,
     this.onSpeak,
+    this.wordOf,
   });
 
   final List<RubyToken> tokens;
@@ -83,12 +84,14 @@ class RubyText extends StatelessWidget {
   /// (hearing it gives the reading away, so it counts like a reveal).
   final void Function(int index)? onSpeak;
 
+  /// Word number per token (tokens of one word share it). When set, each word is
+  /// underlined as one unit, like Duolingo, so 銀行 reads as one word, 帶 遮 as two.
+  final List<int>? wordOf;
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final rubySize = fontSize * 0.36;
-    final cells = <Widget>[];
-    var pendingOpen = <Widget>[];
 
     Widget glyph(RubyToken t, int i) {
       final base = Text(
@@ -210,34 +213,97 @@ class RubyText extends StatelessWidget {
       );
     }
 
+    // Group tokens into words: [opening punct][word glyphs][closing punct].
+    final groups = <_Group>[];
+    var pendingOpen = <Widget>[];
+    int? lastWord;
     for (var i = 0; i < tokens.length; i++) {
       final t = tokens[i];
       if (t.kind == 'space') {
-        cells.add(SizedBox(width: fontSize * 0.3));
+        groups.add(_Group(space: fontSize * 0.3));
+        lastWord = null;
         continue;
       }
       final g = glyph(t, i);
       if (t.kind == 'punct') {
         if (_opening.contains(t.surface)) {
           pendingOpen.add(g);
-        } else if (cells.isNotEmpty && cells.last is _Cell) {
-          (cells.last as _Cell).children.add(g);
+        } else if (groups.isNotEmpty && groups.last.space == null) {
+          groups.last.trail.add(g);
         } else {
-          cells.add(_Cell([g]));
+          groups.add(_Group()..trail.add(g));
         }
+        lastWord = null;
         continue;
       }
-      cells.add(_Cell([...pendingOpen, g]));
-      pendingOpen = [];
+      final w = wordOf != null && i < wordOf!.length ? wordOf![i] : null;
+      final last = groups.isEmpty ? null : groups.last;
+      if (w != null &&
+          w == lastWord &&
+          last != null &&
+          last.trail.isEmpty &&
+          pendingOpen.isEmpty) {
+        last.word.add(g);
+      } else {
+        groups.add(
+          _Group(underline: wordOf != null && t.isHan)
+            ..lead.addAll(pendingOpen)
+            ..word.add(g),
+        );
+        pendingOpen = [];
+      }
+      lastWord = w;
     }
-    if (pendingOpen.isNotEmpty) cells.add(_Cell(pendingOpen));
+    if (pendingOpen.isNotEmpty) groups.add(_Group()..lead.addAll(pendingOpen));
 
+    final line = scheme.outlineVariant;
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.end,
       runSpacing: fontSize * 0.25,
-      children: cells,
+      children: [
+        for (final g in groups)
+          if (g.space != null)
+            SizedBox(width: g.space)
+          else
+            _Cell([
+              ...g.lead,
+              if (g.word.isNotEmpty)
+                g.underline
+                    ? Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: fontSize * 0.05,
+                        ),
+                        padding: const EdgeInsets.only(bottom: 3),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: line, width: 2),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: g.word,
+                        ),
+                      )
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: g.word,
+                      ),
+              ...g.trail,
+            ]),
+      ],
     );
   }
+}
+
+class _Group {
+  _Group({this.space, this.underline = false});
+  final double? space;
+  final bool underline;
+  final lead = <Widget>[];
+  final word = <Widget>[];
+  final trail = <Widget>[];
 }
 
 /// A character with the punctuation glued to it; wraps as one unit.

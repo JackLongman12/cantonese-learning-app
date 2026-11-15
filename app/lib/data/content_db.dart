@@ -37,6 +37,7 @@ class SentenceRow {
     this.dialogue,
     this.speaker,
     this.turn,
+    this.words = const [],
   });
 
   final String id;
@@ -55,6 +56,29 @@ class SentenceRow {
   final String? dialogue;
   final String? speaker;
   final int? turn;
+
+  /// Multi-character words as (first token index, token count), from the pipeline's
+  /// context segmentation checked against the dictionary.
+  final List<(int, int)> words;
+
+  /// Word number for each token: tokens of one word share it (for underlining).
+  List<int> get wordOf {
+    final out = List<int>.generate(tokens.length, (i) => i);
+    for (final (start, len) in words) {
+      for (var k = start; k < start + len && k < out.length; k++) {
+        out[k] = start;
+      }
+    }
+    return out;
+  }
+
+  /// The token range (start, end) of the word containing token [i].
+  (int, int) wordRange(int i) {
+    for (final (start, len) in words) {
+      if (i >= start && i < start + len) return (start, start + len);
+    }
+    return (i, i + 1);
+  }
 
   Set<String> get itemIds => {
     for (final t in tokens)
@@ -361,6 +385,18 @@ class ContentDb {
             ),
           );
     }
+    final words = <String, List<(int, int)>>{};
+    for (final r in _db.select(
+      'SELECT w.sentence_id, w.start_idx, w.length '
+      'FROM sentence_word w JOIN sentence s ON s.id = w.sentence_id '
+      'WHERE $where ORDER BY w.sentence_id, w.start_idx',
+      args,
+    )) {
+      words.putIfAbsent(r['sentence_id'] as String, () => []).add((
+        r['start_idx'] as int,
+        r['length'] as int,
+      ));
+    }
     return [
       for (final r in _db.select(
         'SELECT s.id, s.pair_id, s.lang, s.text, s.en, s.register, s.region, s.notes, '
@@ -383,6 +419,7 @@ class ContentDb {
           dialogue: r['dialogue'] as String?,
           speaker: r['speaker'] as String?,
           turn: r['turn'] as int?,
+          words: words[r['id'] as String] ?? const [],
         ),
     ];
   }
