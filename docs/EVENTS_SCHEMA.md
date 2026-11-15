@@ -45,6 +45,8 @@ Stored one JSON object per line (`.jsonl`), gzip-compressed for sync.
 - `reader.lookup` `{char, reading_shown, in_sentence?}` — long-press on a character; `words_found` = dictionary words covering it
 - `word.save` `{text, lang, reading?, en?, sentence_id?, context?, context_en?}` — added to "My words" (replayed into `WordBook`; a later save of the same `lang:text` replaces it)
 - `word.remove` `{text, lang}`
+- `word.flag` `{text, lang, reason: read|say, reading?, sentence_id?, context?, context_en?}` — automatic: you revealed a reading you were meant to read, or read-aloud heard the word wrong; it joins the practice list
+- `word.practice` `{text, lang, ok}` — one practice of a flagged word (mic-graded, or self-graded without a mic); two `ok` in a row take it off the list
 - `conv.choice` `{exposure_id, sentence_id, correct, tries}` — the learner picked a line on their turn in a conversation (visual-novel mode); wrong options are lines from other conversations of the topic
 - `reader.scrollback` `{from_idx, to_idx}`
 - `speech.attempt` `{exposure_id, engine, expected, heard, per_token: [{ok, tone_ok}], score}`

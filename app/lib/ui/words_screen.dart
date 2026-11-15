@@ -9,6 +9,7 @@ import '../app_services.dart';
 import '../data/content_db.dart';
 import '../engine/word_book.dart';
 import '../platform/sfx.dart';
+import 'practice_words_screen.dart';
 import 'reader_screen.dart';
 import 'ruby_text.dart';
 import 'word_sheet.dart';
@@ -103,6 +104,68 @@ class _WordsScreenState extends State<WordsScreen> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
           children: [
+            if (_s.words.practice(_lang) case final practice
+                when practice.isNotEmpty) ...[
+              Card(
+                key: const ValueKey('practice-card'),
+                margin: EdgeInsets.zero,
+                color: scheme.tertiaryContainer,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        '${practice.length} ${practice.length == 1 ? 'word' : 'words'} to practise',
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Added by themselves when you needed the reading or said them wrong.',
+                        style: theme.textTheme.bodySmall,
+                      ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: [
+                          for (final w in practice.take(12))
+                            Chip(
+                              label: Text(
+                                w.text,
+                                style: chineseStyle(_lang, fontSize: 16),
+                              ),
+                              visualDensity: VisualDensity.compact,
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      FilledButton.icon(
+                        key: const ValueKey('practise-flagged'),
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size(0, 52),
+                        ),
+                        onPressed: () async {
+                          _s.sound(Sfx.tap);
+                          await Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) => PracticeWordsScreen(
+                                services: _s,
+                                words: practice.take(10).toList(),
+                              ),
+                            ),
+                          );
+                          if (mounted) setState(() {});
+                        },
+                        icon: const Icon(Icons.record_voice_over_rounded),
+                        label: const Text('Practise them'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
             Text('My words', style: theme.textTheme.titleLarge),
             const SizedBox(height: 4),
             Text(

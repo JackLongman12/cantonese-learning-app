@@ -81,6 +81,9 @@ class AppServices {
     return await voice?.say(text) ?? false;
   }
 
+  /// The "no Cantonese voice" notice is shown once per launch.
+  bool voiceNoticeShown = false;
+
   /// UI sounds (null in tests).
   final SoundEffects? sfx;
 

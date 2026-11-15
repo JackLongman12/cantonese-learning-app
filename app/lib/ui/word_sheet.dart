@@ -37,6 +37,26 @@ String? rangeReading(List<TokenRow> tokens, int start, int end) {
   return parts.isEmpty ? null : parts.join(' ');
 }
 
+/// Puts the word around token [i] on the practice list ([reason]: 'read' when its
+/// reading had to be revealed, 'say' when read-aloud heard it wrong).
+void flagWord(AppServices s, SentenceRow sentence, int i, String reason) {
+  final (a, b) = sentence.wordRange(i);
+  final text = [for (var k = a; k < b; k++) sentence.tokens[k].surface].join();
+  if (text.isEmpty || sentence.tokens[i].kind != 'han') return;
+  final offs = tokenOffsets(sentence.tokens);
+  final cs = offs[a];
+  final ce = b < offs.length ? offs[b] : sentence.text.length;
+  s.logger.log('word.flag', {
+    'text': text,
+    'lang': sentence.lang,
+    'reason': reason,
+    'reading': ?rangeReading(sentence.tokens, cs, ce),
+    'sentence_id': sentence.id,
+    'context': sentence.text,
+    'context_en': sentence.en,
+  });
+}
+
 const noVoiceMessage =
     'No Cantonese voice on this device. Install "Cantonese (Hong Kong)" '
     'under Settings > Text-to-speech (Speech services by Google).';
@@ -48,7 +68,8 @@ Future<void> sayOrExplain(
   String word,
   String lang,
 ) async {
-  if (!await s.sayWord(word, lang) && context.mounted) {
+  if (!await s.sayWord(word, lang) && context.mounted && !s.voiceNoticeShown) {
+    s.voiceNoticeShown = true;
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(

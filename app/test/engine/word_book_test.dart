@@ -59,11 +59,27 @@ void main() {
 
   test('struggled words go on the practice list until practised twice', () {
     final book = WordBook.replay([
-      ev('word.flag', {'text': '銀行', 'lang': 'yue', 'reason': 'read'}, minute: 1),
-      ev('word.flag', {'text': '銀行', 'lang': 'yue', 'reason': 'say'}, minute: 2),
-      ev('word.flag', {'text': '巴士', 'lang': 'yue', 'reason': 'say'}, minute: 3),
+      ev('word.flag', {
+        'text': '銀行',
+        'lang': 'yue',
+        'reason': 'read',
+      }, minute: 1),
+      ev('word.flag', {
+        'text': '銀行',
+        'lang': 'yue',
+        'reason': 'say',
+      }, minute: 2),
+      ev('word.flag', {
+        'text': '巴士',
+        'lang': 'yue',
+        'reason': 'say',
+      }, minute: 3),
       ev('word.practice', {'text': '巴士', 'lang': 'yue', 'ok': true}, minute: 4),
-      ev('word.practice', {'text': '巴士', 'lang': 'yue', 'ok': false}, minute: 5),
+      ev('word.practice', {
+        'text': '巴士',
+        'lang': 'yue',
+        'ok': false,
+      }, minute: 5),
       ev('word.practice', {'text': '銀行', 'lang': 'yue', 'ok': true}, minute: 6),
       ev('word.practice', {'text': '銀行', 'lang': 'yue', 'ok': true}, minute: 7),
     ]);

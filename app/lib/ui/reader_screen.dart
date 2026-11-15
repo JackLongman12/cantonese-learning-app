@@ -319,7 +319,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
       final ok = await showDialog<bool>(
         context: context,
         barrierDismissible: false,
-        builder: (_) => _ModelDownloadDialog(engine: eng),
+        builder: (_) => ModelDownloadDialog(engine: eng),
       );
       if (ok != true || !mounted) return;
     }
@@ -379,6 +379,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
       ],
     });
     _s.sound(soundAccuracy(score.chars) >= 85 ? Sfx.good : Sfx.tryAgain);
+    // words said wrong go on the practice list
+    final seenWords = <int>{};
+    for (final e in byToken.entries.where((e) => e.value.isError)) {
+      if (seenWords.add(s.wordRange(e.key).$1)) flagWord(_s, s, e.key, 'say');
+    }
     setState(() {
       _speech = byToken;
       // A mispronounced character is a reading lapse, exactly like tapping to reveal.
@@ -423,6 +428,14 @@ class _ReaderScreenState extends State<ReaderScreen> {
       if (o.signal == Signal.reveal) _lapsed.add(o.itemId);
     }
     if (outcomes.isNotEmpty) _read++;
+    // characters you had to reveal: their words go on the practice list
+    if (!skipped) {
+      final seen = <int>{};
+      for (final i in _revealedTokens) {
+        final w = _sentence.wordRange(i).$1;
+        if (seen.add(w)) flagWord(_s, _sentence, i, 'read');
+      }
+    }
     _s.logger.log('item.done', {
       'exposure_id': _exposureId,
       'active_ms': activeMs,
@@ -464,7 +477,10 @@ class _ReaderScreenState extends State<ReaderScreen> {
       'rate': 'normal',
       'text': word,
     });
-    if (!await _s.sayWord(word, widget.lang) && mounted) {
+    if (!await _s.sayWord(word, widget.lang) &&
+        mounted &&
+        !_s.voiceNoticeShown) {
+      _s.voiceNoticeShown = true;
       _toast(noVoiceMessage);
     }
   }
@@ -1353,15 +1369,15 @@ class _SpeechResult extends StatelessWidget {
   }
 }
 
-class _ModelDownloadDialog extends StatefulWidget {
-  const _ModelDownloadDialog({required this.engine});
+class ModelDownloadDialog extends StatefulWidget {
+  const ModelDownloadDialog({super.key, required this.engine});
   final SpeechEngine engine;
 
   @override
-  State<_ModelDownloadDialog> createState() => _ModelDownloadDialogState();
+  State<ModelDownloadDialog> createState() => ModelDownloadDialogState();
 }
 
-class _ModelDownloadDialogState extends State<_ModelDownloadDialog> {
+class ModelDownloadDialogState extends State<ModelDownloadDialog> {
   double? _progress;
   String? _error;
 
