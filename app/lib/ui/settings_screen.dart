@@ -17,6 +17,7 @@ import 'goal_picker.dart';
 import 'reminder_sync.dart';
 import 'ruby_text.dart';
 import 'update_ui.dart';
+import 'voice_picker.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key, required this.services});
@@ -209,18 +210,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _changed('sound_effects', !v, v);
                   },
                 ),
-                SwitchListTile(
-                  key: const ValueKey('set-phone-voice'),
-                  title: const Text("Sentences in the phone's voice"),
-                  subtitle: const Text(
-                    'The same voice as a tapped word, with everyday tones. '
-                    'Off: the recorded voice (some tones sound formal)',
-                  ),
-                  value: p.phoneVoice,
-                  onChanged: (v) {
-                    _s.silence();
-                    p.phoneVoice = v;
-                    _changed('phone_voice', !v, v);
+                ListTile(
+                  key: const ValueKey('set-voice'),
+                  leading: const Icon(Icons.record_voice_over_rounded),
+                  title: const Text('Sentence voice'),
+                  subtitle: Text(voiceLabel(_s)),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () async {
+                    await showVoicePicker(
+                      context,
+                      _s,
+                      onChanged: (from, to) => _changed('voice', from, to),
+                    );
+                    if (mounted) setState(() {});
                   },
                 ),
                 if (_s.reminders != null) ...[

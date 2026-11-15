@@ -63,6 +63,7 @@ class AppServices {
        _playAudioSlow = playAudioSlow, // ignore: prefer_initializing_formals
        prefs = prefs ?? Prefs.memory(),
        shares = shares ?? ShareInbox() {
+    voice?.wanted = this.prefs.voiceName;
     // starting the mic silences whatever is playing
     speech?.beforeRecording = () async => stopAudio?.call();
     logger.addListener(learner.apply);

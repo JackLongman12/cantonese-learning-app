@@ -81,6 +81,10 @@ class Prefs {
   bool get phoneVoice => _data['phone_voice'] != false;
   set phoneVoice(bool v) => _set('phone_voice', v);
 
+  /// Which of the phone's Cantonese voices (its engine name); null = the phone's default.
+  String? get voiceName => _data['voice_name'] as String?;
+  set voiceName(String? v) => _set('voice_name', v);
+
   /// Stories start in read-along mode.
 
   /// Daily reminder: off by default; null minute = use the learned usual time.

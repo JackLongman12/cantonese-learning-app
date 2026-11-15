@@ -48,5 +48,19 @@ void main() {
     await t.pump();
     expect(prefs.soundEffects, isFalse);
     expect(const ScaffoldPolicy(shift: 1).shift, 1);
+
+    // sentence voice: the phone's default voice unless you pick another
+    expect(prefs.phoneVoice, isTrue);
+    expect(prefs.voiceName, isNull);
+    await t.ensureVisible(find.byKey(const ValueKey('set-voice')));
+    await t.tap(find.byKey(const ValueKey('set-voice')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('voice-recorded')));
+    await t.pumpAndSettle();
+    expect(prefs.phoneVoice, isFalse);
+    await t.tap(find.byKey(const ValueKey('voice-default')));
+    await t.pumpAndSettle();
+    expect(prefs.phoneVoice, isTrue);
+    expect(prefs.voiceName, isNull);
   }, skip: !File(dbPath).existsSync());
 }
