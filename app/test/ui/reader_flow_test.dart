@@ -36,6 +36,18 @@ void main() {
     }
   }, skip: hasDb ? false : 'run the pipeline first');
 
+  test('variant words are grouped, most-said first', () {
+    final db = ContentDb.open(dbPath);
+    addTearDown(db.close);
+    final g = db.variantsOf('救護車');
+    expect(g.single.id, 'var-ambulance');
+    expect(g.single.words.first.word, '白車');
+    expect(db.variantsOf('你好'), isEmpty);
+    // 白車 is underlined as one word although no dictionary lists it
+    final s = db.sentencesByIds(['sent-var-001:yue']).single;
+    expect(s.wordRange(3), (3, 5));
+  }, skip: hasDb ? false : 'run the pipeline first');
+
   testWidgets('reading a scenario logs reviews and fades the readings', (
     t,
   ) async {

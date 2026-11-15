@@ -152,7 +152,7 @@ def test_build_writes_aligned_tokens_and_items(tmp_path):
     assert toks[0] == ("唔", "m4", "cr:yue:唔:m4") and toks[2][1] is None
     assert db.execute("SELECT COUNT(*) FROM item WHERE kind='word' AND key='唔該'").fetchone()[0]
     assert db.execute("SELECT COUNT(*) FROM sentence WHERE lang!='yue'").fetchone()[0] == 0
-    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "9"
+    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "10"
 
 
 def test_flags_reach_review_queue_until_fixed(tmp_path):
@@ -247,3 +247,22 @@ def test_dictionary_line_parsing(tmp_path):
     e = {x.trad: x for x in load_dictionary(tmp_path)}
     assert e["銀行"].en == "bank" and e["銀行"].jyutping == "ngan4 hong4"
     assert e["埋單"].source == "cccanto" and e["埋單"].en == "to ask for the bill"
+
+
+def test_variants_become_groups_and_words(tmp_path):
+    (tmp_path / "c").mkdir()
+    root = _tree(tmp_path / "c", GOOD)
+    (root / "variants.yaml").write_text(
+        "groups:\n  - {id: var-bill, en: pay the bill, words: [埋單, 找數], note: n}\n", "utf-8"
+    )
+    out = tmp_path / "out" / "content.db"
+    build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False)
+    db = sqlite3.connect(out)
+    rows = db.execute("SELECT word, reading, rank FROM variant ORDER BY rank").fetchall()
+    assert rows == [("埋單", "maai4 daan1", 0), ("找數", "zaau2 sou3", 1)]
+
+    (root / "variants.yaml").write_text(
+        "groups:\n  - {id: var-bill, en: x, words: [埋單]}\n", "utf-8"
+    )
+    with pytest.raises(ContentError):
+        build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False)

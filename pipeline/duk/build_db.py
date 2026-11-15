@@ -23,9 +23,9 @@ from .content import Content, ContentError, load_content
 from .reference import load_reference
 from .words import refine_words
 
-SCHEMA_VERSION = 9  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
+SCHEMA_VERSION = 10  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
 # 6: decks; 7: card image + credit, food deck; 8: slim dict_entry (Cantonese only);
-# 9: char_info.hint, skill / skill_entry
+# 9: char_info.hint, skill / skill_entry; 10: variant (words for the same thing)
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -96,6 +96,9 @@ CREATE TABLE card_token(
 CREATE TABLE street_pattern(
   region TEXT NOT NULL, zh TEXT NOT NULL, word TEXT NOT NULL, n INTEGER NOT NULL,
   total INTEGER NOT NULL);
+CREATE TABLE variant(
+  group_id TEXT NOT NULL, en TEXT NOT NULL, note TEXT NOT NULL, word TEXT NOT NULL,
+  reading TEXT, rank INTEGER NOT NULL, PRIMARY KEY(group_id, word)) WITHOUT ROWID;
 CREATE TABLE audio(
   hash TEXT PRIMARY KEY, lang TEXT NOT NULL, voice TEXT NOT NULL, rate TEXT NOT NULL,
   text TEXT NOT NULL, path TEXT NOT NULL);
@@ -120,6 +123,7 @@ class BuildResult:
         self.items = 0
         self.flags: list[tuple[str, str, Annotation]] = []  # (owner id, lang, annotation)
         self.warnings: list[str] = []
+        self.unlisted: list[tuple[str, str]] = []  # (variant group, word not in a dictionary)
 
 
 def build(
@@ -162,6 +166,13 @@ def build(
         _entries = load_dictionary(raw_root)
         if _entries is not None:
             vocab = vocabulary(_entries, content.overrides.get("yue", {}))
+            # variant words count as words even when no dictionary lists them (白車)
+            _vp = content_root / "variants.yaml"
+            if _vp.exists():
+                import yaml as _yaml
+
+                for g in (_yaml.safe_load(_vp.read_text("utf-8")) or {}).get("groups") or []:
+                    vocab |= {w for w in g.get("words") or [] if len(w) > 1}
 
     for sc in content.scenarios:
         db.execute(
@@ -395,6 +406,39 @@ def build(
                  e["example"], e["example_en"], rank),
             )  # fmt: skip
 
+    # Words for the same thing (content/variants.yaml): "Also said" on a tapped word
+    vpath = content_root / "variants.yaml"
+    vdoc = yaml.safe_load(vpath.read_text("utf-8")) if vpath.exists() else None
+    listed = {e.trad for e in _entries} if _entries is not None else None
+    seen_groups: set[str] = set()
+    for g in (vdoc or {}).get("groups") or []:
+        gid = g.get("id", "")
+        if not gid.startswith("var-") or gid in seen_groups:
+            problems.append(f"variants: bad or duplicate id {gid!r}")
+            continue
+        seen_groups.add(gid)
+        if len(g.get("words") or []) < 2:
+            problems.append(f"{gid}: needs at least two words")
+            continue
+        for rank, w in enumerate(g["words"]):
+            try:
+                ann = annotate(
+                    w, "yue", overrides=content.overrides.get("yue"), prior=priors["yue"],
+                    spoken=spoken, words=word_readings,
+                )
+            except ValueError as err:
+                problems.append(f"{gid} {w}: {err}")
+                continue
+            if ann.flags:
+                result.flags.append((gid, "yue", ann))
+            if listed is not None and w not in listed:
+                result.unlisted.append((gid, w))
+            db.execute(
+                "INSERT INTO variant VALUES(?,?,?,?,?,?)",
+                (gid, g["en"], g.get("note", ""), w,
+                 " ".join(x for x in ann.readings if x) or None, rank),
+            )  # fmt: skip
+
     for item_id, (kind, lang, key, reading) in item_rows.items():
         db.execute(
             "INSERT INTO item VALUES(?,?,?,?,?,?)",
@@ -480,6 +524,15 @@ def _write_review_queue(path: Path, result: BuildResult) -> None:
         f"Open items: {sum(len(a.flags) for _, _, a in result.flags)}",
         "",
     ]
+    if result.unlisted:
+        lines += [
+            "## Variant words not in CC-Canto or CC-CEDICT",
+            "",
+            "Confirm each is really said this way (content/variants.yaml), or remove it.",
+            "",
+        ]
+        lines += [f"- {gid}: {w}" for gid, w in result.unlisted]
+        lines.append("")
     for owner, lang, ann in result.flags:
         lines += [f"## {owner}", "", f"`{ann.text}`", ""]
         for t in ann.flags:

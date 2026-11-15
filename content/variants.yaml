@@ -1,0 +1,79 @@
+# Same thing, different words: everyday Cantonese often has two or three words for one
+# thing (白車 / 救護車 / 救傷車, all "ambulance"). Tapping any of these words in the app
+# shows the others under "Also said", and the topic "Many ways to say it"
+# (scenarios/hk/many-ways-to-say-it.yaml) practises each one in a sentence.
+#
+# Drafted by an LLM; reviewed: false until the owner confirms the groups and notes.
+# Every word must be in CC-Canto or CC-CEDICT (the build warns otherwise). Words are
+# listed most-said first. IDs are permanent.
+source: llm
+reviewed: false
+groups:
+  - {id: var-ambulance, en: ambulance, words: [白車, 救護車, 救傷車, 十字車],
+     note: "白車 (white car) is what most people say; 救護車 is on signs and in the news; 救傷車 and 十字車 are older."}
+  - {id: var-police, en: police officer, words: [警察, 差人, 差佬],
+     note: "警察 is neutral; 差人 is colloquial; 差佬 is very casual and can sound rude."}
+  - {id: var-lift, en: lift / elevator, words: [𨋢, 電梯, 升降機],
+     note: "𨋢 (lip1, from 'lift') is the everyday word; 升降機 is on official signs; 電梯 also means escalator."}
+  - {id: var-fridge, en: fridge, words: [雪櫃, 冰箱],
+     note: "雪櫃 is the Cantonese word; 冰箱 is the standard Chinese one."}
+  - {id: var-ice-cream, en: ice cream, words: [雪糕, 冰淇淋],
+     note: "雪糕 is what people say; 冰淇淋 shows up on menus and packaging."}
+  - {id: var-strawberry, en: strawberry, words: [士多啤梨, 草莓],
+     note: "士多啤梨 comes from English 'strawberry'; 草莓 is the standard Chinese word."}
+  - {id: var-bicycle, en: bicycle, words: [單車, 腳踏車],
+     note: "單車 is the Hong Kong and Macau word; 腳踏車 is standard Chinese."}
+  - {id: var-motorbike, en: motorbike, words: [電單車, 摩托車],
+     note: "電單車 is the local word, very common in Macau; 摩托車 is standard Chinese."}
+  - {id: var-mobile, en: mobile phone, words: [手機, 手提電話],
+     note: "手機 is short and everyday; 手提電話 is the full, more formal word."}
+  - {id: var-aircon, en: air conditioning, words: [冷氣, 空調],
+     note: "冷氣 is what people say; 空調 appears on notices and in shops."}
+  - {id: var-potato, en: potato, words: [薯仔, 馬鈴薯],
+     note: "薯仔 is the everyday word; 馬鈴薯 is on menus and in recipes."}
+  - {id: var-corn, en: corn, words: [粟米, 玉米],
+     note: "粟米 is the Cantonese word (粟米斑塊); 玉米 is standard Chinese."}
+  - {id: var-toilet, en: toilet, words: [廁所, 洗手間],
+     note: "Both are everyday; 洗手間 is politer, for restaurants and offices."}
+  - {id: var-husband, en: husband, words: [老公, 先生],
+     note: "老公 is how you talk about your own husband; 先生 is politer, often about someone else's."}
+  - {id: var-wife, en: wife, words: [老婆, 太太],
+     note: "老婆 is casual; 太太 is polite."}
+  - {id: var-dad, en: dad, words: [爸爸, 阿爸, 老豆],
+     note: "爸爸 and 阿爸 to his face; 老豆 when talking about him, casual."}
+  - {id: var-mum, en: mum, words: [媽媽, 阿媽, 老母],
+     note: "媽媽 and 阿媽 to her face; 老母 when talking about her, very casual."}
+  - {id: var-now, en: now, words: [而家, 依家, 宜家],
+     note: "One word, three spellings. 而家 and 宜家 are ji4 gaa1, 依家 is ji1 gaa1; people say both. 宜家 is also IKEA."}
+  - {id: var-go-to-work, en: go to work, words: [返工, 上班],
+     note: "返工 is the Cantonese word; 上班 is standard Chinese, also heard."}
+  - {id: var-off-work, en: finish work, words: [放工, 下班],
+     note: "放工 is the Cantonese word; 下班 is standard Chinese, also heard."}
+  - {id: var-sunday, en: Sunday, words: [星期日, 禮拜日],
+     note: "Both are everyday; 禮拜 is a bit more casual. The same goes for 星期一 / 禮拜一."}
+  - {id: var-what, en: what, words: [乜嘢, 咩],
+     note: "咩 is the short, quick form of 乜嘢."}
+  - {id: var-where, en: where, words: [邊度, 邊處],
+     note: "邊度 is more common; 邊處 is the same word, a little older."}
+  - {id: var-chat, en: chat, words: [傾偈, 吹水],
+     note: "傾偈 is chatting; 吹水 is idle chat or shooting the breeze."}
+  - {id: var-cheap, en: cheap, words: [平, 便宜],
+     note: "平 is what people say; 便宜 is standard Chinese, seen in writing."}
+  - {id: var-tip, en: tip (money), words: [貼士, 小費],
+     note: "貼士 comes from English 'tips' (also means a hint); 小費 is standard."}
+  - {id: var-sofa, en: sofa, words: [梳化, 沙發],
+     note: "梳化 is the Hong Kong and Macau word; 沙發 is standard Chinese."}
+  - {id: var-ball, en: ball, words: [波, 球],
+     note: "波 is from English 'ball' (踢波, 打波); 球 is the standard word (足球)."}
+  - {id: var-umbrella, en: umbrella, words: [遮, 雨傘],
+     note: "遮 is what people say; 雨傘 is the full word."}
+  - {id: var-sleep, en: sleep, words: [瞓覺, 睡覺],
+     note: "瞓覺 is the Cantonese word; 睡覺 is standard Chinese."}
+  - {id: var-kid, en: kid, words: [細路, 細路仔, 小朋友],
+     note: "細路 and 細路仔 are casual; 小朋友 is warm and polite, used by teachers and shops."}
+  - {id: var-stamp, en: postage stamp, words: [士擔, 郵票],
+     note: "士擔 (from 'stamp') is older speech; 郵票 is the standard word."}
+  - {id: var-sweater, en: sweater, words: [冷衫, 毛衣],
+     note: "冷衫 is the Cantonese word; 毛衣 is standard Chinese."}
+  - {id: var-pay-bill, en: pay the bill, words: [埋單, 找數],
+     note: "埋單 is asking for the bill; 找數 is paying it (also 'I'll pay')."}

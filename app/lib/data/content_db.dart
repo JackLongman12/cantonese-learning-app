@@ -703,3 +703,46 @@ extension SkillQueries on ContentDb {
     ];
   }
 }
+
+/// One thing, several everyday words (content/variants.yaml): 白車 / 救護車 / 救傷車.
+class VariantGroup {
+  const VariantGroup(this.id, this.en, this.note, this.words);
+  final String id;
+  final String en;
+  final String note;
+
+  /// Most-said first.
+  final List<({String word, String? reading})> words;
+}
+
+extension VariantQueries on ContentDb {
+  /// The groups [word] belongs to (empty for most words, or an older content.db).
+  List<VariantGroup> variantsOf(String word) {
+    try {
+      final rows = _db.select(
+        'SELECT group_id, en, note, word, reading FROM variant WHERE group_id IN '
+        '(SELECT group_id FROM variant WHERE word = ?) ORDER BY group_id, rank',
+        [word],
+      );
+      final out = <String, VariantGroup>{};
+      for (final r in rows) {
+        final g = out.putIfAbsent(
+          r['group_id'] as String,
+          () => VariantGroup(
+            r['group_id'] as String,
+            r['en'] as String,
+            r['note'] as String,
+            [],
+          ),
+        );
+        g.words.add((
+          word: r['word'] as String,
+          reading: r['reading'] as String?,
+        ));
+      }
+      return out.values.toList();
+    } on SqliteException {
+      return const [];
+    }
+  }
+}

@@ -116,6 +116,7 @@ Future<void> showWordLookup(
       sentence: sentence,
       found: found,
       char: sentence.tokens[tokenIndex].surface,
+      contextWord: sentence.text.substring(cs, ce),
     ),
   );
 }
@@ -128,12 +129,16 @@ class WordLookupSheet extends StatefulWidget {
     required this.sentence,
     required this.found,
     required this.char,
+    this.contextWord,
   });
   final AppServices services;
   final String lang;
   final SentenceRow sentence;
   final List<({int start, int end, List<DictEntry> entries})> found;
   final String char;
+
+  /// The word the sentence uses around the tapped character (白車 for 白).
+  final String? contextWord;
 
   @override
   State<WordLookupSheet> createState() => _WordLookupSheetState();
@@ -159,6 +164,23 @@ class _WordLookupSheetState extends State<WordLookupSheet> {
       });
     }
     setState(() {});
+  }
+
+  /// Variant groups of the words shown (and of the sentence's own word, which may have
+  /// no dictionary entry, like 白車).
+  List<VariantGroup> _variants() {
+    final text = widget.sentence.text;
+    final words = <String>{
+      for (final f in widget.found) text.substring(f.start, f.end),
+      ?widget.contextWord,
+      widget.char,
+    };
+    final seen = <String>{};
+    return [
+      for (final w in words)
+        for (final g in _s.content.variantsOf(w))
+          if (seen.add(g.id)) g,
+    ];
   }
 
   @override
@@ -198,6 +220,16 @@ class _WordLookupSheetState extends State<WordLookupSheet> {
                   widget.sentence.text.substring(f.start, f.end),
                 ),
                 onToggle: (word, reading, en) => _toggle(word, reading, en),
+                onSpeak: (word) => sayOrExplain(context, _s, word, lang),
+              ),
+              const SizedBox(height: 10),
+            ],
+            // other everyday words for the same thing (白車 / 救護車 / 救傷車)
+            for (final g in _variants()) ...[
+              _VariantPanel(
+                key: ValueKey('variants-${g.id}'),
+                lang: lang,
+                group: g,
                 onSpeak: (word) => sayOrExplain(context, _s, word, lang),
               ),
               const SizedBox(height: 10),
@@ -303,6 +335,69 @@ class _WordCard extends StatelessWidget {
                 en.join('; '),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// "Also said": the other words for the same thing, tap one to hear it.
+class _VariantPanel extends StatelessWidget {
+  const _VariantPanel({
+    super.key,
+    required this.lang,
+    required this.group,
+    required this.onSpeak,
+  });
+  final String lang;
+  final VariantGroup group;
+  final void Function(String word) onSpeak;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Card(
+      margin: EdgeInsets.zero,
+      color: scheme.secondaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('All mean "${group.en}"', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final w in group.words)
+                  ActionChip(
+                    key: ValueKey('variant-${w.word}'),
+                    onPressed: () => onSpeak(w.word),
+                    avatar: Icon(
+                      Icons.volume_up_rounded,
+                      color: scheme.primary,
+                    ),
+                    label: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(w.word, style: chineseStyle(lang, fontSize: 20)),
+                        if (w.reading != null)
+                          Text(
+                            showReading(lang, w.reading!),
+                            style: theme.textTheme.labelSmall,
+                          ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+            if (group.note.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(group.note, style: theme.textTheme.bodySmall),
+            ],
           ],
         ),
       ),

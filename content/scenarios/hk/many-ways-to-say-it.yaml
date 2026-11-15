@@ -1,0 +1,146 @@
+# Many ways to say it: one thing, several everyday words (白車 / 救護車 / 救傷車). Each
+# group from content/variants.yaml gets lines using each of its words, so you learn to
+# read all of them. `pattern` is the group id, so the planner spreads a group's lines out.
+# Drafted by an LLM; reviewed: false until the owner confirms wording and notes.
+scenario:
+  id: scn-variants
+  title: Many ways to say it
+  region: both
+  tags: [vocabulary, variants, slang]
+
+defaults: {register: spoken, source: llm, region: both}
+
+sentences:
+  # --- ambulance ---------------------------------------------------------------------
+  - {id: sent-var-001, yue: 快啲叫白車！, en: "Call an ambulance, quick!", pattern: var-ambulance, notes: "白車 (white car): the everyday word for ambulance."}
+  - {id: sent-var-002, yue: 救護車就嚟到。, en: "The ambulance is almost here.", pattern: var-ambulance, notes: "救護車: the formal word, on signs and in the news."}
+  - {id: sent-var-003, yue: 有架救傷車停咗喺門口。, en: "An ambulance has stopped at the entrance.", pattern: var-ambulance, notes: "救傷車: an older word for ambulance."}
+  - {id: sent-var-004, yue: 我阿爺以前叫白車做十字車。, en: "My grandpa used to call ambulances 'cross cars'.", pattern: var-ambulance, notes: "十字車: older speech, from the red cross."}
+  # --- police --------------------------------------------------------------------------
+  - {id: sent-var-005, yue: 唔該幫我報警，叫警察嚟。, en: "Please call the police for me, get an officer here.", pattern: var-police}
+  - {id: sent-var-006, yue: 門口有兩個差人。, en: "There are two police officers at the door.", pattern: var-police, notes: "差人: colloquial for police officer."}
+  - {id: sent-var-007, yue: 差佬嚟咗，快啲走！, en: "The cops are here, run!", pattern: var-police, notes: "差佬: very casual, a bit rude."}
+  # --- lift ----------------------------------------------------------------------------
+  - {id: sent-var-008, yue: 部𨋢壞咗，要行樓梯。, en: "The lift is broken, we have to take the stairs.", pattern: var-lift, notes: "𨋢 lip1: the everyday word, from English 'lift'."}
+  - {id: sent-var-009, yue: 我哋搭𨋢上去啦。, en: "Let's take the lift up.", pattern: var-lift}
+  - {id: sent-var-010, yue: 商場啲電梯好多人。, en: "The escalators in the mall are packed.", pattern: var-lift, notes: "電梯: lift or escalator."}
+  - {id: sent-var-011, yue: 升降機維修中。, en: "Lift under maintenance.", register: written, pattern: var-lift, notes: "升降機: the word on official notices."}
+  # --- fridge --------------------------------------------------------------------------
+  - {id: sent-var-012, yue: 啲牛奶擺返入雪櫃啦。, en: "Put the milk back in the fridge.", pattern: var-fridge}
+  - {id: sent-var-013, yue: 雪櫃入面仲有凍檸茶。, en: "There's still iced lemon tea in the fridge.", pattern: var-fridge}
+  - {id: sent-var-014, yue: 呢部冰箱好慳電。, en: "This fridge saves a lot of power.", pattern: var-fridge, notes: "冰箱: the standard Chinese word, common in shops."}
+  # --- ice cream -----------------------------------------------------------------------
+  - {id: sent-var-015, yue: 好熱呀，買雪糕食啦。, en: "It's so hot, let's buy ice cream.", pattern: var-ice-cream}
+  - {id: sent-var-016, yue: 我要一個朱古力雪糕。, en: "I'd like a chocolate ice cream.", pattern: var-ice-cream}
+  - {id: sent-var-017, yue: 餐牌上面寫住雲呢拿冰淇淋。, en: "The menu says vanilla ice cream.", pattern: var-ice-cream, notes: "冰淇淋: on menus and packaging."}
+  # --- strawberry ----------------------------------------------------------------------
+  - {id: sent-var-018, yue: 士多啤梨今日好平。, en: "Strawberries are cheap today.", pattern: var-strawberry, notes: "士多啤梨: from English 'strawberry'."}
+  - {id: sent-var-019, yue: 我想要士多啤梨味。, en: "I'd like strawberry flavor.", pattern: var-strawberry}
+  - {id: sent-var-020, yue: 包裝寫住草莓味。, en: "The packet says strawberry flavor.", pattern: var-strawberry, notes: "草莓: the standard Chinese word."}
+  # --- bicycle -------------------------------------------------------------------------
+  - {id: sent-var-021, yue: 星期日一齊去踩單車吖。, en: "Let's go cycling together on Sunday.", pattern: var-bicycle, notes: "踩單車: ride a bike."}
+  - {id: sent-var-022, yue: 我架單車唔見咗。, en: "My bike is gone.", pattern: var-bicycle}
+  - {id: sent-var-023, yue: 台灣人叫單車做腳踏車。, en: "People in Taiwan call a bike 腳踏車.", pattern: var-bicycle}
+  # --- motorbike -----------------------------------------------------------------------
+  - {id: sent-var-024, yue: 澳門好多人揸電單車返工。, en: "Lots of people in Macau ride motorbikes to work.", region: macau, pattern: var-motorbike}
+  - {id: sent-var-025, yue: 電單車唔可以泊喺度。, en: "Motorbikes can't park here.", region: macau, pattern: var-motorbike}
+  - {id: sent-var-026, yue: 佢買咗架新摩托車。, en: "He bought a new motorbike.", pattern: var-motorbike, notes: "摩托車: the standard Chinese word."}
+  # --- mobile phone --------------------------------------------------------------------
+  - {id: sent-var-027, yue: 我部手機冇電喇。, en: "My phone's out of battery.", pattern: var-mobile}
+  - {id: sent-var-028, yue: 你個手機號碼係幾多號？, en: "What's your mobile number?", pattern: var-mobile}
+  - {id: sent-var-029, yue: 請留低你嘅手提電話號碼。, en: "Please leave your mobile phone number.", pattern: var-mobile, notes: "手提電話: the full word, on forms."}
+  # --- air conditioning ----------------------------------------------------------------
+  - {id: sent-var-030, yue: 開大啲冷氣啦，好熱呀。, en: "Turn the air con up, it's so hot.", pattern: var-aircon}
+  - {id: sent-var-031, yue: 戲院啲冷氣好凍。, en: "The air con in the cinema is freezing.", pattern: var-aircon}
+  - {id: sent-var-032, yue: 空調開放，請關門。, en: "Air conditioning on, please close the door.", register: written, pattern: var-aircon, notes: "空調: on notices."}
+  # --- potato --------------------------------------------------------------------------
+  - {id: sent-var-033, yue: 今晚煮薯仔炆雞翼。, en: "Tonight we're cooking braised chicken wings with potatoes.", pattern: var-potato}
+  - {id: sent-var-034, yue: 我唔食薯仔。, en: "I don't eat potatoes.", pattern: var-potato}
+  - {id: sent-var-035, yue: 餐牌寫住馬鈴薯沙律。, en: "The menu says potato salad.", pattern: var-potato, notes: "馬鈴薯: on menus and in recipes."}
+  # --- corn ----------------------------------------------------------------------------
+  - {id: sent-var-036, yue: 唔該，一個粟米斑塊飯。, en: "Fish fillet with corn sauce on rice, please.", pattern: var-corn}
+  - {id: sent-var-037, yue: 街邊有得賣粟米。, en: "They sell corn on the street.", pattern: var-corn}
+  - {id: sent-var-038, yue: 呢罐係玉米湯。, en: "This can is corn soup.", pattern: var-corn, notes: "玉米: the standard Chinese word."}
+  # --- toilet --------------------------------------------------------------------------
+  - {id: sent-var-039, yue: 唔該，洗手間喺邊度？, en: "Excuse me, where's the restroom?", pattern: var-toilet, notes: "洗手間: the polite word."}
+  - {id: sent-var-040, yue: 我去一去廁所先。, en: "I'm just going to the toilet first.", pattern: var-toilet}
+  - {id: sent-var-041, yue: 公廁喺地鐵站出口。, en: "The public toilet is at the station exit.", pattern: var-toilet, notes: "公廁: short for 公眾廁所."}
+  # --- husband / wife ------------------------------------------------------------------
+  - {id: sent-var-042, yue: 我老公今晚加班。, en: "My husband is working late tonight.", pattern: var-husband}
+  - {id: sent-var-043, yue: 你先生今日唔使返工呀？, en: "Your husband doesn't have to work today?", pattern: var-husband, notes: "先生: polite, often for someone else's husband."}
+  - {id: sent-var-044, yue: 我老婆好鍾意食辣。, en: "My wife loves spicy food.", pattern: var-wife}
+  - {id: sent-var-045, yue: 陳太太，早晨！, en: "Good morning, Mrs. Chan!", pattern: var-wife, notes: "太太: polite, and 'Mrs.' after a surname."}
+  - {id: sent-var-046, yue: 你太太都一齊嚟呀？, en: "Is your wife coming too?", pattern: var-wife}
+  # --- dad / mum -----------------------------------------------------------------------
+  - {id: sent-var-047, yue: 爸爸，我返嚟喇！, en: "Dad, I'm home!", pattern: var-dad}
+  - {id: sent-var-048, yue: 阿爸，食飯喇。, en: "Dad, dinner's ready.", pattern: var-dad}
+  - {id: sent-var-049, yue: 我老豆唔准我出街。, en: "My dad won't let me go out.", pattern: var-dad, notes: "老豆: casual, when talking about him."}
+  - {id: sent-var-050, yue: 媽媽，我肚餓。, en: "Mum, I'm hungry.", pattern: var-mum}
+  - {id: sent-var-051, yue: 阿媽煲咗湯。, en: "Mum made soup.", pattern: var-mum}
+  - {id: sent-var-052, yue: 我老母成日叫我早啲瞓。, en: "My mum always tells me to sleep earlier.", pattern: var-mum, notes: "老母: very casual, when talking about her."}
+  # --- now -----------------------------------------------------------------------------
+  - {id: sent-var-053, yue: 我而家出門口。, en: "I'm heading out now.", pattern: var-now}
+  - {id: sent-var-054, yue: 你依家喺邊？, en: "Where are you now?", pattern: var-now, notes: "依家: another spelling of 而家."}
+  - {id: sent-var-055, yue: 宜家幾點呀？, en: "What time is it now?", pattern: var-now, notes: "宜家: a third spelling of 而家, common in messages.", fix_yue: {宜: ji4}}
+  # --- go to work / off work -----------------------------------------------------------
+  - {id: sent-var-056, yue: 我聽日八點返工。, en: "I start work at eight tomorrow.", pattern: var-go-to-work}
+  - {id: sent-var-057, yue: 你返工搭咩車？, en: "How do you get to work?", pattern: var-go-to-work}
+  - {id: sent-var-058, yue: 佢喺銀行上班。, en: "She works at a bank.", pattern: var-go-to-work, notes: "上班: standard Chinese, also heard."}
+  - {id: sent-var-059, yue: 你幾點放工？, en: "What time do you finish work?", pattern: var-off-work}
+  - {id: sent-var-060, yue: 放工一齊食飯吖。, en: "Let's eat together after work.", pattern: var-off-work}
+  - {id: sent-var-061, yue: 我下班先打俾你。, en: "I'll call you after work.", pattern: var-off-work, notes: "下班: standard Chinese, also heard."}
+  # --- Sunday --------------------------------------------------------------------------
+  - {id: sent-var-062, yue: 星期日我唔使返工。, en: "I don't work on Sunday.", pattern: var-sunday}
+  - {id: sent-var-063, yue: 禮拜日去飲茶吖。, en: "Let's go for dim sum on Sunday.", pattern: var-sunday, notes: "禮拜日: the same as 星期日."}
+  - {id: sent-var-064, yue: 禮拜一見。, en: "See you Monday.", pattern: var-sunday, notes: "禮拜一 = 星期一."}
+  - {id: sent-var-065, yue: 星期一要開會。, en: "There's a meeting on Monday.", pattern: var-sunday}
+  # --- what / where --------------------------------------------------------------------
+  - {id: sent-var-066, yue: 你講乜嘢呀？, en: "What are you saying?", pattern: var-what}
+  - {id: sent-var-067, yue: 你食咩呀？, en: "What are you eating?", pattern: var-what, notes: "咩: short for 乜嘢."}
+  - {id: sent-var-068, yue: 咩事呀？, en: "What's up?", pattern: var-what}
+  - {id: sent-var-069, yue: 你想要乜嘢？, en: "What do you want?", pattern: var-what}
+  - {id: sent-var-070, yue: 巴士站喺邊度？, en: "Where's the bus stop?", pattern: var-where}
+  - {id: sent-var-071, yue: 你住喺邊處？, en: "Where do you live?", pattern: var-where, notes: "邊處: the same as 邊度."}
+  # --- chat ----------------------------------------------------------------------------
+  - {id: sent-var-072, yue: 得閒出嚟傾吓偈。, en: "Come out for a chat when you're free.", pattern: var-chat, notes: "傾吓偈: 吓 goes between 傾 and 偈.", fix_yue: {偈: gai2}}
+  - {id: sent-var-073, yue: 佢哋喺度傾偈。, en: "They're chatting.", pattern: var-chat}
+  - {id: sent-var-074, yue: 唔好吹水喇，做嘢啦。, en: "Stop chatting, get to work.", pattern: var-chat, notes: "吹水: idle chat, shooting the breeze."}
+  - {id: sent-var-075, yue: 我哋飲茶吹吓水。, en: "We had dim sum and shot the breeze.", pattern: var-chat}
+  # --- cheap ---------------------------------------------------------------------------
+  - {id: sent-var-076, yue: 呢度啲嘢好平。, en: "Things here are really cheap.", pattern: var-cheap}
+  - {id: sent-var-077, yue: 可唔可以平啲呀？, en: "Can you make it cheaper?", pattern: var-cheap}
+  - {id: sent-var-078, yue: 網上買便宜好多。, en: "It's a lot cheaper online.", pattern: var-cheap, notes: "便宜: standard Chinese, also heard."}
+  # --- tip -----------------------------------------------------------------------------
+  - {id: sent-var-079, yue: 喺香港食飯使唔使俾貼士？, en: "Do you need to tip when eating out in Hong Kong?", region: hk, pattern: var-tip}
+  - {id: sent-var-080, yue: 俾個貼士你：早啲去排隊。, en: "Here's a tip: go and queue early.", pattern: var-tip, notes: "貼士 also means a hint."}
+  - {id: sent-var-081, yue: 帳單已經包咗一成小費。, en: "The bill already includes a ten percent tip.", pattern: var-tip, notes: "小費: the standard word; 一成 = 10%."}
+  # --- sofa ----------------------------------------------------------------------------
+  - {id: sent-var-082, yue: 佢喺梳化瞓着咗。, en: "He fell asleep on the sofa.", pattern: var-sofa}
+  - {id: sent-var-083, yue: 我想買張新梳化。, en: "I want to buy a new sofa.", pattern: var-sofa}
+  - {id: sent-var-084, yue: 傢俬舖寫住真皮沙發。, en: "The furniture shop says leather sofa.", pattern: var-sofa, notes: "沙發: the standard Chinese word."}
+  # --- ball ----------------------------------------------------------------------------
+  - {id: sent-var-085, yue: 放學一齊去踢波！, en: "Let's go play football after school!", pattern: var-ball, notes: "踢波: play football."}
+  - {id: sent-var-086, yue: 你今晚睇唔睇波？, en: "Are you watching the match tonight?", pattern: var-ball, notes: "睇波: watch a match."}
+  - {id: sent-var-087, yue: 我哋去打籃球。, en: "We're going to play basketball.", pattern: var-ball, notes: "球: the standard word, in names of sports."}
+  # --- umbrella ------------------------------------------------------------------------
+  - {id: sent-var-088, yue: 落雨喇，記得帶遮。, en: "It's raining, remember your umbrella.", pattern: var-umbrella}
+  - {id: sent-var-089, yue: 我把遮唔見咗。, en: "I've lost my umbrella.", pattern: var-umbrella}
+  - {id: sent-var-090, yue: 雨傘賣三十蚊一把。, en: "Umbrellas are thirty dollars each.", pattern: var-umbrella, notes: "雨傘: the full word."}
+  # --- sleep ---------------------------------------------------------------------------
+  - {id: sent-var-091, yue: 好夜喇，去瞓覺啦。, en: "It's late, go to sleep.", pattern: var-sleep}
+  - {id: sent-var-092, yue: 我尋晚冇瞓覺。, en: "I didn't sleep last night.", pattern: var-sleep}
+  - {id: sent-var-093, yue: 睡覺前唔好玩手機。, en: "Don't play on your phone before bed.", pattern: var-sleep, notes: "睡覺: standard Chinese, seen in writing."}
+  # --- kid -----------------------------------------------------------------------------
+  - {id: sent-var-094, yue: 細路唔好跑！, en: "Kids, don't run!", pattern: var-kid}
+  - {id: sent-var-095, yue: 個細路仔喊緊。, en: "The little kid is crying.", pattern: var-kid}
+  - {id: sent-var-096, yue: 小朋友，你幾多歲呀？, en: "How old are you, little one?", pattern: var-kid, notes: "小朋友: warm and polite."}
+  # --- stamp ---------------------------------------------------------------------------
+  - {id: sent-var-097, yue: 寄信要貼士擔。, en: "You need a stamp to send a letter.", pattern: var-stamp, notes: "士擔: from English 'stamp', older speech.", fix_yue: {貼: tip3, 士: si6}}
+  - {id: sent-var-098, yue: 郵局有紀念郵票賣。, en: "The post office sells commemorative stamps.", pattern: var-stamp}
+  # --- sweater -------------------------------------------------------------------------
+  - {id: sent-var-099, yue: 凍呀，著件冷衫先出去。, en: "It's cold, put on a sweater before you go out.", pattern: var-sweater, fix_yue: {著: zoek3}}
+  - {id: sent-var-100, yue: 呢件毛衣幾多錢？, en: "How much is this sweater?", pattern: var-sweater, notes: "毛衣: the standard Chinese word, on price tags."}
+  # --- pay the bill --------------------------------------------------------------------
+  - {id: sent-var-101, yue: 唔該，埋單！, en: "The bill, please!", pattern: var-pay-bill}
+  - {id: sent-var-102, yue: 今餐我找數。, en: "This meal's on me.", pattern: var-pay-bill, notes: "找數: pay up, settle the bill."}
+  - {id: sent-var-103, yue: 你找咗數未呀？, en: "Have you paid yet?", pattern: var-pay-bill}

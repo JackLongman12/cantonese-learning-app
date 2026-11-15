@@ -122,6 +122,25 @@ Card directions generated per place: `zh→sound`, `foreign→zh`, `sound→zh`,
 
 Planned decks: `signs`, `emergency` (typhoon/rainstorm signals, hospital), `menu-cha-chaan-teng`, `menu-macanese`, `dim-sum`, `forms`, `surnames` (with HK and Macau romanisations), `brands`, `numbers-money-time`, `transport-hk`, `transport-macau`, `particles` (audio-first), `trad-simp`, `yue-cmn-vocab`.
 
+## Variants (`content/variants.yaml`)
+
+Groups of everyday words for one thing (白車 / 救護車 / 救傷車 / 十字車, "ambulance").
+Tapping any of them in the app shows the whole group ("All mean ...") with readings and
+a note on when each is used. Variant words are treated as words for underlining even when
+no dictionary lists them.
+
+```yaml
+groups:
+  - {id: var-ambulance, en: ambulance, words: [白車, 救護車, 救傷車, 十字車],
+     note: "白車 is what most people say; 救護車 is on signs and in the news."}
+```
+
+- `id` is `var-<name>`, permanent; at least two words, most-said first.
+- Each word should be in CC-Canto or CC-CEDICT; the build lists the ones that are not in
+  `build/review_queue.md` for the owner to confirm.
+- The topic `scenarios/hk/many-ways-to-say-it.yaml` gives each word sentences, with
+  `pattern:` set to the group id.
+
 ## Phonetic family
 
 ```yaml
