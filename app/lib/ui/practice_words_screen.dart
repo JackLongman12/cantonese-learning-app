@@ -350,8 +350,6 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
             });
           },
         ),
-        if (_s.speech != null && !_s.prefs.quietNow)
-          CantSpeakButton(services: _s, onQuiet: () => setState(() {})),
         const SizedBox(height: 8),
         Row(
           children: [

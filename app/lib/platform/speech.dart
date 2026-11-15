@@ -145,6 +145,15 @@ class SpeechEngine {
     });
   }
 
+  /// A recording is running.
+  bool get recording => _sub != null;
+
+  /// Stops a running recording and throws it away (leaving a screen).
+  Future<void> cancel() async {
+    if (!recording) return;
+    await stopRecording();
+  }
+
   /// Stops and returns the recording as float samples in [-1, 1].
   Future<Float32List> stopRecording() async {
     await _recorder.stop();

@@ -168,7 +168,10 @@ class StopAudioOnLeave extends NavigatorObserver {
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    if (route is PageRoute) services.stopAudio?.call();
+    if (route is PageRoute) {
+      services.stopAudio?.call();
+      services.speech?.cancel();
+    }
   }
 }
 

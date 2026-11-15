@@ -18,8 +18,7 @@ import '../events/event_logger.dart';
 import 'mascot.dart';
 import 'ruby_text.dart';
 import 'visual_novel.dart';
-import 'mic_check.dart'
-    show micAuto, noteSilence, playComparison, CantSpeakButton;
+import 'mic_check.dart' show noteSilence, playComparison;
 import 'word_sheet.dart';
 import '../engine/pronunciation.dart';
 import '../platform/sfx.dart';
@@ -198,6 +197,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
   void dispose() {
     // leaving early still counts once a few sentences were read: no pressure to finish
     if (!_finished && _read >= 3) _complete();
+    if (_mic == _Mic.recording) _s.speech?.cancel();
     super.dispose();
   }
 
@@ -233,12 +233,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
       final shown = _index;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted || _index != shown) return;
-        if (micAuto(_s) && _mic == _Mic.idle) {
-          // try reading it first; the audio is the safety net afterwards
-          _readAloud();
-        } else if (widget.autoplay) {
-          _play(slow: false, auto: true);
-        }
+        if (widget.autoplay) _play(slow: false, auto: true);
       });
     }
     _s.logger.log('item.shown', {
@@ -284,11 +279,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
     }
     _s.sound(Sfx.good);
     setState(() => _choosing = false);
-    if (micAuto(_s) && _mic == _Mic.idle) {
-      _readAloud();
-    } else if (widget.autoplay) {
-      _play(slow: false, auto: true);
-    }
+    if (widget.autoplay) _play(slow: false, auto: true);
   }
 
   /// Who stands opposite you on the stage: the current speaker, or the last one who spoke.
@@ -882,19 +873,6 @@ class _ReaderScreenState extends State<ReaderScreen> {
                           ),
                         ],
                       ),
-                      if (_s.speech != null && !_s.prefs.quietNow)
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: CantSpeakButton(
-                            services: _s,
-                            onQuiet: () {
-                              if (_mic == _Mic.recording) {
-                                _s.speech!.stopRecording().ignore();
-                              }
-                              setState(() => _mic = _Mic.idle);
-                            },
-                          ),
-                        ),
                       if (_speech.isNotEmpty)
                         _SpeechResult(
                           scores: _speech.values.toList(),

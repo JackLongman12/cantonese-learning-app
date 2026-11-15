@@ -60,14 +60,6 @@ class Prefs {
   bool get reminderOffered => _data['reminder_offered'] == true;
   set reminderOffered(bool v) => _set('reminder_offered', v);
 
-  /// "Can't speak now": no automatic mic until this time (local, ISO).
-  DateTime? get quietUntil =>
-      DateTime.tryParse(_data['quiet_until'] as String? ?? '');
-  set quietUntil(DateTime? v) => _set('quiet_until', v?.toIso8601String());
-
-  /// The automatic mic is paused ("can't speak now").
-  bool get quietNow => quietUntil?.isAfter(DateTime.now()) ?? false;
-
   /// First-run setup done (how much you can read; how the reader works).
   bool get onboarded => _data['onboarded'] == true;
   set onboarded(bool v) => _set('onboarded', v);

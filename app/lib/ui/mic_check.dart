@@ -46,31 +46,7 @@ Future<void> playComparison(
   }
 }
 
-/// "Can't speak now": no automatic mic for an hour; exercises are read in your head.
-void cantSpeakNow(BuildContext context, AppServices s) {
-  s.prefs.quietUntil = DateTime.now().add(const Duration(hours: 1));
-  s.speechSilences = 0;
-  s.logger.log('settings.change', {
-    'key': 'quiet_until',
-    'from': null,
-    'to': s.prefs.quietUntil?.toIso8601String(),
-  });
-  ScaffoldMessenger.of(context)
-    ..hideCurrentSnackBar()
-    ..showSnackBar(
-      SnackBar(
-        content: const Text(
-          'Mic off for an hour. Read in your head and tap Listen to check.',
-        ),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () => s.prefs.quietUntil = null,
-        ),
-      ),
-    );
-}
-
-/// Two silent recordings in a row: ask whether speaking is not possible right now.
+/// Two silent recordings in a row: a hint (silence is never scored as wrong).
 void noteSilence(BuildContext context, AppServices s, {required bool heard}) {
   if (heard) {
     s.speechSilences = 0;
@@ -82,36 +58,12 @@ void noteSilence(BuildContext context, AppServices s, {required bool heard}) {
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 8),
-        content: const Text("Didn't hear anything. Can't speak right now?"),
-        action: SnackBarAction(
-          label: 'Mic off 1 h',
-          onPressed: () => cantSpeakNow(context, s),
+      const SnackBar(
+        content: Text(
+          "Didn't hear anything. Tap the mic and speak up a little.",
         ),
       ),
     );
-}
-
-/// The automatic mic can run (model installed, not paused).
-bool micAuto(AppServices s) => s.speech?.installed == true && !s.prefs.quietNow;
-
-/// A small "Can't speak now" button for every speaking exercise.
-class CantSpeakButton extends StatelessWidget {
-  const CantSpeakButton({super.key, required this.services, this.onQuiet});
-  final AppServices services;
-  final VoidCallback? onQuiet;
-
-  @override
-  Widget build(BuildContext context) => TextButton.icon(
-    key: const ValueKey('cant-speak'),
-    onPressed: () {
-      cantSpeakNow(context, services);
-      onQuiet?.call();
-    },
-    icon: const Icon(Icons.mic_off_rounded, size: 18),
-    label: const Text("Can't speak now"),
-  );
 }
 
 class MicCheck extends StatefulWidget {
@@ -121,7 +73,7 @@ class MicCheck extends StatefulWidget {
     required this.expected,
     required this.onResult,
     this.label = 'Say it',
-    this.autoStart = true,
+    this.autoStart = false,
     this.nativeText,
   });
   final AppServices services;
@@ -151,7 +103,7 @@ class _MicCheckState extends State<MicCheck> {
   @override
   void initState() {
     super.initState();
-    if (widget.autoStart && micAuto(_s)) {
+    if (widget.autoStart && _s.speech?.installed == true) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _state == _State.idle) _tap();
       });

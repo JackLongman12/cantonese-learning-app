@@ -18,8 +18,7 @@ import '../engine/pictures.dart';
 import '../engine/pronunciation.dart';
 import '../engine/scaffold.dart';
 import '../platform/sfx.dart';
-import 'mic_check.dart'
-    show heardReadings, noteSilence, playComparison, micAuto, CantSpeakButton;
+import 'mic_check.dart' show heardReadings, noteSilence, playComparison;
 import 'reader_screen.dart' show ModelDownloadDialog;
 import 'ruby_text.dart';
 import 'word_sheet.dart';
@@ -52,7 +51,6 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
   late SpeakMode _mode = widget.mode;
   int _index = 0;
   _Phase _phase = _Phase.ready;
-  bool _paused = false;
   bool _retried = false;
   int _right = 0;
   Map<int, CharScore> _marks = const {};
@@ -61,8 +59,8 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
 
   SentenceRow get _line => widget.sentences[_index];
 
-  /// Speaking possible right now (mic set up and not paused with "can't speak").
-  bool get _hasMic => _s.speech != null && !_s.prefs.quietNow;
+  /// A speech engine exists on this device (the mic is used only when tapped).
+  bool get _hasMic => _s.speech != null;
 
   @override
   void initState() {
@@ -78,7 +76,7 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
   @override
   void dispose() {
     if (_index >= 3) _complete();
-    if (_phase == _Phase.listening) _s.speech?.stopRecording().ignore();
+    _s.speech?.cancel();
     super.dispose();
   }
 
@@ -123,12 +121,8 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
     });
     // "repeat" mode and retries hear it first; otherwise you read it first
     if (_mode == SpeakMode.repeat || _retried) await _playNative();
-    if (!mounted || _paused || !micAuto(_s)) {
-      if (mounted) setState(() {});
-      return;
-    }
-    if (!mounted || _paused) return;
-    await _listen();
+    // the mic waits for a tap (no automatic listening)
+    if (mounted) setState(() {});
   }
 
   Future<void> _playNative() async {
@@ -141,7 +135,7 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
     if (eng == null) return; // no mic: self-paced (buttons below)
     _s.sound(Sfx.mic);
     await Future<void>.delayed(const Duration(milliseconds: 150));
-    if (!mounted || _paused) return;
+    if (!mounted) return;
     final shown = _index;
     await eng.startRecording(
       onFinished: () {
@@ -162,11 +156,8 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
     if (!mounted) return;
     noteSilence(context, _s, heard: eng.heardSpeech);
     if (!eng.heardSpeech) {
-      // nothing said: pause the loop instead of marking it wrong
-      setState(() {
-        _phase = _Phase.ready;
-        _paused = true;
-      });
+      // nothing said: not marked wrong; tap the mic to try again
+      setState(() => _phase = _Phase.ready);
       return;
     }
     await Future<void>.delayed(const Duration(milliseconds: 16));
@@ -200,12 +191,13 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
     if (ok || _retried) {
       _finishLine(marks);
       await Future<void>.delayed(Duration(milliseconds: ok ? 900 : 1800));
-      if (mounted && !_paused) _advance();
+      if (mounted) _advance();
     } else {
-      // one more go: hear yours, then the native, then say it again
+      // one more go: hear yours, then the native, then tap to say it again
       _retried = true;
       await playComparison(_s, samples, null);
-      if (mounted && !_paused) await _present();
+      await _playNative();
+      if (mounted) setState(() => _phase = _Phase.ready);
     }
   }
 
@@ -255,19 +247,6 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
     }
     setState(() => _index++);
     unawaited(_present());
-  }
-
-  void _togglePause() {
-    setState(() => _paused = !_paused);
-    if (_paused) {
-      _s.stopAudio?.call();
-      if (_phase == _Phase.listening) {
-        _s.speech?.stopRecording().ignore();
-        setState(() => _phase = _Phase.ready);
-      }
-    } else {
-      unawaited(_present());
-    }
   }
 
   bool _completed = false;
@@ -322,7 +301,9 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
         scheme.error,
       ),
       _ => (
-        _mode == SpeakMode.repeat ? 'Listen, then say it' : 'Read it aloud',
+        _mode == SpeakMode.repeat
+            ? 'Listen, then tap the mic and say it'
+            : 'Tap the mic and read it aloud',
         scheme.onSurfaceVariant,
       ),
     };
@@ -412,32 +393,17 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                   const SizedBox(height: 24),
                   Center(
                     child: Text(
-                      _paused ? 'Paused' : label,
+                      label,
                       key: const ValueKey('speak-status'),
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: color,
                       ),
                     ),
                   ),
-                  if (_phase == _Phase.listening && !_paused)
+                  if (_phase == _Phase.listening)
                     const Padding(
                       padding: EdgeInsets.only(top: 12),
                       child: Center(child: Icon(Icons.mic_rounded, size: 48)),
-                    ),
-                  if (_hasMic && !_s.prefs.quietNow)
-                    Center(
-                      child: CantSpeakButton(
-                        services: _s,
-                        onQuiet: () {
-                          if (_phase == _Phase.listening) {
-                            _s.speech?.stopRecording().ignore();
-                          }
-                          setState(() {
-                            _phase = _Phase.ready;
-                            _paused = true;
-                          });
-                        },
-                      ),
                     ),
                 ],
               ),
@@ -454,14 +420,19 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                   ),
                   const SizedBox(width: 8),
                   if (_hasMic)
-                    IconButton.filledTonal(
-                      key: const ValueKey('speak-pause'),
-                      tooltip: _paused ? 'Resume' : 'Pause',
-                      onPressed: _togglePause,
+                    IconButton.filled(
+                      key: const ValueKey('speak-mic'),
+                      tooltip: _phase == _Phase.listening ? 'Stop' : 'Speak',
+                      iconSize: 32,
+                      onPressed: _phase == _Phase.thinking
+                          ? null
+                          : _phase == _Phase.listening
+                          ? _score
+                          : _listen,
                       icon: Icon(
-                        _paused
-                            ? Icons.play_arrow_rounded
-                            : Icons.pause_rounded,
+                        _phase == _Phase.listening
+                            ? Icons.stop_rounded
+                            : Icons.mic_rounded,
                       ),
                     ),
                   const SizedBox(width: 8),

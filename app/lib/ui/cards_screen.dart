@@ -580,13 +580,6 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                             color: scheme.onSurfaceVariant,
                           ),
                         ),
-                        if (_s.speech != null && !_s.prefs.quietNow)
-                          Center(
-                            child: CantSpeakButton(
-                              services: _s,
-                              onQuiet: () => setState(() {}),
-                            ),
-                          ),
                       ] else ...[
                         if (_micPct case final pct?)
                           Padding(
