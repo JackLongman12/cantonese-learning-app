@@ -282,6 +282,15 @@ class ContentDb {
     return out;
   }
 
+  /// In how many sentences each character item appears (how common it is).
+  Map<String, int> itemFrequency(String lang) => {
+    for (final r in _db.select(
+      "SELECT id, n_sentences FROM item WHERE lang = ? AND kind = 'char_reading'",
+      [lang],
+    ))
+      r['id'] as String: r['n_sentences'] as int,
+  };
+
   /// Every sentence of a language, for mixed review sessions.
   /// Conversation lines are excluded: they are read in order, as conversations.
   List<SentenceRow> allSentences(String lang) =>

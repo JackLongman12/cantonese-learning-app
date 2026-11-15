@@ -49,6 +49,10 @@ class Prefs {
   bool get autoMeaning => _data['auto_meaning'] != false;
   set autoMeaning(bool v) => _set('auto_meaning', v);
 
+  /// First-run setup done (how much you can read; how the reader works).
+  bool get onboarded => _data['onboarded'] == true;
+  set onboarded(bool v) => _set('onboarded', v);
+
   /// Soft UI sounds on taps, next, save, results (on by default).
   bool get soundEffects => _data['sound_effects'] != false;
   set soundEffects(bool v) => _set('sound_effects', v);

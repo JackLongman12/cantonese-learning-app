@@ -83,6 +83,15 @@ void main() {
       final s = await services(() => now);
       await t.pumpWidget(DukApp(services: s));
       await t.pumpAndSettle();
+      // first run: the setup screen
+      await t.tap(find.byKey(const ValueKey('onboard-level-1')));
+      await t.pumpAndSettle();
+      await expectLater(
+        find.byType(MaterialApp),
+        matchesGoldenFile('goldens/preview_${name}_onboarding.png'),
+      );
+      await t.tap(find.byKey(const ValueKey('onboard-start')));
+      await t.pumpAndSettle();
       await expectLater(
         find.byType(MaterialApp),
         matchesGoldenFile('goldens/preview_${name}_home.png'),
@@ -148,6 +157,7 @@ void main() {
     addTearDown(() => t.binding.setSurfaceSize(null));
     var now = DateTime.utc(2026, 11, 15, 9);
     final s = await services(() => now);
+    s.prefs.onboarded = true;
     await t.pumpWidget(DukApp(services: s));
     await t.pumpAndSettle();
     final topic = find.ancestor(

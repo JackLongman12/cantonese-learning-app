@@ -11,6 +11,7 @@ import 'package:material_ui/material_ui.dart';
 import '../app_services.dart';
 import '../data/content_db.dart';
 import '../engine/item_state.dart';
+import '../engine/path.dart';
 import 'cards_screen.dart';
 import 'logo.dart';
 import 'mascot.dart';
@@ -166,6 +167,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   bool _isLang(ItemState st) => st.itemId.startsWith('cr:$_lang:');
 
+  late final Map<String, int> _frequency = _s.content.itemFrequency(_lang);
+
+  /// Topics from easiest to hardest (common characters first); swearing goes last.
+  List<ScenarioRow> _pathOrder(
+    List<ScenarioRow> scenarios,
+    Map<String, Set<String>> items,
+  ) {
+    final byId = {for (final sc in scenarios) sc.id: sc};
+    final order = orderTopics({
+      for (final sc in scenarios)
+        if (sc.id != 'scn-swearing') sc.id: items[sc.id] ?? const {},
+    }, _frequency);
+    return [for (final id in order) byId[id]!, ?byId['scn-swearing']];
+  }
+
   ({
     String title,
     String mode,
@@ -248,6 +264,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         .where((x) => x.due != null && !x.due!.isAfter(now))
         .length;
     final totalChars = itemsByScenario.values.expand((x) => x).toSet().length;
+    final path = _pathOrder(scenarios, itemsByScenario);
+    final upNextId = upNext(
+      [for (final sc in path) sc.id],
+      itemsByScenario,
+      (id) => !_s.learner.stateOf(id).isNew,
+    );
     unawaited(syncHomeWidget(due: due, known: solid));
 
     Widget page(List<Widget> children) => Center(
@@ -362,6 +384,28 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ),
           ),
         ],
+        if (_resumable() == null &&
+            _continueTopic(scenarios) == null &&
+            upNextId != null)
+          if (scenarios.where((x) => x.id == upNextId).firstOrNull
+              case final nextTopic?) ...[
+            const SizedBox(height: 12),
+            Card(
+              margin: EdgeInsets.zero,
+              child: ListTile(
+                key: const ValueKey('up-next'),
+                leading: CircleAvatar(
+                  backgroundColor: theme.colorScheme.tertiaryContainer,
+                  foregroundColor: theme.colorScheme.onTertiaryContainer,
+                  child: const Icon(Icons.flag_rounded),
+                ),
+                title: Text('Up next: ${nextTopic.title}'),
+                subtitle: const Text('The next topic on your path'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => _openTopic(nextTopic),
+              ),
+            ),
+          ],
         if (_resumable() == null)
           if (_continueTopic(scenarios) case final last?) ...[
             const SizedBox(height: 12),
@@ -469,8 +513,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             padding: EdgeInsets.symmetric(vertical: 24),
             child: Text('No content yet.', textAlign: TextAlign.center),
           ),
-        for (final sc in scenarios)
+        for (final (step, sc) in _pathOrder(scenarios, itemsByScenario).indexed)
           _TopicTile(
+            step: sc.id == 'scn-swearing' ? null : step + 1,
+            next: sc.id == upNextId,
             scenario: sc,
             total: itemsByScenario[sc.id]?.length ?? 0,
             met: (itemsByScenario[sc.id] ?? const {})
@@ -762,12 +808,19 @@ IconData _topicIcon(String id) {
 
 class _TopicTile extends StatelessWidget {
   const _TopicTile({
+    this.step,
+    this.next = false,
     required this.scenario,
     required this.total,
     required this.met,
     required this.onTap,
   });
 
+  /// Position on the beginner path (null: not on the path).
+  final int? step;
+
+  /// The recommended next topic.
+  final bool next;
   final ScenarioRow scenario;
   final int total;
   final int met;
@@ -796,7 +849,41 @@ class _TopicTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(scenario.title, style: theme.textTheme.titleSmall),
+                    Row(
+                      children: [
+                        if (step != null)
+                          Text(
+                            'Step $step · ',
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: scheme.onSurfaceVariant,
+                            ),
+                          ),
+                        Expanded(
+                          child: Text(
+                            scenario.title,
+                            style: theme.textTheme.titleSmall,
+                          ),
+                        ),
+                        if (next)
+                          Container(
+                            key: const ValueKey('up-next-chip'),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: scheme.tertiaryContainer,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              'Up next',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: scheme.onTertiaryContainer,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                     const SizedBox(height: 6),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4),
@@ -836,29 +923,65 @@ class _GrowthLine extends StatelessWidget {
     final theme = Theme.of(context);
     final stage = DuckStage.forKnown(known);
     final next = stage.next;
+    final lv = readingLevel(known);
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
-      child: Text.rich(
-        TextSpan(
-          children: [
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                'Level ${lv.level}',
+                key: const ValueKey('reading-level'),
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: theme.colorScheme.onPrimaryContainer,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: lv.need == 0 ? 1 : lv.have / lv.need,
+                    minHeight: 6,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                lv.need == 0 ? 'top level' : '${lv.have}/${lv.need}',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onPrimaryContainer,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text.rich(
             TextSpan(
-              text: '${stage.zh} ',
-              style: const TextStyle(
-                fontFamily: brushFont,
-                fontWeight: FontWeight.w700,
-              ),
+              children: [
+                TextSpan(
+                  text: '${stage.zh} ',
+                  style: const TextStyle(
+                    fontFamily: brushFont,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                TextSpan(text: stage.en),
+                if (next != null)
+                  TextSpan(
+                    text:
+                        ' · ${next.from - known} more known characters to become a ${next.en.toLowerCase()}',
+                  ),
+              ],
             ),
-            TextSpan(text: stage.en),
-            if (next != null)
-              TextSpan(
-                text:
-                    ' · ${next.from - known} more known characters to become a ${next.en.toLowerCase()}',
-              ),
-          ],
-        ),
-        style: theme.textTheme.bodySmall?.copyWith(
-          color: theme.colorScheme.onPrimaryContainer,
-        ),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
+          ),
+        ],
       ),
     );
   }

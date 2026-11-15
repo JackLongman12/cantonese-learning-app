@@ -20,6 +20,7 @@ import 'platform/speech.dart';
 import 'platform/word_voice.dart';
 import 'platform/updater.dart';
 import 'ui/home_screen.dart';
+import 'ui/onboarding_screen.dart';
 import 'ui/theme.dart';
 
 const appVersion = String.fromEnvironment(
@@ -129,6 +130,28 @@ class DukApp extends StatelessWidget {
     debugShowCheckedModeBanner: false,
     theme: dukTheme(Brightness.light),
     darkTheme: dukTheme(Brightness.dark),
-    home: HomeScreen(services: services),
+    home: _FirstRun(services: services),
   );
+}
+
+/// The setup screen once, for someone who has not read anything yet; then Home.
+class _FirstRun extends StatefulWidget {
+  const _FirstRun({required this.services});
+  final AppServices services;
+
+  @override
+  State<_FirstRun> createState() => _FirstRunState();
+}
+
+class _FirstRunState extends State<_FirstRun> {
+  late bool _setup =
+      !widget.services.prefs.onboarded && widget.services.learner.known.isEmpty;
+
+  @override
+  Widget build(BuildContext context) => _setup
+      ? OnboardingScreen(
+          services: widget.services,
+          onDone: () => setState(() => _setup = false),
+        )
+      : HomeScreen(services: widget.services);
 }

@@ -46,6 +46,8 @@ void main() {
 
     await t.pumpWidget(DukApp(services: services));
     await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('onboard-start')));
+    await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('tab-topics')));
     await t.pumpAndSettle();
     await t.scrollUntilVisible(
