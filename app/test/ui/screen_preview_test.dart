@@ -174,9 +174,26 @@ void main() {
       await t.tap(find.byKey(const ValueKey('next')));
       await t.pumpAndSettle();
     }
+    // character pictures load asynchronously; decode them before the snapshot
+    Future<void> loadPictures() async {
+      for (final e in find.byType(Image).evaluate()) {
+        await t.runAsync(() => precacheImage((e.widget as Image).image, e));
+      }
+      await t.pumpAndSettle();
+    }
+
+    await loadPictures();
     await expectLater(
       find.byType(MaterialApp),
       matchesGoldenFile('goldens/preview_phone_conversation.png'),
+    );
+    // pick your line: it appears in your colour, with the other person dimmed
+    await t.tap(find.text('通粉，唔該。'));
+    await t.pumpAndSettle();
+    await loadPictures();
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('goldens/preview_phone_conversation_line.png'),
     );
   }, skip: !hasDb);
 }

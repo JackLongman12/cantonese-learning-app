@@ -1,0 +1,100 @@
+# Conversation characters: Irasutoya (いらすとや) illustrations, one per speaker role.
+# Terms (irasutoya.com/p/faq.html, checked 2026-11-15): free for non-commercial use with no
+# count limit; credit not required; redistributing the image files is NOT allowed, and
+# aggressive/discriminatory uses are not allowed. So: this file lists links only, `duk
+# characters` downloads the images into data/raw (git-ignored) and copies them into
+# app/assets/characters (git-ignored) at build time. They are never committed, and the
+# swearing topic does not use them.
+characters:
+  你:
+    title: 大学生のイラスト（男性）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpy4Fxva0fi5adGfcsTFDuEtqPpF6hRxpaukSs52ljpHl5TJt-oFpo_03FIaxNGTlYm7-bc5z2Y7DYRViI2gznr7iRLFNo8CcajM0Nf9kGgH5QTvSrsMrcGcc3ConDeQs4L4GoOlM6bhyphenhyphenp/s400/daigakusei_man.png
+    post: https://www.irasutoya.com/2014/01/blog-post_9400.html
+  朋友:
+    title: 大学生のイラスト（女性）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiLXmw0aPpqcn8xSfE_LJqXG_vgIlnL2Csk6Qknx3tDHK56GiXxC7OdSBcF0-IHYtLjdY0MiBOjKuWJvnC3_xwpH0CzV_Fdi9wcw3KdJku9ejGvpSOkUrnAVuhqp7hm3mOpfD-9SgHBk-Vw/s400/daigakusei_woman.png
+    post: https://www.irasutoya.com/2014/01/blog-post_2038.html
+  室友:
+    title: 勉強をしている人のイラスト（女性）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjGrR46yFXe4Czs6smGcJhVInuQa6Ktz34kVUoxG89wjh8zikCJBiYdf0b7Vz3pQwseIaSNX3y-LkGMAsrZkSTbpwx3gMC3xBExk8_JHZrwqFjexVH0EjkVMLeaDmzJncRUyZJVw6FEuAE/s400/study_daigakusei_woman.png
+    post: https://www.irasutoya.com/2015/09/blog-post_20.html
+  同學:
+    title: 単位を取った学生のイラスト（女性）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg3qilO-n3IkWWj-ar17NC3f_iRmPCAQMC5s9eUpP5nB5x3jq2DGeE-5ITftg_FH4nmSeMfwYfcv_MYF12z4JapGQCsTL9-butmUJqvlmP_x-lr2kRElKh72jit69vWYSq0Fd1YFNNMpsY/s400/school_tani_get_girl.png
+    post: https://www.irasutoya.com/2017/12/blog-post_6.html
+  阿明:
+    title: リラックスして座る人のイラスト（若者）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_Yn1nZOmOFT_oQgkL95mOi3Lb4UAmtilLhu57fRUkT4XI-40cE8idHMeEFoMSrw-qSd7up1zUne3-tNHf13d6Qpav0d-H030xDbiYF9kzAn8ANbvJsXLnZqHepLzqa8n31rgfdHQru4iK/s400/thumbnail_pose_relax.jpg
+    post: https://www.irasutoya.com/2019/09/blog-post_75.html
+  司機:
+    title: 運転手のイラスト（男性）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjhrgz5t6a0dT6dRsCyaH6LhuD0X_LcJCWnB7PxenlidRvthQ9fjJEr4bG48v82nDiYAgCCJ3QI28c5tC90lTwGpIMB_5nYdSOpUOxcRjXffUM0x1ByXhlGp0PsBL-61L5JDSb0HToL9Fpp/s400/job_bus_driver_man.png
+    post: https://www.irasutoya.com/2018/05/blog-post_722.html
+  伙計:
+    title: ウェイターのイラスト
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi8t3LVmihgXPbTmXnD3X4QfrikH0Islng3V2i-4F21s9EL3Ov1dXZTexOd2rX-lyl719fzPAdz59ns_gVFccXG3kr5AW_yu4j7M2cDnvW5Kjd-alzV-nvJom3KCYGrTMXt7_LxjFkKmkM/s400/job_waiter.png
+    post: https://www.irasutoya.com/2015/06/blog-post_642.html
+  店員:
+    title: お釣りをトレイに置くレジの店員のイラスト
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgdPzStD6PD_elwEgYU72J213ZgaAP2XI0VU9ezwFd3jA2039OVXtSZAuZ6eGHikxM79idjQa70gxQWNS9zG1VvFCXPJv5zXbwiCV3CWhmt9wM9k9RRK0B29uKZ_fKnK9UYWyK2cgyt77se/s400/reji_kozeni_tray_oku.png
+    post: https://www.irasutoya.com/2020/05/blog-post_78.html
+  檔主:
+    title: 八百屋さんのイラスト
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgmWjQV-plTzC325rya3U2ylDCnoqcXX9jg3gyeOcUnLrkTt4smxlNrcOhfRF2RvGmzwiUaXQhOSytVYloixa_JUVZ83f5CeAB3zgZoz9sus0YfsbgwME4CehRAP-ShModB0M4ASfblT6I/s400/job_yaoya.png
+    post: https://www.irasutoya.com/2013/07/blog-post_2231.html
+  路人:
+    title: オシャレなおばさんのイラスト
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjLoY9wPY1NL5uXoVQ41xmvL97KIRitfL0uN8rx7W7sLqAnfn9EohVd54swMLlC11ckDC0ggsnBja4xEtth4gDlIOBWdnX8hE0Vjh7bHa63AOj236lG_AYLJ7J6CnLxHxELFCzfq3yhjNjt/s400/fashion_osyare_middle_woman.png
+    post: https://www.irasutoya.com/2020/02/blog-post_95.html
+  醫生:
+    title: 椅子に座るお医者さんのイラスト（男性）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgy0v8VuewpSdVkTf6ikwhk80z9DEmi8tS6J-N1kGHWdQ3hUJEJL6K8P5ml69cVt2xFH18Pw-sG8y0WWkSjx6xwFHOy8YXyDGj1IOOf8-SDPcmxNpAgWBevx5oEHZi10MbsBs9uo9Ar_mje/s400/medical_doctor_suwaru_man.png
+    post: https://www.irasutoya.com/2017/03/blog-post_894.html
+  姑娘:
+    title: 話し合いをする看護師のイラスト（女性）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgRtAOERuk5sANNsSdYpeqJpzVbM-FrkN1JBV-9eszBgjGbEURC2x86TerdQqmxMZ3nnIw0boxbl-MdGFikwNBnPCxXZcJjeMYrQc-g39GW6hRPANcCyzYOUAEHjAnQTtDZ7p5x4g9SwoM/s400/hanashiai_nurse_woman.png
+    post: https://www.irasutoya.com/2018/04/blog-post_772.html
+  老細:
+    title: 社長のイラスト（男性）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjhmGlyd5fHDcjrCkLQsFIV0UXZwAxOS0q3b5qiipCUwtoVfOrKaCNTCVgd9a7MM-coMuNJXT75qeqMM8foskdDofL0qskRfPZ3Nl7ZktNeEKwEETuHe2a9MWfjTUDNRLMQgSZp4kPMl9w/s400/kaisya_desk1_syachou_man.png
+    post: https://www.irasutoya.com/2017/10/blog-post_994.html
+  職員:
+    title: スーツを着た受付のイラスト（女性）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiRlPjuatjSkfr2A0Nfup5m5sCWv71dqy0tkML2GLCMRSx9sU2xmj-tItE1sAt5c5LJKwdf0NMGG2FMj8r2edD_SQmL_5XA63WZe7Co54VYou6fqN20B5XvDG7mZ7Y84bH5WUQT2imNvJEA/s400/thumbnail_business_suit_uketsuke_woman.jpg
+    post: https://www.irasutoya.com/2020/07/blog-post_670.html
+  經紀:
+    title: 不動産屋のイラスト
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi0QmlQV76_Nq_OJykIpiPpe4gyfboe1f9v9wOOnyHRhGIc6iDtEt7-BFRcDMCNSPFlbTXjDODE3LhZDY5571kzaNbfEhbvZ_g707NBqbzD4PRJWEpfDsHAiBUVi06EwsYt61pNBp9wRKdX/s400/fudousanya.png
+    post: https://www.irasutoya.com/2013/07/blog-post_1506.html
+  業主:
+    title: 大家さんのイラスト
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhuQun6q_lQOcSKEcBdonQZeFXcdcU5SwNu6ePq05a5b2WX9jvsuwzkpGrJ1HhIiJBsGuwYatZDOeIr6iM4xe-WgiWIJiaQzUq-UPFgD1UzIVhgdenhWbF2bRxrAsG5ZH6ZB6GBJfxLO14/s400/job_ooya.png
+    post: https://www.irasutoya.com/2014/10/blog-post_975.html
+  鄰居:
+    title: 専業主婦のイラスト
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhH8kqJ_JKpW01RWCxZkjTUMaMwswfStFYzJFF99c62DL1ZNKbAIkmVH3uolemliISjJbhNYGPomIfC1ffdTeox1KnqVm1VdX3iUWjDAFYXVjDjlrVO-XEQos_n16QDEePEmJaWm44zBCja/s400/family_sengyou_syufu_woman.png
+    post: https://www.irasutoya.com/2019/07/blog-post_86.html
+  速遞員:
+    title: ドアの前に荷物を置く配達員のイラスト
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgYM6bVITUi2ndjxbfblPzFqWD93o5-8m6RsARJZt3q0pLEMhG_SeaQ8-jHzEhJyvcNmu6BOusEAMLtfwv7kjmBGpTJfB6ArWszaN5bsYKOIjzdhWSIoMZ_HWdmXUnekLCPCdw76d8vZi1N/s400/yuubin_takuhaiin_door_okihai.png
+    post: https://www.irasutoya.com/2020/04/blog-post_74.html
+  同事:
+    title: オフィスチェアに座る人のイラスト（スーツ）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiOXftwPlDOL2k86HnoMigA0QpUJZwWGAmQfEUKVZfg2D1wEQOtkr2iTfyGRMyqxI_EnrZNe8hd_PV0iKVI_hibZBWzEMGGOHDNtbvYSq_a0NNrldfH4ZXB30fEq9uzSty1TI7Y5TKqG9Th/s400/thumbnail_office_chair_business.jpg.
+    post: https://www.irasutoya.com/2021/01/blog-post_60.html
+  警員:
+    title: スマートフォンを使う警察官のイラスト（男性）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi5tShPkZ82T-Wj2syrV3RxD0u10ri9ESGArrV2q5tHR9TrjM49dWOD_grwPx-DFFq9Jx13gYtU9c9tfVGLrJbBoiE7HFOr0CXo4DIx-88pbt6_yNFtsKGBaFwyJkvh0IHZcoVV9wFF_pYS/s400/smartphone_stand_policeman.png
+    post: https://www.irasutoya.com/2019/01/blog-post_377.html
+  保安:
+    title: 警備員のイラスト（男性）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjAdPWfOvz0ENrneV1vgMEjLasv8MeBJ1V_0fljb_PhGI_Un-3sJc7fhj2qvTUAGwxd7twaG6nz4CQwHZ-inlFaSL8FXS0FzbqoiXkZyfAhhMRcsZRpIv95GbzqWXPIzQQ2XPd5JL9Qd1BS/s400/job_keibiin_man_.png
+    post: https://www.irasutoya.com/2016/04/blog-post_183.html
+  經理:
+    title: 社長のイラスト（女性）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitq22bcgCn0YYVINBRRz044CLVQwEQtxmxipkF_BL5JBB_AmF93lazmdnFQzhB8md6_TeEwXMxm1GIkt2yCSPhqKBEorr4-Yf_ZhQKi5weanBJMcm6XivCTAJjHRtFtJaOnV_dEzqZPeI/s400/kaisya_desk1_syachou_woman.png
+    post: https://www.irasutoya.com/2017/10/blog-post_934.html
+  遊客:
+    title: 外国人観光客のイラスト（東南アジア人）
+    image: https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgzdd39m-FPpS_xZ3cOFBFgFJr5P7Vwk1oHhbOYPBbAkdbtj-KhXk2KWIKlealOFtS4z6O8Q3AhLYJ-nJ7H6AtRXAjXyqSb814R0uJ0zJXfSilzpO2rFgiz_I-hA71GGsTjnWDgq7WLX6aa/s400/kankou_india_family.png
+    post: https://www.irasutoya.com/2016/05/blog-post_380.html

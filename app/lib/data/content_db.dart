@@ -360,6 +360,17 @@ class ContentDb {
       ),
   ];
 
+  /// What the learner (你) says in the other conversations of a topic: plausible but
+  /// wrong answers for the "what do you say?" choice.
+  List<String> learnerLines(String scenarioId, {String? exceptDialogue}) => [
+    for (final r in _db.select(
+      "SELECT text FROM sentence WHERE scenario_id = ? AND speaker = '你' "
+      'AND dialogue IS NOT NULL AND dialogue != ? ORDER BY id',
+      [scenarioId, exceptDialogue ?? ''],
+    ))
+      r['text'] as String,
+  ];
+
   /// The lines of one conversation, in speaking order.
   List<SentenceRow> dialogueLines(String dialogueId, String lang) =>
       _sentences('s.dialogue = ? AND s.lang = ?', [dialogueId, lang])

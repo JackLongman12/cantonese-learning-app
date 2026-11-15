@@ -218,7 +218,7 @@ void main() {
   }, skip: !hasDb);
 
   testWidgets(
-    'a conversation is read in order with earlier lines kept as bubbles',
+    'a conversation plays as a visual novel: stage, choices on your turn, backlog',
     (t) async {
       await t.binding.setSurfaceSize(const Size(500, 900));
       addTearDown(() => t.binding.setSurfaceSize(null));
@@ -253,14 +253,31 @@ void main() {
             sentences: lines,
             lang: 'yue',
             conversation: true,
+            scenarioId: 'scn-mo-getting-around',
           ),
         ),
       );
-      await t.tap(find.byKey(const ValueKey('next')));
       await t.pumpAndSettle();
-      await t.tap(find.byKey(const ValueKey('next')));
+      expect(find.byKey(const ValueKey('stage')), findsOneWidget);
+      for (var k = 0; k < 2; k++) {
+        if (lines[k].speaker == '你') {
+          // your turn: pick your line from three before it appears
+          expect(find.byKey(const ValueKey('choices')), findsOneWidget);
+          await t.tap(find.text(lines[k].text));
+          await t.pumpAndSettle();
+          expect(
+            store.events.lastWhere((e) => e.type == 'conv.choice').payload['correct'],
+            isTrue,
+          );
+        } else {
+          expect(find.byKey(const ValueKey('choices')), findsNothing);
+        }
+        await t.tap(find.byKey(const ValueKey('next')));
+        await t.pumpAndSettle();
+      }
+      // earlier lines are in the backlog
+      await t.tap(find.byKey(const ValueKey('backlog')));
       await t.pumpAndSettle();
-      // the first two lines now show as plain bubbles above the third
       expect(find.text(lines[0].text), findsOneWidget);
       expect(find.text(lines[1].text), findsOneWidget);
       final shown = store.events

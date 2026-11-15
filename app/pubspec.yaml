@@ -77,6 +77,7 @@ flutter:
     - assets/content/content.db
     - assets/content/audio/
     - assets/sfx/
+    - assets/characters/
 
   # Regional fonts decide which glyph variant of a shared code point is drawn.
   fonts:

@@ -15,6 +15,7 @@ def main(argv: list[str] | None = None) -> int:
             stream.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(prog="duk")
     sub = ap.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("characters", help="download conversation characters (git-ignored)")
     f = sub.add_parser("fetch", help="download reference datasets into data/raw/")
     f.add_argument("--only", nargs="*", help="source names, e.g. osm_macau osm_hk")
     a = sub.add_parser("annotate", help="show readings for a piece of text")
@@ -28,6 +29,11 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     try:
+        if args.cmd == "characters":
+            from .characters import fetch_characters
+
+            print(chr(10).join(fetch_characters()))
+            return 0
         if args.cmd == "fetch":
             from .fetch_sources import fetch
 

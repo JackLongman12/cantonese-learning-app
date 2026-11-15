@@ -3,6 +3,7 @@
 library;
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +16,7 @@ import '../engine/signals.dart';
 import '../events/event_logger.dart';
 import 'mascot.dart';
 import 'ruby_text.dart';
+import 'visual_novel.dart';
 import 'word_sheet.dart';
 import '../engine/pronunciation.dart';
 import '../platform/sfx.dart';
@@ -80,6 +82,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
   final Set<String> _revealed = {};
   final Set<int> _revealedTokens = {};
   bool _showTranslation = false;
+
+  /// Learner's turn in a conversation: pick the line before seeing it.
+  bool _choosing = false;
+  List<String> _options = const [];
+  final _wrongPicks = <String>{};
   int _audioPlays = 0;
   Map<int, CharScore> _speech = const {};
   String? _myRecording;
@@ -149,7 +156,10 @@ class _ReaderScreenState extends State<ReaderScreen> {
       'conversation': widget.conversation,
       'story': widget.story,
     };
-    if (widget.autoplay || _s.prefs.autoPlay) {
+    _wrongPicks.clear();
+    _options = _choicesFor(_sentence);
+    _choosing = _options.length >= 2;
+    if (!_choosing && (widget.autoplay || _s.prefs.autoPlay)) {
       final shown = _index;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _index == shown) _play(slow: false, auto: true);
@@ -164,6 +174,52 @@ class _ReaderScreenState extends State<ReaderScreen> {
       'planner': {'reasons': _why[_sentence.id] ?? const []},
       'pos_in_session': _index,
     });
+  }
+
+  /// The line to say plus two lines you say in other conversations of this topic,
+  /// shuffled the same way each time.
+  List<String> _choicesFor(SentenceRow s) {
+    if (!widget.conversation || !_isLearner(s) || widget.scenarioId == null) {
+      return const [];
+    }
+    final others = _s.content
+        .learnerLines(widget.scenarioId!, exceptDialogue: s.dialogue)
+        .where((t) => t != s.text)
+        .toSet()
+        .toList();
+    if (others.length < 2) return const [];
+    final rnd = Random(s.id.hashCode);
+    others.shuffle(rnd);
+    return [s.text, others[0], others[1]]..shuffle(rnd);
+  }
+
+  void _pick(String text) {
+    final ok = text == _sentence.text;
+    _s.logger.log('conv.choice', {
+      'exposure_id': _exposureId,
+      'sentence_id': _sentence.id,
+      'correct': ok,
+      'tries': _wrongPicks.length + 1,
+    });
+    if (!ok) {
+      _s.sound(Sfx.tryAgain);
+      setState(() => _wrongPicks.add(text));
+      return;
+    }
+    _s.sound(Sfx.good);
+    setState(() => _choosing = false);
+    if (widget.autoplay || _s.prefs.autoPlay) _play(slow: false, auto: true);
+  }
+
+  /// Who stands opposite you on the stage: the current speaker, or the last one who spoke.
+  String _otherSpeaker() {
+    for (var k = _index; k >= 0; k--) {
+      if (!_isLearner(_queue[k])) return _queue[k].speaker ?? '';
+    }
+    for (final l in _queue) {
+      if (!_isLearner(l)) return l.speaker ?? '';
+    }
+    return '';
   }
 
   /// In conversations the learner is 你; everyone else is the other side.
@@ -568,146 +624,166 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         ),
                       ),
                     if (widget.conversation) ...[
-                      for (var k = 0; k < _index; k++)
-                        _Bubble(
-                          line: _queue[k],
-                          lang: widget.lang,
-                          mine: _isLearner(_queue[k]),
-                        ),
-                      const SizedBox(height: 4),
-                      Align(
-                        alignment: _isLearner(s)
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: _SpeakerHeader(
-                          speaker: s.speaker ?? '',
-                          mine: _isLearner(s),
-                          current: true,
-                        ),
+                      const SizedBox(height: 8),
+                      ConversationStage(
+                        other: _otherSpeaker(),
+                        youSpeaking: _isLearner(s),
+                        // Irasutoya's terms rule out aggressive uses
+                        showPictures: widget.scenarioId != 'scn-swearing',
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          if (!_isLearner(s))
+                            NamePlate(speaker: s.speaker ?? '', mine: false),
+                          const Spacer(),
+                          if (_index > 0)
+                            IconButton(
+                              key: const ValueKey('backlog'),
+                              tooltip: 'Earlier lines',
+                              icon: const Icon(Icons.history_rounded),
+                              onPressed: () => showBacklog(
+                                context,
+                                _queue.sublist(0, _index),
+                              ),
+                            ),
+                          if (_isLearner(s))
+                            const NamePlate(speaker: '你', mine: true),
+                        ],
                       ),
                     ],
                     const SizedBox(height: 12),
-                    Card(
-                      margin: EdgeInsets.zero,
-                      color: widget.conversation
-                          ? (_isLearner(s)
-                                ? theme.colorScheme.primaryContainer
-                                : theme.colorScheme.surfaceContainerHigh)
-                          : null,
-                      shape: widget.conversation
-                          ? RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                              side: BorderSide(
-                                width: 2,
-                                color: _isLearner(s)
-                                    ? theme.colorScheme.primary
-                                    : theme.colorScheme.outline,
-                              ),
-                            )
-                          : null,
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.fromLTRB(
-                          20,
-                          wide ? 28 : 20,
-                          20,
-                          wide ? 32 : 24,
-                        ),
-                        child: RubyText(
-                          lang: widget.lang,
-                          onReveal: _reveal,
-                          onSpeak: _speakWord,
-                          wordOf: s.wordOf,
-                          onLookup: (i) {
-                            _reveal(i);
-                            showWordLookup(
-                              context,
-                              services: _s,
-                              lang: widget.lang,
-                              sentence: _sentence,
-                              tokenIndex: i,
-                            ).then((_) {
-                              if (mounted) setState(() {});
-                            });
-                          },
-                          fontSize: (wide ? 44 : 34) * _s.prefs.textScale,
-                          tokens: [
-                            for (var i = 0; i < s.tokens.length; i++)
-                              RubyToken(
-                                surface: s.tokens[i].surface,
-                                kind: s.tokens[i].kind,
-                                reading: s.tokens[i].reading,
-                                level:
-                                    _levels[s.tokens[i].itemId] ??
-                                    ScaffoldLevel.full,
-                                revealed: _revealedTokens.contains(i),
-                                flagged: s.tokens[i].flagged,
-                                saved: savedChars.contains(i),
-                                mark: switch (_speech[i]?.verdict) {
-                                  Verdict.ok => SpeechMark.ok,
-                                  Verdict.tone => SpeechMark.tone,
-                                  Verdict.wrong => SpeechMark.wrong,
-                                  Verdict.missed => SpeechMark.missed,
-                                  null => null,
-                                },
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.touch_app_outlined,
-                          size: 18,
-                          color: scheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            hint,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: scheme.onSurfaceVariant,
-                            ),
+                    if (_choosing)
+                      ChoicePanel(
+                        key: const ValueKey('choices'),
+                        options: _options,
+                        wrong: _wrongPicks,
+                        prompt: _index > 0 ? _queue[_index - 1].en : null,
+                        onPick: _pick,
+                      )
+                    else ...[
+                      Card(
+                        margin: EdgeInsets.zero,
+                        color: widget.conversation
+                            ? speakerColors(scheme, mine: _isLearner(s)).bg
+                            : null,
+                        shape: widget.conversation
+                            ? RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                side: BorderSide(
+                                  width: 2,
+                                  color: speakerColors(
+                                    scheme,
+                                    mine: _isLearner(s),
+                                  ).edge,
+                                ),
+                              )
+                            : null,
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.fromLTRB(
+                            20,
+                            wide ? 28 : 20,
+                            20,
+                            wide ? 32 : 24,
+                          ),
+                          child: RubyText(
+                            lang: widget.lang,
+                            onReveal: _reveal,
+                            onSpeak: _speakWord,
+                            wordOf: s.wordOf,
+                            onLookup: (i) {
+                              _reveal(i);
+                              showWordLookup(
+                                context,
+                                services: _s,
+                                lang: widget.lang,
+                                sentence: _sentence,
+                                tokenIndex: i,
+                              ).then((_) {
+                                if (mounted) setState(() {});
+                              });
+                            },
+                            fontSize: (wide ? 44 : 34) * _s.prefs.textScale,
+                            tokens: [
+                              for (var i = 0; i < s.tokens.length; i++)
+                                RubyToken(
+                                  surface: s.tokens[i].surface,
+                                  kind: s.tokens[i].kind,
+                                  reading: s.tokens[i].reading,
+                                  level:
+                                      _levels[s.tokens[i].itemId] ??
+                                      ScaffoldLevel.full,
+                                  revealed: _revealedTokens.contains(i),
+                                  flagged: s.tokens[i].flagged,
+                                  saved: savedChars.contains(i),
+                                  mark: switch (_speech[i]?.verdict) {
+                                    Verdict.ok => SpeechMark.ok,
+                                    Verdict.tone => SpeechMark.tone,
+                                    Verdict.wrong => SpeechMark.wrong,
+                                    Verdict.missed => SpeechMark.missed,
+                                    null => null,
+                                  },
+                                ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                    if (_s.speech != null &&
-                        _mic == _Mic.idle &&
-                        _speech.isEmpty)
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextButton.icon(
-                          key: const ValueKey('shadow'),
-                          onPressed: _shadow,
-                          icon: const Icon(Icons.repeat_rounded, size: 18),
-                          label: const Text('Shadow: listen, then say it'),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.touch_app_outlined,
+                            size: 18,
+                            color: scheme.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              hint,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (_s.speech != null &&
+                          _mic == _Mic.idle &&
+                          _speech.isEmpty)
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton.icon(
+                            key: const ValueKey('shadow'),
+                            onPressed: _shadow,
+                            icon: const Icon(Icons.repeat_rounded, size: 18),
+                            label: const Text('Shadow: listen, then say it'),
+                          ),
                         ),
+                      if (_speech.isNotEmpty)
+                        _SpeechResult(
+                          scores: _speech.values.toList(),
+                          onPlayMine:
+                              _myRecording == null || _s.playFile == null
+                              ? null
+                              : () {
+                                  _s.logger.log('item.audio', {
+                                    'exposure_id': _exposureId,
+                                    'scope': 'own_recording',
+                                  });
+                                  _s.playFile!(_myRecording!);
+                                },
+                          onPlayNative: () => _play(slow: false),
+                        ),
+                      const SizedBox(height: 16),
+                      _MeaningPanel(
+                        open: _showTranslation,
+                        en: s.en,
+                        notes: s.notes,
+                        onToggle: _toggleMeaning,
                       ),
-                    if (_speech.isNotEmpty)
-                      _SpeechResult(
-                        scores: _speech.values.toList(),
-                        onPlayMine: _myRecording == null || _s.playFile == null
-                            ? null
-                            : () {
-                                _s.logger.log('item.audio', {
-                                  'exposure_id': _exposureId,
-                                  'scope': 'own_recording',
-                                });
-                                _s.playFile!(_myRecording!);
-                              },
-                        onPlayNative: () => _play(slow: false),
-                      ),
-                    const SizedBox(height: 16),
-                    _MeaningPanel(
-                      open: _showTranslation,
-                      en: s.en,
-                      notes: s.notes,
-                      onToggle: _toggleMeaning,
-                    ),
+                    ],
                   ],
                 ),
               ),
@@ -1368,140 +1444,6 @@ class _ModelDownloadDialogState extends State<_ModelDownloadDialog> {
           child: Text(_error == null ? 'Download' : 'Try again'),
         ),
       ],
-    );
-  }
-}
-
-/// English role for each speaker name used in the conversations.
-const speakerRoles = {
-  '你': 'You',
-  '司機': 'Driver',
-  '伙計': 'Waiter',
-  '店員': 'Shop assistant',
-  '檔主': 'Stall owner',
-  '路人': 'Passer-by',
-  '朋友': 'Friend',
-  '醫生': 'Doctor',
-  '姑娘': 'Nurse',
-  '老細': 'Boss',
-  '職員': 'Staff',
-  '經紀': 'Agent',
-  '業主': 'Landlord',
-  '鄰居': 'Neighbour',
-  '速遞員': 'Courier',
-  '室友': 'Flatmate',
-  '同事': 'Colleague',
-  '警員': 'Police officer',
-  '保安': 'Security guard',
-  '經理': 'Manager',
-  '同學': 'Classmate',
-  '遊客': 'Tourist',
-  '阿明': 'Ah Ming',
-};
-
-/// "You say" / "伙計 Waiter says", with an avatar, on the speaker's side.
-class _SpeakerHeader extends StatelessWidget {
-  const _SpeakerHeader({
-    required this.speaker,
-    required this.mine,
-    this.current = false,
-  });
-  final String speaker;
-  final bool mine;
-  final bool current;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final role = speakerRoles[speaker];
-    final avatar = CircleAvatar(
-      radius: current ? 14 : 11,
-      backgroundColor: mine ? scheme.primary : scheme.secondary,
-      foregroundColor: mine ? scheme.onPrimary : scheme.onSecondary,
-      child: mine
-          ? Icon(Icons.person_rounded, size: current ? 18 : 14)
-          : Text(
-              speaker.isEmpty ? '?' : speaker.characters.first,
-              style: chineseStyle(
-                'yue',
-                fontSize: current ? 14 : 11,
-                color: scheme.onSecondary,
-              ),
-            ),
-    );
-    final label = Text.rich(
-      TextSpan(
-        children: [
-          if (!mine)
-            TextSpan(
-              text: '$speaker ',
-              style: chineseStyle('yue', fontSize: 14),
-            ),
-          TextSpan(text: mine ? 'You' : (role ?? '')),
-          if (current) TextSpan(text: mine ? ' say' : ' says'),
-        ],
-      ),
-      style: (current ? theme.textTheme.labelLarge : theme.textTheme.labelSmall)
-          ?.copyWith(
-            color: mine ? scheme.primary : scheme.onSurfaceVariant,
-            fontWeight: FontWeight.w600,
-          ),
-    );
-    return Padding(
-      padding: const EdgeInsets.only(top: 6),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: mine
-            ? [label, const SizedBox(width: 6), avatar]
-            : [avatar, const SizedBox(width: 6), label],
-      ),
-    );
-  }
-}
-
-/// An earlier line of the conversation: plain text (it has been read already),
-/// learner on the right, the other speaker on the left.
-class _Bubble extends StatelessWidget {
-  const _Bubble({required this.line, required this.lang, required this.mine});
-  final SentenceRow line;
-  final String lang;
-  final bool mine;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Align(
-      alignment: mine ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(top: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        constraints: const BoxConstraints(maxWidth: 520),
-        decoration: BoxDecoration(
-          color: mine ? scheme.primaryContainer : scheme.surfaceContainerHigh,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(14),
-            topRight: const Radius.circular(14),
-            bottomLeft: Radius.circular(mine ? 14 : 4),
-            bottomRight: Radius.circular(mine ? 4 : 14),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: mine
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
-          children: [
-            if ((line.speaker ?? '').isNotEmpty)
-              Text(
-                mine
-                    ? 'You'
-                    : '${line.speaker} ${speakerRoles[line.speaker] ?? ''}',
-                style: Theme.of(context).textTheme.labelSmall,
-              ),
-            Text(line.text, style: chineseStyle(lang, fontSize: 18)),
-          ],
-        ),
-      ),
     );
   }
 }
