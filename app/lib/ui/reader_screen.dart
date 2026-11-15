@@ -1055,16 +1055,16 @@ class _BottomBar extends StatelessWidget {
           children: [
             Row(
               children: [
-                FilledButton.tonalIcon(
-                  onPressed: onListen,
-                  icon: const Icon(Icons.volume_up_rounded),
-                  label: const Text('Listen'),
-                ),
-                const SizedBox(width: 8),
-                IconButton.outlined(
-                  tooltip: 'Listen slowly',
-                  onPressed: onSlow,
-                  icon: const Icon(Icons.slow_motion_video_rounded),
+                // one button: tap to listen, hold for slow
+                Tooltip(
+                  message: 'Tap to listen, hold for slow',
+                  child: FilledButton.tonalIcon(
+                    key: const ValueKey('listen'),
+                    onPressed: onListen,
+                    onLongPress: onSlow,
+                    icon: const Icon(Icons.volume_up_rounded),
+                    label: const Text('Listen'),
+                  ),
                 ),
                 if (mic != null) ...[
                   const SizedBox(width: 4),
@@ -1089,9 +1089,7 @@ class _BottomBar extends StatelessWidget {
                               : const Icon(Icons.mic_rounded),
                         ),
                 ],
-                const SizedBox(width: 4),
-                TextButton(onPressed: onSkip, child: const Text('Skip')),
-                const SizedBox(width: 4),
+                const SizedBox(width: 8),
                 // takes the remaining width, so the bar fits small phones
                 Expanded(
                   child: FilledButton.icon(

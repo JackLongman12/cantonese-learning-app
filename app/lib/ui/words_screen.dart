@@ -11,7 +11,6 @@ import '../engine/word_book.dart';
 import '../platform/sfx.dart';
 import 'paste_reader_screen.dart';
 import 'practice_words_screen.dart';
-import 'reader_screen.dart';
 import 'ruby_text.dart';
 import 'word_sheet.dart';
 
@@ -35,24 +34,24 @@ class _WordsScreenState extends State<WordsScreen> {
     super.dispose();
   }
 
-  Future<void> _practise(List<SavedWord> words) async {
-    final ids = {for (final w in words) ?w.sentenceId}.toList();
-    final lines = _s.content.sentencesByIds(ids);
-    if (lines.isEmpty) return;
-    _s.logger.log('nav.screen', {'screen': 'reader', 'mode': 'my_words'});
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => ReaderScreen(
-          services: _s,
-          title: 'My words',
-          sentences: lines,
-          lang: _lang,
-          mode: 'my_words',
-          ordered: true,
-        ),
-      ),
-    );
-    if (mounted) setState(() {});
+  /// Flagged words first, then saved ones not already flagged, as practice items.
+  List<PracticeWord> _practiceList(List<SavedWord> saved) {
+    final flagged = _s.words.practice(_lang);
+    final have = {for (final w in flagged) w.text};
+    return [
+      ...flagged,
+      for (final w in saved)
+        if (!have.contains(w.text))
+          PracticeWord(
+            text: w.text,
+            lang: w.lang,
+            flaggedAt: w.savedAt,
+            reading: w.reading,
+            sentenceId: w.sentenceId,
+            context: w.context,
+            contextEn: w.contextEn,
+          ),
+    ];
   }
 
   void _remove(SavedWord w) {
@@ -105,8 +104,8 @@ class _WordsScreenState extends State<WordsScreen> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
           children: [
-            if (_s.words.practice(_lang) case final practice
-                when practice.isNotEmpty) ...[
+            // one place to practise: words the app flagged first, then the ones you saved
+            if (_practiceList(words) case final list when list.isNotEmpty) ...[
               Card(
                 key: const ValueKey('practice-card'),
                 margin: EdgeInsets.zero,
@@ -117,12 +116,13 @@ class _WordsScreenState extends State<WordsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        '${practice.length} ${practice.length == 1 ? 'word' : 'words'} to practise',
+                        'Practise my words',
                         style: theme.textTheme.titleMedium,
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Added by themselves when you needed the reading or said them wrong.',
+                        'Read each one aloud in its sentence. Words you needed help '
+                        'with come first.',
                         style: theme.textTheme.bodySmall,
                       ),
                       const SizedBox(height: 8),
@@ -130,7 +130,7 @@ class _WordsScreenState extends State<WordsScreen> {
                         spacing: 6,
                         runSpacing: 6,
                         children: [
-                          for (final w in practice.take(12))
+                          for (final w in list.take(12))
                             Chip(
                               label: Text(
                                 w.text,
@@ -147,19 +147,18 @@ class _WordsScreenState extends State<WordsScreen> {
                           minimumSize: const Size(0, 52),
                         ),
                         onPressed: () async {
-                          _s.sound(Sfx.tap);
                           await Navigator.of(context).push(
                             MaterialPageRoute<void>(
                               builder: (_) => PracticeWordsScreen(
                                 services: _s,
-                                words: practice.take(10).toList(),
+                                words: list.take(10).toList(),
                               ),
                             ),
                           );
                           if (mounted) setState(() {});
                         },
                         icon: const Icon(Icons.record_voice_over_rounded),
-                        label: const Text('Practise them'),
+                        label: Text('Practise (${list.length})'),
                       ),
                     ],
                   ),
@@ -224,14 +223,6 @@ class _WordsScreenState extends State<WordsScreen> {
               },
             ),
             const SizedBox(height: 16),
-            if (words.isNotEmpty)
-              FilledButton.icon(
-                key: const ValueKey('practise-words'),
-                onPressed: () => _practise(words),
-                style: FilledButton.styleFrom(minimumSize: const Size(0, 48)),
-                icon: const Icon(Icons.play_arrow_rounded),
-                label: Text('Read their sentences again (${words.length})'),
-              ),
             const SizedBox(height: 12),
             if (words.isEmpty)
               Card(

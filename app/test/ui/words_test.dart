@@ -88,7 +88,7 @@ void main() {
       ),
     );
     expect(find.byKey(ValueKey('my-word-$word')), findsOneWidget);
-    expect(find.byKey(const ValueKey('practise-words')), findsOneWidget);
+    expect(find.byKey(const ValueKey('practise-flagged')), findsOneWidget);
   }, skip: !hasDb);
 
   testWidgets('a reading you had to reveal becomes a word to practise', (

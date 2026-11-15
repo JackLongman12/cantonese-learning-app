@@ -217,14 +217,6 @@ void main() {
       expect(levels[i] == 'full', !introduced.contains(ids[i]), reason: ids[i]);
     }
 
-    // Skipping teaches nothing.
-    final before = store.events.where((e) => e.type == 'review.applied').length;
-    await t.tap(find.text('Skip'));
-    await t.pumpAndSettle();
-    expect(
-      store.events.where((e) => e.type == 'review.applied').length,
-      before,
-    );
   }, skip: !hasDb);
 
   testWidgets(

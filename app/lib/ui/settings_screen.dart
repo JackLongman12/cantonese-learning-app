@@ -13,6 +13,8 @@ import '../engine/insights.dart';
 import '../platform/sfx.dart';
 import '../platform/speech.dart';
 import '../platform/storage.dart';
+import '../engine/goals.dart';
+import 'goal_picker.dart';
 import 'ruby_text.dart';
 import 'update_ui.dart';
 
@@ -158,6 +160,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: const EdgeInsets.only(bottom: 32),
               children: [
                 section('Reading'),
+                ListTile(
+                  key: const ValueKey('set-goal'),
+                  title: const Text('Your goal'),
+                  subtitle: Text(goalById(p.goal).title),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () async {
+                    if (await pickGoal(context, _s)) setState(() {});
+                  },
+                ),
                 ListTile(
                   title: const Text('Jyutping help'),
                   subtitle: const Text(

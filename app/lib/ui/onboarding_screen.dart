@@ -6,6 +6,7 @@ library;
 import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
+import 'goal_picker.dart';
 import 'logo.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -23,15 +24,17 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   int? _help;
+  String? _goal;
 
   void _finish() {
     final p = widget.services.prefs;
     p.helpShift = _help ?? 0;
+    p.goal = _goal ?? 'all';
     p.onboarded = true;
     widget.services.logger.log('settings.change', {
       'key': 'onboarding',
       'from': null,
-      'to': {'help_shift': p.helpShift},
+      'to': {'help_shift': p.helpShift, 'goal': p.goal},
     });
     widget.onDone();
   }
@@ -110,6 +113,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     -1,
                     'Quite a lot',
                     'Jyutping fades faster; you get tested sooner.',
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'What do you want Cantonese for?',
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Your topics come first. You can change this any time.',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 10),
+                  GoalList(
+                    selected: _goal,
+                    onPick: (g) => setState(() => _goal = g.id),
                   ),
                   const SizedBox(height: 16),
                   Text('How it works', style: theme.textTheme.titleMedium),

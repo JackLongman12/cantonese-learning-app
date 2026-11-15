@@ -10,9 +10,11 @@ import '../app_services.dart';
 import '../data/content_db.dart';
 import '../engine/item_state.dart';
 import '../engine/adaptive.dart';
+import '../engine/goals.dart';
 import '../engine/path.dart';
 import '../engine/weak_spots.dart';
 import 'cards_screen.dart';
+import 'goal_picker.dart';
 import 'logo.dart';
 import 'mascot.dart';
 import 'paste_reader_screen.dart';
@@ -383,7 +385,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       for (final sc in scenarios)
         if (sc.id != 'scn-swearing') sc.id: items[sc.id] ?? const {},
     }, _frequency);
-    return [for (final id in order) byId[id]!, ?byId['scn-swearing']];
+    final base = [
+      ...order,
+      if (byId.containsKey('scn-swearing')) 'scn-swearing',
+    ];
+    // your goal's topics first; everything else follows in the usual order
+    return [
+      for (final id in orderForGoal(base, goalById(_s.prefs.goal))) byId[id]!,
+    ];
   }
 
   ({
@@ -493,6 +502,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
 
     final nextTopic = scenarios.where((x) => x.id == upNextId).firstOrNull;
+    final goal = goalById(_s.prefs.goal);
     final overview = _overview();
     final practiseWords = _s.words.practice(_lang);
     final cardsDue = _lang == 'yue'
@@ -557,7 +567,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           id: 'learn',
           icon: Icons.flag_rounded,
           title: 'Learn: ${nextTopic.title}',
-          detail: 'New sentences from the next topic on your path.',
+          detail: goal.id == 'all'
+              ? 'New sentences from the next topic on your path.'
+              : 'Next for your goal: ${goal.title.toLowerCase()}.',
           done: done.contains('learn'),
           start: () {
             _s.prefs.setLastTopic(_lang, nextTopic.id);
@@ -586,9 +598,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             mode: SpeakMode.read,
             sentences: pickSpeakLines(
               _s,
-              met < 20 && nextTopic != null
-                  ? _s.content.sentences(nextTopic.id, _lang)
-                  : _s.content.allSentences(_lang),
+              // lines from your goal's topics (all topics for "a bit of everything")
+              [
+                for (final sc in scenarios)
+                  if (inGoal(sc.id, goal) && sc.id != 'scn-swearing')
+                    ..._s.content.sentences(sc.id, _lang),
+              ],
             ),
             onComplete: () => finished('speak'),
           ),
@@ -619,6 +634,61 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             onUpdate: () => runUpdate(context, _s, u),
           ),
         _TodayCard(known: learned, onQuack: () => _s.sound(Sfx.quack)),
+        const SizedBox(height: 8),
+        // your goal shapes the plan; asked once, changeable here any time
+        if (_s.prefs.goal == null)
+          Card(
+            key: const ValueKey('goal-ask'),
+            margin: EdgeInsets.zero,
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'What do you want Cantonese for?',
+                    style: theme.textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Your plan will start with those topics.',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 10),
+                  GoalList(
+                    selected: null,
+                    onPick: (g) => setState(() => setGoal(_s, g)),
+                  ),
+                ],
+              ),
+            ),
+          )
+        else
+          Row(
+            key: const ValueKey('goal-row'),
+            children: [
+              Icon(
+                Icons.flag_rounded,
+                size: 18,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  'Goal: ${goal.title}',
+                  style: theme.textTheme.titleSmall,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              TextButton(
+                key: const ValueKey('goal-change'),
+                onPressed: () async {
+                  if (await pickGoal(context, _s)) setState(() {});
+                },
+                child: const Text('Change'),
+              ),
+            ],
+          ),
         if (_resumable() case final r?) ...[
           const SizedBox(height: 12),
           Card(

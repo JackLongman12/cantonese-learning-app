@@ -60,6 +60,10 @@ class Prefs {
   bool get reminderOffered => _data['reminder_offered'] == true;
   set reminderOffered(bool v) => _set('reminder_offered', v);
 
+  /// What the learner wants to do with Cantonese (engine/goals.dart); null = not asked yet.
+  String? get goal => _data['goal'] as String?;
+  set goal(String? v) => _set('goal', v);
+
   /// First-run setup done (how much you can read; how the reader works).
   bool get onboarded => _data['onboarded'] == true;
   set onboarded(bool v) => _set('onboarded', v);
