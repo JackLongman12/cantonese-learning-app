@@ -47,25 +47,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late String _lang = _s.prefs.lang;
   int _tab = 0;
-  String _topicFilter = 'All';
 
   /// Topic groups for the filter chips (matched against topic ids).
-  static const _topicGroups = <String, List<String>?>{
-    'All': null,
-    'Getting around': ['getting-around', 'tourism'],
-    'Food': ['food'],
-    'Daily life': [
-      'home',
-      'shopping',
-      'health',
-      'weather',
-      'numbers',
-      'messaging',
-      'signs',
-    ],
-    'Work & papers': ['gov', 'work'],
-    'People & culture': ['chat', 'swearing'],
-  };
+  /// Topics grouped by kind of situation, in this order. A topic goes in the first
+  /// group whose keyword is in its id; anything unmatched lands in "More".
+  static const _topicGroups = <(String, List<String>)>[
+    ('The basics', ['numbers', 'signs']),
+    ('Getting around', ['getting-around', 'tourism']),
+    ('Food and shopping', ['food', 'shopping']),
+    ('Home and health', ['home', 'health', 'weather']),
+    ('Errands and work', ['gov', 'work']),
+    ('People and chat', ['chat', 'messaging', 'swearing']),
+  ];
   StreamSubscription<String>? _shareSub;
   UpdateInfo? _update;
 
@@ -861,75 +854,46 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         Text('Topics', style: theme.textTheme.titleLarge),
         const SizedBox(height: 2),
         Text(
-          'Everything is open. Steps are only a suggested order for beginners.',
+          'Everything is open. "Up next" is the suggested next topic.',
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
-        const SizedBox(height: 10),
-        // filter by kind of situation: fewer tiles to scan at once
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              for (final c in _topicGroups.keys)
-                Padding(
-                  padding: const EdgeInsets.only(right: 6),
-                  child: ChoiceChip(
-                    key: ValueKey('topic-filter-$c'),
-                    label: Text(c),
-                    selected: _topicFilter == c,
-                    showCheckmark: false,
-                    onSelected: (_) {
-                      _s.sound(Sfx.tap);
-                      setState(() => _topicFilter = c);
-                    },
-                  ),
-                ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
         if (scenarios.isEmpty)
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 24),
             child: Text('No content yet.', textAlign: TextAlign.center),
           ),
-        // two columns: half the scrolling on a phone
-        LayoutBuilder(
-          builder: (context, box) {
-            final cols = box.maxWidth >= 560 ? 3 : 2;
-            final w = (box.maxWidth - 10 * (cols - 1)) / cols;
-            final group = _topicGroups[_topicFilter];
-            return Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                for (final (step, sc) in _pathOrder(
-                  scenarios,
-                  itemsByScenario,
-                ).indexed)
-                  if (group == null || group.any((g) => sc.id.contains(g)))
-                    SizedBox(
-                      width: w,
-                      child: _TopicTile(
-                        step: sc.id == 'scn-swearing' ? null : step + 1,
-                        next: sc.id == upNextId,
-                        scenario: sc,
-                        total: itemsByScenario[sc.id]?.length ?? 0,
-                        met: (itemsByScenario[sc.id] ?? const {})
-                            .where((id) => !_s.learner.stateOf(id).isNew)
-                            .length,
-                        onTap: () {
-                          _s.sound(Sfx.tap);
-                          _openTopic(sc);
-                        },
-                      ),
-                    ),
-              ],
-            );
-          },
-        ),
+        // grouped by kind of situation, each group in path order
+        for (final (name, list) in _groupTopics(
+          _pathOrder(scenarios, itemsByScenario),
+        )) ...[
+          Padding(
+            padding: const EdgeInsets.only(top: 18, bottom: 10),
+            child: Text(
+              name,
+              key: ValueKey('topic-group-$name'),
+              style: theme.textTheme.titleMedium,
+            ),
+          ),
+          TileGrid(
+            children: [
+              for (final sc in list)
+                _TopicTile(
+                  next: sc.id == upNextId,
+                  scenario: sc,
+                  total: itemsByScenario[sc.id]?.length ?? 0,
+                  met: (itemsByScenario[sc.id] ?? const {})
+                      .where((id) => !_s.learner.stateOf(id).isNew)
+                      .length,
+                  onTap: () {
+                    _s.sound(Sfx.tap);
+                    _openTopic(sc);
+                  },
+                ),
+            ],
+          ),
+        ],
         const SizedBox(height: 24),
       ]),
       StoriesScreen(key: ValueKey('stories-$_lang'), services: _s, lang: _lang),
@@ -1040,6 +1004,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ],
       ),
     );
+  }
+
+  List<(String, List<ScenarioRow>)> _groupTopics(List<ScenarioRow> ordered) {
+    final groups = {for (final (n, _) in _topicGroups) n: <ScenarioRow>[]};
+    final more = <ScenarioRow>[];
+    for (final sc in ordered) {
+      final g = _topicGroups.where((g) => g.$2.any(sc.id.contains)).firstOrNull;
+      (g == null ? more : groups[g.$1]!).add(sc);
+    }
+    return [
+      for (final e in groups.entries)
+        if (e.value.isNotEmpty) (e.key, e.value),
+      if (more.isNotEmpty) ('More', more),
+    ];
   }
 
   static const _tabNames = ['today', 'topics', 'stories', 'progress'];
@@ -1387,7 +1365,6 @@ IconData _topicIcon(String id) {
 
 class _TopicTile extends StatelessWidget {
   const _TopicTile({
-    this.step,
     this.next = false,
     required this.scenario,
     required this.total,
@@ -1396,7 +1373,6 @@ class _TopicTile extends StatelessWidget {
   });
 
   /// Position on the beginner path (null: not on the path).
-  final int? step;
 
   /// The recommended next topic.
   final bool next;
@@ -1450,13 +1426,6 @@ class _TopicTile extends StatelessWidget {
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: scheme.onTertiaryContainer,
                         ),
-                      ),
-                    )
-                  else if (step != null)
-                    Text(
-                      'Step $step',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: scheme.onSurfaceVariant,
                       ),
                     ),
                 ],
