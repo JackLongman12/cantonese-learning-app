@@ -39,6 +39,7 @@ class ReaderScreen extends StatefulWidget {
     this.autoplay = false,
     this.ordered = false,
     this.startAt = 0,
+    this.onComplete,
   });
 
   final AppServices services;
@@ -66,6 +67,9 @@ class ReaderScreen extends StatefulWidget {
   /// Keep [sentences] in the given order (resuming), starting at [startAt].
   final bool ordered;
   final int startAt;
+
+  /// Called once when the last sentence is finished (Today's plan ticks a step).
+  final VoidCallback? onComplete;
 
   @override
   State<ReaderScreen> createState() => _ReaderScreenState();
@@ -456,6 +460,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
         'items_done': _queue.length,
       });
       _s.sound(Sfx.finish);
+      widget.onComplete?.call();
       setState(() => _finished = true);
       return;
     }

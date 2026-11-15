@@ -23,9 +23,13 @@ class PracticeWordsScreen extends StatefulWidget {
     super.key,
     required this.services,
     required this.words,
+    this.onComplete,
   });
   final AppServices services;
   final List<PracticeWord> words;
+
+  /// Called once when the last word is done.
+  final VoidCallback? onComplete;
 
   @override
   State<PracticeWordsScreen> createState() => _PracticeWordsScreenState();
@@ -115,6 +119,7 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
 
   void _next() {
     _s.sound(Sfx.next);
+    if (_index + 1 >= widget.words.length) widget.onComplete?.call();
     setState(() {
       _index++;
       _shown = false;

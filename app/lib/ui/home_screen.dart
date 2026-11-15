@@ -16,6 +16,7 @@ import 'cards_screen.dart';
 import 'logo.dart';
 import 'mascot.dart';
 import 'paste_reader_screen.dart';
+import 'practice_words_screen.dart';
 import 'reader_screen.dart';
 import 'practice_screens.dart';
 import '../platform/home_widget_sync.dart';
@@ -208,14 +209,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  ScenarioRow? _continueTopic(List<ScenarioRow> scenarios) {
-    final id = _s.prefs.lastTopic(_lang);
-    for (final sc in scenarios) {
-      if (sc.id == id) return sc;
-    }
-    return null;
-  }
-
   Future<void> _open({
     required String title,
     required List<SentenceRow> sentences,
@@ -223,6 +216,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     String? scenarioId,
     int? count,
     int maxNew = 12,
+    VoidCallback? onComplete,
   }) async {
     _s.logger.log('nav.screen', {
       'screen': 'reader',
@@ -240,6 +234,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           scenarioId: scenarioId,
           count: count,
           maxNew: maxNew,
+          onComplete: onComplete,
         ),
       ),
     );
@@ -281,6 +276,94 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
       ),
     );
+
+    // Today's plan: a few clear steps, ticked off as they are finished.
+    final day = now.toLocal().toIso8601String().substring(0, 10);
+    final done = _s.prefs.planDone(day);
+    void finished(String id) {
+      _s.prefs.markPlanDone(day, id);
+      _s.logger.log('plan.step', {'step': id, 'day': day});
+    }
+
+    final nextTopic = scenarios.where((x) => x.id == upNextId).firstOrNull;
+    final practiseWords = _s.words.practice(_lang);
+    final cardsDue = _lang == 'yue'
+        ? dueCards(_s, _s.content.decks())
+        : const <CardRow>[];
+    final plan = <_PlanStep>[
+      if (due > 0 || done.contains('review'))
+        _PlanStep(
+          id: 'review',
+          icon: Icons.history_edu_rounded,
+          title: 'Review ${due > 0 ? '$due ' : ''}characters',
+          detail: 'Sentences with characters you have met, before they fade.',
+          done: done.contains('review'),
+          start: () => _open(
+            title: 'Review',
+            sentences: _s.content.allSentences(_lang),
+            mode: 'review',
+            count: due.clamp(5, 15),
+            maxNew: 0,
+            onComplete: () => finished('review'),
+          ),
+        ),
+      if (nextTopic != null)
+        _PlanStep(
+          id: 'learn',
+          icon: Icons.flag_rounded,
+          title: 'Learn: ${nextTopic.title}',
+          detail: 'New sentences from the next topic on your path.',
+          done: done.contains('learn'),
+          start: () {
+            _s.prefs.setLastTopic(_lang, nextTopic.id);
+            return _open(
+              title: nextTopic.title,
+              sentences: _s.content.sentences(nextTopic.id, _lang),
+              mode: 'path',
+              scenarioId: nextTopic.id,
+              count: 8,
+              maxNew: 5,
+              onComplete: () => finished('learn'),
+            );
+          },
+        ),
+      if (practiseWords.isNotEmpty || done.contains('words'))
+        _PlanStep(
+          id: 'words',
+          icon: Icons.record_voice_over_rounded,
+          title: practiseWords.isEmpty
+              ? 'Practise words'
+              : 'Practise ${practiseWords.length} ${practiseWords.length == 1 ? 'word' : 'words'}',
+          detail: 'Words you needed help with, read aloud in their sentences.',
+          done: done.contains('words'),
+          start: () => _push(
+            PracticeWordsScreen(
+              services: _s,
+              words: practiseWords.take(10).toList(),
+              onComplete: () => finished('words'),
+            ),
+          ),
+        ),
+      if (cardsDue.isNotEmpty || done.contains('cards'))
+        _PlanStep(
+          id: 'cards',
+          icon: Icons.style_rounded,
+          title: cardsDue.isEmpty
+              ? 'Flashcards'
+              : 'Review ${cardsDue.length} flashcards',
+          detail: 'Dishes, streets and stations you are learning.',
+          done: done.contains('cards'),
+          start: () => _push(
+            CardSessionScreen(
+              services: _s,
+              deck: const DeckRow('due', 'Cards due', 'both', '', 0),
+              cards: cardsDue.take(20).toList(),
+              onComplete: () => finished('cards'),
+            ),
+          ),
+        ),
+    ];
+    final nextStep = plan.where((x) => !x.done).firstOrNull;
 
     void startDaily() => _open(
       title: met == 0 ? 'First steps' : "Today's reading",
@@ -386,47 +469,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             ),
           ),
         ],
-        if (_resumable() == null &&
-            _continueTopic(scenarios) == null &&
-            upNextId != null)
-          if (scenarios.where((x) => x.id == upNextId).firstOrNull
-              case final nextTopic?) ...[
-            const SizedBox(height: 12),
-            Card(
-              margin: EdgeInsets.zero,
-              child: ListTile(
-                key: const ValueKey('up-next'),
-                leading: CircleAvatar(
-                  backgroundColor: theme.colorScheme.tertiaryContainer,
-                  foregroundColor: theme.colorScheme.onTertiaryContainer,
-                  child: const Icon(Icons.flag_rounded),
-                ),
-                title: Text('Up next: ${nextTopic.title}'),
-                subtitle: const Text('The next topic on your path'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => _openTopic(nextTopic),
-              ),
-            ),
-          ],
-        if (_resumable() == null)
-          if (_continueTopic(scenarios) case final last?) ...[
-            const SizedBox(height: 12),
-            Card(
-              margin: EdgeInsets.zero,
-              child: ListTile(
-                key: const ValueKey('continue-topic'),
-                leading: CircleAvatar(
-                  backgroundColor: theme.colorScheme.primaryContainer,
-                  foregroundColor: theme.colorScheme.onPrimaryContainer,
-                  child: const Icon(Icons.replay_rounded),
-                ),
-                title: Text('Continue: ${last.title}'),
-                subtitle: const Text('Straight back into its sentences'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => _openTopic(last, practise: true),
-              ),
-            ),
-          ],
+        const SizedBox(height: 16),
+        for (final step in plan) _PlanTile(step: step),
         const SizedBox(height: 12),
         IntrinsicHeight(
           child: Row(
@@ -571,12 +615,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   width: double.infinity,
                   child: FilledButton.icon(
                     key: const ValueKey('start-daily'),
-                    onPressed: scenarios.isNotEmpty ? startDaily : null,
+                    onPressed: scenarios.isEmpty
+                        ? null
+                        : nextStep?.start ?? startDaily,
                     style: FilledButton.styleFrom(
                       minimumSize: const Size(0, 56),
                     ),
                     icon: const Icon(Icons.play_arrow_rounded),
-                    label: Text(met == 0 ? 'Start' : "Start today's reading"),
+                    label: Text(
+                      nextStep != null
+                          ? (nextStep.id == 'learn' && met == 0
+                                ? 'Start'
+                                : 'Next: ${nextStep.title}')
+                          : 'All done today. Read more',
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
               ),
@@ -660,6 +713,58 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 }
 
+class _PlanStep {
+  const _PlanStep({
+    required this.id,
+    required this.icon,
+    required this.title,
+    required this.detail,
+    required this.done,
+    required this.start,
+  });
+  final String id;
+  final IconData icon;
+  final String title;
+  final String detail;
+  final bool done;
+  final Future<void> Function() start;
+}
+
+class _PlanTile extends StatelessWidget {
+  const _PlanTile({required this.step});
+  final _PlanStep step;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Card(
+      key: ValueKey('plan-${step.id}'),
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+        leading: CircleAvatar(
+          backgroundColor: step.done ? scheme.primary : scheme.primaryContainer,
+          foregroundColor: step.done
+              ? scheme.onPrimary
+              : scheme.onPrimaryContainer,
+          child: Icon(step.done ? Icons.check_rounded : step.icon),
+        ),
+        title: Text(
+          step.title,
+          style: theme.textTheme.titleSmall?.copyWith(
+            decoration: step.done ? TextDecoration.lineThrough : null,
+            color: step.done ? scheme.onSurfaceVariant : null,
+          ),
+        ),
+        subtitle: Text(step.detail),
+        trailing: const Icon(Icons.chevron_right_rounded),
+        onTap: step.start,
+      ),
+    );
+  }
+}
+
 class _TodayCard extends StatelessWidget {
   const _TodayCard({
     required this.due,
@@ -691,14 +796,14 @@ class _TodayCard extends StatelessWidget {
     if (isFirstTime) {
       headline = 'Start reading';
       detail =
-          'Short real-life sentences with Jyutping over every new character. '
-          'The Jyutping fades as you learn each one.';
+          'Your plan for today is below: short real-life sentences, Jyutping '
+          'over every new character, fading as you learn it.';
     } else if (due > 0) {
       headline = '$due ${due == 1 ? 'character' : 'characters'} to review';
-      detail = 'Mixed with a few new ones. Pick how long you have.';
+      detail = 'Start with them, then something new. Your plan is below.';
     } else {
       headline = 'All caught up';
-      detail = 'Nothing is due. Keep going with some new characters.';
+      detail = 'Nothing is due. Carry on with the next step below.';
     }
     return Card(
       color: scheme.primaryContainer,
@@ -748,28 +853,6 @@ class _TodayCard extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             _GrowthLine(known: known),
-            Row(
-              children: [
-                Text(
-                  'Sentences',
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: scheme.onPrimaryContainer,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                for (final n in const [5, 15, 30]) ...[
-                  ChoiceChip(
-                    key: ValueKey('length-$n'),
-                    label: Text('$n'),
-                    showCheckmark: false,
-                    selected: length == n,
-                    visualDensity: VisualDensity.compact,
-                    onSelected: (_) => onLength(n),
-                  ),
-                  const SizedBox(width: 6),
-                ],
-              ],
-            ),
           ],
         ),
       ),

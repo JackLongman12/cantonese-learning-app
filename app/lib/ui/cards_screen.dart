@@ -48,7 +48,7 @@ class DeckSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        if (_dueCards(services, decks) case final due when due.isNotEmpty)
+        if (dueCards(services, decks) case final due when due.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: FilledButton.icon(
@@ -103,7 +103,7 @@ class DeckSection extends StatelessWidget {
 }
 
 /// Cards from every deck whose review is due now, most overdue first.
-List<CardRow> _dueCards(AppServices s, List<DeckRow> decks) {
+List<CardRow> dueCards(AppServices s, List<DeckRow> decks) {
   final now = s.logger.now();
   final due = <(CardRow, DateTime)>[];
   for (final d in decks) {
@@ -194,12 +194,16 @@ class CardSessionScreen extends StatefulWidget {
     required this.services,
     required this.deck,
     this.cards,
+    this.onComplete,
   });
   final AppServices services;
   final DeckRow deck;
 
   /// Cards to study instead of the deck's own (e.g. everything due, across decks).
   final List<CardRow>? cards;
+
+  /// Called once when the session is finished.
+  final VoidCallback? onComplete;
 
   @override
   State<CardSessionScreen> createState() => _CardSessionScreenState();
@@ -344,6 +348,7 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
         'items_done': _queue.length,
       });
       _s.sound(Sfx.finish);
+      widget.onComplete?.call();
       setState(() => _index++);
       return;
     }

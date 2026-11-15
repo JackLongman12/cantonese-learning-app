@@ -49,27 +49,34 @@ void main() {
     );
   }
 
-  testWidgets('home remembers the last topic and session length', (t) async {
+  testWidgets("Today's plan starts the next step and ticks it off", (t) async {
     await t.binding.setSurfaceSize(const Size(500, 1400));
     addTearDown(() => t.binding.setSurfaceSize(null));
     final db = ContentDb.open(dbPath);
     addTearDown(db.close);
-    final prefs = Prefs.memory()..setLastTopic('yue', 'scn-mo-health');
-    await t.pumpWidget(
-      MaterialApp(home: HomeScreen(services: make(db, prefs))),
+    final prefs = Prefs.memory();
+    final services = make(db, prefs);
+    await t.pumpWidget(MaterialApp(home: HomeScreen(services: services)));
+    await t.pumpAndSettle();
+    // Today's plan: a new learner starts with the first topic on the path
+    expect(find.byKey(const ValueKey('plan-learn')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('plan-review')),
+      findsNothing,
+    ); // nothing due yet
+    await t.tap(find.byKey(const ValueKey('start-daily')));
+    await t.pumpAndSettle();
+    expect(find.byKey(const ValueKey('next')), findsOneWidget); // in the reader
+    // finishing the session ticks the step
+    while (find.byKey(const ValueKey('next')).evaluate().isNotEmpty) {
+      await t.tap(find.byKey(const ValueKey('next')));
+      await t.pumpAndSettle();
+    }
+    final day = services.logger.now().toLocal().toIso8601String().substring(
+      0,
+      10,
     );
-    await t.pumpAndSettle();
-    expect(find.text('Continue: Health and the doctor'), findsOneWidget);
-
-    await t.tap(find.byKey(const ValueKey('length-5')));
-    await t.pump();
-    expect(prefs.sessionLength, 5);
-
-    await t.tap(find.byKey(const ValueKey('continue-topic')));
-    await t.pumpAndSettle();
-    expect(find.text('Health and the doctor'), findsOneWidget); // reader title
-    // a quick session never has more than the chosen length... topic sessions are
-    // planner-sized; daily ones use the length
+    expect(prefs.planDone(day), contains('learn'));
   }, skip: !hasDb);
 
   testWidgets('shared text opens straight into the reader', (t) async {

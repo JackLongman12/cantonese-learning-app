@@ -49,6 +49,19 @@ class Prefs {
   bool get autoMeaning => _data['auto_meaning'] != false;
   set autoMeaning(bool v) => _set('auto_meaning', v);
 
+  /// Steps of Today's plan finished on [day] ('2026-11-15').
+  Set<String> planDone(String day) {
+    final m = _data['plan_done'];
+    return m is Map && m['day'] == day
+        ? {...(m['steps'] as List? ?? const []).cast<String>()}
+        : <String>{};
+  }
+
+  void markPlanDone(String day, String step) => _set('plan_done', {
+    'day': day,
+    'steps': [...planDone(day), step],
+  });
+
   /// First-run setup done (how much you can read; how the reader works).
   bool get onboarded => _data['onboarded'] == true;
   set onboarded(bool v) => _set('onboarded', v);
