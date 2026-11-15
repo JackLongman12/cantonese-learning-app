@@ -7,11 +7,31 @@ Personal, non-commercial app (Android, Windows, macOS) for one user who **speaks
 
 ## Read first
 
-1. `docs/ROADMAP.md` â€” what to do next, in order, and what "done" means. **Start at the first unticked task.**
-2. `docs/DESIGN.md` â€” the spec. Â§5 (text handling) lists the mistakes that are easy to make.
-3. `docs/CONTENT_GUIDE.md` â€” YAML content formats and validation rules.
-4. `docs/EVENTS_SCHEMA.md` â€” event log, the source of truth for progress.
-5. `docs/DATA_SOURCES.md` â€” what to download instead of building; URLs there are unverified.
+1. `docs/ROADMAP.md`: what to do next, in order, and what "done" means. **Start at the first unticked task.**
+2. `docs/DESIGN.md`: the spec. §5 (text handling) lists the mistakes that are easy to make.
+3. `docs/CONTENT_GUIDE.md`: YAML content formats and validation rules.
+4. `docs/EVENTS_SCHEMA.md`: event log, the source of truth for progress.
+5. `docs/DATA_SOURCES.md`: what to download instead of building; URLs there are unverified.
+6. `docs/CHANGELOG.md`: what was built when, and why things are the way they are.
+
+## Code map
+
+```
+content/     YAML you edit: scenarios/ (topics), dialogues/ (+ advanced/), stories/, decks/,
+             skills/, variants.yaml, characters.yaml (picture links), overrides/readings.yaml
+pipeline/duk content -> content.db: content.py (load + validate), annotate.py (readings),
+             build_db.py (SQLite + review queue), tts.py (edge-tts clips), audio_pack.py
+             (Opus), cli.py (`duk` commands, `bundle` also subsets the font)
+app/lib      engine/ + events/ (pure Dart, unit-tested), data/ (content_db.dart queries),
+             platform/ (device features), ui/ (screens), app_services.dart, main.dart
+app/test     engine/, platform/, ui/ (widget tests, goldens in ui/goldens)
+tool/        release.sh (build, sign, tag, publish)
+build/, data/  generated or downloaded; git-ignored
+```
+
+Adding a topic: a scenario file, 5 conversations, optionally an advanced one; give the id a
+keyword that `_topicGroups` / `_topicIcon` in `ui/home_screen.dart` and `engine/goals.dart`
+recognise. Then `duk build`, check the review queue, `duk tts`, `duk bundle`.
 
 ## How to work here
 
@@ -27,7 +47,7 @@ Personal, non-commercial app (Android, Windows, macOS) for one user who **speaks
 1. **`app/lib/engine/` and `app/lib/events/` are pure Dart.** No Flutter imports. Everything there is unit-tested.
 2. **Events are the source of truth.** UI never writes `item_state` directly; state must be rebuildable by replay.
 3. **Never invent linguistic or local facts.** Readings come from dictionaries or overrides; ambiguous polyphones go to the review queue. Macau/HK facts (place names, Portuguese names, routes, prices) come from a listed source or the owner.
-4. **The owner is the authority on Cantonese.** LLM-written content is `source: llm`, `reviewed: false` until they approve it.
+4. **The owner is the authority on Cantonese.** LLM-written content is `source: llm`. The owner accepted LLM content as-is on 2026-11-16 (no per-line approval), so new content needs no review step, but readings still come from the dictionaries: check new review-queue items and pin wrong ones with `fix_yue`.
 5. **Readings are arrays aligned to tokens**, never one string.
 6. **Set locale and font on all Chinese text** (`zh-HK` + Noto Sans HK). The internal language tag stays `yue`: it is part of permanent item IDs (`cr:yue:…`).
 7. **IDs are permanent.** Never renumber or reuse content or item IDs.
@@ -41,6 +61,7 @@ Personal, non-commercial app (Android, Windows, macOS) for one user who **speaks
 - Installed: Flutter 3.50 / Dart 3.14 at `C:\src\flutter`; Visual Studio 2022 Build Tools (C++); Microsoft OpenJDK 17 at `C:\Program Files\Microsoft\jdk-17.0.21.21-hotspot`; Android SDK at `C:\Android\Sdk` (platform 36, build-tools 37). Flutter is configured to use both. Not installed: Android Studio, an emulator image, Ollama.
 - macOS cannot be built locally; use GitHub Actions `macos-latest`.
 - Windows builds need `nuget.exe` on PATH (flutter_tts's Windows plugin fetches CppWinRT with it). Not installed yet; only matters when Windows releases resume or for `integration_test -d windows`.
+- ffmpeg (winget, on PATH) is needed by `duk bundle` to encode Opus audio; without it MP3s ship.
 - The project path contains spaces (`CLAUDE PROJECT\cantonese learning app`); quote paths in every command and script.
 
 ## Releases and auto-update

@@ -746,3 +746,18 @@ extension VariantQueries on ContentDb {
     }
   }
 }
+
+extension CharacterPicQueries on ContentDb {
+  /// Speaker role -> picture link (content/characters.yaml). The app downloads them on
+  /// the device; empty for an older content.db.
+  Map<String, String> characterPictureUrls() {
+    try {
+      return {
+        for (final r in _db.select('SELECT role, url FROM character_pic'))
+          r['role'] as String: r['url'] as String,
+      };
+    } on SqliteException {
+      return const {};
+    }
+  }
+}

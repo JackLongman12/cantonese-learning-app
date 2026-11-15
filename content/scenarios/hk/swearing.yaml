@@ -489,3 +489,112 @@ sentences:
     yue: 識聽粗口，唔一定要講。
     en: Understand swearing; you don't have to use it.
     tags: [culture]
+
+  # --- more with 屌 (added 2026-11-16) ---------------------------------------------------
+  - {id: sent-sw-101, yue: 屌，好撚痛！, en: "Fuck, that hurts like hell!", fix_yue: {撚: lan2}, tags: [big-five, strong]}
+  - {id: sent-sw-102, yue: 屌你呀！, en: "Fuck you!", notes: "Aimed at a person: a fight starter with strangers.", tags: [big-five, strong]}
+  - {id: sent-sw-103, yue: 屌，部電腦又死機。, en: "Fuck, the computer crashed again.", tags: [big-five, strong]}
+  - {id: sent-sw-104, yue: 今日俾老細屌咗成朝。, en: "Got chewed out by the boss all morning.", fix_yue: {朝: ziu1}, notes: "As a verb, 屌 also means to tear into someone verbally.", tags: [big-five, medium]}
+  - {id: sent-sw-105, yue: 佢俾人鬧到一面屁。, en: "He got a real earful.", notes: "一面屁: literally a face full of farts; no swear word in it.", tags: [mild]}
+  - {id: sent-sw-106, yue: 屌那星！, en: "Damn it!", notes: "那星 stands in for 那媽: softened, still crude.", tags: [euphemism, medium]}
+  - {id: sent-sw-107, yue: 你老味！, en: "Your mum!", notes: "老味 stands in for 老母. Softer, still rude.", tags: [euphemism, medium]}
+  - {id: sent-sw-108, yue: 屌，唔好嚇我啦！, en: "Fuck, don't scare me like that!", tags: [big-five, strong]}
+  - {id: sent-sw-109, yue: 屌！咁都得？, en: "Fuck, seriously? That works?", notes: "Surprise, not anger.", tags: [big-five, strong]}
+  - {id: sent-sw-110, yue: 佢一嬲就屌天屌地。, en: "When he's angry he curses at everything.", notes: "屌天屌地: cursing heaven and earth, i.e. at everything and everyone.", tags: [big-five, strong]}
+  # --- 撚 as an intensifier ----------------------------------------------------------------
+  - {id: sent-sw-111, yue: 今日好撚攰呀。, en: "I'm so damn tired today.", fix_yue: {撚: lan2}, tags: [big-five, intensifier]}
+  - {id: sent-sw-112, yue: 你有撚用咩？, en: "What fucking use are you?", fix_yue: {撚: lan2}, tags: [big-five, intensifier, insult]}
+  - {id: sent-sw-113, yue: 唔撚得閒呀！, en: "I've got no damn time!", fix_yue: {撚: lan2}, tags: [big-five, intensifier]}
+  - {id: sent-sw-114, yue: 有冇搞撚錯呀？, en: "Are you fucking kidding me?", fix_yue: {撚: lan2}, tags: [big-five, intensifier]}
+  - {id: sent-sw-115, yue: 我點撚知呀？, en: "How the hell would I know?", fix_yue: {撚: lan2}, tags: [big-five, intensifier]}
+  - {id: sent-sw-116, yue: 呢度貴撚到死。, en: "This place is crazy expensive.", fix_yue: {撚: lan2}, tags: [big-five, intensifier]}
+  - {id: sent-sw-117, yue: 你個撚樣！, en: "Look at your stupid face!", fix_yue: {撚: lan2}, tags: [big-five, insult]}
+  - {id: sent-sw-118, yue: 正撚呀！, en: "Fucking awesome!", fix_yue: {撚: lan2}, notes: "Praise: 撚 makes good things better too.", tags: [big-five, intensifier]}
+  - {id: sent-sw-119, yue: 冇撚嘢做，悶到死。, en: "Nothing to fucking do; bored to death.", fix_yue: {撚: lan2}, tags: [big-five, intensifier]}
+  - {id: sent-sw-120, yue: 佢又遲撚到！, en: "He's fucking late again!", fix_yue: {撚: lan2}, tags: [big-five, intensifier]}
+  - {id: sent-sw-121, yue: 有冇搞錯呀？, en: "Are you kidding me?", notes: "The same line with no swear word: fine anywhere.", tags: [mild, clean]}
+  - {id: sent-sw-122, yue: 我點知呀？, en: "How would I know?", notes: "The clean version of 我點撚知呀.", tags: [mild, clean]}
+  - {id: sent-sw-123, yue: 今日好攰呀。, en: "I'm so tired today.", notes: "The clean version of 今日好撚攰呀.", tags: [mild, clean]}
+  # --- 鳩 ------------------------------------------------------------------------------
+  - {id: sent-sw-124, yue: 唔好鳩估啦。, en: "Stop guessing wildly.", notes: "鳩 before a verb: doing it carelessly, at random.", tags: [big-five]}
+  - {id: sent-sw-125, yue: 佢鳩搞一餐，搞到亂晒。, en: "He messed about and made a total mess.", tags: [big-five]}
+  - {id: sent-sw-126, yue: 你又鳩買嘢？, en: "Buying random crap again?", tags: [big-five]}
+  - {id: sent-sw-127, yue: 戇鳩到極。, en: "Stupid as hell.", tags: [big-five, insult]}
+  - {id: sent-sw-128, yue: 乜鳩嘢呀？, en: "What the fuck?", tags: [big-five]}
+  - {id: sent-sw-129, yue: 唔好鳩撳啦，部機會壞㗎。, en: "Stop jabbing the buttons, you'll break it.", tags: [big-five]}
+  # --- 柒 ------------------------------------------------------------------------------
+  - {id: sent-sw-130, yue: 你好柒呀。, en: "You're such an idiot.", tags: [big-five, insult]}
+  - {id: sent-sw-131, yue: 佢喺台上面柒咗。, en: "He made a fool of himself on stage.", tags: [big-five, mild]}
+  - {id: sent-sw-132, yue: 我唔想扮柒。, en: "I don't want to look stupid.", tags: [big-five, mild]}
+  - {id: sent-sw-133, yue: 柒頭，返嚟呀！, en: "Dumbass, come back!", notes: "Between friends; rude to anyone else.", tags: [big-five, friends]}
+  - {id: sent-sw-134, yue: 呢件事真係好柒。, en: "This is really embarrassing.", tags: [big-five, mild]}
+  - {id: sent-sw-135, yue: 唔好咁柒啦。, en: "Don't be such a dork.", tags: [big-five, mild]}
+  # --- euphemisms and softer swearing ------------------------------------------------------
+  - {id: sent-sw-136, yue: 乜春嘢呀？, en: "What the heck?", notes: "春 stands in for 撚.", tags: [euphemism, mild]}
+  - {id: sent-sw-137, yue: 乜鬼嘢嚟㗎？, en: "What on earth is this?", tags: [euphemism, mild]}
+  - {id: sent-sw-138, yue: 頂你條肺！, en: "Damn you!", notes: "Same as 頂你個肺: mild, almost comic.", tags: [euphemism, mild]}
+  - {id: sent-sw-139, yue: 冚家富貴！, en: "Damn your whole family!", notes: "A joking stand-in for 冚家鏟: it sounds like a blessing.", tags: [euphemism, mild]}
+  - {id: sent-sw-140, yue: 你條粉腸，又唔覆我。, en: "You sausage, not replying to me again.", tags: [mild, friends]}
+  - {id: sent-sw-141, yue: 衰鬼，嚇死我。, en: "You rascal, you scared me.", notes: "衰鬼: teasing, even affectionate.", tags: [mild, friends]}
+  - {id: sent-sw-142, yue: 死鬼，咁夜先返。, en: "You devil, home this late.", notes: "Couples say this to each other; not really an insult.", tags: [mild, friends]}
+  - {id: sent-sw-143, yue: 好鬼死凍。, en: "It's bloody freezing.", tags: [euphemism, mild]}
+  - {id: sent-sw-144, yue: 鬼死咁貴。, en: "Ridiculously expensive.", tags: [euphemism, mild]}
+  - {id: sent-sw-145, yue: 見鬼咩，又唔見咗。, en: "What the hell, it's gone again.", tags: [euphemism, mild]}
+  - {id: sent-sw-146, yue: 吹脹！, en: "I give up!", notes: "吹脹: exasperated, nothing you can do.", tags: [mild]}
+  - {id: sent-sw-147, yue: 真係吹脹佢。, en: "He really does my head in.", tags: [mild]}
+  - {id: sent-sw-148, yue: 我頂唔順佢。, en: "I can't stand him.", tags: [mild]}
+  - {id: sent-sw-149, yue: 佢衰到貼地。, en: "He's as bad as they come.", tags: [mild, insult]}
+  - {id: sent-sw-150, yue: 你咁衰格㗎！, en: "You're so nasty!", notes: "衰格: mean, spiteful.", tags: [mild, insult]}
+  # --- more insults ------------------------------------------------------------------------
+  - {id: sent-sw-151, yue: 你正一契弟！, en: "You're a real bastard!", notes: "契弟: an old, fairly strong insult.", tags: [insult, medium]}
+  - {id: sent-sw-152, yue: 契弟走得摩，快啲走！, en: "Run for it, now!", notes: "An old saying, literally 'the coward runs fast': get out quick.", tags: [medium]}
+  - {id: sent-sw-153, yue: 佢正一搞屎棍。, en: "He's a real troublemaker.", notes: "搞屎棍: literally a stick that stirs shit.", tags: [insult, mild]}
+  - {id: sent-sw-154, yue: 食屎啦你！, en: "Eat shit!", tags: [insult, medium]}
+  - {id: sent-sw-155, yue: 做成噉，一嚿屎噉。, en: "Done like that, it's a pile of crap.", tags: [medium]}
+  - {id: sent-sw-156, yue: 你個豬頭！, en: "You pig-head!", tags: [insult, mild]}
+  - {id: sent-sw-157, yue: 蠢過隻豬。, en: "Dumber than a pig.", tags: [insult, mild]}
+  - {id: sent-sw-158, yue: 你好膠呀。, en: "You're so dumb.", notes: "膠: stupid, from online slang.", tags: [insult, mild, online]}
+  - {id: sent-sw-159, yue: 死開啦！, en: "Get lost!", tags: [medium]}
+  - {id: sent-sw-160, yue: 你個死仔包！, en: "You little brat!", notes: "What parents say to naughty kids.", tags: [mild]}
+  - {id: sent-sw-161, yue: 死人頭，又唔聽電話。, en: "Damn it, not answering the phone again.", tags: [mild]}
+  - {id: sent-sw-162, yue: 仆你個街！, en: "Damn you!", notes: "The full form of 仆街.", tags: [insult, medium]}
+  - {id: sent-sw-163, yue: 佢喺樓梯度仆咗街。, en: "He fell flat on his face on the stairs.", notes: "The literal meaning of 仆街: to fall flat in the street.", tags: [culture]}
+  - {id: sent-sw-164, yue: 你好賤呀。, en: "You're so low.", tags: [insult, medium]}
+  - {id: sent-sw-165, yue: 佢個人好串。, en: "He's so cocky.", notes: "串: arrogant, rude in manner.", tags: [mild]}
+  - {id: sent-sw-166, yue: 串乜嘢呀你？, en: "What are you so cocky about?", tags: [mild]}
+  - {id: sent-sw-167, yue: 佢成日扮晒嘢。, en: "He's always showing off.", tags: [mild]}
+  - {id: sent-sw-168, yue: 你好黐筋呀。, en: "You're nuts.", tags: [insult, mild]}
+  - {id: sent-sw-169, yue: 你玩撚完未呀？, en: "Are you fucking done messing around?", fix_yue: {撚: lan2}, tags: [big-five, intensifier]}
+  - {id: sent-sw-170, yue: 收你皮啦！, en: "Shut it!", tags: [mild]}
+  # --- how it's written online -------------------------------------------------------------
+  - {id: sent-sw-171, yue: DLLM，又加價。, en: "FFS, prices up again.", notes: "DLLM: 屌你老母 initials, typed as a reaction.", tags: [online]}
+  - {id: sent-sw-172, yue: 7頭，你又遲到。, en: "Dumbass, late again.", notes: "7 for 柒 (both cat).", tags: [online]}
+  - {id: sent-sw-173, yue: PK即係仆街。, en: "PK means 仆街.", notes: "From the sounds: puk gaai.", tags: [online]}
+  - {id: sent-sw-174, yue: 討論區啲人成日互屌。, en: "People on forums are always flaming each other.", notes: "互屌: cursing each other.", tags: [online]}
+  - {id: sent-sw-175, yue: 唔好喺群組度爆粗。, en: "Don't swear in the group chat.", tags: [online, culture]}
+  - {id: sent-sw-176, yue: 「膠」喺網上即係蠢。, en: "Online, 膠 means stupid.", tags: [online]}
+  - {id: sent-sw-177, yue: on9讀出嚟好似戇鳩。, en: "Said aloud, on9 sounds like 戇鳩.", tags: [online]}
+  - {id: sent-sw-178, yue: 有啲人會用個X代替粗口字。, en: "Some people type an X instead of the swear word.", tags: [online]}
+  - {id: sent-sw-179, yue: 佢一句粗口都冇講，但係句句都好串。, en: "He didn't swear once, but every line was cocky.", tags: [culture]}
+  - {id: sent-sw-180, yue: 留言區又鬧交。, en: "The comments section is fighting again.", tags: [online]}
+  # --- strength, meaning and manners --------------------------------------------------------
+  - {id: sent-sw-181, yue: 粗口唔一定係鬧人，有時係講到好激動。, en: "Swearing isn't always cursing someone; sometimes it's just excitement.", tags: [culture]}
+  - {id: sent-sw-182, yue: 「仆街」比「屌你」輕好多。, en: "仆街 is much milder than 屌你.", tags: [culture]}
+  - {id: sent-sw-183, yue: 「黐線」幾乎唔算粗口。, en: "黐線 barely counts as swearing.", tags: [culture]}
+  - {id: sent-sw-184, yue: 佢老豆講嘢好多粗口，但係人好好。, en: "His dad swears a lot, but he's a good guy.", tags: [culture]}
+  - {id: sent-sw-185, yue: 鬧人之前諗清楚。, en: "Think before you curse at someone.", tags: [culture]}
+  - {id: sent-sw-186, yue: 佢講粗口好自然，好似助語詞噉。, en: "He swears as naturally as if they were filler words.", tags: [culture]}
+  - {id: sent-sw-187, yue: 「粗口爛舌」係話人講嘢好粗俗。, en: "粗口爛舌 means someone talks crudely.", tags: [culture]}
+  - {id: sent-sw-188, yue: 佢一激動就粗口爛舌。, en: "When he gets worked up, the swearing pours out.", tags: [culture]}
+  - {id: sent-sw-189, yue: 我哋公司唔准講粗口。, en: "Swearing isn't allowed at our company.", tags: [culture]}
+  - {id: sent-sw-190, yue: 喺車廂講粗口，啲人會望住你。, en: "Swear on the train and people will stare.", tags: [culture]}
+  - {id: sent-sw-191, yue: 呢個字太粗，唔好亂講。, en: "This word is too crude; don't throw it around.", tags: [culture]}
+  - {id: sent-sw-192, yue: 佢笑住講粗口，唔係真係嬲。, en: "He swore laughing; he wasn't really angry.", tags: [culture]}
+  - {id: sent-sw-193, yue: 老友之間講「仆街」好似打招呼噉。, en: "Between old friends, 仆街 is almost a greeting.", tags: [culture, friends]}
+  - {id: sent-sw-194, yue: 佢鬧人唔使講粗口都好勁。, en: "He can tear into people without a single swear word.", tags: [culture]}
+  - {id: sent-sw-195, yue: 聽唔明啲粗口就問我。, en: "If you don't get the swearing, ask me.", tags: [culture]}
+  - {id: sent-sw-196, yue: 字幕會將粗口改得斯文啲。, en: "Subtitles tone the swearing down.", tags: [culture]}
+  - {id: sent-sw-197, yue: 喺長輩面前，「頂」都唔好講。, en: "In front of elders, don't even say 頂.", tags: [culture]}
+  - {id: sent-sw-198, yue: 佢扮冇聽到我講粗口。, en: "She pretended not to hear me swear.", tags: [culture]}
+  - {id: sent-sw-199, yue: 講完粗口，佢即刻話唔好意思。, en: "Right after swearing, he said sorry.", tags: [culture]}
+  - {id: sent-sw-200, yue: 學粗口都係學廣東話嘅一部分。, en: "Learning swearing is part of learning Cantonese too.", tags: [culture]}

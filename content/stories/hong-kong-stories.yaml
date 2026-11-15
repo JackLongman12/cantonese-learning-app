@@ -1,0 +1,82 @@
+# Stories about ordinary days in Hong Kong.
+# level 1 = very easy, 2 = easy, 3 = more written-style characters.
+# Drafted by an LLM; the owner accepted LLM content as-is on 2026-11-16.
+stories:
+  - id: sty-hk-yumcha-yue
+    lang: yue
+    level: 1
+    title: "Sunday yum cha"
+    lines:
+      - ["星期日朝早，阿媽打電話嚟。", "On Sunday morning, Mum calls."]
+      - ["佢話：「去飲茶啦，九點酒樓等。」", "She says: \"Let's go for yum cha. Meet at the restaurant at nine.\""]
+      - ["我九點半先到，已經好多人排隊。", "I only get there at half past nine, and there's already a long queue."]
+      - ["阿媽坐咗喺入面，向我揮手。", "Mum is already sitting inside, waving at me."]
+      - ["佢一早嚟咗攞位。", "She came early to get a table."]
+      - ["枱面已經有一壺普洱。", "There's already a pot of pu'er on the table."]
+      - ["我哋叫咗蝦餃、燒賣同埋叉燒包。", "We order har gow, siu mai and char siu buns."]
+      - ["阿爸仲要一碟鳳爪。", "Dad wants a plate of chicken feet too."]
+      - ["阿媽問我最近返工攰唔攰。", "Mum asks whether work has been tiring lately."]
+      - ["我話好攰，但係都OK。", "I say it's tiring, but OK."]
+      - ["佢叫我多啲返屋企食飯。", "She tells me to come home for dinner more often."]
+      - ["食完，阿爸搶住埋單。", "When we finish, Dad rushes to pay the bill."]
+      - ["我話：「今次我請啦。」", "I say: \"This time it's on me.\""]
+      - ["阿爸笑住話：「下次先啦。」", "Dad laughs: \"Next time.\""]
+
+  - id: sty-hk-screen-yue
+    lang: yue
+    level: 2
+    title: "The cracked phone screen"
+    lines:
+      - ["我喺巴士站跌咗部手機落地。", "I drop my phone on the ground at the bus stop."]
+      - ["執返起身，個mon爆晒。", "When I pick it up, the screen is completely cracked."]
+      - ["我好心痛，因為部機買咗冇耐。", "It hurts, because I only bought it recently."]
+      - ["同事話旺角有好多舖頭整手機。", "A colleague says there are lots of phone repair shops in Mong Kok."]
+      - ["收工之後，我搭港鐵去搵。", "After work I take the MTR to look for one."]
+      - ["第一間話要等三日。", "The first shop says it'll take three days."]
+      - ["第二間話一個鐘就整好。", "The second says it'll be done in an hour."]
+      - ["我問：「會唔會影響防水？」", "I ask: \"Will it affect the waterproofing?\""]
+      - ["老闆話：「會差少少，不過唔緊要。」", "The owner says: \"A little, but it's fine.\""]
+      - ["我諗咗一陣，都係俾佢整。", "I think about it for a bit, then let him fix it."]
+      - ["等嘅時候，我去隔籬食咗碗車仔麵。", "While waiting, I have a bowl of cart noodles next door."]
+      - ["一個鐘之後返去，部手機好似新嘅一樣。", "An hour later I go back, and the phone looks like new."]
+      - ["老闆仲送咗張保護貼俾我。", "The owner even throws in a screen protector."]
+      - ["我同自己講：下次一定要小心啲。", "I tell myself: next time, be more careful."]
+
+  - id: sty-hk-hike-yue
+    lang: yue
+    level: 2
+    title: "A hike above the city"
+    lines:
+      - ["朋友約我星期日去行山。", "A friend invites me hiking on Sunday."]
+      - ["我好耐冇做運動，有啲驚行唔到。", "I haven't exercised in ages and I'm a bit worried I won't manage."]
+      - ["佢話：「好易行㗎，兩個鐘就得。」", "He says: \"It's an easy one, just two hours.\""]
+      - ["朝早好熱，我哋帶咗好多水。", "It's hot in the morning, so we bring lots of water."]
+      - ["一開始全部都係樓梯。", "At first it's all steps."]
+      - ["行咗半個鐘，我已經成身汗。", "After half an hour I'm already drenched in sweat."]
+      - ["朋友喺前面叫我：「加油呀！」", "My friend calls from ahead: \"Keep going!\""]
+      - ["中途有個涼亭，我哋坐低休息。", "Halfway there's a pavilion, and we sit down to rest."]
+      - ["有隻狗仔走埋嚟，好得意。", "A little dog comes over; it's so cute."]
+      - ["終於行到山頂，風好大，好涼。", "We finally reach the top; it's windy and cool."]
+      - ["成個城市喺下面，啲樓細到好似玩具。", "The whole city is below us; the buildings look as small as toys."]
+      - ["我影咗好多相，send俾屋企人睇。", "I take lots of photos and send them to my family."]
+      - ["落山嗰陣，我對腳已經好軟。", "On the way down, my legs are already wobbly."]
+      - ["不過我同朋友講：「下個禮拜再嚟！」", "But I tell my friend: \"Let's come again next week!\""]
+
+  - id: sty-hk-damp-yue
+    lang: yue
+    level: 3
+    title: "The damp season"
+    lines:
+      - ["三月嘅一個朝早，我起身發覺地下濕晒。", "One morning in March, I wake up to find the floor all wet."]
+      - ["我以為係漏水，即刻去睇水喉。", "I think it's a leak and rush to check the pipes."]
+      - ["原來唔係漏水，係回南天。", "It isn't a leak; it's the damp season."]
+      - ["啲牆、啲鏡，甚至張枱都出晒水。", "The walls, the mirrors, even the table are all sweating."]
+      - ["我晾咗喺屋企嘅衫，兩日都未乾。", "The clothes I hung indoors still aren't dry after two days."]
+      - ["著落身仲有一陣怪味。", "When I put them on, there's a funny smell."]
+      - ["樓下嘅保安叔叔話：「千祈唔好開窗呀。」", "The security guard downstairs says: \"Whatever you do, don't open the windows.\""]
+      - ["佢教我閂埋窗，開抽濕機。", "He tells me to shut the windows and run the dehumidifier."]
+      - ["個抽濕機嘅水箱，半日就滿咗。", "The dehumidifier's tank fills up in half a day."]
+      - ["我每次倒水都覺得好神奇。", "Every time I empty it, I'm amazed."]
+      - ["一個禮拜之後，天氣終於轉乾。", "After a week, the weather finally turns dry."]
+      - ["我打開窗，陽光照入嚟，好舒服。", "I open the window, the sun comes in, and it feels wonderful."]
+      - ["我心諗：原來乾爽都係一種幸福。", "I think to myself: being dry is a kind of happiness too."]

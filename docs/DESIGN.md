@@ -144,17 +144,19 @@ ml/ (Python, desktop)  ◄── event logs (Drive) ◄── app  ◄───�
 
 ```
 app/lib/
-  ui/         views only; no business logic
-  engine/     PURE DART, no Flutter imports: learner_model, planner, fsrs glue, diagnosis, bandit
-  events/     schema, logger, idle detection, replay
-  data/       drift databases, repositories
-  sync/       Google Drive appDataFolder
-  update/     GitHub release check, content-pack updater
-  audio/      playback, cache, live TTS client, OS-TTS fallback
-  platform/   OCR channels, hotkeys
+  main.dart          start-up: copies content.db out, replays the event log, builds AppServices
+  app_services.dart  everything screens need, passed down explicitly (no global state)
+  engine/     PURE DART, no Flutter imports: learner model (FSRS), planner, scaffold, goals,
+              pronunciation compare, weak spots, word book. Unit-tested.
+  events/     PURE DART: event envelope, logger, JSONL store, replay
+  data/       content_db.dart (read-only queries on the bundled SQLite), prefs.dart
+  platform/   device things: phone voice (flutter_tts), speech recogniser (sherpa-onnx),
+              updater, reminders, share inbox, sound effects, character-picture download
+  ui/         screens and widgets; *_screen.dart is one screen each
 ```
+Planned and not built: `sync/` (Google Drive, Phase 3).
 
-Packages in use: `sqlite3` (raw, no code generation), `fsrs`, `audioplayers` (has a Windows backend; `just_audio` does not), `ulid`, `path_provider`; widgets come from `package:material_ui` (Flutter ≥ 3.47 moved Material out of the SDK). Planned: `flutter_map` (+ tile caching), `google_mlkit_text_recognition` (Android), `flutter_tts`, `googleapis`/`googleapis_auth`/`google_sign_in`, `package_info_plus`, `onnxruntime`, `auto_updater` or a custom updater.
+Packages in use: `sqlite3` (raw, no code generation), `fsrs`, `audioplayers` (has a Windows backend; `just_audio` does not), `flutter_tts`, `sherpa_onnx`, `http`, `ulid`, `path_provider`, `package_info_plus`; widgets come from `package:material_ui` (Flutter ≥ 3.47 moved Material out of the SDK). The updater is custom (`platform/updater.dart`). Planned: `flutter_map` (+ tile caching), `googleapis`/`google_sign_in` (sync).
 
 ### 4.2 Two databases
 
@@ -212,20 +214,17 @@ If an event older than one already applied arrives (merged from another device),
 
 ## 6. Audio
 
-- **Sentences play in the phone's own Cantonese voice by default** (owner, 2026-11-16: Android's Google "Cantonese (Hong Kong)" voice says everyday tones, e.g. 澳門 ou3 mun2; the recorded edge-tts voice reads some words in a formal tone and ignores our Jyutping). Settings → "Sentences in the phone's voice" switches back to the recorded clips, which are also the fallback where no Cantonese voice is installed (most Windows PCs). Settings → Sentence voice lists the phone's default voice (the default), every other Cantonese voice the phone's engine offers (Google's online voices first; the choice applies to tapped words too), and the recorded voice. Cloud candidates for better quality, not built (each needs an owner key): Google Cloud TTS yue-HK Chirp 3 HD voices (likely the same tone habits as the phone's Google voice), Amazon Polly Hiujin (neural), MiniMax Speech, cantonese.ai (claims Jyutping pronunciation control). Checked 2026-11-16: the edge-tts endpoint rejects custom SSML (`<phoneme>`, `<sub>`), so the recorded voice cannot be told a reading.
-- **Primary TTS: Azure Speech** (zh-HK and zh-CN neural voices), chosen by a bake-off that the owner rates (see ROADMAP Phase 0). Candidates to compare: Azure, Google Cloud, a local model on the RTX 4060 (CosyVoice family), ElevenLabs.
-- Content audio is **pre-generated** in the pipeline: 2 voices per language, normal + slow (SSML rate, not time-stretch).
-- **Verification loop:** synthesise → ASR back-transcribe → compare → flag mismatches. Fix with SSML phoneme where supported, else a *TTS-only* homophone substitution (display text unchanged).
-- Single characters are synthesised in a carrier and trimmed, or taken from a per-syllable set if a good one is found.
-- App has a "wrong audio" button → emits an event → pipeline regenerates.
-- Pasted/OCR text: live Azure call, cached by hash; OS voice as offline fallback.
+- **Sentences play in the phone's own Cantonese voice by default** (owner, 2026-11-16: Android's Google "Cantonese (Hong Kong)" voice says everyday tones, e.g. 澳門 ou3 mun2; the recorded edge-tts voice reads some words in a formal tone and ignores our Jyutping). Picking "Recorded voice" switches to the recorded clips, which are also the fallback where no Cantonese voice is installed (most Windows PCs). Settings → Sentence voice lists the phone's default voice (the default), every other Cantonese voice the phone's engine offers (Google's online voices first; the choice applies to tapped words too), and the recorded voice. Cloud candidates for better quality, not built (each needs an owner key): Google Cloud TTS yue-HK Chirp 3 HD voices (likely the same tone habits as the phone's Google voice), Amazon Polly Hiujin (neural), MiniMax Speech, cantonese.ai (claims Jyutping pronunciation control). Checked 2026-11-16: the edge-tts endpoint rejects custom SSML (`<phoneme>`, `<sub>`), so the recorded voice cannot be told a reading.
+- **Recorded clips** (the fallback and the "Recorded voice" option): edge-tts `zh-HK-HiuMaanNeural`, one clip per line, cached as MP3 in `build/audio`. `duk bundle` ships them as **Opus in Ogg, 24 kbps mono** (`pipeline/duk/audio_pack.py`, needs ffmpeg; about 40% of the MP3 size, 21 MB for 3,500 clips) and points the bundled `content.db` at the `.ogg` files. Android plays Ogg Opus from Android 10. "Slow" plays the same clip at 75% speed.
+- Pasted text has no clip: it plays in the phone voice.
+- Not built (superseded by the phone voice, 2026-11-16): the Azure bake-off, an ASR back-check loop, TTS-only substitutions and a "wrong audio" button.
 
 ## 7. Sync, update, privacy
 
 - **Google Drive `appDataFolder`** (`drive.appdata` scope). Each device writes only `events/<deviceId>/<yyyy-mm>.jsonl.gz`. Devices merge by event ID; no conflicts possible. Also holds `models/` and weekly `backups/`.
 - **Windows** has no `google_sign_in`: use the loopback OAuth flow. OAuth app must be published (not left in Testing) or refresh tokens expire weekly.
 - **Updates:** check GitHub Releases on launch, in the background. Channels `dev` (every push to main) and `stable` (tags). App binaries and content packs are versioned independently; content packs declare the minimum app version they need.
-- Android builds must always be signed with the same keystore (stored as a GitHub Actions secret, backed up by the owner).
+- Android builds must always be signed with the same keystore: `%USERPROFILE%\.ducklearn\` on the build PC, backed up to `D:\Backups\DuckLearn signing key` and the owner's OneDrive (2026-11-16). CI does not sign.
 - Location is opt-in and stored as region only (macau / hk / other).
 - Secrets live in `secrets.json` (git-ignored). No key is compiled into a released binary; the app asks for keys in Settings and stores them in the OS keystore.
 

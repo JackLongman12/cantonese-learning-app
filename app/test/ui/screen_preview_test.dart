@@ -33,7 +33,7 @@ Future<void> loadFont(String family, String path) async {
 
 void main() {
   // keep Irasutoya pictures out of committed snapshots (public repo)
-  characterPicturesEnabled = false;
+  characterPictures = null;
 
   const dbPath = 'assets/content/content.db';
   final hasDb = File(dbPath).existsSync();

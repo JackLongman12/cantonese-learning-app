@@ -1,0 +1,22 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; the owner accepted LLM content as-is on 2026-11-16.
+scenario: scn-hk-daily
+dialogues:
+  - id: dlg-adv-hk-daily-01
+    title: "Damp season in a small flat"
+    level: 3
+    lines:
+      - ["室友", "嘩，啲牆又出水喇，回南天真係煩。", "Ugh, the walls are sweating again. The damp season is so annoying."]
+      - ["你", "我啲衫晾咗兩日都未乾。", "My clothes have been hanging for two days and still aren't dry."]
+      - ["室友", "你冇開抽濕機咩？", "Didn't you turn on the dehumidifier?"]
+      - ["你", "開咗，不過個水箱成日滿，要倒好多次。", "I did, but the tank keeps filling up; I have to empty it all the time."]
+      - ["室友", "唔好開窗呀，越開越濕。", "Don't open the windows; it only gets damper."]
+      - ["你", "我以為開窗會通風啲。", "I thought opening them would air the place out."]
+      - ["室友", "平時係，但係回南天外面仲濕過入面。", "Normally yes, but in the damp season it's wetter outside than in."]
+      - ["你", "咁今晚開埋冷氣抽濕啦。", "Then let's run the aircon on dry mode tonight too."]
+      - ["室友", "電費又會好貴喎。", "The electricity bill will be huge, though."]
+      - ["你", "冇計啦，總好過啲衫發霉。", "No choice. Better than our clothes going mouldy."]
+      - ["室友", "地下好滑，你行路小心啲。", "The floor's slippery, watch where you walk."]
+      - ["你", "知道，我頭先差啲跣親。", "I know, I nearly slipped just now."]
+      - ["室友", "聽日我去買多部抽濕機算啦。", "Tomorrow I'll just go buy another dehumidifier."]
+      - ["你", "好，我同你夾錢。", "OK, I'll split it with you."]

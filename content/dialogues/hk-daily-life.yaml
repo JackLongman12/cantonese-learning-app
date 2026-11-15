@@ -1,0 +1,44 @@
+# Conversations for Hong Kong daily life.
+# Drafted by an LLM; the owner accepted LLM content as-is on 2026-11-16.
+scenario: scn-hk-daily
+dialogues:
+  - id: dlg-hk-daily-01
+    title: "Sharing a table"
+    lines:
+      - ["你", "唔該，有冇位呀？", "Excuse me, any seats?"]
+      - ["伙計", "搭枱得唔得？", "OK to share a table?"]
+      - ["你", "得，冇問題。", "Sure, no problem."]
+      - ["伙計", "坐呢度啦。食咩？", "Sit here. What'll you have?"]
+      - ["你", "一個早餐，熱奶茶，唔該。", "One breakfast set, hot milk tea, please."]
+  - id: dlg-hk-daily-02
+    title: "The lift is broken again"
+    lines:
+      - ["鄰居", "部𨋢又壞咗呀。", "The lift's broken again."]
+      - ["你", "唔係嘛，我住廿樓㗎！", "No way, I live on the twentieth floor!"]
+      - ["鄰居", "管理處話下晝會整好。", "The management office says it'll be fixed this afternoon."]
+      - ["你", "咁我去樓下飲杯嘢先。", "Then I'll get a drink downstairs first."]
+      - ["鄰居", "好主意，我同你一齊去。", "Good idea, I'll come with you."]
+  - id: dlg-hk-daily-03
+    title: "A parcel at the management office"
+    lines:
+      - ["保安", "陳生，有你嘅速遞。", "Mr Chan, there's a delivery for you."]
+      - ["你", "唔該晒，係咪好大件？", "Thanks a lot. Is it a big one?"]
+      - ["保安", "幾大箱，你拎唔拎得到？", "It's a big box. Can you carry it?"]
+      - ["你", "應該得，我試吓。", "Should be fine, I'll try."]
+      - ["保安", "要幫手就叫我。", "Call me if you need a hand."]
+  - id: dlg-hk-daily-04
+    title: "Returning a shirt"
+    lines:
+      - ["你", "唔該，呢件衫太細，可唔可以換？", "Excuse me, this shirt is too small. Can I exchange it?"]
+      - ["店員", "有冇單據呀？", "Do you have the receipt?"]
+      - ["你", "有，喺度。", "Yes, here."]
+      - ["店員", "你要大一個碼定兩個碼？", "One size up or two?"]
+      - ["你", "大一個碼得喇，唔該。", "One size up is fine, thanks."]
+  - id: dlg-hk-daily-05
+    title: "Sunday hike plans"
+    lines:
+      - ["朋友", "星期日去行山好唔好？", "Shall we go hiking on Sunday?"]
+      - ["你", "好呀，不過唔好太早。", "Sure, but not too early."]
+      - ["朋友", "九點喺港鐵站等，得唔得？", "Meet at the MTR station at nine, OK?"]
+      - ["你", "得。天文台話會好熱喎。", "OK. The Observatory says it'll be really hot."]
+      - ["朋友", "咁帶多啲水，戴埋帽。", "Then bring extra water and a hat."]

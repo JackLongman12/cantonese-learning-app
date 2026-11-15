@@ -1,0 +1,41 @@
+# Conversations for "Many ways to say it": two people use different words for the same
+# thing (content/variants.yaml) and still understand each other.
+# Drafted by an LLM; the owner accepted LLM content as-is on 2026-11-16.
+scenario: scn-variants
+dialogues:
+  - id: dlg-var-01
+    title: "Calling an ambulance"
+    lines:
+      - ["路人", "有個阿伯暈低咗！", "An old man has collapsed!"]
+      - ["你", "快啲叫白車！", "Quick, call an ambulance!"]
+      - ["路人", "我打咗電話，救護車就到。", "I've called; the ambulance is on its way."]
+      - ["你", "好，我喺度睇住佢。", "OK, I'll stay here and watch him."]
+  - id: dlg-var-02
+    title: "Lift or elevator"
+    lines:
+      - ["遊客", "唔該，請問電梯喺邊？", "Excuse me, where's the elevator?"]
+      - ["你", "你想搭𨋢定係扶手電梯？", "Do you want the lift or the escalator?"]
+      - ["遊客", "搭𨋢，我有行李。", "The lift, I've got luggage."]
+      - ["你", "𨋢喺左邊，行過去就見到。", "The lift is on the left; walk over and you'll see it."]
+  - id: dlg-var-03
+    title: "Ice cream for the kids"
+    lines:
+      - ["朋友", "啲細路話想食冰淇淋。", "The kids say they want ice cream."]
+      - ["你", "樓下便利店有雪糕。", "The convenience store downstairs has ice cream."]
+      - ["朋友", "有冇士多啤梨味？", "Is there strawberry?"]
+      - ["你", "應該有，草莓味好受歡迎。", "Should be; strawberry is really popular."]
+  - id: dlg-var-04
+    title: "What time is it now"
+    lines:
+      - ["同事", "而家幾點呀？", "What time is it now?"]
+      - ["你", "依家六點，可以放工喇。", "It's six now; time to finish work."]
+      - ["同事", "我仲未下班得，要開會。", "I can't knock off yet, I've got a meeting."]
+      - ["你", "咁我返屋企先，聽日返工見。", "Then I'll head home. See you at work tomorrow."]
+  - id: dlg-var-05
+    title: "Paying the bill"
+    lines:
+      - ["你", "唔該，埋單！", "Excuse me, the bill please!"]
+      - ["伙計", "好，即刻嚟。", "Sure, coming right away."]
+      - ["朋友", "今次我找數。", "I'll pay this time."]
+      - ["你", "唔好啦，上次都係你俾。", "No way, you paid last time too."]
+      - ["朋友", "咁你俾貼士啦。", "Then you leave the tip."]

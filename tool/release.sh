@@ -34,8 +34,6 @@ echo "== content"
 "$PY" -X utf8 -m duk build | tail -3
 "$PY" -X utf8 -m duk tts | tail -1
 "$PY" -X utf8 -m duk bundle
-# conversation characters: downloaded, never committed (content/characters.yaml)
-"$PY" -X utf8 -m duk characters | tail -1
 
 echo "== builds"
 cd app

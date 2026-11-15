@@ -35,6 +35,6 @@ jobs:
       # analyzer and the pure-Dart engine and platform tests.
       - run: pip install -e pipeline
       - run: python -m duk build && python -m duk bundle --no-audio
-      - run: mkdir -p app/assets/content/audio app/assets/characters app/assets/cards
+      - run: mkdir -p app/assets/content/audio app/assets/cards
       - working-directory: app
         run: flutter pub get && flutter analyze && flutter test test/engine test/platform

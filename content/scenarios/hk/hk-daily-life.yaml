@@ -1,0 +1,147 @@
+# Hong Kong daily life: the commute, cha chaan teng breakfasts, the convenience store,
+# living in a building, malls, errands, weekends, weather talk, queues, neighbours and
+# evenings at home. General statements only: no prices, routes or opening hours (those
+# must come from a listed source, CLAUDE.md rule 3).
+# Drafted by an LLM; the owner accepted LLM content as-is on 2026-11-16.
+scenario:
+  id: scn-hk-daily
+  title: Hong Kong daily life
+  region: hk
+  tags: [daily, hk]
+
+defaults: {register: spoken, source: llm, region: hk}
+
+sentences:
+  # --- the commute ------------------------------------------------------------------
+  - {id: sent-hk-daily-001, yue: 今朝好迫，我等咗三班車先上到。, en: "It was packed this morning; I waited for three trains before I got on.", pattern: commute}
+  - {id: sent-hk-daily-002, yue: 我每日搭港鐵返工。, en: "I take the MTR to work every day.", pattern: commute}
+  - {id: sent-hk-daily-003, yue: 你返工要搭幾耐車？, en: "How long is your commute?", pattern: commute}
+  - {id: sent-hk-daily-004, yue: 大概四十五分鐘，要轉一次車。, en: "About forty-five minutes, with one change.", pattern: commute}
+  - {id: sent-hk-daily-005, yue: 今日遲咗出門口，要搭的士。, en: "I left late today, so I have to take a taxi.", pattern: commute}
+  - {id: sent-hk-daily-006, yue: 落雨天啲人都唔想出街。, en: "On rainy days nobody wants to go out.", pattern: commute}
+  - {id: sent-hk-daily-007, yue: 我喺車上面通常聽歌。, en: "I usually listen to music on the train.", pattern: commute}
+  - {id: sent-hk-daily-008, yue: 車廂入面好多人瞓覺。, en: "Lots of people sleep in the carriage.", pattern: commute}
+  - {id: sent-hk-daily-009, yue: 唔該借借，我落車。, en: "Excuse me, I'm getting off.", pattern: commute}
+  - {id: sent-hk-daily-010, yue: 唔好企喺門口，入啲啦。, en: "Don't stand by the door, move in a bit.", pattern: commute}
+  # --- cha chaan teng --------------------------------------------------------------
+  - {id: sent-hk-daily-011, yue: 早晨！老樣，唔該。, en: "Morning! The usual, please.", pattern: cafe}
+  - {id: sent-hk-daily-012, yue: 一個早餐，凍奶茶少甜。, en: "One breakfast set, iced milk tea, less sweet.", pattern: cafe}
+  - {id: sent-hk-daily-013, yue: 有冇位呀？, en: "Any seats?", pattern: cafe}
+  - {id: sent-hk-daily-014, yue: 搭枱得唔得？, en: "OK to share a table?", pattern: cafe, notes: "搭枱: sharing a table with strangers, normal at busy times."}
+  - {id: sent-hk-daily-015, yue: 唔該埋單。, en: "The bill, please.", pattern: cafe}
+  - {id: sent-hk-daily-016, yue: 呢度可唔可以用八達通俾錢？, en: "Can I pay by Octopus here?", pattern: cafe}
+  - {id: sent-hk-daily-017, yue: 外賣，唔該。, en: "Takeaway, please.", pattern: cafe}
+  - {id: sent-hk-daily-018, yue: 走冰，唔該。, en: "No ice, please.", pattern: cafe, notes: "走 means 'without': 走冰 no ice, 走甜 no sugar."}
+  - {id: sent-hk-daily-019, yue: 茶餐廳啲伙計講嘢好快。, en: "Cha chaan teng waiters talk really fast.", pattern: cafe}
+  - {id: sent-hk-daily-020, yue: 午飯時間成日排長龍。, en: "There's always a long queue at lunchtime.", pattern: cafe, fix_yue: {長: coeng4}}
+  # --- the convenience store and paying --------------------------------------------
+  - {id: sent-hk-daily-021, yue: 我去便利店買支水。, en: "I'm going to the convenience store for a bottle of water.", pattern: pay}
+  - {id: sent-hk-daily-022, yue: 八達通冇錢喇，要增值。, en: "My Octopus is out of money; I need to top up.", pattern: pay}
+  - {id: sent-hk-daily-023, yue: 可唔可以用手機俾錢？, en: "Can I pay with my phone?", pattern: pay}
+  - {id: sent-hk-daily-024, yue: 我冇散紙，用卡得唔得？, en: "I don't have change; can I use a card?", pattern: pay}
+  - {id: sent-hk-daily-025, yue: 要唔要膠袋？, en: "Do you want a plastic bag?", pattern: pay}
+  - {id: sent-hk-daily-026, yue: 唔使膠袋，唔該。, en: "No bag, thanks.", pattern: pay}
+  - {id: sent-hk-daily-027, yue: 膠袋要另外俾錢。, en: "Plastic bags cost extra.", pattern: pay}
+  - {id: sent-hk-daily-028, yue: 收據要唔要？, en: "Do you want the receipt?", pattern: pay}
+  - {id: sent-hk-daily-029, yue: 你哋幾點關門？, en: "What time do you close?", pattern: pay}
+  - {id: sent-hk-daily-030, yue: 呢間二十四小時都開。, en: "This one's open twenty-four hours.", pattern: pay}
+  # --- the building and the flat ---------------------------------------------------
+  - {id: sent-hk-daily-031, yue: 我住喺屋邨，住咗好多年喇。, en: "I live on a public housing estate; I've been here for years.", pattern: building}
+  - {id: sent-hk-daily-032, yue: 部𨋢又壞咗，要行樓梯。, en: "The lift's broken again; I have to take the stairs.", pattern: building}
+  - {id: sent-hk-daily-033, yue: 保安叔叔同我打招呼。, en: "The security guard says hello to me.", pattern: building}
+  - {id: sent-hk-daily-034, yue: 有你嘅速遞，放咗喺管理處。, en: "There's a delivery for you; it's at the management office.", pattern: building}
+  - {id: sent-hk-daily-035, yue: 垃圾要拎去垃圾房。, en: "Rubbish goes to the refuse room.", pattern: building}
+  - {id: sent-hk-daily-036, yue: 我屋企好細，得一間房。, en: "My flat is tiny, just one bedroom.", pattern: building}
+  - {id: sent-hk-daily-037, yue: 香港啲樓好貴。, en: "Flats in Hong Kong are really expensive.", pattern: building}
+  - {id: sent-hk-daily-038, yue: 樓上成日好嘈。, en: "Upstairs is always noisy.", pattern: building}
+  - {id: sent-hk-daily-039, yue: 回南天，地下好濕。, en: "It's the damp season; the floor is wet.", pattern: building, notes: "回南天: the humid spells in spring when walls and floors sweat."}
+  - {id: sent-hk-daily-040, yue: 開抽濕機啦，啲衫唔乾。, en: "Turn on the dehumidifier; the clothes won't dry.", pattern: building}
+  - {id: sent-hk-daily-041, yue: 夏天唔開冷氣真係頂唔順。, en: "In summer I really can't stand it without aircon.", pattern: building}
+  - {id: sent-hk-daily-042, yue: 今個月電費好貴。, en: "This month's electricity bill is high.", pattern: building}
+  - {id: sent-hk-daily-043, yue: 個水喉漏水，要搵人整。, en: "The tap is leaking; I need to get someone to fix it.", pattern: building}
+  - {id: sent-hk-daily-044, yue: 我哋棟大廈今日洗水缸，冇水用。, en: "Our building is cleaning the water tank today, so there's no water.", pattern: building}
+  # --- malls and shops -------------------------------------------------------------
+  - {id: sent-hk-daily-045, yue: 我哋去商場行吓啦。, en: "Let's go for a wander round the mall.", pattern: mall}
+  - {id: sent-hk-daily-046, yue: 商場有冷氣，好舒服。, en: "The mall has aircon; it's comfortable.", pattern: mall}
+  - {id: sent-hk-daily-047, yue: 呢間舖頭減緊價。, en: "This shop is having a sale.", pattern: mall}
+  - {id: sent-hk-daily-048, yue: 有冇大啲嘅碼？, en: "Do you have a bigger size?", pattern: mall}
+  - {id: sent-hk-daily-049, yue: 我可唔可以試吓？, en: "Can I try it on?", pattern: mall}
+  - {id: sent-hk-daily-050, yue: 試身室喺邊？, en: "Where's the fitting room?", pattern: mall}
+  - {id: sent-hk-daily-051, yue: 呢件衫幾錢？, en: "How much is this top?", pattern: mall}
+  - {id: sent-hk-daily-052, yue: 我睇吓先，唔該。, en: "I'm just looking, thanks.", pattern: mall}
+  - {id: sent-hk-daily-053, yue: 可唔可以退貨？, en: "Can I return it?", pattern: mall}
+  - {id: sent-hk-daily-054, yue: 有單據先可以換。, en: "You can only exchange it with the receipt.", pattern: mall}
+  - {id: sent-hk-daily-055, yue: 個個週末商場都好多人。, en: "The mall is crowded every weekend.", pattern: mall}
+  - {id: sent-hk-daily-056, yue: 我約咗朋友喺旺角食飯。, en: "I'm meeting a friend in Mong Kok for dinner.", pattern: mall}
+  - {id: sent-hk-daily-057, yue: 銅鑼灣人太多，我哋去第二度啦。, en: "Causeway Bay is too crowded; let's go somewhere else.", pattern: mall}
+  # --- errands ---------------------------------------------------------------------
+  - {id: sent-hk-daily-058, yue: 我要去銀行攞錢。, en: "I need to go to the bank to get cash.", pattern: errand}
+  - {id: sent-hk-daily-059, yue: 附近有冇櫃員機？, en: "Is there an ATM nearby?", pattern: errand}
+  - {id: sent-hk-daily-060, yue: 我想寄呢個包裹。, en: "I'd like to send this parcel.", pattern: errand}
+  - {id: sent-hk-daily-061, yue: 郵局幾點開門？, en: "What time does the post office open?", pattern: errand}
+  - {id: sent-hk-daily-062, yue: 我想剪頭髮。, en: "I'd like a haircut.", pattern: errand}
+  - {id: sent-hk-daily-063, yue: 剪短少少就得。, en: "Just a little shorter.", pattern: errand}
+  - {id: sent-hk-daily-064, yue: 兩邊剪短啲，上面唔使郁。, en: "Shorter on the sides; leave the top.", pattern: errand}
+  - {id: sent-hk-daily-065, yue: 我部手機個mon爆咗。, en: "My phone screen is cracked.", pattern: errand, notes: "mon: from English 'monitor', the everyday word for a screen."}
+  - {id: sent-hk-daily-066, yue: 整要幾耐？, en: "How long will the repair take?", pattern: errand}
+  - {id: sent-hk-daily-067, yue: 聽日嚟攞得唔得？, en: "Can I pick it up tomorrow?", pattern: errand}
+  - {id: sent-hk-daily-068, yue: 我拎啲衫去洗衣舖。, en: "I'm taking some clothes to the laundry.", pattern: errand}
+  - {id: sent-hk-daily-069, yue: 幾時可以攞？, en: "When can I collect it?", pattern: errand}
+  - {id: sent-hk-daily-070, yue: 我要去影證件相。, en: "I need to get ID photos taken.", pattern: errand}
+  # --- weekends --------------------------------------------------------------------
+  - {id: sent-hk-daily-071, yue: 星期日去行山好唔好？, en: "Shall we go hiking on Sunday?", pattern: weekend}
+  - {id: sent-hk-daily-072, yue: 記得帶多啲水。, en: "Remember to bring extra water.", pattern: weekend}
+  - {id: sent-hk-daily-073, yue: 山頂嘅風景好靚。, en: "The view from the top is beautiful.", pattern: weekend}
+  - {id: sent-hk-daily-074, yue: 我哋去公園跑步。, en: "We're going running in the park.", pattern: weekend}
+  - {id: sent-hk-daily-075, yue: 我去圖書館借書。, en: "I'm going to the library to borrow books.", pattern: weekend}
+  - {id: sent-hk-daily-076, yue: 今晚去睇戲好唔好？, en: "Shall we see a film tonight?", pattern: weekend}
+  - {id: sent-hk-daily-077, yue: 我已經喺網上買咗飛。, en: "I've already bought tickets online.", pattern: weekend}
+  - {id: sent-hk-daily-078, yue: 星期日同屋企人去飲茶。, en: "On Sunday I go to yum cha with my family.", pattern: weekend}
+  - {id: sent-hk-daily-079, yue: 去早啲先有位。, en: "You have to go early to get a table.", pattern: weekend}
+  - {id: sent-hk-daily-080, yue: 我哋去海邊散步啦。, en: "Let's go for a walk by the water.", pattern: weekend}
+  - {id: sent-hk-daily-081, yue: 放假去離島玩。, en: "On days off we go to the outlying islands.", pattern: weekend}
+  - {id: sent-hk-daily-082, yue: 我哋搭船去離島食海鮮。, en: "We take the ferry to an island for seafood.", pattern: weekend}
+  # --- weather talk ----------------------------------------------------------------
+  - {id: sent-hk-daily-083, yue: 今日好焗呀。, en: "It's so muggy today.", pattern: weather-talk}
+  - {id: sent-hk-daily-084, yue: 出街記得帶遮。, en: "Remember an umbrella when you go out.", pattern: weather-talk}
+  - {id: sent-hk-daily-085, yue: 天文台話聽日會落大雨。, en: "The Observatory says it'll rain heavily tomorrow.", pattern: weather-talk}
+  - {id: sent-hk-daily-086, yue: 熱到成身汗。, en: "So hot I'm sweating all over.", pattern: weather-talk}
+  - {id: sent-hk-daily-087, yue: 入面冷氣好凍，帶件外套啦。, en: "The aircon inside is freezing; bring a jacket.", pattern: weather-talk}
+  - {id: sent-hk-daily-088, yue: 冬天其實唔係好凍。, en: "Winter actually isn't that cold.", pattern: weather-talk}
+  # --- queues ----------------------------------------------------------------------
+  - {id: sent-hk-daily-089, yue: 香港人好鍾意排隊。, en: "Hongkongers love a queue.", pattern: queue}
+  - {id: sent-hk-daily-090, yue: 呢度排隊，唔好打尖。, en: "Queue here, no cutting in.", pattern: queue}
+  - {id: sent-hk-daily-091, yue: 前面仲有好多人。, en: "There are still lots of people ahead.", pattern: queue}
+  - {id: sent-hk-daily-092, yue: 要排幾耐？, en: "How long is the wait?", pattern: queue}
+  - {id: sent-hk-daily-093, yue: 攞籌先，等叫號。, en: "Take a number first and wait to be called.", pattern: queue}
+  - {id: sent-hk-daily-094, yue: 到你喇。, en: "It's your turn.", pattern: queue}
+  # --- neighbours ------------------------------------------------------------------
+  - {id: sent-hk-daily-095, yue: 早晨，食咗早餐未？, en: "Morning, had breakfast yet?", pattern: neighbour}
+  - {id: sent-hk-daily-096, yue: 好耐冇見，最近點呀？, en: "Long time no see, how have you been?", pattern: neighbour}
+  - {id: sent-hk-daily-097, yue: 都係咁啦，忙忙地。, en: "Same as ever, a bit busy.", pattern: neighbour}
+  - {id: sent-hk-daily-098, yue: 你搬咗嚟幾耐？, en: "How long ago did you move here?", pattern: neighbour}
+  - {id: sent-hk-daily-099, yue: 有咩需要就搵我。, en: "If you need anything, come find me.", pattern: neighbour}
+  - {id: sent-hk-daily-100, yue: 你隻狗好得意。, en: "Your dog is so cute.", pattern: neighbour}
+  - {id: sent-hk-daily-101, yue: 小心啲，地下好滑。, en: "Careful, the floor is slippery.", pattern: neighbour}
+  # --- evenings --------------------------------------------------------------------
+  - {id: sent-hk-daily-102, yue: 今晚喺屋企食定出去食？, en: "Eat at home tonight or go out?", pattern: evening}
+  - {id: sent-hk-daily-103, yue: 叫外賣算啦。, en: "Let's just order delivery.", pattern: evening}
+  - {id: sent-hk-daily-104, yue: 我收工好攰，唔想煮飯。, en: "I'm tired after work; I don't want to cook.", pattern: evening}
+  - {id: sent-hk-daily-105, yue: 我去街市買餸。, en: "I'm going to the market for groceries.", pattern: evening}
+  - {id: sent-hk-daily-106, yue: 今晚煲咗湯。, en: "I made soup tonight.", pattern: evening}
+  - {id: sent-hk-daily-107, yue: 食完飯我洗碗。, en: "I'll do the dishes after dinner.", pattern: evening}
+  - {id: sent-hk-daily-108, yue: 我哋一齊睇電視啦。, en: "Let's watch TV together.", pattern: evening}
+  - {id: sent-hk-daily-109, yue: 聽日要早起，我早啲瞓。, en: "I have to get up early tomorrow, so I'll go to bed early.", pattern: evening}
+  - {id: sent-hk-daily-110, yue: 記得熄燈。, en: "Remember to switch off the lights.", pattern: evening}
+  # --- notices you pass every day (written) ----------------------------------------
+  - {id: sent-hk-daily-111, yue: 車廂內請勿飲食。, en: "No eating or drinking in the carriage.", register: written, pattern: notice}
+  - {id: sent-hk-daily-112, yue: 小心地滑。, en: "Caution: wet floor.", register: written, pattern: notice}
+  - {id: sent-hk-daily-113, yue: 暫停服務。, en: "Out of service.", register: written, pattern: notice}
+  - {id: sent-hk-daily-114, yue: 請排隊等候。, en: "Please queue.", register: written, pattern: notice}
+  - {id: sent-hk-daily-115, yue: 只限住客。, en: "Residents only.", register: written, pattern: notice}
+  - {id: sent-hk-daily-116, yue: 維修中，不便之處，敬請原諒。, en: "Under repair. We apologise for the inconvenience.", register: written, pattern: notice}
+  # --- small asks ------------------------------------------------------------------
+  - {id: sent-hk-daily-117, yue: 我想辦張圖書證。, en: "I'd like to get a library card.", pattern: ask}
+  - {id: sent-hk-daily-118, yue: 呢度有冇WiFi？, en: "Is there WiFi here?", pattern: ask}
+  - {id: sent-hk-daily-119, yue: 我部手機冇電，借個叉電器用吓得唔得？, en: "My phone's dead; can I borrow a charger?", pattern: ask}
+  - {id: sent-hk-daily-120, yue: 我出咗去，你唔使等我食飯。, en: "I'm out; don't wait for me for dinner.", pattern: ask}

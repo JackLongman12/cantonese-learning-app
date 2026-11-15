@@ -76,8 +76,11 @@ yue:
   會唔會: [wui5, m4, wui5]
   會員: [wui2, jyun4]
   蝕: [sit6]
+  # 撚 in this app is always the swear word (lan2, CC-Canto: 乜撚嘢 mat1 lan2 je5), never nan2
+  撚: [lan2]
   雞蛋: [gai1, daan2]
   著得: [zoek3, dak1]
+  著落身: [zoek3, lok6, san1]
   切粒: [cit3, nap1]
   一粒: [jat1, nap1]
   啲淡: [di1, taam5]

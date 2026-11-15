@@ -23,9 +23,10 @@ from .content import Content, ContentError, load_content
 from .reference import load_reference
 from .words import refine_words
 
-SCHEMA_VERSION = 10  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
+SCHEMA_VERSION = 11  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
 # 6: decks; 7: card image + credit, food deck; 8: slim dict_entry (Cantonese only);
-# 9: char_info.hint, skill / skill_entry; 10: variant (words for the same thing)
+# 9: char_info.hint, skill / skill_entry; 10: variant (words for the same thing);
+# 11: character_pic (links the app downloads; the images are never bundled)
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -99,6 +100,7 @@ CREATE TABLE street_pattern(
 CREATE TABLE variant(
   group_id TEXT NOT NULL, en TEXT NOT NULL, note TEXT NOT NULL, word TEXT NOT NULL,
   reading TEXT, rank INTEGER NOT NULL, PRIMARY KEY(group_id, word)) WITHOUT ROWID;
+CREATE TABLE character_pic(role TEXT PRIMARY KEY, url TEXT NOT NULL) WITHOUT ROWID;
 CREATE TABLE audio(
   hash TEXT PRIMARY KEY, lang TEXT NOT NULL, voice TEXT NOT NULL, rate TEXT NOT NULL,
   text TEXT NOT NULL, path TEXT NOT NULL);
@@ -405,6 +407,17 @@ def build(
                 (sid, e["id"], e["zh"], reading or None, e.get("emoji", ""), e["meaning"],
                  e["example"], e["example_en"], rank),
             )  # fmt: skip
+
+    # Conversation pictures (content/characters.yaml): only the links go into the app,
+    # which downloads each picture on the device (Irasutoya forbids redistributing files)
+    cpath = content_root / "characters.yaml"
+    cdoc = yaml.safe_load(cpath.read_text("utf-8")) if cpath.exists() else None
+    for role, info in ((cdoc or {}).get("characters") or {}).items():
+        url = (info or {}).get("image", "")
+        if not url.startswith("https://"):
+            problems.append(f"characters.yaml {role}: image must be an https link")
+            continue
+        db.execute("INSERT INTO character_pic VALUES(?,?)", (role, url))
 
     # Words for the same thing (content/variants.yaml): "Also said" on a tapped word
     vpath = content_root / "variants.yaml"

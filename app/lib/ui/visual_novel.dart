@@ -2,14 +2,16 @@
 /// speaking is lit, the other dimmed), name plates, a backlog of earlier lines, and the
 /// "what do you say?" choice on the learner's turns.
 ///
-/// Characters are Irasutoya illustrations downloaded at build time into
-/// assets/characters (never committed; see content/characters.yaml). When an image is
-/// missing (tests, CI, the swearing topic) a coloured initial is drawn instead.
+/// Characters are Irasutoya illustrations the app downloads on first launch
+/// (platform/character_pictures.dart; never bundled or committed, see
+/// content/characters.yaml). When a picture is missing (offline so far, tests, the
+/// swearing topic) a coloured initial is drawn instead.
 library;
 
 import 'package:material_ui/material_ui.dart';
 
 import '../data/content_db.dart';
+import '../platform/character_pictures.dart';
 import 'ruby_text.dart';
 
 /// English role for each speaker name used in the conversations.
@@ -40,14 +42,9 @@ const speakerRoles = {
   '嫲嫲': 'Grandma',
 };
 
-/// Off in committed preview snapshots: Irasutoya pictures must not end up in the
-/// public repo (their terms forbid redistributing the files).
-bool characterPicturesEnabled = true;
-
-/// Asset path of a speaker's picture: code points in hex (伙計 -> 4f19-8a08.png), the
-/// same rule as pipeline/duk/characters.py.
-String characterAsset(String speaker) =>
-    'assets/characters/${speaker.runes.map((r) => r.toRadixString(16)).join('-')}.png';
+/// The downloaded pictures (set at start-up; null in tests and previews, so Irasutoya
+/// pictures never end up in committed snapshots).
+CharacterPictures? characterPictures;
 
 /// Colours that tell the two sides apart everywhere: stage, name plate, dialogue box.
 ({Color bg, Color fg, Color edge}) speakerColors(
@@ -93,9 +90,10 @@ class CharacterSprite extends StatelessWidget {
               ),
       ),
     );
-    final picture = showPicture && characterPicturesEnabled
-        ? Image.asset(
-            characterAsset(speaker),
+    final file = showPicture ? characterPictures?.fileFor(speaker) : null;
+    final picture = file != null && file.existsSync()
+        ? Image.file(
+            file,
             height: height,
             fit: BoxFit.contain,
             errorBuilder: (_, _, _) => fallback,

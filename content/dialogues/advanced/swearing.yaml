@@ -1,0 +1,22 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese, with swearing.
+# Drafted by an LLM; the owner accepted LLM content as-is on 2026-11-16.
+scenario: scn-swearing
+dialogues:
+  - id: dlg-adv-sw-01
+    title: "Explaining the swear words to a friend"
+    level: 3
+    lines:
+      - ["朋友", "喂，點解佢哋講嘢句句都有個「撚」字？", "Hey, why does every line they say have 撚 in it?"]
+      - ["你", "嗰個係加強語氣，好似英文講fucking噉。", "It's for emphasis, like 'fucking' in English."]
+      - ["朋友", "咁「好撚好食」係讚定係鬧？", "So is 好撚好食 praise or a complaint?"]
+      - ["你", "係讚呀，即係好好食。", "Praise. It means really delicious."]
+      - ["朋友", "噉「仆街」呢？我聽到啲朋友互相噉叫。", "What about 仆街? I hear friends call each other that."]
+      - ["你", "老友之間係玩，對住陌生人講就會出事。", "Between old friends it's banter; say it to a stranger and there'll be trouble."]
+      - ["朋友", "邊個最重？", "Which is the strongest?"]
+      - ["你", "「屌你老母」最重，千祈唔好亂講。", "屌你老母 is the strongest. Never throw it around."]
+      - ["朋友", "如果我想鬧人但唔想太粗呢？", "What if I want to tell someone off without being too crude?"]
+      - ["你", "講「頂你個肺」或者「黐線」就得。", "Say 頂你個肺 or 黐線."]
+      - ["朋友", "「頂你個肺」聽落好好笑。", "頂你個肺 sounds really funny."]
+      - ["你", "係呀，所以啲人覺得冇咁嬲。", "Yeah, which is why people find it less angry."]
+      - ["朋友", "網上見到DLLM又點讀？", "And how do I say the DLLM I see online?"]
+      - ["你", "唔使讀出嚟，識睇就夠喇！", "You don't say it. Recognising it is enough!"]

@@ -27,6 +27,7 @@ const goals = [
     'numbers',
   ]),
   Goal('daily', 'Daily life', 'Home, health, weather, paperwork, your phone', [
+    'daily',
     'home',
     'health',
     'weather',

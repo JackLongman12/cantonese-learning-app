@@ -47,9 +47,8 @@ content/readings.lock.json.tmp
 data/models/
 data/fonts-full/
 
-# Irasutoya character images: downloaded at build time, never redistributed (content/characters.yaml)
-app/assets/characters/*
-!app/assets/characters/README.md
+# Irasutoya character images: the app downloads them on the device; never bundle or commit
+app/assets/characters/
 
 # personal-use images (not for the public repo)
 docs/local/

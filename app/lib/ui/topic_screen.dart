@@ -134,15 +134,7 @@ class _TopicScreenState extends State<TopicScreen> {
                 const SizedBox(height: 10),
                 if (dialogues.isEmpty)
                   const Text('No conversations for this topic yet.'),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    'All lines are drafts until you have checked them by ear.',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
+                const SizedBox(height: 4),
                 TileGrid(
                   children: [
                     for (final d in dialogues)

@@ -16,7 +16,6 @@ def main(argv: list[str] | None = None) -> int:
             stream.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(prog="duk")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("characters", help="download conversation characters (git-ignored)")
     f = sub.add_parser("fetch", help="download reference datasets into data/raw/")
     f.add_argument("--only", nargs="*", help="source names, e.g. osm_macau osm_hk")
     a = sub.add_parser("annotate", help="show readings for a piece of text")
@@ -35,11 +34,6 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     try:
-        if args.cmd == "characters":
-            from .characters import fetch_characters
-
-            print(chr(10).join(fetch_characters()))
-            return 0
         if args.cmd == "fetch":
             from .fetch_sources import fetch
 
@@ -117,12 +111,11 @@ def main(argv: list[str] | None = None) -> int:
                     for r in check.execute("SELECT path FROM audio")
                     if (paths.AUDIO / Path(r[0]).name).exists()
                 }
-            for stale in dest.glob("audio/*.mp3"):
-                if stale.name not in wanted:
-                    stale.unlink()
-            for name in wanted:
-                if not (dest / "audio" / name).exists():
-                    shutil.copy2(paths.AUDIO / name, dest / "audio" / name)
+            # The app ships Opus (.ogg, 24 kbps mono): 40% of the MP3s' size, clear for
+            # speech. The MP3s stay the TTS cache; the bundled content.db points at .ogg.
+            from .audio_pack import pack_audio
+
+            shipped = pack_audio(wanted, paths.AUDIO, dest / "audio", dest / "content.db")
             # Reading font cut down to the characters the app uses (content, cards,
             # dictionary), from the full copy in data/fonts-full (git-ignored). Text with
             # other characters (pasted) falls back to the phone's own Chinese font.
@@ -169,7 +162,7 @@ def main(argv: list[str] | None = None) -> int:
                 src = paths.RAW / "food" / "img" / name
                 if src.exists() and not (img_dest / name).exists():
                     shutil.copy2(src, img_dest / name)
-            print(f"bundled content.db, {len(wanted)} audio files, {len(images)} photos -> {dest}")
+            print(f"bundled content.db, {shipped} audio files, {len(images)} photos -> {dest}")
     except ContentError as e:
         print("Content problems:", file=sys.stderr)
         for p in e.problems:

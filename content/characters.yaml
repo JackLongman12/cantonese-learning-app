@@ -1,10 +1,10 @@
 # Conversation characters: Irasutoya (いらすとや) illustrations, one per speaker role.
 # Terms (irasutoya.com/p/faq.html, checked 2026-11-15): free for non-commercial use with no
 # count limit; credit not required; redistributing the image files is NOT allowed, and
-# aggressive/discriminatory uses are not allowed. So: this file lists links only, `duk
-# characters` downloads the images into data/raw (git-ignored) and copies them into
-# app/assets/characters (git-ignored) at build time. They are never committed, and the
-# swearing topic does not use them.
+# aggressive/discriminatory uses are not allowed. So: this file lists links only; `duk
+# build` puts the links in content.db and the app downloads each picture on the device
+# on first launch (app/lib/platform/character_pictures.dart). The files are never
+# committed or bundled in the APK, and the swearing topic does not use them.
 characters:
   你:
     title: 大学生のイラスト（男性）

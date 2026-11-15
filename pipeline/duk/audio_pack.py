@@ -1,0 +1,66 @@
+"""Turn the TTS cache (MP3) into what the app ships: Opus in Ogg, 24 kbps mono.
+
+Opus at 24 kbps is about 40% of the 48 kbps MP3s edge-tts returns and still clear for
+speech. Encoded copies are cached in build/audio_ogg, so only new clips are encoded.
+Needs ffmpeg with libopus on PATH; without it the MP3s are shipped unchanged.
+"""
+
+from __future__ import annotations
+
+import shutil
+import sqlite3
+import subprocess
+import sys
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+
+from . import paths
+
+BITRATE = "24k"
+
+
+def _encode(src: Path, out: Path) -> None:
+    tmp = out.with_suffix(".tmp.ogg")
+    subprocess.run(
+        ["ffmpeg", "-v", "error", "-y", "-i", str(src), "-map_metadata", "-1",
+         "-c:a", "libopus", "-b:a", BITRATE, "-application", "voip", "-ac", "1", str(tmp)],
+        check=True,
+    )  # fmt: skip
+    tmp.replace(out)
+
+
+def pack_audio(
+    wanted: set[str],
+    mp3_dir: Path,
+    dest: Path,
+    bundled_db: Path,
+    cache: Path | None = None,
+) -> int:
+    """Fill [dest] with one clip per name in [wanted] (MP3 file names) and point the
+    bundled database's audio paths at them. Returns the number of clips shipped."""
+    dest.mkdir(parents=True, exist_ok=True)
+    use_ogg = shutil.which("ffmpeg") is not None
+    if not use_ogg:
+        print("ffmpeg not found: shipping MP3 audio (larger app)", file=sys.stderr)
+    ext = ".ogg" if use_ogg else ".mp3"
+    names = {Path(n).stem + ext for n in wanted}
+    for stale in [*dest.glob("*.mp3"), *dest.glob("*.ogg")]:
+        if stale.name not in names:
+            stale.unlink()
+    if use_ogg:
+        cache = cache or paths.ROOT / "build" / "audio_ogg"
+        cache.mkdir(parents=True, exist_ok=True)
+        todo = [n for n in wanted if not (cache / (Path(n).stem + ".ogg")).exists()]
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            list(pool.map(lambda n: _encode(mp3_dir / n, cache / (Path(n).stem + ".ogg")), todo))
+        for n in names:
+            if not (dest / n).exists():
+                shutil.copy2(cache / n, dest / n)
+        with sqlite3.connect(bundled_db) as db:
+            db.execute("UPDATE audio SET path = substr(path, 1, length(path) - 4) || '.ogg' "
+                       "WHERE path LIKE '%.mp3'")  # fmt: skip
+    else:
+        for n in names:
+            if not (dest / n).exists():
+                shutil.copy2(mp3_dir / n, dest / n)
+    return len(names)

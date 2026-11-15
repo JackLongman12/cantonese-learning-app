@@ -54,10 +54,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   /// Topics grouped by kind of situation, in this order. A topic goes in the first
   /// group whose keyword is in its id; anything unmatched lands in "More".
   static const _topicGroups = <(String, List<String>)>[
-    ('The basics', ['numbers', 'signs']),
+    ('The basics', ['numbers', 'signs', 'variants']),
     ('Getting around', ['getting-around', 'tourism']),
     ('Food and shopping', ['food', 'shopping']),
-    ('Home and health', ['home', 'health', 'weather']),
+    ('Home and health', ['home', 'daily', 'health', 'weather']),
     ('Errands and work', ['gov', 'work']),
     ('People and chat', ['chat', 'messaging', 'swearing']),
   ];
@@ -1179,6 +1179,8 @@ IconData _topicIcon(String id) {
     'messaging': Icons.smartphone_rounded,
     'tourism': Icons.hotel_rounded,
     'swearing': Icons.sentiment_very_dissatisfied_rounded,
+    'daily': Icons.location_city_rounded,
+    'variants': Icons.swap_horiz_rounded,
   };
   for (final e in byKeyword.entries) {
     if (id.contains(e.key)) return e.value;

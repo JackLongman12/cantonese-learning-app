@@ -39,3 +39,27 @@ dialogues:
       - ["你", "喂，細路仔喺度呀。", "Hey, there are kids here."]
       - ["朋友", "唔好意思，頂！又落雨。", "Sorry. Damn! Raining again."]
       - ["你", "好啲喇。", "That's better."]
+  - id: dlg-sw-06
+    title: "Chewed out by the boss"
+    lines:
+      - ["同事", "做咩你個樣咁衰？", "Why the long face?"]
+      - ["你", "頭先俾老細屌咗成個鐘。", "The boss just chewed me out for an hour."]
+      - ["同事", "又係份報告？", "The report again?"]
+      - ["你", "係呀，佢話我鳩做。", "Yeah, he says I did it any old how."]
+      - ["同事", "唔好理佢，放工飲啤酒。", "Forget him. Beer after work."]
+  - id: dlg-sw-07
+    title: "Stuck in traffic"
+    lines:
+      - ["你", "屌，又塞車！", "Fuck, traffic again!"]
+      - ["朋友", "冷靜啲，嬲都冇用。", "Calm down, getting angry won't help."]
+      - ["你", "我九點要到，而家八點五十喇。", "I have to be there at nine, and it's ten to."]
+      - ["朋友", "咁打個電話話遲啲到囉。", "Then call and say you'll be late."]
+      - ["你", "頂，又要俾人鬧。", "Damn, I'm getting told off again."]
+  - id: dlg-sw-08
+    title: "Toning it down at dinner"
+    lines:
+      - ["朋友", "呢間嘢好撚好食！", "This place is fucking delicious!"]
+      - ["你", "細聲啲，隔籬枱有阿婆。", "Keep it down, there's an old lady at the next table."]
+      - ["朋友", "哦，好鬼好食。", "Oh, right. Bloody delicious."]
+      - ["你", "仲係有個鬼字。", "There's still a 鬼 in it."]
+      - ["朋友", "好好食，得未？", "Very delicious. Happy now?"]

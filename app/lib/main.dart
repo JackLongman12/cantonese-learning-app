@@ -23,6 +23,8 @@ import 'platform/updater.dart';
 import 'ui/home_screen.dart';
 import 'ui/onboarding_screen.dart';
 import 'ui/theme.dart';
+import 'ui/visual_novel.dart' show characterPictures;
+import 'platform/character_pictures.dart';
 
 const appVersion = String.fromEnvironment(
   'APP_VERSION',
@@ -49,6 +51,17 @@ Future<AppServices> _bootstrap() async {
     flush: true,
   );
   final content = ContentDb.open(dbFile.path);
+
+  // Conversation pictures: downloaded here, never bundled (content/characters.yaml).
+  // In the background, after start-up; a failure just leaves the coloured initials.
+  final pictures = CharacterPictures(
+    Directory(p.join(support.path, 'characters')),
+  );
+  characterPictures = pictures;
+  Future<void>.delayed(
+    const Duration(seconds: 3),
+    () => pictures.fetchMissing(content.characterPictureUrls()),
+  ).ignore();
 
   // Leftovers from an earlier update (installer, unpack folders) are junk once it ran.
   try {

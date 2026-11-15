@@ -9,7 +9,7 @@ Content lives in `content/` as YAML. The pipeline validates it, fills in reading
 3. **Region tag is required:** `macau`, `hk`, `both`, or `general`. Target mix: about 50% macau, 30% hk/both, 20% general.
 4. **Register tag is required:** `spoken` (written Cantonese: 佢哋、唔係、嘅) or `written` (standard written Chinese as on signs, forms, news).
 5. **Readings are never typed into sentences.** The pipeline computes them. To correct one, add `fix_yue: {字: reading}` (or `字#2` for the second occurrence) on the entry, or a word in `content/overrides/readings.yaml` when it holds everywhere. Approved readings of `reviewed: true` entries are frozen in `content/readings.lock.json` (machine-written, committed); a build that would change one fails.
-6. **`reviewed: false` by default.** Only the owner sets `reviewed: true`. Unreviewed content is usable but visibly marked in the app.
+6. **`reviewed: false` by default.** Only the owner sets `reviewed: true`. The owner accepted LLM content as-is on 2026-11-16, so the app no longer marks unreviewed lines.
 7. **LLM-generated content** must also carry `source: llm` and is never auto-approved.
 8. **Macau facts** (bus routes, place names, Portuguese names, prices) must come from a source listed in `DATA_SOURCES.md` or from the owner. Do not invent them.
 9. Traditional text uses HK standard forms (OpenCC `s2hk`/`t2hk`). Simplified text is authored or converted then checked for many-to-one cases (發/髮→发).
@@ -175,9 +175,10 @@ the dictionary first, else the English article title.
 
 ## Conversation characters (`content/characters.yaml`)
 
-Speaker role → Irasutoya title, image link and post link. `duk characters` downloads them
-(git-ignored). Add a role here when a conversation introduces a new speaker; the app
-falls back to a coloured initial when a picture is missing.
+Speaker role → Irasutoya title, image link and post link. Only the links go into
+`content.db`; the app downloads the pictures on the device on first launch (they must
+not be bundled: Irasutoya forbids redistributing the files). Links must be `https://`.
+Add a role here when a conversation introduces a new speaker; the app falls back to a coloured initial when a picture is missing.
 
 
 ## Conversation levels

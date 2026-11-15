@@ -296,7 +296,7 @@ class SkillScreen extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
           children: [
             Text(
-              'Drafts until checked by a native speaker. Tap an example to hear it.',
+              'Tap an example to hear it.',
               style: theme.textTheme.labelSmall?.copyWith(
                 color: scheme.onSurfaceVariant,
               ),
