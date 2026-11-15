@@ -100,4 +100,47 @@ void main() {
     expect(a.speakingPct, 75);
     expect(weekAccuracy(const [], now).readingPct, isNull);
   });
+
+  test('compares this week with last week and your first week', () {
+    final now = DateTime.utc(2026, 11, 30, 12);
+    Event met(String id, DateTime at) =>
+        ev('review.applied', {'item_id': id, 'signal': 'introduced'}, at);
+    Event read(int reveals, DateTime at) =>
+        ev('item.done', {'reveals': reveals}, at);
+    final first = DateTime.utc(2026, 11, 2);
+    final last = DateTime.utc(2026, 11, 20);
+    final thisW = DateTime.utc(2026, 11, 28);
+    final p = progressOverTime(
+      [
+        met('a', first),
+        read(2, first),
+        read(1, first),
+        met('b', last),
+        met('c', last),
+        read(0, last),
+        read(3, last),
+        met('d', thisW),
+        read(0, thisW),
+        read(0, thisW),
+      ],
+      now,
+      weeks: 4,
+    );
+    expect(p.thisWeek.newChars, 1);
+    expect(p.thisWeek.readingPct, 100);
+    expect(p.lastWeek.newChars, 2);
+    expect(p.lastWeek.readingPct, 50);
+    expect(p.firstWeek!.readingPct, 0);
+    // running totals per week, oldest first
+    expect(p.metByWeek, [1, 1, 3, 4]);
+  });
+
+  test('no first-week comparison until two weeks in', () {
+    final now = DateTime.utc(2026, 11, 16, 12);
+    final p = progressOverTime([
+      ev('item.done', {'reveals': 0}, DateTime.utc(2026, 11, 5)),
+    ], now);
+    expect(p.firstWeek, isNull);
+    expect(p.lastWeek.readingPct, 100);
+  });
 }

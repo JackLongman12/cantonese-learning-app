@@ -41,6 +41,7 @@ class ReaderScreen extends StatefulWidget {
     this.autoplay = false,
     this.ordered = false,
     this.startAt = 0,
+    this.focus = const {},
     this.onComplete,
   });
 
@@ -69,6 +70,9 @@ class ReaderScreen extends StatefulWidget {
   /// Keep [sentences] in the given order (resuming), starting at [startAt].
   final bool ordered;
   final int startAt;
+
+  /// Weak characters to work on even if not due yet (Review).
+  final Set<String> focus;
 
   /// Called once when the last sentence is finished (Today's plan ticks a step).
   final VoidCallback? onComplete;
@@ -127,6 +131,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
     if (_queue.isNotEmpty) _present();
   }
 
+  late final Set<String> _recent = _s.recentSentences();
+
   /// The next batch: chosen by the planner, never repeating a sentence already shown.
   List<SentenceRow> _pickMore({int extraNew = 0}) {
     final seen = {for (final q in _queueOrEmpty) q.id};
@@ -140,6 +146,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
       now: _s.logger.now(),
       count: widget.count ?? pool.length,
       maxNew: widget.maxNew + extraNew,
+      // different sentences each session, same characters reinforced
+      recentlySeen: _recent,
+      focus: widget.focus,
+      random: _s.variety,
+      jitter: AppServices.plannerJitter,
     );
     final byId = {for (final s in pool) s.id: s};
     for (final p in picks) {

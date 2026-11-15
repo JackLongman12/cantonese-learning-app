@@ -1,6 +1,13 @@
 /// Chooses what to read next (docs/DESIGN.md section 2.4): sentences that cover the most
 /// due items, introduce at most a couple of new ones, and are otherwise readable.
+///
+/// Variety: sentences read in the last few days ([recentlySeen]) are pushed back, and a
+/// little random [jitter] breaks near-ties, so the same due characters come back in
+/// different sentences each time. Jitter is smaller than one due item, so what needs
+/// reviewing still decides the session.
 library;
+
+import 'dart:math';
 
 import 'item_state.dart';
 import 'learner_model.dart';
@@ -75,7 +82,15 @@ class Planner {
     required int count,
     int maxNew = 10,
     Set<String> recentlySeen = const {},
+    Set<String> focus = const {},
+    Random? random,
+    double jitter = 0,
   }) {
+    // one random nudge per sentence for the whole session (stable while re-scoring)
+    final nudge = <String, double>{
+      if (random != null && jitter > 0)
+        for (final c in candidates) c.id: jitter * random.nextDouble(),
+    };
     final remaining = [...candidates];
     final covered = <String>{};
     final usedPatterns = <String>{};
@@ -93,8 +108,13 @@ class Planner {
           usedPatterns,
           recentlySeen,
           newBudget,
+          focus,
         );
-        if (p != null && (best == null || p.score > best.score)) best = p;
+        if (p == null) continue;
+        final scored = nudge[c.id] == null
+            ? p
+            : Pick(p.candidate, p.score + nudge[c.id]!, p.reasons);
+        if (best == null || scored.score > best.score) best = scored;
       }
       if (best == null) break;
       picks.add(best);
@@ -116,6 +136,7 @@ class Planner {
     Set<String> usedPatterns,
     Set<String> recentlySeen,
     int newBudget,
+    Set<String> focus,
   ) {
     var dueScore = 0.0;
     var dueCount = 0;
@@ -125,7 +146,8 @@ class Planner {
       final s = learner.stateOf(id);
       if (s.isNew) {
         newItems.add(id);
-      } else if (_isDue(s, now)) {
+      } else if (_isDue(s, now) || focus.contains(id)) {
+        // due, or a weak spot to work on (counts as due)
         dueCount++;
         // Lower recall probability means more urgent.
         dueScore += 1 + (1 - learner.memory.retrievability(s, now));

@@ -33,3 +33,20 @@ int? usualStudyMinute(
   final median = busiest[busiest.length ~/ 2];
   return (median ~/ 15) * 15;
 }
+
+/// Sentences shown in reading or speaking in the last [window], so the next session can
+/// pick different ones (they come back once the window has passed, or when nothing else
+/// covers what is due).
+Set<String> recentSentences(
+  Iterable<Event> events,
+  DateTime nowUtc, {
+  Duration window = const Duration(days: 2),
+}) {
+  final since = nowUtc.subtract(window);
+  return {
+    for (final e in events)
+      if ((e.type == 'item.shown' || e.type == 'speech.attempt') &&
+          e.tsUtc.isAfter(since))
+        if (e.payload['sentence_id'] case final String id) id,
+  };
+}

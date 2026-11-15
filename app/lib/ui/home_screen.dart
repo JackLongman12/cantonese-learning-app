@@ -18,6 +18,7 @@ import 'goal_picker.dart';
 import 'paste_reader_screen.dart';
 import 'reader_screen.dart';
 import 'practice_screens.dart';
+import 'progress_view.dart';
 import 'skills.dart';
 import '../platform/sfx.dart';
 import 'settings_screen.dart';
@@ -188,6 +189,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     List<ItemState> chars,
     SessionPlan session,
     ({int? readingPct, int? speakingPct}) accuracy,
+    ({
+      PeriodStats thisWeek,
+      PeriodStats lastWeek,
+      PeriodStats? firstWeek,
+      List<int> metByWeek,
+    })
+    time,
   })?
   _insights;
 
@@ -199,6 +207,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     List<ItemState> chars,
     SessionPlan session,
     ({int? readingPct, int? speakingPct}) accuracy,
+    ({
+      PeriodStats thisWeek,
+      PeriodStats lastWeek,
+      PeriodStats? firstWeek,
+      List<int> metByWeek,
+    })
+    time,
   })
   _overview() {
     if (_insights case final i?) return i;
@@ -211,6 +226,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       chars: weakCharacters(_s.learner.known, _lang),
       session: adaptSession(events, _s.logger.now().toUtc()),
       accuracy: weekAccuracy(events, _s.logger.now().toUtc()),
+      time: progressOverTime(events, _s.logger.now().toUtc()),
     );
   }
 
@@ -422,6 +438,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     String? scenarioId,
     int? count,
     int maxNew = 12,
+    Set<String> focus = const {},
     VoidCallback? onComplete,
   }) async {
     _s.logger.log('nav.screen', {
@@ -440,6 +457,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           scenarioId: scenarioId,
           count: count,
           maxNew: maxNew,
+          focus: focus,
           onComplete: onComplete,
         ),
       ),
@@ -451,9 +469,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   List<_PlanStep> _lastPlan = const [];
   String _lastDay = '';
 
-  /// Set while jumping Home from a finish screen: a step's own follow-up waits.
-  bool _jumping = false;
-
   _PlanStep? get _nextUndone {
     final done = _s.prefs.planDone(_lastDay);
     return _lastPlan.where((p) => !done.contains(p.id)).firstOrNull;
@@ -461,12 +476,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   /// Back to Home, rebuild, then do [then] (from a finish screen anywhere).
   void _fromAnywhere(void Function() then) {
-    _jumping = true;
     Navigator.of(context).popUntil((r) => r.isFirst);
     setState(() {});
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) then();
-      _jumping = false;
     });
   }
 
@@ -598,7 +611,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final reviewCount = due + overview.chars.length + practiceWords.length;
     final plan = <_PlanStep>[
       // Review: due characters, weak spots and words to practice in one session of
-      // sentences, then any flashcards that are due.
+      // sentences. Due flashcards only when there are no sentences to review (one
+      // screen per step, so Back leaves the whole review; cards also show on the
+      // Cards tile).
       if (reviewCount > 0 || cardsDue.isNotEmpty || done.contains('review'))
         _PlanStep(
           id: 'review',
@@ -608,7 +623,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             if (due > 0) '$due due',
             if (overview.chars.isNotEmpty) '${overview.chars.length} weak',
             if (practiceWords.isNotEmpty) '${practiceWords.length} words',
-            if (cardsDue.isNotEmpty) '${cardsDue.length} cards',
+            if (reviewCount == 0 && cardsDue.isNotEmpty)
+              '${cardsDue.length} cards',
           ].join(' · '),
           done: done.contains('review'),
           start: () async {
@@ -624,7 +640,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   x,
             ];
             if (due > 0 || weakLines.isNotEmpty) {
-              await _open(
+              return _open(
                 title: 'Review',
                 // weak spots and flagged words first, then whatever is due
                 sentences: [
@@ -634,10 +650,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 mode: 'review',
                 count: overview.session.count,
                 maxNew: 0,
+                focus: focus,
                 onComplete: () => finished('review'),
               );
             }
-            if (cardsDue.isNotEmpty && mounted && !_jumping) {
+            if (cardsDue.isNotEmpty) {
               await _push(
                 CardSessionScreen(
                   services: _s,
@@ -898,22 +915,25 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ]),
       StoriesScreen(key: ValueKey('stories-$_lang'), services: _s, lang: _lang),
       page([
-        Text('Progress', style: theme.textTheme.titleLarge),
-        const SizedBox(height: 12),
-        _WeakSpotsCard(
+        ProgressView(
           met: met,
           learned: learned,
           readablePct: totalChars == 0
               ? null
               : (100 * solid / totalChars).round(),
-          newThisWeek: overview.newChars,
-          readingPct: overview.accuracy.readingPct,
-          speakingPct: overview.accuracy.speakingPct,
+          thisWeek: overview.time.thisWeek,
+          lastWeek: overview.time.lastWeek,
+          firstWeek: overview.time.firstWeek,
+          metByWeek: overview.time.metByWeek,
+          chars: overview.chars,
+          sounds: overview.sounds,
           wordsToPractice: practiceWords.length,
           cardsDue: cardsDue.length,
-          sounds: overview.sounds,
-          chars: overview.chars,
           onChar: (c) => sayOrExplain(context, _s, c, _lang),
+          onReview: plan.where((p) => p.id == 'review').firstOrNull?.start,
+          onWords: () => _openTool('words'),
+          onCards: () => _openTool('cards'),
+          onSpeak: () => _openTool('speak'),
         ),
       ]),
     ];
@@ -1053,186 +1073,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           icon: const Icon(Icons.settings_rounded),
         ),
       ],
-    );
-  }
-}
-
-/// What you find hard: sounds you mix up reading aloud, characters you keep needing.
-class _WeakSpotsCard extends StatelessWidget {
-  const _WeakSpotsCard({
-    required this.met,
-    required this.learned,
-    required this.readablePct,
-    required this.newThisWeek,
-    required this.readingPct,
-    required this.speakingPct,
-    required this.wordsToPractice,
-    required this.cardsDue,
-    required this.sounds,
-    required this.chars,
-    required this.onChar,
-  });
-  final int met;
-  final int learned;
-  final int? readablePct;
-  final int newThisWeek;
-  final int? readingPct;
-  final int? speakingPct;
-  final int wordsToPractice;
-  final int cardsDue;
-  final List<SoundMixup> sounds;
-  final List<ItemState> chars;
-  final ValueChanged<String> onChar;
-
-  static String _explain(SoundMixup m) => switch (m.kind) {
-    'tone' => 'tone ${m.expected} said as ${m.heard}',
-    'start' => 'starts with ${m.expected}, said as ${m.heard}',
-    _ => 'ends in ${m.expected}, said as ${m.heard}',
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    return Card(
-      key: const ValueKey('weak-spots'),
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Your progress', style: theme.textTheme.titleSmall),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                _Metric(
-                  key: const ValueKey('stat-met'),
-                  value: '$met',
-                  label: 'characters met',
-                ),
-                _Metric(value: '$learned', label: 'learned'),
-                _Metric(
-                  value: readablePct == null ? '–' : '$readablePct%',
-                  label: 'of all content readable',
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'This week',
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: scheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                _Metric(value: '$newThisWeek', label: 'new characters'),
-                _Metric(
-                  key: const ValueKey('metric-reading'),
-                  value: readingPct == null ? '–' : '$readingPct%',
-                  label: 'read without help',
-                ),
-                _Metric(
-                  key: const ValueKey('metric-speaking'),
-                  value: speakingPct == null ? '–' : '$speakingPct%',
-                  label: 'sounds said right',
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                _Metric(value: '${chars.length}', label: 'weak characters'),
-                _Metric(value: '$wordsToPractice', label: 'words to practice'),
-                _Metric(value: '$cardsDue', label: 'cards due'),
-              ],
-            ),
-            const SizedBox(height: 4),
-            if (chars.isNotEmpty) ...[
-              const SizedBox(height: 6),
-              Text(
-                'Characters you keep needing help with (tap to hear):',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                children: [
-                  for (final c in chars)
-                    ActionChip(
-                      onPressed: () => onChar(c.itemId.split(':')[2]),
-                      label: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            c.itemId.split(':')[3],
-                            style: theme.textTheme.labelSmall,
-                          ),
-                          Text(
-                            c.itemId.split(':')[2],
-                            style: chineseStyle('yue', fontSize: 20),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            ],
-            if (sounds.isNotEmpty) ...[
-              const SizedBox(height: 10),
-              Text(
-                'Sounds you mix up when reading aloud:',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
-              ),
-              for (final m in sounds)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text(
-                    '• ${_explain(m)} (${m.count}×), e.g. ${m.examples.first}',
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Metric extends StatelessWidget {
-  const _Metric({super.key, required this.value, required this.label});
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            value,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          Text(
-            label,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

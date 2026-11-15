@@ -6,8 +6,6 @@ library;
 
 import '../engine/pictures.dart';
 
-import 'dart:math';
-
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -208,7 +206,7 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
         recall: (st) => _s.memory.retrievability(st, _s.logger.now()),
         now: _s.logger.now(),
         // a fresh shuffle each visit; fixed in tests so previews stay stable
-        random: ambientMotion ? null : Random(0),
+        random: _s.variety,
       ))
         byId[id]!,
     ];

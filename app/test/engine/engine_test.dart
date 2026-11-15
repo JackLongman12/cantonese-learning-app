@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:duk/engine/item_state.dart';
 import 'package:duk/engine/learner_model.dart';
@@ -364,6 +365,52 @@ void main() {
       expect(ids.first, startsWith('mo-'));
       // the second variation is pushed behind unrelated sentences
       expect(ids.last, startsWith('mo-'));
+    });
+
+    test('jitter varies sentences that teach the same thing', () {
+      final learner = LearnerModel(memory);
+      final cands = [
+        for (var i = 0; i < 8; i++) c('s$i', ['n$i']),
+      ];
+      final firsts = {
+        for (var seed = 0; seed < 8; seed++)
+          planner
+              .plan(
+                candidates: cands,
+                learner: learner,
+                now: t0,
+                count: 3,
+                random: Random(seed),
+                jitter: 0.5,
+              )
+              .first
+              .candidate
+              .id,
+      };
+      expect(firsts.length, greaterThan(1));
+    });
+
+    test('jitter never beats a due item; recent sentences go behind', () {
+      final learner = LearnerModel.replay([
+        review('ea', 'a', 'good', t0),
+      ], memory);
+      final now = t0.add(const Duration(days: 30));
+      for (var seed = 0; seed < 10; seed++) {
+        final picks = planner.plan(
+          candidates: [
+            c('new', ['n1'], region: 'general'),
+            c('due-old', ['a']),
+            c('due-recent', ['a']),
+          ],
+          learner: learner,
+          now: now,
+          count: 1,
+          recentlySeen: {'due-recent'},
+          random: Random(seed),
+          jitter: 0.5,
+        );
+        expect(picks.single.candidate.id, 'due-old');
+      }
     });
   });
 }

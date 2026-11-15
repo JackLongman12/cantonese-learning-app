@@ -13,7 +13,10 @@ import 'package:duk/engine/memory.dart';
 import 'package:duk/events/event_logger.dart';
 import 'package:duk/events/event_store.dart';
 import 'package:duk/main.dart';
+import 'package:duk/engine/item_state.dart';
+import 'package:duk/engine/weak_spots.dart';
 import 'package:duk/ui/cards_screen.dart';
+import 'package:duk/ui/progress_view.dart';
 import 'package:duk/ui/theme.dart';
 import 'package:duk/ui/visual_novel.dart';
 import 'package:flutter/services.dart';
@@ -239,4 +242,70 @@ void main() {
       matchesGoldenFile('goldens/preview_phone_food_card.png'),
     );
   }, skip: !hasDb);
+
+  // Sample numbers (not the real log): a few weeks in, to show the comparisons.
+  testWidgets('preview progress', (t) async {
+    await t.binding.setSurfaceSize(const Size(400, 1300));
+    addTearDown(() => t.binding.setSurfaceSize(null));
+    final sounds = SoundMixup('start', 'n', 'l')
+      ..count = 6
+      ..examples.add('nei5 → lei5');
+    final tone = SoundMixup('tone', '3', '6')
+      ..count = 3
+      ..examples.add('si3 → si6');
+    await t.pumpWidget(
+      MaterialApp(
+        theme: dukTheme(Brightness.light),
+        home: Scaffold(
+          body: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+            children: [
+              ProgressView(
+                met: 212,
+                learned: 160,
+                readablePct: 18,
+                thisWeek: const PeriodStats(
+                  newChars: 41,
+                  sentences: 96,
+                  readingPct: 72,
+                  speakingPct: 81,
+                ),
+                lastWeek: const PeriodStats(
+                  newChars: 33,
+                  sentences: 110,
+                  readingPct: 64,
+                  speakingPct: 84,
+                ),
+                firstWeek: const PeriodStats(
+                  newChars: 28,
+                  sentences: 40,
+                  readingPct: 31,
+                  speakingPct: 62,
+                ),
+                metByWeek: const [28, 55, 80, 104, 138, 171, 212],
+                chars: const [
+                  ItemState(itemId: 'cr:yue:銀:ngan4', lapses: 3, reps: 5),
+                  ItemState(itemId: 'cr:yue:嘅:ge3', lapses: 2, reps: 6),
+                  ItemState(itemId: 'cr:yue:街:gaai1', lapses: 1, reps: 4),
+                ],
+                sounds: [sounds, tone],
+                wordsToPractice: 4,
+                cardsDue: 9,
+                onChar: (_) {},
+                onReview: () {},
+                onWords: () {},
+                onCards: () {},
+                onSpeak: () {},
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await t.pumpAndSettle();
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('goldens/preview_phone_progress.png'),
+    );
+  });
 }

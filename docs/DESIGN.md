@@ -84,6 +84,7 @@ score = w_due   × Σ urgency(due items covered)
 - Target 90–95% known characters per sentence.
 - `unlock_value` = corpus frequency (weighted to Macau/HK and the owner's own pasted/OCR text) + size of the phonetic family the item unlocks.
 - Greedy selection, re-scored after each pick so one sentence covers many due items.
+- Variety (2026-11-16): `recently_seen` = sentences read or said in the last 2 days (event log), and each candidate gets a random nudge of up to 0.5 per session (less than one due item, so due and weak items still decide what is studied; only which sentence carries them changes). Review also passes the weak characters as `focus`: they count as due even before FSRS says so. Flashcards (`deck_planner.dart`): every visit is a shuffled set of up to 8 new cards drawn at random from the next 16 unseen, filled with the weakest seen cards (lowest recall), skipping cards answered in the last 30 minutes unless nothing else is left. Tests fix the random seed.
 - Session shape: warm-up (easy) → hardest items early → cool-down. End or ease off on detected fatigue.
 - Hard limits the model/bandit may not exceed: max new items/day, max session length, FSRS interval may be adjusted by at most ±30%.
 

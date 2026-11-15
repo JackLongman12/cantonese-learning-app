@@ -542,6 +542,9 @@ List<SentenceRow> pickSpeakLines(
     now: s.logger.now(),
     count: count,
     maxNew: maxNew,
+    recentlySeen: s.recentSentences(),
+    random: s.variety,
+    jitter: AppServices.plannerJitter,
   );
   final byId = {for (final l in short) l.id: l};
   return [for (final p in picks) byId[p.candidate.id]!];

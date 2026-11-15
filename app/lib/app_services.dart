@@ -1,9 +1,13 @@
 /// Everything the screens need, built once at start-up and passed down explicitly.
 library;
 
+import 'dart:io';
+import 'dart:math';
+
 import 'data/content_db.dart';
 import 'data/prefs.dart';
 import 'engine/learner_model.dart';
+import 'engine/insights.dart' as insights;
 import 'engine/memory.dart';
 import 'engine/planner.dart';
 import 'engine/scaffold.dart';
@@ -67,6 +71,18 @@ class AppServices {
 
   /// Words saved from reading ("My words"), rebuilt from the event log.
   late final WordBook words = WordBook.replay(logger.store.readAll());
+
+  /// A fresh shuffle for picking what to study, so sessions vary. Fixed under tests so
+  /// previews and flows stay the same run to run.
+  Random get variety => _inTest ? Random(0) : Random();
+  static final _inTest = Platform.environment.containsKey('FLUTTER_TEST');
+
+  /// How much randomness the planner may add (less than one due item).
+  static const plannerJitter = 0.5;
+
+  /// Sentences read or said in the last two days (next sessions prefer others).
+  Set<String> recentSentences() =>
+      insights.recentSentences(logger.store.readAll(), logger.now().toUtc());
 
   final ContentDb content;
   final EventLogger logger;

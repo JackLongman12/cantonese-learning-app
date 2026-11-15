@@ -1,7 +1,6 @@
 // Renders the README banner (docs/banner.png) and a 9:16 mobile ad (docs/ad_9x16.png): the round logo and words on the left, the
-// app's Home screen on the right. Uses the real logo and the real Home preview, so run
-// the screen previews first:
-//   flutter test --update-goldens --tags golden test/ui/screen_preview_test.dart
+// app's reading screen on the right. Uses the real logo and a fixed screenshot of the
+// reader (docs/banner_screen.png, a saved screen preview showing fading Jyutping):
 //   flutter test --update-goldens --tags golden test/ui/banner_test.dart
 @Tags(['golden'])
 library;
@@ -28,8 +27,7 @@ void main() {
     t.view.physicalSize = const Size(1600, 800);
     addTearDown(t.view.reset);
 
-    final Uint8List shot = File('test/ui/goldens/preview_phone_reader_day2.png')
-        .readAsBytesSync();
+    final Uint8List shot = File('../docs/banner_screen.png').readAsBytesSync();
     final image = MemoryImage(shot);
 
     await t.pumpWidget(
@@ -120,7 +118,7 @@ void main() {
     t.view.physicalSize = const Size(1080, 1920);
     addTearDown(t.view.reset);
     final image = MemoryImage(
-      File('test/ui/goldens/preview_phone_reader_day2.png').readAsBytesSync(),
+      File('../docs/banner_screen.png').readAsBytesSync(),
     );
     await t.pumpWidget(
       MaterialApp(
