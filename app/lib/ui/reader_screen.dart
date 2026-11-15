@@ -2,6 +2,8 @@
 /// from what the learner did, not asked for.
 library;
 
+import '../engine/pictures.dart';
+
 import 'dart:io';
 import 'dart:math';
 
@@ -617,6 +619,16 @@ class _ReaderScreenState extends State<ReaderScreen> {
                           const _Tag(
                             icon: Icons.signpost_outlined,
                             text: 'Written Chinese',
+                          ),
+                        // a picture of what the sentence is about
+                        if (pictureForMeaning(s.en) case final pic?)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              pic,
+                              key: const ValueKey('sentence-picture'),
+                              style: const TextStyle(fontSize: 40),
+                            ),
                           ),
                       ],
                     ),

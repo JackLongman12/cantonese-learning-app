@@ -4,6 +4,8 @@
 /// sign, and the audio.
 library;
 
+import '../engine/pictures.dart';
+
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -472,6 +474,20 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                     padding: const EdgeInsets.all(20),
                     children: [
                       // the dish's photo, so the word and the food stick together
+                      // no photo: a picture for the kind of card
+                      if (_card.image == null)
+                        Center(
+                          child: Text(
+                            widget.deck.id.contains('streets')
+                                ? '🛣️'
+                                : widget.deck.id == 'food'
+                                ? (pictureForMeaning(_card.alt) ?? '🍽️')
+                                : widget.deck.id == 'due'
+                                ? (pictureForMeaning(_card.alt) ?? '🗂️')
+                                : '🚉',
+                            style: const TextStyle(fontSize: 56),
+                          ),
+                        ),
                       if (_card.image case final img?)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12),

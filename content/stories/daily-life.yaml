@@ -1,0 +1,178 @@
+# Longer stories about ordinary days in Macau and Hong Kong.
+# level 1 = very easy, 2 = easy, 3 = more written-style characters.
+# Drafted by an LLM; reviewed: false until the owner approves them.
+stories:
+  - id: sty-morning-yue
+    lang: yue
+    level: 1
+    title: "A weekday morning"
+    lines:
+      - ["鬧鐘七點響，我好唔想起身。", "The alarm goes off at seven and I really don't want to get up."]
+      - ["我再瞓多五分鐘，結果瞓咗半個鐘。", "I sleep five more minutes, and end up sleeping half an hour."]
+      - ["我即刻跳起身，刷牙洗面。", "I jump straight up, brush my teeth and wash my face."]
+      - ["冇時間食早餐喇。", "There's no time for breakfast."]
+      - ["我拎住手機同銀包就出門口。", "I grab my phone and wallet and head out the door."]
+      - ["樓下巴士站已經排咗好長龍。", "There's already a long queue at the bus stop downstairs."]
+      - ["第一架巴士太迫，我上唔到。", "The first bus is too packed; I can't get on."]
+      - ["第二架終於嚟喇，我企喺門口。", "The second one finally comes; I stand by the door."]
+      - ["車上面好多人睇緊手機。", "Lots of people on the bus are looking at their phones."]
+      - ["有個阿伯大聲講電話，全車都聽到。", "An old man is talking loudly on the phone; the whole bus can hear."]
+      - ["我落車之後行去公司，經過一間麵包舖。", "After getting off I walk to the office and pass a bakery."]
+      - ["菠蘿包啱啱出爐，好香。", "The pineapple buns are fresh out of the oven and smell great."]
+      - ["我忍唔住買咗一個，仲買咗杯奶茶。", "I can't resist buying one, and a milk tea too."]
+      - ["返到公司，啱啱好九點正。", "I get to the office at exactly nine."]
+      - ["同事笑住話：「今日咁準時嘅？」", "A colleague laughs: \"On time today?\""]
+      - ["我話：「全靠個菠蘿包。」", "I say: \"All thanks to the pineapple bun.\""]
+
+  - id: sty-market-yue
+    lang: yue
+    level: 2
+    title: "The wet market with Grandma"
+    lines:
+      - ["星期六朝早，嫲嫲叫我陪佢去街市。", "On Saturday morning Grandma asks me to go to the wet market with her."]
+      - ["街市好嘈，周圍都係人。", "The market is noisy and full of people."]
+      - ["嫲嫲先去買菜，佢揀得好仔細。", "Grandma buys vegetables first; she chooses very carefully."]
+      - ["佢話：「菜心要揀嫩嘅，梗唔好太粗。」", "She says: \"Pick tender choy sum; the stems shouldn't be too thick.\""]
+      - ["賣菜嘅姨姨同嫲嫲好熟，仲送咗啲蔥俾佢。", "The vegetable lady knows Grandma well and gives her some spring onions free."]
+      - ["跟住我哋去買魚。", "Then we go to buy fish."]
+      - ["啲魚仲喺水入面游緊。", "The fish are still swimming in the water."]
+      - ["嫲嫲指住一條魚：「呢條幾錢斤？」", "Grandma points at a fish: \"How much a catty for this one?\""]
+      - ["魚檔老闆講咗個價，嫲嫲話太貴。", "The fishmonger names a price; Grandma says it's too expensive."]
+      - ["佢哋講咗幾句，老闆終於平咗少少。", "They exchange a few words and the owner finally lowers it a little."]
+      - ["我喺旁邊睇，覺得好好笑。", "I watch from the side and find it really funny."]
+      - ["最後去肉檔買半斤免治豬肉。", "Last, we go to the meat stall for half a catty of minced pork."]
+      - ["嫲嫲話今晚整蒸肉餅。", "Grandma says she's making steamed pork patty tonight."]
+      - ["返屋企嘅時候，兩隻手都拎滿晒嘢。", "On the way home, both our hands are full."]
+      - ["嫲嫲話：「你下次自己嚟買，我考吓你。」", "Grandma says: \"Next time you come and buy on your own; I'll test you.\""]
+      - ["我心諗：我一定會俾人呃。", "I think to myself: I'm definitely going to get ripped off."]
+
+  - id: sty-clinic-yue
+    lang: yue
+    level: 2
+    title: "Seeing the doctor"
+    lines:
+      - ["我琴晚開始喉嚨痛，今朝仲有啲發燒。", "My throat started hurting last night, and this morning I have a slight fever."]
+      - ["我打電話去公司請病假。", "I call the office to take sick leave."]
+      - ["附近有間診所，我去咗排隊。", "There's a clinic nearby, so I go and queue."]
+      - ["姑娘問我要身份證，幫我登記。", "The nurse asks for my ID card and registers me."]
+      - ["佢幫我探熱，三十八度。", "She takes my temperature: thirty-eight degrees."]
+      - ["等咗差唔多一個鐘，終於輪到我。", "After waiting nearly an hour, it's finally my turn."]
+      - ["醫生叫我擘大口，睇吓我個喉嚨。", "The doctor tells me to open my mouth wide and looks at my throat."]
+      - ["佢話：「發炎喎，你係咪成日飲凍嘢？」", "He says: \"It's inflamed. Do you drink cold drinks a lot?\""]
+      - ["我唔敢話自己日日飲凍檸茶。", "I don't dare say I drink iced lemon tea every day."]
+      - ["醫生開咗三日藥，仲有病假紙。", "The doctor prescribes three days of medicine, plus a sick note."]
+      - ["姑娘解釋點食藥：一日三次，飯後食。", "The nurse explains the medicine: three times a day, after meals."]
+      - ["佢仲提我：「呢幾日唔好飲凍嘢。」", "She also reminds me: \"No cold drinks these next few days.\""]
+      - ["返到屋企，我食完藥就瞓覺。", "Back home, I take the medicine and go to sleep."]
+      - ["一覺瞓醒，已經夜晚喇。", "When I wake up, it's already night."]
+      - ["阿媽煲咗粥，叫我食啲先再食藥。", "Mum has made congee and tells me to eat some before the medicine."]
+      - ["飲住熱粥，我覺得舒服好多。", "Eating hot congee, I feel much better."]
+
+  - id: sty-new-job-yue
+    lang: yue
+    level: 3
+    title: "First day at a new job"
+    lines:
+      - ["今日係我第一日返新工，我好緊張。", "Today is my first day at a new job, and I'm really nervous."]
+      - ["我提早半個鐘到，喺樓下行咗兩個圈。", "I arrive half an hour early and walk around the block twice."]
+      - ["人事部嘅同事帶我入公司，介紹我俾大家識。", "Someone from HR takes me in and introduces me to everyone."]
+      - ["我記唔晒咁多個名，淨係不停點頭微笑。", "I can't remember so many names, so I just keep nodding and smiling."]
+      - ["我個上司叫陳小姐，佢講嘢好快。", "My manager is Ms Chan, and she talks very fast."]
+      - ["佢俾咗一大疊文件我睇，話下晝要開會。", "She gives me a big pile of documents to read and says there's a meeting in the afternoon."]
+      - ["啲文件有好多我唔識讀嘅字。", "The documents have many characters I can't read."]
+      - ["我用手機一個一個查，查到頭都暈。", "I look them up one by one on my phone until my head spins."]
+      - ["坐我隔籬嘅同事見到，就主動幫我。", "The colleague next to me notices and offers to help."]
+      - ["佢話：「唔使驚，我第一日都係咁。」", "She says: \"Don't worry, I was the same on my first day.\""]
+      - ["中午佢帶我去附近一間茶餐廳食飯。", "At lunch she takes me to a cha chaan teng nearby."]
+      - ["我哋傾吓傾吓，原來大家都係讀同一間中學。", "Chatting, we find out we went to the same secondary school."]
+      - ["下晝開會，陳小姐問我有冇意見。", "In the afternoon meeting, Ms Chan asks if I have any thoughts."]
+      - ["我好緊張，但係都講咗兩句。", "I'm nervous, but I still say a couple of things."]
+      - ["佢點點頭，話：「幾好，繼續努力。」", "She nods: \"Quite good, keep it up.\""]
+      - ["收工嘅時候，我覺得好攰，但係好開心。", "When work ends, I feel exhausted but happy."]
+      - ["返屋企嘅路上，我已經開始期待聽日。", "On the way home, I'm already looking forward to tomorrow."]
+
+  - id: sty-new-year-yue
+    lang: yue
+    level: 2
+    title: "Lunar New Year visits"
+    lines:
+      - ["年初一，成家人一早換上新衫。", "On the first day of the new year, the whole family puts on new clothes early."]
+      - ["我哋第一站去爺爺嫲嫲屋企拜年。", "Our first stop is Grandpa and Grandma's place to pay New Year visits."]
+      - ["一入門口，我就講：「恭喜發財，身體健康！」", "As soon as I step in I say: \"Wishing you prosperity and good health!\""]
+      - ["嫲嫲笑到見牙唔見眼，俾咗封利是我。", "Grandma beams and gives me a red packet."]
+      - ["枱面擺滿晒糖果同年糕。", "The table is covered with sweets and New Year cake."]
+      - ["爺爺問我今年有咩計劃。", "Grandpa asks what my plans are this year."]
+      - ["我話想學好讀中文，佢好高興。", "I say I want to learn to read Chinese properly; he's very pleased."]
+      - ["跟住我哋去姑媽屋企，嗰度仲多人。", "Then we go to my aunt's place, which is even busier."]
+      - ["一班細路喺客廳度玩，好嘈。", "A bunch of kids are playing in the living room, very noisy."]
+      - ["表哥啱啱結咗婚，今年第一次派利是。", "My cousin just got married, and this year he hands out red packets for the first time."]
+      - ["佢一邊派一邊話：「好彩我準備咗好多封。」", "Handing them out he says: \"Lucky I prepared lots of them.\""]
+      - ["大人喺度打麻雀，細路就睇電視。", "The adults play mahjong while the kids watch TV."]
+      - ["夜晚我哋一齊去睇煙花。", "In the evening we all go to watch the fireworks."]
+      - ["海邊迫滿晒人，但係煙花好靚。", "The waterfront is packed, but the fireworks are beautiful."]
+      - ["返到屋企，我數吓啲利是，好滿足。", "Back home, I count my red packets, very satisfied."]
+      - ["阿媽話：「啲錢記住儲起佢呀。」", "Mum says: \"Remember to save that money.\""]
+
+  - id: sty-wedding-yue
+    lang: yue
+    level: 3
+    title: "A wedding banquet"
+    lines:
+      - ["表姐結婚，喺酒樓擺酒。", "My cousin is getting married and holding the banquet at a Chinese restaurant."]
+      - ["請帖寫住七點入席，我七點半先到。", "The invitation says seven o'clock, and I arrive at half past seven."]
+      - ["原來大家都係咁，好多枱仲係空嘅。", "It turns out everyone does that; lots of tables are still empty."]
+      - ["門口有人收人情，我交咗個紅封包。", "At the door someone collects gifts; I hand in a red envelope."]
+      - ["新郎新娘企喺門口同每個人影相。", "The bride and groom stand at the entrance taking photos with everyone."]
+      - ["我坐嗰枱有幾個我唔識嘅親戚。", "At my table there are a few relatives I don't know."]
+      - ["佢哋好熱情，不停問我做咩工、有冇拍拖。", "They're very warm, and keep asking what I do and whether I'm dating."]
+      - ["等到九點，終於起菜喇。", "At nine, the food finally starts coming."]
+      - ["第一道係乳豬，大家即刻拎起筷子。", "The first course is roast suckling pig, and everyone picks up their chopsticks."]
+      - ["跟住有魚、有雞、有龍蝦，一道接一道。", "Then fish, chicken, lobster, one course after another."]
+      - ["新郎新娘逐枱敬酒，大家一齊起身飲杯。", "The couple go from table to table toasting, and everyone stands up for a drink."]
+      - ["有人大叫：「飲勝！」全場都笑晒。", "Someone shouts: \"Cheers!\" and the whole room laughs."]
+      - ["食到最後，我已經飽到郁唔到。", "By the end I'm too full to move."]
+      - ["甜品係紅豆沙，我都係飲晒佢。", "Dessert is red bean soup, and I still finish it."]
+      - ["散席之前，表姐攬住我話多謝我嚟。", "Before everyone leaves, my cousin hugs me and thanks me for coming."]
+      - ["我祝佢哋白頭到老。", "I wish them a long and happy life together."]
+
+  - id: sty-lost-phone-yue
+    lang: yue
+    level: 2
+    title: "The lost phone"
+    lines:
+      - ["我落咗巴士先發覺唔見咗部手機。", "Only after getting off the bus do I notice my phone is gone."]
+      - ["我摸晒所有口袋，都搵唔到。", "I check all my pockets and can't find it."]
+      - ["我即刻借路人部電話打俾自己。", "I immediately borrow a passer-by's phone to call myself."]
+      - ["響咗好耐，終於有人聽。", "It rings for ages, and finally someone answers."]
+      - ["係巴士司機！佢話喺座位度搵到部手機。", "It's the bus driver! He says he found a phone on a seat."]
+      - ["佢叫我喺總站等佢。", "He tells me to wait for him at the terminus."]
+      - ["我搭的士去總站，心入面好緊張。", "I take a taxi to the terminus, really anxious."]
+      - ["等咗二十分鐘，嗰架巴士終於返嚟。", "After twenty minutes, that bus finally comes back."]
+      - ["司機落車，拎住我部手機，笑住揮手。", "The driver gets off holding my phone, smiling and waving."]
+      - ["我不停咁講多謝，想俾錢佢飲茶。", "I keep saying thank you and want to give him money for a drink."]
+      - ["佢搖頭話：「唔使，應該嘅。」", "He shakes his head: \"No need, it's what anyone should do.\""]
+      - ["我買咗兩罐汽水，硬塞咗一罐俾佢。", "I buy two cans of soda and insist he takes one."]
+      - ["佢終於收咗，話：「下次小心啲呀。」", "He finally accepts it: \"Be more careful next time.\""]
+      - ["返屋企嘅路上，我一直揸實部手機。", "On the way home, I keep a tight grip on my phone."]
+      - ["今日我覺得呢個城市好有人情味。", "Today this city feels really warm-hearted."]
+
+  - id: sty-mid-autumn-yue
+    lang: yue
+    level: 2
+    title: "Mid-Autumn night"
+    lines:
+      - ["中秋節嗰晚，屋企人一齊食團圓飯。", "On Mid-Autumn night, the family has a reunion dinner together."]
+      - ["阿媽整咗成枱餸，有雞有魚。", "Mum has cooked a whole table of dishes, chicken and fish."]
+      - ["食完飯，阿爸切月餅俾大家食。", "After dinner, Dad cuts mooncakes for everyone."]
+      - ["我鍾意食蓮蓉，細佬鍾意食冰皮。", "I like lotus seed paste; my little brother likes snow skin."]
+      - ["月餅好甜，一定要配茶。", "Mooncakes are very sweet; you need tea with them."]
+      - ["跟住我哋拎住燈籠去公園。", "Then we take lanterns to the park."]
+      - ["公園入面好多人，周圍都係燈籠。", "The park is crowded, with lanterns everywhere."]
+      - ["細佬嗰個燈籠係兔仔形，佢好開心。", "My little brother's lantern is shaped like a rabbit; he's thrilled."]
+      - ["我哋坐喺草地度睇月光。", "We sit on the grass and look at the moon."]
+      - ["今年個月亮特別圓，特別光。", "This year the moon is especially round and bright."]
+      - ["阿爸講起佢細個點樣過中秋。", "Dad talks about how he spent Mid-Autumn as a child."]
+      - ["佢話以前啲燈籠係用紙整，好易燒著。", "He says lanterns used to be made of paper and caught fire easily."]
+      - ["大家聽到都笑起嚟。", "Everyone laughs hearing that."]
+      - ["夜啲，細佬喺我膊頭瞓著咗。", "Later on, my little brother falls asleep on my shoulder."]
+      - ["我望住個月亮，覺得好幸福。", "Looking at the moon, I feel very happy."]

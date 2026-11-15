@@ -6,6 +6,8 @@
 /// and say whether you got it. Two right in a row takes a word off the list.
 library;
 
+import '../engine/pictures.dart';
+
 import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
@@ -237,6 +239,16 @@ class _PracticeWordsScreenState extends State<PracticeWordsScreen> {
                             ),
                           ),
                         ),
+                        if (pictureForMeaning(_ctx.en) case final pic?)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12),
+                            child: Center(
+                              child: Text(
+                                pic,
+                                style: const TextStyle(fontSize: 48),
+                              ),
+                            ),
+                          ),
                         if (_ctx.en.isNotEmpty) ...[
                           const SizedBox(height: 10),
                           Text(
