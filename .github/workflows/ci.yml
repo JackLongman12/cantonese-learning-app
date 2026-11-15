@@ -29,9 +29,12 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-      # content.db is a build output: build it so the end-to-end reader test runs.
+      # content.db is a build output: build it so the app compiles. CI has none of the
+      # downloaded reference data (dictionary, maps, food pages), so the screen tests
+      # that read real content run on the dev machine before each release; CI runs the
+      # analyzer and the pure-Dart engine and platform tests.
       - run: pip install -e pipeline
       - run: python -m duk build && python -m duk bundle --no-audio
-      - run: mkdir -p app/assets/content/audio
+      - run: mkdir -p app/assets/content/audio app/assets/characters app/assets/cards
       - working-directory: app
-        run: flutter pub get && flutter analyze && flutter test --exclude-tags golden
+        run: flutter pub get && flutter analyze && flutter test test/engine test/events test/platform
