@@ -231,7 +231,7 @@ void main() {
 
   // The funny one: a "translation" you should not trust. Readings from the dictionary
   // (duk annotate): 屌 diu2, 你 nei5, 老 lou5, 母 mou2, 冚 ham6, 家 gaa1, 剷 caan2.
-  testWidgets('mobile ad 9:16, funny', (t) async {
+  Future<void> funnyAd(WidgetTester t, Widget mascot, String out) async {
     await loadFont('NotoSansHK', 'assets/fonts/NotoSansHK.ttf');
     t.view.devicePixelRatio = 1;
     t.view.physicalSize = const Size(1080, 1920);
@@ -264,36 +264,12 @@ void main() {
                   Text('She smiled and said:', style: sans(64, Palette.bark)),
                   const SizedBox(height: 60),
                   // the line, with Jyutping on top, as in the app
-                  // an incoming chat message: sender, bubble with a tail corner, time
-                  Padding(
-                    padding: const EdgeInsets.only(left: 90),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Neighbor',
-                        style: sans(34, Palette.barkSoft, w: FontWeight.w500),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
                   Container(
                     width: 900,
                     padding: const EdgeInsets.symmetric(vertical: 56),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(56),
-                        bottomLeft: Radius.circular(56),
-                        bottomRight: Radius.circular(56),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0x14000000),
-                          blurRadius: 24,
-                          offset: Offset(0, 8),
-                        ),
-                      ],
+                    decoration: BoxDecoration(
+                      color: Palette.oat,
+                      borderRadius: BorderRadius.circular(48),
                     ),
                     child: Column(
                       children: [
@@ -333,17 +309,7 @@ void main() {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 100, top: 10),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        '9:41',
-                        style: sans(30, Palette.barkSoft, w: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 56),
                   Text(
                     '"I wish your family well!"',
                     style: sans(68, Palette.terra),
@@ -354,7 +320,7 @@ void main() {
                     style: sans(48, Palette.barkSoft, w: FontWeight.w400),
                   ),
                   const SizedBox(height: 40),
-                  const Chick(mood: ChickMood.confused, size: 290),
+                  mascot,
                   const Spacer(),
                   Text(
                     'Learn what they really said.',
@@ -390,10 +356,36 @@ void main() {
         ),
       ),
     );
+    // pictures load off the test clock
+    await t.runAsync(() async {
+      for (final e in find.byType(Image).evaluate()) {
+        await precacheImage((e.widget as Image).image, e);
+      }
+    });
     await t.pumpAndSettle();
     await expectLater(
       find.byKey(const ValueKey('funny')),
-      matchesGoldenFile('../../../docs/ad_9x16_funny.png'),
+      matchesGoldenFile(out),
+    );
+  }
+
+  testWidgets('mobile ad 9:16, funny', (t) async {
+    await funnyAd(
+      t,
+      const Chick(mood: ChickMood.confused, size: 290),
+      '../../../docs/ad_9x16_funny.png',
     );
   });
+
+  // Personal-use variant with a picture kept out of the repo (docs/local is
+  // git-ignored). Skipped when the picture is not there.
+  final local = File('../docs/local/eavesdrop.png');
+  testWidgets('mobile ad 9:16, funny, local picture', (t) async {
+    final pic = MemoryImage(local.readAsBytesSync());
+    await funnyAd(
+      t,
+      Image(image: pic, width: 440, filterQuality: FilterQuality.high),
+      '../../../docs/local/ad_9x16_funny.png',
+    );
+  }, skip: !local.existsSync());
 }

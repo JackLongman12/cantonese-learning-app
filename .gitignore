@@ -50,3 +50,6 @@ data/fonts-full/
 # Irasutoya character images: downloaded at build time, never redistributed (content/characters.yaml)
 app/assets/characters/*
 !app/assets/characters/README.md
+
+# personal-use images (not for the public repo)
+docs/local/
