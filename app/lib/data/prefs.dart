@@ -45,6 +45,10 @@ class Prefs {
   double get textScale => (_data['text_scale'] as num?)?.toDouble() ?? 1.0;
   set textScale(double v) => _set('text_scale', v);
 
+  /// Show the English after a sentence's audio finishes (on by default).
+  bool get autoMeaning => _data['auto_meaning'] != false;
+  set autoMeaning(bool v) => _set('auto_meaning', v);
+
   /// Soft UI sounds on taps, next, save, results (on by default).
   bool get soundEffects => _data['sound_effects'] != false;
   set soundEffects(bool v) => _set('sound_effects', v);

@@ -1,0 +1,491 @@
+# Swearing and rude Cantonese (粗口): how it is really used, how strong each word is, and
+# how it gets written online (DLLM, on9, 9, L, 7). Slurs aimed at groups of people are
+# left out on purpose.
+# Drafted by an LLM; reviewed: false until the owner confirms wording, strength notes and
+# readings. 撚 in swearing is lan2 (CC-Canto: 乜撚嘢 mat1 lan2 je5, 你咁撚衰 nei5 gam3 lan2
+# seoi1), pinned per sentence with fix_yue.
+scenario:
+  id: scn-swearing
+  title: Swearing and rude Cantonese
+  region: both
+  tags: [swearing, slang, culture]
+
+defaults: {register: spoken, source: llm, region: both}
+
+sentences:
+  # --- the big five: 屌 撚 鳩 柒 閪 -------------------------------------------------
+  - id: sent-sw-001
+    yue: 屌！
+    en: Fuck!
+    notes: 屌 diu2 is the strongest of the five big swear words. Alone it is an exclamation.
+    tags: [big-five, strong]
+  - id: sent-sw-002
+    yue: 屌你老母！
+    en: Fuck your mother!
+    notes: The classic full insult. Very strong; a real fight starter.
+    tags: [big-five, strong]
+  - id: sent-sw-003
+    yue: 屌！又塞車。
+    en: Fuck, traffic again.
+    notes: Swearing at a situation, not a person. Common, still strong.
+    tags: [big-five, strong]
+  - id: sent-sw-004
+    yue: 你講乜撚嘢呀？
+    en: What the fuck are you talking about?
+    notes: 撚 lan2 (penis) inserted for emphasis. Very common among friends; rude to strangers.
+    fix_yue: {撚: lan2}
+    tags: [big-five, intensifier]
+  - id: sent-sw-005
+    yue: 做乜撚嘢呀你？
+    en: What the fuck are you doing?
+    fix_yue: {撚: lan2}
+    tags: [big-five, intensifier]
+  - id: sent-sw-006
+    yue: 你咁撚衰嘅！
+    en: You're such a prick!
+    fix_yue: {撚: lan2}
+    tags: [big-five, intensifier]
+  - id: sent-sw-007
+    yue: 呢間餐廳好撚好食。
+    en: This restaurant is fucking delicious.
+    notes: 好撚 + adjective is praise as often as complaint.
+    fix_yue: {撚: lan2}
+    tags: [big-five, intensifier]
+  - id: sent-sw-008
+    yue: 今日熱撚到死。
+    en: It's fucking boiling today.
+    fix_yue: {撚: lan2}
+    tags: [big-five, intensifier]
+  - id: sent-sw-009
+    yue: 你知條撚咩！
+    en: What the fuck do you know!
+    fix_yue: {撚: lan2}
+    tags: [big-five, strong]
+  - id: sent-sw-010
+    yue: 佢正一戇鳩。
+    en: He's a real fucking idiot.
+    notes: 鳩 gau1 (penis). 戇鳩 = stupid; one of the most common insults.
+    tags: [big-five, insult]
+  - id: sent-sw-011
+    yue: 唔好鳩噏啦。
+    en: Stop talking bullshit.
+    notes: 鳩噏 = to talk nonsense. Rude but casual among friends.
+    tags: [big-five]
+  - id: sent-sw-012
+    yue: 佢成日鳩噏廿四。
+    en: He's always talking utter nonsense.
+    tags: [big-five]
+  - id: sent-sw-013
+    yue: 你唔好鳩做啦。
+    en: Don't just do it any old fucking way.
+    notes: 鳩 before a verb = doing it carelessly.
+    tags: [big-five]
+  - id: sent-sw-014
+    yue: 佢個人好柒。
+    en: He's a total dork.
+    notes: 柒 cat6 (penis). 柒 as an adjective = foolish, embarrassing. Milder than 戇鳩.
+    tags: [big-five, insult]
+  - id: sent-sw-015
+    yue: 我頭先真係柒咗。
+    en: I really made a fool of myself just now.
+    notes: 柒咗 = got embarrassed. You can say this about yourself without offending anyone.
+    tags: [big-five, mild]
+  - id: sent-sw-016
+    yue: 你個柒頭！
+    en: You idiot!
+    notes: CC-Canto lists 柒頭 as a curse meaning sucker or fool.
+    tags: [big-five, insult]
+  - id: sent-sw-017
+    yue: 唔好扮柒啦。
+    en: Stop acting like an idiot.
+    tags: [big-five]
+  - id: sent-sw-018
+    yue: 屌閪係好重嘅粗口。
+    en: 屌閪 is very heavy swearing.
+    notes: 閪 hai1 (vulva) is the one most people avoid even when swearing. Know it, rarely say it.
+    tags: [big-five, strong]
+  - id: sent-sw-019
+    yue: 廣東話有五個最出名嘅粗口字。
+    en: Cantonese has five best-known swear words.
+    notes: 屌 diu2, 撚 lan2, 鳩 gau1, 柒 cat6, 閪 hai1.
+    register: written
+    tags: [culture]
+  - id: sent-sw-020
+    yue: 好多人話粗口係廣東話嘅一部分。
+    en: Many people say swearing is part of Cantonese.
+    register: written
+    tags: [culture]
+
+  # --- everyday insults ------------------------------------------------------------
+  - id: sent-sw-021
+    yue: 仆街！
+    en: Damn it! / Drop dead!
+    notes: 仆街 = "fall in the street". At a thing it means damn; at a person it's a curse.
+    tags: [insult, medium]
+  - id: sent-sw-022
+    yue: 仆街啦，我唔記得帶鎖匙。
+    en: Damn, I forgot my keys.
+    tags: [medium]
+  - id: sent-sw-023
+    yue: 你個仆街！
+    en: You bastard!
+    tags: [insult, medium]
+  - id: sent-sw-024
+    yue: 冚家鏟！
+    en: May your whole family die!
+    notes: 冚家鏟 = wipe out the whole family. Old-fashioned but very nasty.
+    tags: [insult, strong]
+  - id: sent-sw-025
+    yue: 你黐線㗎？
+    en: Are you crazy?
+    notes: 黐線 = crossed wires. Mild; fine with friends.
+    tags: [insult, mild]
+  - id: sent-sw-026
+    yue: 你黐撚線呀？
+    en: Are you fucking crazy?
+    fix_yue: {撚: lan2}
+    tags: [insult, intensifier]
+  - id: sent-sw-027
+    yue: 佢黐孖筋。
+    en: He's lost his mind.
+    notes: 黐孖筋 = tangled tendons. Mild, almost playful.
+    tags: [insult, mild]
+  - id: sent-sw-028
+    yue: 你個粉腸！
+    en: You twit!
+    notes: 粉腸 (pig intestine) for a useless or annoying person. Mild.
+    tags: [insult, mild]
+  - id: sent-sw-029
+    yue: 佢正廢柴，乜都唔識。
+    en: He's useless, can't do anything.
+    tags: [insult, mild]
+  - id: sent-sw-030
+    yue: 你係咪死蠢㗎？
+    en: Are you dead stupid?
+    tags: [insult, mild]
+  - id: sent-sw-031
+    yue: 戇居居噉企喺度。
+    en: Standing there like a dope.
+    notes: 戇居 is the polite cousin of 戇鳩.
+    tags: [insult, mild, euphemism]
+  - id: sent-sw-032
+    yue: 衰人！
+    en: Meanie! / Jerk!
+    notes: Mild; often said half-jokingly.
+    tags: [insult, mild]
+  - id: sent-sw-033
+    yue: 死八婆，咪阻住條路！
+    en: Damn woman, get out of the way!
+    notes: 八婆 is an insult aimed at women. Common, rude.
+    tags: [insult, medium]
+  - id: sent-sw-034
+    yue: 佢個衰樣真係激死人。
+    en: His smug face is infuriating.
+    tags: [insult, mild]
+  - id: sent-sw-035
+    yue: 你個樣好欠揍。
+    en: Your face is asking to be punched.
+    tags: [insult, mild]
+  - id: sent-sw-036
+    yue: 佢係人渣。
+    en: He's scum.
+    tags: [insult, medium]
+  - id: sent-sw-037
+    yue: 收皮啦你！
+    en: Give it a rest! / Get lost!
+    notes: 收皮 = shut up, give up. Rude but not swearing.
+    tags: [mild]
+  - id: sent-sw-038
+    yue: 收聲啦！
+    en: Shut up!
+    tags: [mild]
+  - id: sent-sw-039
+    yue: 躝屍！
+    en: Get the hell out!
+    notes: 躝屍 = drag your corpse away. Strong.
+    tags: [medium]
+  - id: sent-sw-040
+    yue: 你去死啦！
+    en: Go to hell!
+    tags: [medium]
+
+  # --- mild swearing and euphemisms --------------------------------------------------
+  - id: sent-sw-041
+    yue: 頂你個肺！
+    en: Damn you! (lit. butt your lung)
+    notes: A safe stand-in for 屌你老母; older people say it.
+    tags: [euphemism, mild]
+  - id: sent-sw-042
+    yue: 頂！又落雨。
+    en: Damn, raining again.
+    notes: 頂 alone is the clean version of 屌.
+    tags: [euphemism, mild]
+  - id: sent-sw-043
+    yue: 頂唔順呀！
+    en: I can't stand it!
+    tags: [mild]
+  - id: sent-sw-044
+    yue: 你搞乜鬼呀？
+    en: What the hell are you doing?
+    notes: 鬼 (ghost) is the clean intensifier where 撚 would be the dirty one.
+    tags: [euphemism, mild]
+  - id: sent-sw-045
+    yue: 今日好鬼凍。
+    en: It's bloody cold today.
+    tags: [euphemism, mild]
+  - id: sent-sw-046
+    yue: 你講乜鬼嘢呀？
+    en: What the heck are you saying?
+    tags: [euphemism, mild]
+  - id: sent-sw-047
+    yue: 撞鬼咩！
+    en: What the hell!
+    tags: [mild]
+  - id: sent-sw-048
+    yue: 弊傢伙！
+    en: Oh no! / Damn!
+    tags: [mild]
+  - id: sent-sw-049
+    yue: 大鑊喇！
+    en: We're screwed!
+    notes: 大鑊 = big wok, big trouble. Not swearing.
+    tags: [mild]
+  - id: sent-sw-050
+    yue: 激死我喇！
+    en: You're driving me mad!
+    tags: [mild]
+  - id: sent-sw-051
+    yue: 你識條鐵咩！
+    en: You don't know squat!
+    notes: 識條鐵 is the clean version of 識條鳩.
+    tags: [euphemism, mild]
+  - id: sent-sw-052
+    yue: 正一戇居佬。
+    en: A real dope.
+    tags: [euphemism, mild]
+  - id: sent-sw-053
+    yue: 死火，部車壞咗。
+    en: Damn, the car's broken down.
+    tags: [mild]
+  - id: sent-sw-054
+    yue: 好嘢！今晚食大餐！
+    en: Hell yeah! Big dinner tonight!
+    notes: Not swearing, but sits where English would swear for joy.
+    tags: [mild]
+  - id: sent-sw-055
+    yue: 你條友真係癲嘅。
+    en: That guy is nuts.
+    tags: [mild]
+
+  # --- how it is written online -----------------------------------------------------
+  - id: sent-sw-056
+    yue: 網上成日見到DLLM。
+    en: You often see DLLM online.
+    notes: DLLM = 屌你老母 (diu2 lei5 lou5 mou2, with 你 said lei5).
+    register: written
+    tags: [online]
+  - id: sent-sw-057
+    yue: on9係戇鳩嘅意思。
+    en: on9 means 戇鳩.
+    notes: '"on" sounds like 戇 (ngong6) said lazily, and 9 (gau2) like 鳩 (gau1).'
+    register: written
+    tags: [online]
+  - id: sent-sw-058
+    yue: 你好on9呀。
+    en: You're such an idiot.
+    register: written
+    tags: [online]
+  - id: sent-sw-059
+    yue: 有人會寫個L字代替撚。
+    en: Some people write L instead of 撚.
+    register: written
+    fix_yue: {撚: lan2}
+    tags: [online]
+  - id: sent-sw-060
+    yue: 好L正！
+    en: Fucking awesome!
+    notes: L stands for 撚 (lan2).
+    register: written
+    tags: [online]
+  - id: sent-sw-061
+    yue: 有人寫7代替柒。
+    en: Some people write 7 for 柒.
+    notes: 7 (cat1) sounds like 柒 (cat6).
+    register: written
+    tags: [online]
+  - id: sent-sw-062
+    yue: 9up即係鳩噏。
+    en: 9up means 鳩噏 (talking nonsense).
+    register: written
+    tags: [online]
+  - id: sent-sw-063
+    yue: 屌字有時會寫成丟。
+    en: 屌 is sometimes written as 丟.
+    notes: 丟 (diu1) is a clean character with nearly the same sound.
+    register: written
+    tags: [online, euphemism]
+  - id: sent-sw-064
+    yue: 丟，又遲到。
+    en: Damn, late again.
+    register: written
+    tags: [online, euphemism]
+  - id: sent-sw-065
+    yue: 報紙會用交叉代替粗口字。
+    en: Newspapers replace swear words with crosses.
+    register: written
+    tags: [culture]
+  - id: sent-sw-066
+    yue: 電視播出嘅時候會消音。
+    en: TV bleeps it out.
+    register: written
+    tags: [culture]
+
+  # --- among friends -----------------------------------------------------------------
+  - id: sent-sw-067
+    yue: 佢啲朋友講嘢句句都有粗口。
+    en: His friends swear in every sentence.
+    tags: [culture]
+  - id: sent-sw-068
+    yue: 熟啲嘅朋友講粗口唔使介意。
+    en: With close friends, swearing is no big deal.
+    tags: [culture]
+  - id: sent-sw-069
+    yue: 喂，你條仆街終於嚟喇！
+    en: Hey, you bastard, finally here!
+    notes: Between close friends this is affectionate.
+    tags: [friends, medium]
+  - id: sent-sw-070
+    yue: 你個衰仔又遲到。
+    en: You rascal, late again.
+    tags: [friends, mild]
+  - id: sent-sw-071
+    yue: 嘩，好撚勁呀！
+    en: Whoa, fucking amazing!
+    fix_yue: {撚: lan2}
+    tags: [friends, intensifier]
+  - id: sent-sw-072
+    yue: 屌，你中咗六合彩？
+    en: Holy shit, you won the Mark Six?
+    notes: 屌 can be pure surprise among friends.
+    tags: [friends, strong]
+  - id: sent-sw-073
+    yue: 唔好鳩笑啦。
+    en: Quit fucking laughing.
+    tags: [friends]
+  - id: sent-sw-074
+    yue: 我今日真係柒到爆。
+    en: I was a total idiot today.
+    tags: [friends, mild]
+  - id: sent-sw-075
+    yue: 你又玩嘢？
+    en: Are you messing with me again?
+    tags: [friends, mild]
+  - id: sent-sw-076
+    yue: 唔好再撚化我啦。
+    en: Stop pulling my leg.
+    notes: CC-Canto gives 撚化 as nan2 faa3, to tease playfully. Not swearing.
+    tags: [friends, mild]
+
+  # --- when not to swear ------------------------------------------------------------
+  - id: sent-sw-077
+    yue: 喺長輩面前唔好講粗口。
+    en: Don't swear in front of elders.
+    tags: [culture]
+  - id: sent-sw-078
+    yue: 返工講粗口會俾人覺得冇禮貌。
+    en: Swearing at work comes across as rude.
+    tags: [culture]
+  - id: sent-sw-079
+    yue: 細路仔講粗口會俾阿媽鬧。
+    en: Kids who swear get scolded by their mum.
+    tags: [culture]
+  - id: sent-sw-080
+    yue: 唔好喺細路仔面前講粗口。
+    en: Don't swear in front of kids.
+    tags: [culture]
+  - id: sent-sw-081
+    yue: 佢一嬲就講粗口。
+    en: He swears as soon as he gets angry.
+    tags: [culture]
+  - id: sent-sw-082
+    yue: 你講嘢斯文啲啦。
+    en: Watch your language.
+    notes: The polite way to tell someone to stop swearing.
+    tags: [culture, mild]
+  - id: sent-sw-083
+    yue: 唔該你唔好講粗口。
+    en: Please don't swear.
+    tags: [culture]
+  - id: sent-sw-084
+    yue: 對陌生人講粗口好容易打交。
+    en: Swearing at strangers easily starts a fight.
+    tags: [culture]
+  - id: sent-sw-085
+    yue: 講粗口唔代表你夠型。
+    en: Swearing doesn't make you cool.
+    tags: [culture]
+
+  # --- reading it in the wild --------------------------------------------------------
+  - id: sent-sw-086
+    yue: 佢揸車嗰陣成日鬧人。
+    en: He's always swearing at people when he drives.
+    tags: [culture]
+  - id: sent-sw-087
+    yue: 佢喺車上面大聲講粗口。
+    en: He was swearing loudly on the bus.
+    tags: [culture]
+  - id: sent-sw-088
+    yue: 討論區啲留言成日有粗口。
+    en: Forum comments are full of swearing.
+    register: written
+    tags: [online]
+  - id: sent-sw-089
+    yue: 呢句粗口我睇唔明。
+    en: I can't read this swear word.
+    tags: [online]
+  - id: sent-sw-090
+    yue: 啲粗口字好多都冇人識寫。
+    en: Many swear words, few people know how to write.
+    notes: People often say them fluently but have never seen 閪 or 撚 written.
+    tags: [culture]
+  - id: sent-sw-091
+    yue: 佢喺電話度鬧咗半個鐘。
+    en: He yelled on the phone for half an hour.
+    tags: [culture]
+  - id: sent-sw-092
+    yue: 球迷睇波嗰陣成日講粗口。
+    en: Football fans swear a lot when watching matches.
+    tags: [culture]
+  - id: sent-sw-093
+    yue: 打機輸咗，佢即刻爆粗。
+    en: He lost the game and immediately swore.
+    notes: 爆粗 = to burst out swearing.
+    tags: [culture]
+  - id: sent-sw-094
+    yue: 佢一開口就爆粗。
+    en: He swears the moment he opens his mouth.
+    tags: [culture]
+  - id: sent-sw-095
+    yue: 爆粗係講粗口嘅意思。
+    en: 爆粗 means to swear.
+    tags: [culture]
+  - id: sent-sw-096
+    yue: 粗口又叫做「粗話」。
+    en: Swearing is also called 粗話.
+    tags: [culture]
+  - id: sent-sw-097
+    yue: 佢講嘢好粗俗。
+    en: He talks very crudely.
+    tags: [culture]
+  - id: sent-sw-098
+    yue: 呢套戲好多粗口。
+    en: This film has a lot of swearing.
+    tags: [culture]
+  - id: sent-sw-099
+    yue: 呢首歌啲歌詞有粗口。
+    en: This song's lyrics have swearing.
+    tags: [culture]
+  - id: sent-sw-100
+    yue: 識聽粗口，唔一定要講。
+    en: Understand swearing; you don't have to use it.
+    tags: [culture]

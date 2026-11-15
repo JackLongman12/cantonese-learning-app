@@ -176,6 +176,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 SwitchListTile(
+                  key: const ValueKey('set-auto-meaning'),
+                  title: const Text('Show meaning after listening'),
+                  subtitle: const Text(
+                    'The English appears when a sentence finishes playing',
+                  ),
+                  value: p.autoMeaning,
+                  onChanged: (v) {
+                    p.autoMeaning = v;
+                    _changed('auto_meaning', !v, v);
+                  },
+                ),
+                SwitchListTile(
                   key: const ValueKey('set-sfx'),
                   title: const Text('Sound effects'),
                   subtitle: const Text(

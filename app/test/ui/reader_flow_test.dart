@@ -102,6 +102,14 @@ void main() {
 
     // the sentence plays by itself when it opens, and again on Listen
     expect(played.single, startsWith('audio/'));
+    // once it has played, the meaning shows by itself
+    await t.pump();
+    expect(
+      store.events.any(
+        (e) => e.type == 'item.reveal' && e.payload['auto'] == true,
+      ),
+      isTrue,
+    );
     await t.tap(find.text('Listen'));
     await t.pump();
     expect(played, hasLength(2));

@@ -1,0 +1,41 @@
+# Conversations for the swearing topic: when swearing is friendly, when it starts trouble,
+# and how people tone it down. Drafted by an LLM; reviewed: false until the owner approves.
+scenario: scn-swearing
+dialogues:
+  - id: dlg-sw-01
+    title: "Old friends meet (friendly swearing)"
+    lines:
+      - ["朋友", "喂，你條仆街終於嚟喇！", "Hey, you bastard, finally here!"]
+      - ["你", "塞車呀，冇計。", "Traffic, nothing I could do."]
+      - ["朋友", "成日都係你最遲。", "You're always the last one."]
+      - ["你", "收皮啦，請你飲嘢得未？", "Give it a rest, I'll buy you a drink, OK?"]
+      - ["朋友", "好嘢！", "Hell yeah!"]
+  - id: dlg-sw-02
+    title: "Watching football"
+    lines:
+      - ["朋友", "屌！咁都射唔入？", "Fuck! How did he miss that?"]
+      - ["你", "佢今日真係柒到爆。", "He's been a total idiot today."]
+      - ["朋友", "教練都唔知做乜鬼。", "The coach has no idea what he's doing either."]
+      - ["你", "頂唔順，我去攞啤酒。", "Can't take it, I'm getting a beer."]
+  - id: dlg-sw-03
+    title: "Someone cuts the queue"
+    lines:
+      - ["路人", "喂，你打尖呀！", "Hey, you're cutting the queue!"]
+      - ["你", "唔好意思，我唔知有人排緊。", "Sorry, I didn't know people were queuing."]
+      - ["路人", "你黐線㗎？咁長條人龍睇唔到？", "Are you crazy? You can't see that long line?"]
+      - ["你", "講嘢斯文啲啦，我而家去排囉。", "Watch your language, I'm going to queue now."]
+  - id: dlg-sw-04
+    title: "Reading a forum post"
+    lines:
+      - ["朋友", "你睇吓呢個留言，句句都有粗口。", "Look at this comment, swearing in every line."]
+      - ["你", "DLLM係咩意思？", "What does DLLM mean?"]
+      - ["朋友", "即係屌你老母，好粗㗎。", "It's 屌你老母, very rude."]
+      - ["你", "噉on9呢？", "And on9?"]
+      - ["朋友", "戇鳩囉，都係鬧人蠢。", "戇鳩, calling someone stupid."]
+  - id: dlg-sw-05
+    title: "Kids are listening"
+    lines:
+      - ["朋友", "屌，又落雨！", "Fuck, raining again!"]
+      - ["你", "喂，細路仔喺度呀。", "Hey, there are kids here."]
+      - ["朋友", "唔好意思，頂！又落雨。", "Sorry. Damn! Raining again."]
+      - ["你", "好啲喇。", "That's better."]

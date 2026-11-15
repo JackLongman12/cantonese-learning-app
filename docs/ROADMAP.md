@@ -116,6 +116,7 @@ Goal: prove the three risky things (readings, audio, ruby rendering) on 20 sente
 | Getting around Hong Kong (MTR, minibus, Octopus) | to write | 0 | 0 |
 | Hong Kong daily life (茶餐廳, shopping, districts) | to write | 0 | 0 |
 | Numbers, time, dates and prices | `scenarios/macau/numbers-and-time.yaml` | 100 | 0 |
+| Swearing and rude Cantonese (粗口: the big five, insults, euphemisms, DLLM/on9, when not to) — owner's request; no group slurs; 撚 = lan2 per CC-Canto | `scenarios/hk/swearing.yaml` + 5 conversations | 100 | 0 |
 
 Write one topic at a time: draft → `duk build` → clear the review queue → print readings and
 check them by eye → `duk tts` → `duk bundle`. The owner then confirms wording by ear.

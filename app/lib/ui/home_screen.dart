@@ -751,6 +751,7 @@ IconData _topicIcon(String id) {
     'signs': Icons.signpost_rounded,
     'messaging': Icons.smartphone_rounded,
     'tourism': Icons.hotel_rounded,
+    'swearing': Icons.sentiment_very_dissatisfied_rounded,
   };
   for (final e in byKeyword.entries) {
     if (id.contains(e.key)) return e.value;

@@ -33,7 +33,7 @@ Stored one JSON object per line (`.jsonl`), gzip-compressed for sync.
 
 ### Items
 - `item.shown` `{exposure_id, sentence_id?|card_id?, lang, item_ids[], scaffold[], planner: {score, reasons[]}, pos_in_session}`
-- `item.reveal` `{exposure_id, item_id, token_idx, what: reading|tone|meaning|translation, latency_ms}`
+- `item.reveal` `{exposure_id, item_id, token_idx, what: reading|tone|meaning|translation, latency_ms, auto?}` — `auto: true` when the app showed the translation after the audio finished (not a learner request)
 - `item.audio` `{exposure_id, scope: sentence|char|word, rate: normal|slow, nth, available, auto?}` — `auto: true` when the app played it on open (not counted in `audio_plays`)
 - `item.grade` `{exposure_id, grade: again|hard|good|easy, explicit: bool, latency_ms}`
 - `item.done` `{exposure_id, dwell_ms, active_ms, reveals, audio_plays, skipped}`

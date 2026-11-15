@@ -220,8 +220,22 @@ class _ReaderScreenState extends State<ReaderScreen> {
       _toast('No audio for this sentence yet');
       return;
     }
+    final shownAt = _exposure;
     try {
       await _s.playAudio(path);
+      // the meaning appears once the line has been heard (setting, on by default)
+      if (mounted &&
+          _s.prefs.autoMeaning &&
+          !_showTranslation &&
+          _exposure == shownAt &&
+          !_finished) {
+        _s.logger.log('item.reveal', {
+          'exposure_id': _exposureId,
+          'what': 'translation',
+          'auto': true,
+        });
+        setState(() => _showTranslation = true);
+      }
     } on Object catch (e) {
       // automatic playback fails quietly; a tap on Listen says what went wrong
       if (mounted && !auto) _toast('Could not play audio: $e');
