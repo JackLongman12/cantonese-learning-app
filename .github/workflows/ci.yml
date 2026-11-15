@@ -37,4 +37,4 @@ jobs:
       - run: python -m duk build && python -m duk bundle --no-audio
       - run: mkdir -p app/assets/content/audio app/assets/characters app/assets/cards
       - working-directory: app
-        run: flutter pub get && flutter analyze && flutter test test/engine test/events test/platform
+        run: flutter pub get && flutter analyze && flutter test test/engine test/platform

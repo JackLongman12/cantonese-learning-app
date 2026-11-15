@@ -28,7 +28,7 @@ void main() {
     addTearDown(t.view.reset);
 
     final Uint8List shot = File(
-      'test/ui/goldens/preview_phone_home_day2.png',
+      'test/ui/goldens/preview_phone_reader_new.png',
     ).readAsBytesSync();
     final image = MemoryImage(shot);
 
@@ -70,21 +70,12 @@ void main() {
                           ),
                           const SizedBox(height: 20),
                           Text(
-                            'A beginner-friendly app\nfor learning Cantonese.',
+                            'Beginner-friendly Cantonese',
                             style: theme.textTheme.headlineSmall?.copyWith(
                               fontSize: 38,
                               fontWeight: FontWeight.w400,
                               color: Palette.barkSoft,
                               height: 1.35,
-                            ),
-                          ),
-                          const SizedBox(height: 28),
-                          Text(
-                            'Real Macau and Hong Kong sentences · Jyutping help that fades as you learn',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w500,
-                              color: Palette.terraDeep,
                             ),
                           ),
                         ],
