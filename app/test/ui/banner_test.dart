@@ -264,12 +264,36 @@ void main() {
                   Text('She smiled and said:', style: sans(64, Palette.bark)),
                   const SizedBox(height: 60),
                   // the line, with Jyutping on top, as in the app
+                  // an incoming chat message: sender, bubble with a tail corner, time
+                  Padding(
+                    padding: const EdgeInsets.only(left: 90),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Neighbor',
+                        style: sans(34, Palette.barkSoft, w: FontWeight.w500),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   Container(
                     width: 900,
                     padding: const EdgeInsets.symmetric(vertical: 56),
-                    decoration: BoxDecoration(
-                      color: Palette.oat,
-                      borderRadius: BorderRadius.circular(48),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(56),
+                        bottomLeft: Radius.circular(56),
+                        bottomRight: Radius.circular(56),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0x14000000),
+                          blurRadius: 24,
+                          offset: Offset(0, 8),
+                        ),
+                      ],
                     ),
                     child: Column(
                       children: [
@@ -309,15 +333,28 @@ void main() {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 56),
-                  Text('"I wish your family well!"', style: sans(68, Palette.terra)),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 100, top: 10),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        '9:41',
+                        style: sans(30, Palette.barkSoft, w: FontWeight.w400),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  Text(
+                    '"I wish your family well!"',
+                    style: sans(68, Palette.terra),
+                  ),
                   const SizedBox(height: 14),
                   Text(
                     '...right?',
                     style: sans(48, Palette.barkSoft, w: FontWeight.w400),
                   ),
                   const SizedBox(height: 40),
-                  const Chick(mood: ChickMood.confused, size: 380),
+                  const Chick(mood: ChickMood.confused, size: 290),
                   const Spacer(),
                   Text(
                     'Learn what they really said.',

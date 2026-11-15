@@ -202,9 +202,18 @@ class _ChickPainter extends CustomPainter {
           ..drawLine(const Offset(2.2, -5.5), const Offset(5, -5.5), l);
         _beak(c);
       case ChickMood.confused:
+        // puzzled: two dot eyes, one a little bigger, one brow arched up over it
         c
-          ..drawCircle(const Offset(-3.6, -5.5), 2, eye)
-          ..drawCircle(const Offset(3.5, -5.4), 2, _stroke(ink.eye, 1));
+          ..drawCircle(const Offset(-3.6, -5.3), 1.7, eye)
+          ..drawCircle(const Offset(3.6, -5.6), 2.2, eye)
+          ..drawCircle(const Offset(-3.1, -5.8), 0.6, white)
+          ..drawCircle(const Offset(4.2, -6.3), 0.75, white)
+          ..drawPath(
+            Path()
+              ..moveTo(1.4, -9.8)
+              ..quadraticBezierTo(3.8, -12.6, 6.0, -10.6),
+            _stroke(ink.eye, 1),
+          );
         c.drawPath(
           Path()
             ..moveTo(-1.8, -2)
