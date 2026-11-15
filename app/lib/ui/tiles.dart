@@ -125,10 +125,17 @@ class TileGrid extends StatelessWidget {
     builder: (context, box) {
       final cols = box.maxWidth >= 560 ? 3 : 2;
       final w = (box.maxWidth - 10 * (cols - 1)) / cols;
+      // a part-filled last row stretches its tiles to fill it: no blank gap
+      final rest = children.length % cols;
+      final wLast = rest == 0 ? w : (box.maxWidth - 10 * (rest - 1)) / rest;
+      final firstOfLast = children.length - rest;
       return Wrap(
         spacing: 10,
         runSpacing: 10,
-        children: [for (final c in children) SizedBox(width: w, child: c)],
+        children: [
+          for (final (i, c) in children.indexed)
+            SizedBox(width: i >= firstOfLast ? wLast : w, child: c),
+        ],
       );
     },
   );

@@ -1,5 +1,6 @@
-/// DuckLearn mark: the duckling's face fills the whole tile, as an app icon should.
-/// Drawn in code so the app, the icons and every size stay identical.
+/// DuckLearn mark: a white duck's face, winking, with a yellow beak and anime blush, the
+/// round head centred on a terracotta tile. Drawn in code so the app, the launcher
+/// icons and every size stay identical.
 library;
 
 import 'package:material_ui/material_ui.dart';
@@ -11,140 +12,125 @@ class DuckLogo extends StatelessWidget {
 
   final double size;
 
-  /// Rounded-square tile (app icon, header). When false the face is drawn full-bleed
-  /// with square edges, for platforms that apply their own mask (Android adaptive).
+  /// Rounded terracotta tile (app icon, in-app). When false only the face is drawn,
+  /// smaller and on transparent, inside the safe zone of Android's adaptive icons
+  /// (the launcher adds the terracotta background and its own mask).
   final bool tile;
 
   @override
   Widget build(BuildContext context) => SizedBox.square(
     dimension: size,
-    child: CustomPaint(painter: _FacePainter(rounded: tile)),
+    child: CustomPaint(painter: _FacePainter(tile: tile)),
   );
 }
 
 class _FacePainter extends CustomPainter {
-  _FacePainter({required this.rounded});
-  final bool rounded;
+  _FacePainter({required this.tile});
+  final bool tile;
 
-  static const _yolkTop = Color(0xFFFFD866);
-  static const _yolkBottom = Color(0xFFF2B630);
-  static const _beak = Color(0xFFF07F22);
-  static const _beakDark = Color(0xFFD7621A);
-  static const _blush = Color(0xFFF2836B);
+  static const _white = Color(0xFFFFFFFF);
+  static const _edge = Color(0xFFE9DFD2);
+  static const _ink = Color(0xFF3F3731);
+  static const _beak = Color(0xFFF6C344);
+  static const _tongue = Color(0xFFE07A5F);
+  static const _blush = Color(0xFFF4A3A8);
+  static const _blushLine = Color(0xFFE07A86);
+
+  Paint _fill(Color c) => Paint()
+    ..isAntiAlias = true
+    ..color = c;
+
+  Paint _line(Color c, double w) => Paint()
+    ..isAntiAlias = true
+    ..color = c
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = w
+    ..strokeCap = StrokeCap.round;
 
   @override
   void paint(Canvas canvas, Size size) {
     final s = size.shortestSide;
-    Offset o(double x, double y) => Offset(s * x, s * y);
-    final p = Paint()..isAntiAlias = true;
-    final full = Offset.zero & Size.square(s);
-    final clip = RRect.fromRectAndRadius(
-      full,
-      Radius.circular(rounded ? s * 0.23 : 0),
-    );
-
-    canvas.save();
-    canvas.clipRRect(clip);
-
-    // the head is the whole tile
-    p.shader = const LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [_yolkTop, _yolkBottom],
-    ).createShader(full);
-    canvas.drawRect(full, p);
-    p.shader = null;
-
-    // tuft: a cinnabar curl at the crown, the one oriental accent
-    final tuft = Paint()
-      ..isAntiAlias = true
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = s * 0.06
-      ..color = Palette.cinnabar;
-    canvas.drawPath(
-      Path()
-        ..moveTo(s * 0.5, s * 0.17)
-        ..cubicTo(s * 0.47, s * 0.06, s * 0.6, s * 0.03, s * 0.62, s * 0.11),
-      tuft,
-    );
-
-    // eyes: big, glossy, slightly looking up
-    for (final x in [0.33, 0.67]) {
-      final c = o(x, 0.42);
-      p.color = Colors.white;
-      canvas.drawOval(
-        Rect.fromCenter(center: c, width: s * 0.25, height: s * 0.28),
-        p,
+    canvas
+      ..save()
+      ..scale(s / 120);
+    if (tile) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          const Rect.fromLTWH(0, 0, 120, 120),
+          const Radius.circular(28),
+        ),
+        _fill(Palette.terra),
       );
-      p.color = Palette.ink;
-      final pupil = c + Offset(s * (x < 0.5 ? 0.025 : -0.025), -s * 0.005);
-      canvas.drawOval(
-        Rect.fromCenter(center: pupil, width: s * 0.15, height: s * 0.17),
-        p,
-      );
-      p.color = Colors.white;
-      canvas.drawCircle(pupil + Offset(-s * 0.03, -s * 0.04), s * 0.033, p);
-      canvas.drawCircle(pupil + Offset(s * 0.03, s * 0.035), s * 0.013, p);
+    } else {
+      // adaptive foreground: keep the face inside the launcher's safe zone
+      canvas
+        ..translate(60, 60)
+        ..scale(0.75)
+        ..translate(-60, -60);
     }
 
-    // brows: little brush strokes
-    final brow = Paint()
-      ..isAntiAlias = true
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = s * 0.03
-      ..color = Palette.ink;
-    canvas.drawPath(
-      Path()
-        ..moveTo(s * 0.23, s * 0.25)
-        ..quadraticBezierTo(s * 0.32, s * 0.2, s * 0.41, s * 0.24),
-      brow,
-    );
-    canvas.drawPath(
-      Path()
-        ..moveTo(s * 0.59, s * 0.24)
-        ..quadraticBezierTo(s * 0.68, s * 0.2, s * 0.77, s * 0.25),
-      brow,
-    );
+    // tuft above the head (the head itself is the centred circle)
+    final tuft = Path()
+      ..moveTo(54, 22)
+      ..relativeQuadraticBezierTo(2, -10, 8, -2)
+      ..relativeQuadraticBezierTo(3, -8, 8, 0);
+    canvas
+      ..drawPath(tuft, _line(_white, 5))
+      ..drawPath(tuft, _line(_edge.withValues(alpha: 0.8), 1.2));
 
-    // blush
-    p.color = _blush.withValues(alpha: 0.6);
-    for (final x in [0.17, 0.83]) {
+    // head
+    canvas
+      ..drawCircle(const Offset(60, 60), 38, _fill(_white))
+      ..drawCircle(const Offset(60, 60), 38, _line(_edge, 1.5));
+
+    // anime blush: pink cheeks with three little strokes
+    for (final x in const [35.0, 85.0]) {
       canvas.drawOval(
-        Rect.fromCenter(center: o(x, 0.62), width: s * 0.15, height: s * 0.08),
-        p,
+        Rect.fromCenter(center: Offset(x, 70), width: 18, height: 11),
+        _fill(_blush.withValues(alpha: 0.75)),
       );
+      final l = _line(_blushLine, 1.4);
+      for (final dx in const [-6.0, -1.5, 3.0]) {
+        canvas.drawLine(Offset(x + dx, 73), Offset(x + dx + 3, 67), l);
+      }
     }
 
-    // bill: wide and smiling
-    final upper = Path()
-      ..moveTo(s * 0.3, s * 0.63)
-      ..quadraticBezierTo(s * 0.5, s * 0.55, s * 0.7, s * 0.63)
-      ..quadraticBezierTo(s * 0.74, s * 0.7, s * 0.66, s * 0.72)
-      ..quadraticBezierTo(s * 0.5, s * 0.75, s * 0.34, s * 0.72)
-      ..quadraticBezierTo(s * 0.26, s * 0.7, s * 0.3, s * 0.63)
-      ..close();
-    final lower = Path()
-      ..moveTo(s * 0.36, s * 0.72)
-      ..quadraticBezierTo(s * 0.5, s * 0.86, s * 0.64, s * 0.72)
-      ..close();
-    p.color = _beakDark;
-    canvas.drawPath(lower, p);
-    p.color = _beak;
-    canvas.drawPath(upper, p);
-    // nostrils
-    p.color = _beakDark;
-    for (final x in [0.45, 0.55]) {
-      canvas.drawOval(
-        Rect.fromCenter(center: o(x, 0.63), width: s * 0.03, height: s * 0.018),
-        p,
+    // open eye with highlights, and a wink
+    canvas
+      ..drawOval(
+        Rect.fromCenter(center: const Offset(44, 53), width: 11, height: 14),
+        _fill(_ink),
+      )
+      ..drawCircle(const Offset(46, 50), 2.1, _fill(_white))
+      ..drawCircle(const Offset(42.6, 56), 0.9, _fill(_white))
+      ..drawPath(
+        Path()
+          ..moveTo(69, 55)
+          ..relativeQuadraticBezierTo(7, -9, 14, 0),
+        _line(_ink, 3.2),
       );
-    }
 
-    canvas.restore();
+    // smiling beak with a little tongue
+    canvas
+      ..drawPath(
+        Path()
+          ..moveTo(47, 67)
+          ..relativeQuadraticBezierTo(13, -9, 26, 0)
+          ..relativeQuadraticBezierTo(-13, 13, -26, 0)
+          ..close(),
+        _fill(_beak),
+      )
+      ..drawPath(
+        Path()
+          ..moveTo(53, 70)
+          ..relativeQuadraticBezierTo(7, 5, 14, 0)
+          ..relativeQuadraticBezierTo(-7, 6, -14, 0)
+          ..close(),
+        _fill(_tongue),
+      )
+      ..restore();
   }
 
   @override
-  bool shouldRepaint(_FacePainter old) => old.rounded != rounded;
+  bool shouldRepaint(_FacePainter old) => old.tile != tile;
 }
