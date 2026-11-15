@@ -1,0 +1,21 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-mo-food-and-money
+dialogues:
+  - id: dlg-adv-food-01
+    title: "A birthday dinner that goes wrong"
+    level: 3
+    lines:
+      - ["你", "唔該，我哋訂咗位，姓陳，八位。", "Hi, we have a booking, Chan, for eight."]
+      - ["職員", "陳生……唔好意思，我搵唔到你個名喎。", "Mr Chan... sorry, I can't find your name."]
+      - ["你", "冇可能㗎，我上個禮拜打電話嚟訂㗎。", "That's impossible, I phoned last week to book."]
+      - ["職員", "你記唔記得係邊個同事聽電話？", "Do you remember which of my colleagues took the call?"]
+      - ["你", "唔記得喇，但係我記得佢話會留張圓枱。", "I don't, but I remember they said they'd keep a round table."]
+      - ["職員", "而家全場爆滿，可能要等半個鐘。", "We're completely full right now; it might be a half-hour wait."]
+      - ["你", "今日係我阿媽生日，大家都到晒喇。", "It's my mum's birthday today and everyone's already here."]
+      - ["職員", "我明白，我問吓經理有冇辦法。", "I understand, let me ask the manager if there's anything we can do."]
+      - ["經理", "陳生，真係唔好意思，係我哋出錯。", "Mr Chan, I'm really sorry, the mistake was ours."]
+      - ["經理", "我哋喺廂房加張枱俾你，送多碟菜當賠罪。", "We'll set a table in a private room and add a dish on the house to apologise."]
+      - ["你", "咁就好喇，唔該你。", "That's great, thank you."]
+      - ["經理", "仲有，壽包我哋請。", "And the birthday buns are on us."]
+      - ["你", "你哋都幾有心喎，阿媽一定好開心。", "That's thoughtful of you; Mum will be really pleased."]

@@ -109,7 +109,7 @@ class DialogueRow {
   final String title;
   final int lines;
 
-  /// Stories only.
+  /// 1-3 (3 = advanced: longer conversations, harder vocabulary).
   final int level;
   final String? pair;
 }
@@ -297,12 +297,18 @@ class ContentDb {
 
   List<DialogueRow> dialogues(String scenarioId, String lang) => [
     for (final r in _db.select(
-      'SELECT d.id, d.title, COUNT(s.id) AS n FROM dialogue d '
+      'SELECT d.id, d.title, d.level, COUNT(s.id) AS n FROM dialogue d '
       'JOIN sentence s ON s.dialogue = d.id AND s.lang = ? '
-      "WHERE d.scenario_id = ? AND d.kind = 'conversation' GROUP BY d.id ORDER BY d.id",
+      "WHERE d.scenario_id = ? AND d.kind = 'conversation' GROUP BY d.id "
+      'ORDER BY d.level, d.id',
       [lang, scenarioId],
     ))
-      DialogueRow(r['id'] as String, r['title'] as String, r['n'] as int),
+      DialogueRow(
+        r['id'] as String,
+        r['title'] as String,
+        r['n'] as int,
+        level: (r['level'] as int?) ?? 1,
+      ),
   ];
 
   /// Sound families (characters sharing a phonetic component, from Make Me a Hanzi) that

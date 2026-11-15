@@ -1,0 +1,21 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-mo-work
+dialogues:
+  - id: dlg-adv-work-01
+    title: "Asking for a raise"
+    level: 3
+    lines:
+      - ["你", "經理，唔知你得唔得閒，我想同你傾幾句。", "Manager, if you have a moment, I'd like a quick word."]
+      - ["經理", "得，坐低先。咩事？", "Sure, sit down. What is it?"]
+      - ["你", "我喺公司做咗三年，想傾吓人工嘅問題。", "I've been here three years and I'd like to talk about my salary."]
+      - ["經理", "嗯，你想加幾多？", "Mm, how much of a raise do you want?"]
+      - ["你", "我今年攞咗兩個大客，業績比舊年多咗三成。", "This year I brought in two big clients, and my results are up thirty percent on last year."]
+      - ["經理", "我知，你表現的確唔錯。", "I know, your performance has been good."]
+      - ["你", "所以我希望人工可以加一成半。", "So I'm hoping for a fifteen percent raise."]
+      - ["經理", "一成半有啲難，公司今年預算好緊。", "Fifteen is difficult; the budget is tight this year."]
+      - ["你", "咁可唔可以加一成，再加多幾日假？", "Then how about ten percent plus a few more days of leave?"]
+      - ["經理", "呢個建議可以考慮，我要同上面傾吓。", "That proposal I can consider; I'll need to talk to the people above me."]
+      - ["你", "大概幾時會有回覆？", "Roughly when will I hear back?"]
+      - ["經理", "下個禮拜之內答覆你。", "I'll get back to you within next week."]
+      - ["你", "好，多謝你肯聽。", "OK, thanks for listening."]

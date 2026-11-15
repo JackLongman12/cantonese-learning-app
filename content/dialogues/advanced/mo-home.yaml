@@ -1,0 +1,20 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-mo-home
+dialogues:
+  - id: dlg-adv-home-01
+    title: "The landlord wants to raise the rent"
+    level: 3
+    lines:
+      - ["業主", "我想同你傾吓續約嘅事。", "I'd like to talk to you about renewing the lease."]
+      - ["你", "好呀，我都想繼續住落去。", "Sure, I'd like to keep living here."]
+      - ["業主", "不過下年租金要加一成。", "But next year the rent goes up ten percent."]
+      - ["你", "一成？會唔會加得多咗啲？", "Ten percent? Isn't that a bit much?"]
+      - ["業主", "附近啲樓都係咁加，我已經算少㗎喇。", "Everything around here is going up like that; I'm already asking less."]
+      - ["你", "但係冷氣機壞咗成個月，你都未搵人嚟整。", "But the air conditioner has been broken for a month and you still haven't had it fixed."]
+      - ["業主", "呢個……我呢排真係好忙。", "Well... I've been really busy lately."]
+      - ["你", "如果你整好冷氣，加半成我可以接受。", "If you fix the air conditioner, I can accept five percent."]
+      - ["業主", "半成太少喇，七個巴仙點睇？", "Five is too little. How about seven percent?"]
+      - ["你", "七個巴仙都得，但係要寫埋入合約，冷氣一個禮拜內整好。", "Seven is OK, but put in the contract that the air conditioner gets fixed within a week."]
+      - ["業主", "得，就咁話。", "Fine, it's a deal."]
+      - ["你", "我哋約個時間簽約啦。", "Let's set a time to sign."]

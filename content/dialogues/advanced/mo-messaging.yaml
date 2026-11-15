@@ -1,0 +1,19 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-mo-messaging
+dialogues:
+  - id: dlg-adv-messaging-01
+    title: "A misunderstood message"
+    level: 3
+    lines:
+      - ["朋友", "你頭先個message係咩意思？", "What did your message just now mean?"]
+      - ["你", "邊個呀？我話「今晚唔得」嗰個？", "Which one? The one where I said 'can't tonight'?"]
+      - ["朋友", "係呀，我以為你嬲咗我。", "Yes, I thought you were angry with me."]
+      - ["你", "冇呀！我只係要加班咋。", "No! I just have to work late."]
+      - ["朋友", "但係你又冇講原因，仲冇加表情。", "But you didn't say why, and there was no emoji either."]
+      - ["你", "我喺地鐵度打，趕住落車。", "I typed it on the MTR in a rush to get off."]
+      - ["朋友", "原來係咁，害我諗咗成個鐘。", "Oh, I see. I spent a whole hour worrying."]
+      - ["你", "唔好意思呀，下次我講清楚啲。", "Sorry, I'll be clearer next time."]
+      - ["朋友", "咁不如改聽晚？", "So how about tomorrow night instead?"]
+      - ["你", "聽晚得，我請你食飯賠罪。", "Tomorrow works; dinner's on me to make up for it."]
+      - ["朋友", "好呀，你講㗎！", "Deal, you said it!"]

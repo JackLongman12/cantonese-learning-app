@@ -16,6 +16,7 @@ import 'events/event_logger.dart';
 import 'events/event_store.dart';
 import 'platform/reminders.dart';
 import 'platform/sfx.dart';
+import 'platform/storage.dart';
 import 'platform/speech.dart';
 import 'platform/word_voice.dart';
 import 'platform/updater.dart';
@@ -31,6 +32,8 @@ const _contentAsset = 'assets/content/content.db';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // one fixed folder for the audio player's clip copies, reused across launches
+  AudioCache.instance = AudioCache(prefix: 'assets/', cacheId: audioCacheId);
   runApp(DukApp(services: await _bootstrap()));
 }
 
@@ -49,7 +52,10 @@ Future<AppServices> _bootstrap() async {
 
   // Leftovers from an earlier update (installer, unpack folders) are junk once it ran.
   try {
-    Updater.cleanUp(await getTemporaryDirectory());
+    final temp = await getTemporaryDirectory();
+    Updater.cleanUp(temp);
+    // audio player copies from earlier launches, old voice recordings
+    cleanTemp(temp);
   } on Object {
     // temp dir unavailable: nothing to clean
   }

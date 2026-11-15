@@ -1,0 +1,20 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-hk-getting-around
+dialogues:
+  - id: dlg-adv-hk-01
+    title: "The MTR stops at rush hour"
+    level: 3
+    lines:
+      - ["你", "咦，點解架車停咗咁耐？", "Hm, why has the train stopped for so long?"]
+      - ["路人", "啱啱廣播話前面有信號故障。", "The announcement just said there's a signal fault ahead."]
+      - ["你", "我九點要開會，今次死喇。", "I have a meeting at nine. I'm in trouble."]
+      - ["路人", "你喺邊個站落？", "Which station are you getting off at?"]
+      - ["你", "中環，仲有四個站。", "Central, four more stops."]
+      - ["路人", "下個站出去轉巴士可能快啲。", "Getting out at the next station and switching to a bus might be faster."]
+      - ["你", "不過繁忙時間巴士都好塞。", "But buses are jammed at rush hour too."]
+      - ["路人", "咁搭天星小輪過海啦，唔會塞車。", "Then take the Star Ferry across; no traffic."]
+      - ["你", "好主意，碼頭行過去要幾耐？", "Good idea. How long to walk to the pier?"]
+      - ["路人", "大概十分鐘，跟住指示牌行就得。", "About ten minutes; just follow the signs."]
+      - ["你", "多謝你！我即刻send個message話我遲啲到。", "Thanks! I'll send a message right away saying I'll be a bit late."]
+      - ["路人", "港鐵會派延誤證明，記得攞返張。", "The MTR gives out delay slips; remember to take one."]

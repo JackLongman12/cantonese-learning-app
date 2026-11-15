@@ -5,11 +5,14 @@ import 'dart:io';
 
 import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 import '../app_services.dart';
 import '../engine/insights.dart';
 import '../platform/sfx.dart';
 import '../platform/speech.dart';
+import '../platform/storage.dart';
 import 'ruby_text.dart';
 import 'update_ui.dart';
 
@@ -23,6 +26,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   String _version = '';
+  ({int model, int content, int progress, int cache})? _storage;
   String? _updateStatus;
 
   AppServices get _s => widget.services;
@@ -30,11 +34,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
+    _measure();
     PackageInfo.fromPlatform().then((i) {
       if (mounted) {
         setState(() => _version = '${i.version} (build ${i.buildNumber})');
       }
     }).ignore();
+  }
+
+  /// What the app keeps on this phone (the app itself is counted by Android separately).
+  Future<void> _measure() async {
+    try {
+      final support = await getApplicationSupportDirectory();
+      final temp = await getTemporaryDirectory();
+      final r = (
+        model: sizeOf(Directory(p.join(support.path, 'models'))),
+        content: sizeOf(File(p.join(support.path, 'content.db'))),
+        progress: sizeOf(Directory(p.join(support.path, 'events'))),
+        cache: sizeOf(temp),
+      );
+      if (mounted) setState(() => _storage = r);
+    } on Object {
+      // not available (tests): the section stays hidden
+    }
+  }
+
+  Future<void> _clearCache() async {
+    final temp = await getTemporaryDirectory();
+    final freed = cleanTemp(temp, includeAudioCache: true);
+    _s.logger.log('settings.change', {
+      'key': 'clear_cache',
+      'from': null,
+      'to': freed,
+    });
+    await _measure();
+    if (mounted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Freed ${formatBytes(freed)}')));
+    }
   }
 
   void _changed(String key, Object? from, Object? to) {
@@ -94,6 +131,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (ok != true) return;
     if (eng.modelDir.existsSync()) eng.modelDir.deleteSync(recursive: true);
     _changed('speech_model', 'installed', 'removed');
+    await _measure();
   }
 
   @override
@@ -260,6 +298,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             child: const Text('Remove'),
                           )
                         : null,
+                  ),
+                ],
+                if (_storage case final st?) ...[
+                  section('Storage on this phone'),
+                  ListTile(
+                    key: const ValueKey('storage-model'),
+                    dense: true,
+                    title: const Text('Speech model (read aloud)'),
+                    trailing: Text(formatBytes(st.model)),
+                  ),
+                  ListTile(
+                    dense: true,
+                    title: const Text('Content (sentences, dictionary)'),
+                    trailing: Text(formatBytes(st.content)),
+                  ),
+                  ListTile(
+                    dense: true,
+                    title: const Text('Your progress'),
+                    trailing: Text(formatBytes(st.progress)),
+                  ),
+                  ListTile(
+                    key: const ValueKey('storage-cache'),
+                    title: const Text(
+                      'Cache (played clips, your last recording)',
+                    ),
+                    subtitle: const Text(
+                      'Safe to clear; it refills as you play audio',
+                    ),
+                    trailing: TextButton(
+                      onPressed: _clearCache,
+                      child: Text('Clear ${formatBytes(st.cache)}'),
+                    ),
                   ),
                 ],
                 section('App'),

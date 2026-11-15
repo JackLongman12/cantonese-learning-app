@@ -159,3 +159,11 @@ the dictionary first, else the English article title.
 Speaker role → Irasutoya title, image link and post link. `duk characters` downloads them
 (git-ignored). Add a role here when a conversation introduces a new speaker; the app
 falls back to a coloured initial when a picture is missing.
+
+
+## Conversation levels
+
+A conversation may set `level: 1|2|3` (default 1). Level 3 is advanced: 12-16 lines,
+more natural spoken Cantonese and a turn in the situation. Advanced conversations live in
+`content/dialogues/advanced/<topic>.yaml` (one `scenario:` per file) and are listed after
+the others in the topic, marked "Advanced".

@@ -1,0 +1,21 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-mo-tourism
+dialogues:
+  - id: dlg-adv-tourism-01
+    title: "Showing a visitor around"
+    level: 3
+    lines:
+      - ["遊客", "唔好意思，你係本地人？可唔可以介紹吓有咩好去？", "Excuse me, are you local? Could you suggest some good places?"]
+      - ["你", "你鍾意歷史定係食嘢多啲？", "Do you prefer history or food?"]
+      - ["遊客", "兩樣都鍾意，不過最緊要係人唔好太多。", "Both, but most importantly not too crowded."]
+      - ["你", "咁大三巴可能唔啱你，嗰度成日迫到冇位企。", "Then the Ruins of St Paul's may not suit you; it's always packed."]
+      - ["遊客", "咁去邊好？", "So where should I go?"]
+      - ["你", "去路環啦，舊村好靚，又靜。", "Go to Coloane; the old village is lovely and quiet."]
+      - ["遊客", "點去呀？", "How do I get there?"]
+      - ["你", "喺呢度搭巴士，大概半個鐘就到。", "Take a bus from here; it's about half an hour."]
+      - ["遊客", "嗰度有咩好食？", "What's good to eat there?"]
+      - ["你", "一定要試葡撻，仲有海邊啲大排檔。", "You have to try the egg tarts, and the seaside food stalls."]
+      - ["遊客", "你講到我好肚餓喇！", "You're making me hungry!"]
+      - ["你", "記住早啲去，下晝啲葡撻好快賣晒。", "Go early; the egg tarts sell out fast in the afternoon."]
+      - ["遊客", "多謝你，你真係幫咗我好多。", "Thanks, you've really helped me a lot."]

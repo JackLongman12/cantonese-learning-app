@@ -1,0 +1,20 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-cantonese-food
+dialogues:
+  - id: dlg-adv-food-cooking-01
+    title: "Grandma's soup recipe"
+    level: 3
+    lines:
+      - ["你", "嫲嫲，你個老火湯點煲㗎？我想學。", "Grandma, how do you make your slow-cooked soup? I want to learn."]
+      - ["嫲嫲", "你終於肯學喇？先揀料，豬骨要新鮮。", "Finally willing to learn? First the ingredients: the pork bones must be fresh."]
+      - ["你", "豬骨要點處理？", "How do I prepare the pork bones?"]
+      - ["嫲嫲", "先飛水，即係放落滾水度灼一灼，啲血水就會出晒。", "Blanch them first: drop them in boiling water briefly so the blood comes out."]
+      - ["你", "跟住呢？", "And then?"]
+      - ["嫲嫲", "落粟米、紅蘿蔔、蜜棗，加水大火煲滾。", "Add corn, carrots and candied dates, add water, bring to the boil on high heat."]
+      - ["你", "要煲幾耐？", "How long does it cook?"]
+      - ["嫲嫲", "滾咗之後轉細火，最少煲兩個鐘。", "After it boils, turn it down low and cook at least two hours."]
+      - ["你", "幾時落鹽？", "When do I add salt?"]
+      - ["嫲嫲", "飲之前先落，早落啲肉會韌。", "Just before serving; add it early and the meat gets tough."]
+      - ["你", "原來有咁多學問！", "Who knew there was so much to it!"]
+      - ["嫲嫲", "煲湯最緊要係耐性，急唔嚟㗎。", "The key to soup is patience; you can't rush it."]

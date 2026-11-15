@@ -1,0 +1,20 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-mo-health
+dialogues:
+  - id: dlg-adv-health-01
+    title: "A fever that will not go away"
+    level: 3
+    lines:
+      - ["醫生", "你邊度唔舒服？", "What's bothering you?"]
+      - ["你", "發燒成三日，食咗退燒藥都冇用。", "I've had a fever for three days; the fever medicine hasn't helped."]
+      - ["醫生", "仲有冇其他徵狀？咳唔咳？", "Any other symptoms? Coughing?"]
+      - ["你", "有啲咳，夜晚咳到瞓唔到。", "A bit; at night I cough so much I can't sleep."]
+      - ["醫生", "最近有冇去過邊度旅行？", "Have you travelled anywhere recently?"]
+      - ["你", "上個禮拜返咗內地探親。", "Last week I went to the mainland to visit relatives."]
+      - ["醫生", "我幫你聽吓個肺先，深呼吸。", "Let me listen to your lungs first. Deep breath."]
+      - ["醫生", "右邊有啲聲，可能係肺炎，要照X光。", "There's a sound on the right; it might be pneumonia. You need an X-ray."]
+      - ["你", "咁嚴重？使唔使入院？", "That serious? Do I need to be admitted?"]
+      - ["醫生", "睇咗X光先決定，你唔使太擔心。", "We'll decide after the X-ray; don't worry too much."]
+      - ["你", "我聽日仲要返工，可唔可以開病假紙？", "I'm supposed to work tomorrow. Can you give me a sick note?"]
+      - ["醫生", "可以，我開三日俾你，記住多啲飲水同休息。", "Yes, I'll give you three days. Remember to drink lots of water and rest."]

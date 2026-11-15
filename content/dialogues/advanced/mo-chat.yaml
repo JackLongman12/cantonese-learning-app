@@ -1,0 +1,21 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-mo-chat
+dialogues:
+  - id: dlg-adv-chat-01
+    title: "Catching up with an old classmate"
+    level: 3
+    lines:
+      - ["朋友", "喂！你係咪阿明？好耐冇見喇！", "Hey! Aren't you Ah Ming? Long time no see!"]
+      - ["你", "係呀！你一啲都冇變喎！", "Yes! You haven't changed a bit!"]
+      - ["朋友", "邊有呀，肥咗成十磅呀。", "No way, I've put on a good ten pounds."]
+      - ["你", "你而家喺邊度做嘢？", "Where are you working now?"]
+      - ["朋友", "喺酒店做市場推廣，成日要加班。", "Marketing at a hotel; lots of overtime."]
+      - ["你", "咁辛苦嘅？有冇諗過轉工？", "That tough? Ever thought of changing jobs?"]
+      - ["朋友", "諗過，不過而家搵工唔易，算數啦。", "I have, but jobs are hard to find now, so never mind."]
+      - ["你", "我公司啱啱請人，你有冇興趣？", "My company is hiring right now. Interested?"]
+      - ["朋友", "真係？做咩嘢㗎？", "Really? Doing what?"]
+      - ["你", "都係做推廣，人工唔錯，又唔使成日加班。", "Marketing too; decent pay, and not much overtime."]
+      - ["朋友", "聽落好吸引喎，你send個連結俾我睇吓。", "Sounds attractive; send me the link."]
+      - ["你", "冇問題，加返WhatsApp先。", "No problem, let's add each other on WhatsApp first."]
+      - ["朋友", "好呀，得閒出嚟飲杯嘢慢慢傾。", "Great, let's grab a drink sometime and talk properly."]

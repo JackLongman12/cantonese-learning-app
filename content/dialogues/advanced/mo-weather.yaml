@@ -1,0 +1,20 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-mo-weather
+dialogues:
+  - id: dlg-adv-weather-01
+    title: "Typhoon signal goes up during work"
+    level: 3
+    lines:
+      - ["同事", "喂，氣象局話會改掛八號風球喎。", "Hey, the weather bureau says signal No. 8 is going up."]
+      - ["你", "幾點？我仲有份報告未做完。", "What time? I still haven't finished my report."]
+      - ["同事", "兩個鐘之後，公司應該會叫大家早走。", "In two hours; the company should let everyone leave early."]
+      - ["你", "我住得遠，返屋企要轉兩程車。", "I live far; getting home takes two buses."]
+      - ["同事", "咁你要即刻走，遲啲可能冇車。", "Then go right now; later there might be no buses."]
+      - ["你", "但係份報告聽朝要交。", "But the report is due tomorrow morning."]
+      - ["同事", "你可以返屋企用電腦做，同老細講聲咪得囉。", "You can do it at home on your computer; just tell the boss."]
+      - ["老細", "大家聽住，十二點全部收工，注意安全。", "Listen up everyone, we finish at noon. Stay safe."]
+      - ["你", "老細，份報告我可唔可以夜啲電郵俾你？", "Boss, can I email you the report later tonight?"]
+      - ["老細", "得，打風就唔使趕，聽日先交都得。", "Sure, with a typhoon there's no rush; tomorrow is fine."]
+      - ["你", "唔該晒，我而家去搭車。", "Thanks, I'm heading for the bus now."]
+      - ["同事", "到咗屋企send個message報平安。", "Send a message when you get home so we know you're safe."]

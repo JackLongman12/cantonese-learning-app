@@ -1,0 +1,20 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-mo-gov
+dialogues:
+  - id: dlg-adv-gov-01
+    title: "Missing one document"
+    level: 3
+    lines:
+      - ["職員", "下一位。你要辦咩手續？", "Next. What do you need to do?"]
+      - ["你", "我想申請換新身份證。", "I'd like to apply to replace my ID card."]
+      - ["職員", "帶齊文件未？舊身份證、相、住址證明。", "Do you have all the documents? Old ID card, photo, proof of address."]
+      - ["你", "身份證同相有，住址證明……我唔記得帶。", "ID card and photo, yes. Proof of address... I forgot it."]
+      - ["職員", "冇住址證明就辦唔到喎。", "Without proof of address we can't process it."]
+      - ["你", "電話入面有水費單，得唔得？", "I have the water bill on my phone. Will that do?"]
+      - ["職員", "要列印出嚟，或者喺網上預約再嚟過。", "It needs to be printed, or book online and come back."]
+      - ["你", "附近有冇地方可以列印？", "Is there anywhere nearby I can print it?"]
+      - ["職員", "樓下有間文具舖，你可以去試吓。", "There's a stationery shop downstairs; you could try there."]
+      - ["你", "我印完返嚟，使唔使再排隊？", "When I come back with it, do I have to queue again?"]
+      - ["職員", "你拎住呢張籌，返嚟直接搵我。", "Keep this ticket and come straight back to me."]
+      - ["你", "唔該晒，你幫咗我好大忙。", "Thanks so much, you've been a huge help."]

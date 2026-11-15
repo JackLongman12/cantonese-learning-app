@@ -1,0 +1,19 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-mo-signs
+dialogues:
+  - id: dlg-adv-signs-01
+    title: "Reading the notices in a building"
+    level: 3
+    lines:
+      - ["鄰居", "你睇唔睇到升降機門口張告示？", "Did you see the notice by the lift?"]
+      - ["你", "見到，但係有啲字我唔識讀。", "I saw it, but there were some characters I couldn't read."]
+      - ["鄰居", "佢話聽日停水，由朝早九點到下晝五點。", "It says the water's off tomorrow, from nine in the morning to five in the afternoon."]
+      - ["你", "停水？點解嘅？", "Water off? Why?"]
+      - ["鄰居", "維修水管，下面仲有寫「請住戶預早儲水」。", "Pipe repairs; underneath it also says 'residents please store water in advance'."]
+      - ["你", "「儲水」即係要裝定啲水？", "'Store water' means fill some up beforehand?"]
+      - ["鄰居", "係呀，沖涼煮飯都要用。", "Yes, you'll need it for washing and cooking."]
+      - ["你", "旁邊嗰張寫住「嚴禁吸煙」，係咪唔准食煙？", "The one next to it says 嚴禁吸煙; does that mean no smoking?"]
+      - ["鄰居", "係，「嚴禁」即係絕對唔准。", "Yes, 嚴禁 means strictly forbidden."]
+      - ["你", "多謝你，我而家識多兩個詞。", "Thanks, now I know two more words."]
+      - ["鄰居", "多睇吓告示，好快就識晒。", "Keep reading notices and you'll know them all soon."]

@@ -1,0 +1,21 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-mo-shopping
+dialogues:
+  - id: dlg-adv-shopping-01
+    title: "Returning a phone that keeps freezing"
+    level: 3
+    lines:
+      - ["你", "你好，我上個禮拜喺度買咗部手機，成日死機。", "Hi, I bought a phone here last week and it keeps freezing."]
+      - ["店員", "有冇帶收據？", "Did you bring the receipt?"]
+      - ["你", "有，喺度。", "Yes, here."]
+      - ["店員", "我幫你檢查吓先……你有冇裝過咩程式？", "Let me check it first... did you install any apps?"]
+      - ["你", "都係平時用開嗰啲咋。", "Just the usual ones."]
+      - ["店員", "可能係軟件問題，我幫你重設吓。", "It might be a software problem; I'll reset it for you."]
+      - ["你", "我已經重設過兩次，都係一樣。", "I've already reset it twice; same thing."]
+      - ["店員", "咁我哋可以送去維修，大概要兩個禮拜。", "Then we can send it for repair; about two weeks."]
+      - ["你", "兩個禮拜冇手機用好唔方便，可唔可以直接換過部新嘅？", "Two weeks without a phone is a real hassle. Can't I just swap for a new one?"]
+      - ["店員", "七日內可以換，你買咗幾耐？", "Exchanges are within seven days. How long ago did you buy it?"]
+      - ["你", "收據寫住六日前。", "The receipt says six days ago."]
+      - ["店員", "啱啱好，咁我幫你換過部新嘅。", "Just in time, then I'll swap it for a new one."]
+      - ["你", "好彩，唔該晒！", "Lucky! Thanks a lot!"]

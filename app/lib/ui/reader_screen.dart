@@ -20,6 +20,7 @@ import 'visual_novel.dart';
 import 'word_sheet.dart';
 import '../engine/pronunciation.dart';
 import '../platform/sfx.dart';
+import '../platform/storage.dart';
 import '../platform/speech.dart';
 
 class ReaderScreen extends StatefulWidget {
@@ -305,9 +306,9 @@ class _ReaderScreenState extends State<ReaderScreen> {
     if (_mic == _Mic.recording) {
       setState(() => _mic = _Mic.scoring);
       final samples = await eng.stopRecording();
-      final wav = File(
-        '${Directory.systemTemp.path}${Platform.pathSeparator}ducklearn_mine_$_exposure.wav',
-      )..writeAsBytesSync(writeWav16(samples));
+      // one file, overwritten each attempt (and removed on the next start)
+      final wav = File(recordingPath(Directory.systemTemp))
+        ..writeAsBytesSync(writeWav16(samples));
       _myRecording = wav.path;
       // let the spinner paint before the (sub-second) recognition runs
       await Future<void>.delayed(const Duration(milliseconds: 16));

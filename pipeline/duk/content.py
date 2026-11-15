@@ -217,7 +217,12 @@ def load_content(root: Path) -> Content:
                         turn=n,
                     )
                 )
-            dialogues.append(Dialogue(dlg["id"], sid, str(dlg.get("title", "")), len(lines)))
+            dialogues.append(
+                Dialogue(
+                    dlg["id"], sid, str(dlg.get("title", "")), len(lines),
+                    level=int(dlg.get("level", 1)),
+                )
+            )  # fmt: skip
 
     # Stories: content/stories/*.yaml. Same mechanics as conversations (ordered lines),
     # kept under one hidden "Stories" scenario so they never mix into topic sessions.

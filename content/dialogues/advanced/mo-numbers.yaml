@@ -1,0 +1,20 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-mo-numbers
+dialogues:
+  - id: dlg-adv-numbers-01
+    title: "Splitting a group bill fairly"
+    level: 3
+    lines:
+      - ["朋友", "埋單喇，一共幾多錢？", "Bill's here. How much altogether?"]
+      - ["你", "總數一千二百八十蚊，加一服務費。", "1,280 in total, plus the ten percent service charge."]
+      - ["朋友", "我哋六個人，即係每人幾多？", "There are six of us, so how much each?"]
+      - ["你", "等等，阿明冇飲酒，唔應該夾酒錢。", "Wait, Ah Ming didn't drink, he shouldn't pay for the alcohol."]
+      - ["朋友", "啲酒幾錢呀？", "How much were the drinks?"]
+      - ["你", "兩支紅酒，四百八十蚊。", "Two bottles of red wine, 480."]
+      - ["朋友", "咁酒錢五個人分，每人九十六蚊。", "So the wine split five ways is 96 each."]
+      - ["你", "其餘八百蚊六個人分，每人大概一百三十三蚊。", "The other 800 split six ways is about 133 each."]
+      - ["朋友", "仲有服務費呢？", "And the service charge?"]
+      - ["你", "大家各自加一啦，咁最公平。", "Everyone adds ten percent to their own share; that's fairest."]
+      - ["朋友", "你計數好快喎，不如你收錢啦。", "You're quick with numbers. Why don't you collect the money?"]
+      - ["你", "好，用轉數快俾我就得。", "OK, just pay me by FPS."]

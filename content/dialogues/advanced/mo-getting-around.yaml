@@ -1,0 +1,22 @@
+# Advanced conversation (level 3): longer, more natural spoken Cantonese.
+# Drafted by an LLM; reviewed: false until the owner approves it.
+scenario: scn-mo-getting-around
+dialogues:
+  - id: dlg-adv-around-01
+    title: "The taxi driver takes the long way"
+    level: 3
+    lines:
+      - ["你", "司機，唔該去氹仔官也街。", "Driver, Rua do Cunha in Taipa, please."]
+      - ["司機", "好，坐穩啦。", "OK, hold on."]
+      - ["你", "咦，點解唔行大橋？平時唔係行嗰邊㗎咩？", "Hm, why aren't we taking the bridge? Don't you usually go that way?"]
+      - ["司機", "嗰邊而家塞到爆，我兜過去快啲。", "It's jammed solid over there; going round is quicker."]
+      - ["你", "但係咪錶跳得好快喎。", "But the meter's going up really fast."]
+      - ["司機", "唔會差好遠嘅，放心啦。", "It won't be much different, don't worry."]
+      - ["你", "我搭開呢段路，通常幾十蚊就到。", "I take this route a lot; it's usually a few dozen dollars."]
+      - ["司機", "今日情況唔同吖嘛，你睇吓前面。", "Today's different, look up ahead."]
+      - ["你", "前面明明好清喎。", "The road ahead is clearly empty."]
+      - ["司機", "……好啦好啦，我轉返出大橋。", "...Alright, alright, I'll turn back to the bridge."]
+      - ["你", "唔該晒。到咗之後我要收據。", "Thanks. I'll need a receipt when we get there."]
+      - ["司機", "得，收據會俾你。", "Sure, you'll get a receipt."]
+      - ["你", "如果車費同平時差太遠，我會打電話投訴。", "If the fare is way off the usual, I'll call to complain."]
+      - ["司機", "唔使咁嘅，我照平時收你啦。", "No need for that, I'll charge you the usual."]

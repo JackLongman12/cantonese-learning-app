@@ -37,6 +37,7 @@ const speakerRoles = {
   '同學': 'Classmate',
   '遊客': 'Tourist',
   '阿明': 'Ah Ming',
+  '嫲嫲': 'Grandma',
 };
 
 /// Off in committed preview snapshots: Irasutoya pictures must not end up in the

@@ -132,7 +132,11 @@ class _TopicScreenState extends State<TopicScreen> {
                         child: Text('${i + 1}'),
                       ),
                       title: Text(d.title),
-                      subtitle: Text('${d.lines} lines'),
+                      subtitle: Text(
+                        d.level >= 3
+                            ? '${d.lines} lines · Advanced'
+                            : '${d.lines} lines',
+                      ),
                       trailing: const Icon(Icons.forum_rounded),
                       onTap: () => _open(
                         ReaderScreen(
