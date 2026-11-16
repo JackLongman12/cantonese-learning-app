@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:ui' show PlatformDispatcher;
 
 import 'package:material_ui/material_ui.dart';
+import 'package:flutter/foundation.dart' show LicenseEntryWithLineBreaks, LicenseRegistry;
 import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:path/path.dart' as p;
@@ -30,15 +31,31 @@ import 'ui/onboarding_screen.dart';
 import 'ui/theme.dart';
 import 'ui/visual_novel.dart' show characterPictures;
 import 'platform/character_pictures.dart';
+import 'platform/word_photos.dart';
+import 'ui/word_picture.dart' show wordPhotos;
 
 const appVersion = String.fromEnvironment(
   'APP_VERSION',
   defaultValue: '0.1.0-dev',
 );
 const _contentAsset = 'assets/content/content.db';
+const _contentStamp = 'assets/content/content.stamp';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // credits shown on Settings → About DuckLearn (the license page)
+  LicenseRegistry.addLicense(() async* {
+    yield const LicenseEntryWithLineBreaks(
+      ['DuckLearn word icons'],
+      'Icons by OpenMoji (https://openmoji.org), the open-source emoji and icon '
+      'project. License: CC BY-SA 4.0.',
+    );
+    yield const LicenseEntryWithLineBreaks(
+      ['DuckLearn word photos'],
+      'Photos from Wikimedia Commons, downloaded when first shown. The author and license '
+      'of each photo are shown under it in the drill.',
+    );
+  });
   // one fixed folder for the audio player's clip copies, reused across launches
   AudioCache.instance = AudioCache(prefix: 'assets/', cacheId: audioCacheId);
   final services = await _bootstrap();
@@ -72,14 +89,31 @@ Future<void> main() async {
 Future<AppServices> _bootstrap() async {
   final support = await getApplicationSupportDirectory();
 
-  // The bundled content database is copied out on every start: it is small, read-only and
-  // replaced wholesale, and progress never lives in it (docs/DESIGN.md section 4.2).
+  // The bundled content database is copied out of the app: it is read-only and replaced
+  // wholesale, and progress never lives in it (docs/DESIGN.md section 4.2).
   final dbFile = File(p.join(support.path, 'content.db'));
-  final bytes = await rootBundle.load(_contentAsset);
-  await dbFile.writeAsBytes(
-    bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes),
-    flush: true,
-  );
+  // Copied only when the bundled database changed (a new release): its fingerprint is
+  // kept next to the copy. Saves reading and writing 20+ MB on every launch.
+  final stampFile = File(p.join(support.path, 'content.stamp'));
+  String? stamp;
+  try {
+    stamp = (await rootBundle.loadString(_contentStamp)).trim();
+  } on Object {
+    stamp = null; // an older bundle without a stamp: always copy
+  }
+  final fresh =
+      stamp != null &&
+      dbFile.existsSync() &&
+      stampFile.existsSync() &&
+      stampFile.readAsStringSync().trim() == stamp;
+  if (!fresh) {
+    final bytes = await rootBundle.load(_contentAsset);
+    await dbFile.writeAsBytes(
+      bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes),
+      flush: true,
+    );
+    if (stamp != null) stampFile.writeAsStringSync(stamp, flush: true);
+  }
   final content = ContentDb.open(dbFile.path);
 
   // Conversation pictures: downloaded here, never bundled (content/characters.yaml).
@@ -88,6 +122,8 @@ Future<AppServices> _bootstrap() async {
     Directory(p.join(support.path, 'characters')),
   );
   characterPictures = pictures;
+  // newcomer word photos: downloaded when first shown, kept in their own folder
+  wordPhotos = WordPhotos(Directory(p.join(support.path, 'word_photos')));
   Future<void>.delayed(
     const Duration(seconds: 3),
     () => pictures.fetchMissing(content.characterPictureUrls()),

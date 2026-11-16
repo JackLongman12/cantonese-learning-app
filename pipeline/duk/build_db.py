@@ -31,13 +31,15 @@ from .content import Content, ContentError, load_content
 from .reference import load_reference
 from .words import refine_words
 
-SCHEMA_VERSION = 14  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
+SCHEMA_VERSION = 16  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
 # 6: decks; 7: card image + credit, food deck; 8: slim dict_entry (Cantonese only);
 # 9: char_info.hint, skill / skill_entry; 10: variant (words for the same thing);
 # 11: character_pic (links the app downloads; the images are never bundled);
 # 12: char_freq (share of each character in HKCanCor: "% of everyday Cantonese");
 # 13: scenario.description (what a topic is about, shown on its tile and page);
-# 14: situation (newcomer mode: decks of essential words, content/situations.yaml)
+# 14: situation (newcomer mode: decks of essential words, content/situations.yaml);
+# 15: card_picture (a photo or an icon per newcomer word, content/pictures.yaml)
+# 16: practice (replies, tone sets, frames, challenges: content/practice.yaml)
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -108,6 +110,11 @@ CREATE TABLE card_token(
   reading TEXT, item_id TEXT, flagged INTEGER NOT NULL, PRIMARY KEY(card_id, idx)) WITHOUT ROWID;
 CREATE TABLE situation(id TEXT PRIMARY KEY REFERENCES deck(id), icon TEXT NOT NULL,
   rank INTEGER NOT NULL) WITHOUT ROWID;
+CREATE TABLE practice(id TEXT PRIMARY KEY, kind TEXT NOT NULL, grp TEXT NOT NULL,
+  card_id TEXT NOT NULL, en TEXT NOT NULL, extra TEXT NOT NULL, rank INTEGER NOT NULL)
+  WITHOUT ROWID;
+CREATE TABLE card_picture(card_id TEXT PRIMARY KEY, kind TEXT NOT NULL, ref TEXT NOT NULL,
+  credit TEXT NOT NULL DEFAULT '') WITHOUT ROWID;
 CREATE TABLE street_pattern(
   region TEXT NOT NULL, zh TEXT NOT NULL, word TEXT NOT NULL, n INTEGER NOT NULL,
   total INTEGER NOT NULL);
@@ -432,6 +439,87 @@ def build(
                 continue
             words_seen.add(zh)
             add_card(f"card:{sid}:{zh}", sid, zh, en, str(w[2]) if len(w) > 2 else "", wrank)
+
+    # Newcomer practice (content/practice.yaml): each Cantonese line is a card in a hidden
+    # prc-* deck (readings, review queue and audio as for any card); `practice` says
+    # what it is for
+    ppath_ = content_root / "practice.yaml"
+    pr = (yaml.safe_load(ppath_.read_text("utf-8")) if ppath_.exists() else None) or {}
+    for did, title in (("prc-replies", "Replies"), ("prc-tones", "Tones"),
+                       ("prc-frames", "Sentences"), ("prc-challenges", "Challenges")):
+        db.execute("INSERT INTO deck VALUES(?,?,?,?,?)",
+                   (did, title, "both", "", "DuckLearn (LLM-drafted; readings from dictionaries)"))
+    seen_prc: set[str] = set()
+    prank = 0
+
+    def practice(pid, kind, grp, deck, zh, en, extra=""):
+        nonlocal prank
+        if pid in seen_prc:
+            problems.append(f"practice.yaml: {pid} listed twice")
+            return None
+        seen_prc.add(pid)
+        cid = f"card:{deck}:{zh}"
+        add_card(cid, deck, zh, "", "", prank)
+        db.execute("INSERT INTO practice VALUES(?,?,?,?,?,?,?)",
+                   (pid, kind, grp, cid, en, extra, prank))
+        prank += 1
+        return cid
+
+    for sid, lines in (pr.get("replies") or {}).items():
+        if sid not in seen_sit or len(lines or []) < 4:
+            problems.append(f"practice.yaml replies {sid}: unknown situation or under 4 replies")
+            continue
+        for zh, en in lines:
+            practice(f"rep:{sid}:{zh}", "reply", sid, "prc-replies", zh, en)
+    for ts in pr.get("tone_sets") or []:
+        tid = str(ts.get("id", ""))
+        syllables = set()
+        tones = []
+        for ch, en in ts.get("chars") or []:
+            cid = practice(f"tone:{tid}:{ch}", "tone", tid, "prc-tones", ch, en, ts["title"])
+            row = db.execute(
+                "SELECT reading FROM card_token WHERE card_id = ?", (cid,)
+            ).fetchall() if cid else []
+            if len(row) != 1 or not row[0][0]:
+                problems.append(f"practice.yaml {tid}: {ch} has no single reading")
+                continue
+            syllables.add(row[0][0][:-1])
+            tones.append(row[0][0][-1])
+        if len(syllables) != 1 or len(set(tones)) != len(tones) or len(tones) < 2:
+            problems.append(f"practice.yaml {tid}: members must share a syllable, tones differ "
+                            f"({sorted(syllables)}, {tones})")
+    for fr in pr.get("frames") or []:
+        fid, fzh, fen = str(fr.get("id", "")), str(fr.get("zh", "")), str(fr.get("en", ""))
+        if fzh.count("＿") != 1 or fen.count("___") != 1:
+            problems.append(f"practice.yaml {fid}: one ＿ in zh and one ___ in en")
+            continue
+        for word, wen in (fr.get("fill") or {}).items():
+            en = fen.replace("___", str(wen))
+            practice(f"frame:{fid}:{word}", "frame", fid, "prc-frames",
+                     fzh.replace("＿", str(word)), en[0].upper() + en[1:], fzh)
+    for ch in pr.get("challenges") or []:
+        if ch.get("sit") not in seen_sit:
+            problems.append(f"practice.yaml {ch.get('id')}: unknown situation")
+            continue
+        practice(str(ch["id"]), "challenge", ch["sit"], "prc-challenges", ch["zh"], ch["en"])
+
+    # Word pictures (content/pictures.yaml): photo = a Wikimedia Commons file the phone
+    # downloads (with its credit), icon = an OpenMoji hexcode bundled as a small PNG
+    ppath = content_root / "pictures.yaml"
+    pdoc = yaml.safe_load(ppath.read_text("utf-8")) if ppath.exists() else None
+    cards_now = {r[0] for r in db.execute("SELECT id FROM card")}
+    for cid, pic in (pdoc or {}).items():
+        if not pic or cid not in cards_now:
+            continue
+        if pic.get("photo"):
+            db.execute(
+                "INSERT INTO card_picture VALUES(?,?,?,?)",
+                (cid, "photo", str(pic["photo"]), str(pic.get("credit", ""))),
+            )
+        elif pic.get("icon"):
+            db.execute(
+                "INSERT INTO card_picture VALUES(?,?,?,?)", (cid, "icon", str(pic["icon"]), "")
+            )
 
     # Reading-skill lessons (content/skills/*.yaml): particles, measure words, ...
     import yaml

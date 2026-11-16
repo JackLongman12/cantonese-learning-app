@@ -49,6 +49,21 @@ _ROADS = (
 
 
 SOURCES = [
+    # word pictures for newcomer mode (icons for actions, feelings, ideas): CC BY-SA 4.0,
+    # credited in the app's licences
+    Source(
+        "openmoji",
+        "https://github.com/hfg-gmuend/openmoji/releases/download/15.1.0/openmoji-svg-color.zip",
+        "CC BY-SA 4.0 (OpenMoji, HfG Schwäbisch Gmünd)",
+        "openmoji-svg-color.zip",
+        unzip=True,
+    ),
+    Source(
+        "openmoji_meta",
+        "https://cdn.jsdelivr.net/npm/openmoji@15.1.0/data/openmoji.json",
+        "CC BY-SA 4.0 (OpenMoji)",
+        "openmoji.json",
+    ),
     Source(
         "unihan",
         "https://www.unicode.org/Public/UCD/latest/ucd/Unihan.zip",

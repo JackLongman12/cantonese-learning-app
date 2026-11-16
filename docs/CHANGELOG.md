@@ -3,6 +3,36 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2078): understanding replies, tones, sentences, pictures
+
+Gaps from the language-learning review, all but non-native accents (no material for them:
+the app only has text-to-speech; owner, 2026-11-17):
+- **Understanding replies:** "What you'll hear" in a situation, and "Understand replies" on
+  the Drill tab: 59 replies people give (行過去轉左, 賣晒喇, 唔收卡). Hear one, pick the
+  meaning, then see it with Jyutping; Play again and Slow. Missed ones come back first.
+- **Hearing tones:** "Hear the tones": 12 sets that differ only by tone (詩 史 試 時 市 事,
+  買/賣, 湯/糖, 死/四, 貴/鬼…). Each round switches speaker (both recorded voices and the
+  phone's); the sets you mix up most come back first. Readings from the dictionaries, and
+  `duk build` checks each set shares one syllable with distinct tones.
+- **Sentence frames:** "Build a sentence": a word you know in 7 frames (＿喺邊？, 我想要＿,
+  有冇＿？, 唔該＿, 我想去＿, ＿幾錢？, 我＿痛), 42 sentences; say it (mic check), then
+  check.
+- **Jyutping guide** on the Situations tab: the letters that don't sound like English, and
+  the six tones, every example playable. **Sentence particles** (啦 呀 喎 咩) linked there too.
+- **Real use:** "Try it for real" on Home: one small challenge at a time (走冰, 唔該借借,
+  前面有落), "I did it" or "Another". No streaks; done ones stop showing.
+- Content in `content/practice.yaml`; each line is a card in a hidden `prc-*` deck
+  (readings, review queue and audio as usual); schema 16 adds `practice`. New events
+  `listen.answer`, `tone.answer`, `frame.say`, `challenge.done` (shared if opted in:
+  content ids only), replayed by `engine/practice_log.dart`.
+- **Word pictures:** 202 photos (Wikimedia Commons, downloaded on the phone with their
+  credit, never bundled) and 409 icons (OpenMoji, 240 PNGs, 600 KB). Matching is Chinese
+  first with a type filter; 113 wrong matches were replaced by an icon or removed
+  (`fixed: true`). Fixed a hang in the photo cache (a future waiting on itself).
+- **Smaller and faster:** the font is cut to the characters the app uses plus the 2,632 Hong
+  Kong primary-school characters (3 MB → 2.2 MB); content.db is copied out only when it
+  changed (a stamp), not on every launch; release builds are obfuscated.
+
 ## 2026-11-17 (b2077): 927 newcomer words
 
 - Situations grow to 35 and words to 927. New: dim sum, clothes, haircut, free time,

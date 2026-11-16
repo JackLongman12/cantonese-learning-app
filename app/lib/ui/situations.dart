@@ -12,7 +12,9 @@ import '../engine/scaffold.dart';
 import 'cards_screen.dart' show CardSessionScreen;
 import 'finish.dart' show pushOnce;
 import 'ruby_text.dart';
+import 'word_picture.dart';
 import 'skills.dart' show SkillScreen;
+import 'practice_drills.dart';
 
 IconData situationIcon(String name) => switch (name) {
   'waving' => Icons.waving_hand_outlined,
@@ -264,6 +266,8 @@ class NewcomerToday extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 12),
+        ChallengeCard(services: s),
         if (next != null) ...[
           const SizedBox(height: 12),
           Card(
@@ -392,6 +396,23 @@ class SituationsPage extends StatelessWidget {
               ),
             ),
           ),
+        _GuideTile(
+          key: const ValueKey('open-jyutping'),
+          icon: Icons.abc_rounded,
+          title: 'Reading Jyutping',
+          subtitle: 'The letters above each word, and the six tones',
+          open: (_) => JyutpingGuideScreen(services: s),
+        ),
+        if (s.content.skills().where((k) => k.id == 'particles').firstOrNull
+            case final particles?)
+          _GuideTile(
+            key: const ValueKey('open-particles'),
+            icon: Icons.chat_bubble_outline_rounded,
+            title: particles.title,
+            subtitle: '啦 呀 喎 咩: the little words that carry tone of voice',
+            open: (_) => SkillScreen(services: s, skill: particles),
+          ),
+        const SizedBox(height: 4),
         for (final sit in s.content.situations())
           _SituationTile(
             services: s,
@@ -402,6 +423,32 @@ class SituationsPage extends StatelessWidget {
       ],
     );
   }
+}
+
+class _GuideTile extends StatelessWidget {
+  const _GuideTile({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.open,
+  });
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final WidgetBuilder open;
+
+  @override
+  Widget build(BuildContext context) => Card(
+    margin: const EdgeInsets.only(bottom: 8),
+    child: ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      subtitle: Text(subtitle),
+      trailing: const Icon(Icons.chevron_right_rounded),
+      onTap: () => pushOnce(context, MaterialPageRoute<void>(builder: open)),
+    ),
+  );
 }
 
 void toggleSituation(AppServices s, String id) {
@@ -557,6 +604,30 @@ class _SituationScreenState extends State<SituationScreen> {
           children: [
             Text(sit.deck.description, style: theme.textTheme.bodyLarge),
             const SizedBox(height: 12),
+            if (_s.content.practice('reply').any((r) => r.group == sit.deck.id))
+              Card(
+                margin: const EdgeInsets.only(bottom: 12),
+                color: scheme.secondaryContainer,
+                child: ListTile(
+                  key: const ValueKey('situation-listen'),
+                  leading: const Icon(Icons.hearing_rounded),
+                  title: const Text("What you'll hear"),
+                  subtitle: const Text(
+                    'Replies people give here: hear them, pick the meaning',
+                  ),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => pushOnce(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (_) => ListenDrillScreen(
+                        services: _s,
+                        title: sit.deck.title,
+                        situations: {sit.deck.id},
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             for (final c in cards)
               Card(
                 margin: const EdgeInsets.only(bottom: 8),
@@ -567,6 +638,8 @@ class _SituationScreenState extends State<SituationScreen> {
                     padding: const EdgeInsets.fromLTRB(14, 8, 8, 8),
                     child: Row(
                       children: [
+                        WordPicture(services: _s, cardId: c.id, size: 44),
+                        const SizedBox(width: 12),
                         wordWithReading(c.tokens),
                         const SizedBox(width: 12),
                         Expanded(
@@ -649,6 +722,55 @@ class DrillPage extends StatelessWidget {
             drill.isEmpty
                 ? 'Nothing due'
                 : "Today's drill · ${drill.length} words",
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text('Listen and speak', style: theme.textTheme.titleSmall),
+        const SizedBox(height: 4),
+        ListTile(
+          key: const ValueKey('drill-listen'),
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(Icons.hearing_rounded),
+          title: const Text('Understand replies'),
+          subtitle: const Text('Hear what people say back, pick the meaning'),
+          trailing: const Icon(Icons.play_arrow_rounded),
+          onTap: () => pushOnce(
+            context,
+            MaterialPageRoute<void>(
+              builder: (_) => ListenDrillScreen(
+                services: s,
+                title: 'Understand replies',
+                situations: s.prefs.situations.toSet(),
+              ),
+            ),
+          ),
+        ),
+        ListTile(
+          key: const ValueKey('drill-tones'),
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(Icons.graphic_eq_rounded),
+          title: const Text('Hear the tones'),
+          subtitle: const Text('Same sound, different tone, different word'),
+          trailing: const Icon(Icons.play_arrow_rounded),
+          onTap: () => pushOnce(
+            context,
+            MaterialPageRoute<void>(
+              builder: (_) => ToneDrillScreen(services: s),
+            ),
+          ),
+        ),
+        ListTile(
+          key: const ValueKey('drill-frames'),
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(Icons.extension_outlined),
+          title: const Text('Build a sentence'),
+          subtitle: const Text('Put a word into 我想要＿, ＿喺邊？ and more'),
+          trailing: const Icon(Icons.play_arrow_rounded),
+          onTap: () => pushOnce(
+            context,
+            MaterialPageRoute<void>(
+              builder: (_) => FrameDrillScreen(services: s),
+            ),
           ),
         ),
         const SizedBox(height: 16),
@@ -850,6 +972,7 @@ class _PhraseSearchScreenState extends State<PhraseSearchScreen> {
                 ListTile(
                   key: ValueKey('search-word-${c.id}'),
                   contentPadding: EdgeInsets.zero,
+                  leading: WordPicture(services: _s, cardId: c.id, size: 40),
                   title: wordWithReading(c.tokens, size: 24),
                   subtitle: Text(c.alt),
                   trailing: const Icon(Icons.volume_up_outlined),

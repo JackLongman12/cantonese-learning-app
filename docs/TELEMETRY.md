@@ -11,7 +11,8 @@ is sent until they say yes; Settings → "Share anonymous usage and crash report
 
 - **Sent:** the learning events in `app/lib/events/telemetry_filter.dart` (`sharedTypes`):
   sessions, which sentences and characters were shown, checks, reveals, misses, grades, screens
-  opened, settings changed, experiment arms, app version, `android`/`windows`, time zone offset.
+  opened, settings changed, newcomer practice (replies heard, tone answers, sentences said,
+  challenges done: content ids only), experiment arms, app version, `android`/`windows`, time zone offset.
   Crash reports: error type, message (600 characters), stack (6,000), app and OS version.
 - **Never sent:** anything typed, pasted or said (payload keys `text`, `en`, `reading`,
   `per_token`, `heard`, `said`, `query` are removed; characters looked up in pasted text are
@@ -58,6 +59,10 @@ npx.cmd wrangler@4 d1 execute ducklearn-telemetry --remote --file schema.sql   #
 
 Rotating the admin token: write a new one into `secrets.json`, then pipe it to
 `npx.cmd wrangler@4 secret put ADMIN_TOKEN`. Never print it.
+
+Release builds are obfuscated (smaller app). A crash's stack trace is decoded with that
+release's symbols, kept locally in `build/symbols/<tag>/` (git-ignored; back them up with the
+signing key if crashes matter): `flutter symbolize -i stack.txt -d build/symbols/<tag>/app.android-arm64.symbols`.
 
 ## Experiments (A/B)
 

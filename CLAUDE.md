@@ -22,7 +22,8 @@ Onboarding's level (`prefs.level`) picks the mode. The reading app is for **begi
 ## Code map
 
 ```
-content/     YAML you edit: situations.yaml (newcomer keywords), scenarios/ (topics),
+content/     YAML you edit: situations.yaml (newcomer keywords), practice.yaml (replies, tone
+             sets, frames, challenges), pictures.yaml (word photos/icons), scenarios/ (topics),
              dialogues/ (+ advanced/), stories/, decks/,
              skills/, variants.yaml, characters.yaml (picture links), overrides/readings.yaml
 pipeline/duk content -> content.db: content.py (load + validate), annotate.py (readings),

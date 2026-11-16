@@ -524,7 +524,7 @@ extension DeckQueries on ContentDb {
           'SELECT d.id, d.title, d.region, d.description, COUNT(c.id) AS n '
           'FROM deck d JOIN card c ON c.deck_id = d.id '
           // newcomer situations are decks too, but listed on their own
-          "WHERE d.id NOT LIKE 'sit-%' GROUP BY d.id "
+          "WHERE d.id NOT LIKE 'sit-%' AND d.id NOT LIKE 'prc-%' GROUP BY d.id "
           "ORDER BY d.id = 'food' DESC, d.region = 'macau' DESC, d.rowid",
         ))
           DeckRow(
@@ -832,3 +832,150 @@ extension SituationQueries on ContentDb {
     }
   }
 }
+
+/// A newcomer word's picture: a bundled icon or a photo the phone downloads.
+class WordPictureRow {
+  const WordPictureRow(this.kind, this.ref, this.credit);
+
+  /// 'icon' (OpenMoji hexcode, `assets/icons/<ref>.png`) or 'photo' (Commons file name).
+  final String kind;
+  final String ref;
+  final String credit;
+}
+
+extension WordPictureQueries on ContentDb {
+  /// Card id -> picture. Read once and kept; empty for an older content.db.
+  Map<String, WordPictureRow> wordPictures() => _pictures[this] ??= () {
+    try {
+      return {
+        for (final r in _db.select(
+          'SELECT card_id, kind, ref, credit FROM card_picture',
+        ))
+          r['card_id'] as String: WordPictureRow(
+            r['kind'] as String,
+            r['ref'] as String,
+            r['credit'] as String,
+          ),
+      };
+    } on SqliteException {
+      return <String, WordPictureRow>{};
+    }
+  }();
+}
+
+final _pictures = Expando<Map<String, WordPictureRow>>();
+
+/// One newcomer practice line (content/practice.yaml): a reply you'll hear, a tone-set
+/// member, a sentence built from a frame, or a real-world challenge. The Cantonese, its
+/// readings and audio are a card in a hidden `prc-*` deck.
+class PracticeRow {
+  const PracticeRow({
+    required this.id,
+    required this.kind,
+    required this.group,
+    required this.en,
+    required this.extra,
+    required this.card,
+  });
+  final String id;
+
+  /// reply | tone | frame | challenge
+  final String kind;
+
+  /// The situation (reply, challenge), tone set or frame id.
+  final String group;
+  final String en;
+
+  /// Tone set title, or the frame with its gap (＿喺邊？).
+  final String extra;
+  final CardRow card;
+}
+
+const _practiceDecks = {
+  'reply': 'prc-replies',
+  'tone': 'prc-tones',
+  'frame': 'prc-frames',
+  'challenge': 'prc-challenges',
+};
+
+extension PracticeQueries on ContentDb {
+  /// Practice lines of one kind in content order; empty on older databases.
+  List<PracticeRow> practice(String kind) =>
+      (_practice[this] ??= <String, List<PracticeRow>>{})[kind] ??= () {
+        try {
+          final cards = {
+            for (final c in this.cards(_practiceDecks[kind]!)) c.id: c,
+          };
+          return [
+            for (final r in _db.select(
+              'SELECT id, grp, card_id, en, extra FROM practice '
+              'WHERE kind = ? ORDER BY rank',
+              [kind],
+            ))
+              if (cards[r['card_id']] case final card?)
+                PracticeRow(
+                  id: r['id'] as String,
+                  kind: kind,
+                  group: r['grp'] as String,
+                  en: r['en'] as String,
+                  extra: r['extra'] as String,
+                  card: card,
+                ),
+          ];
+        } on SqliteException {
+          return const <PracticeRow>[];
+        }
+      }();
+
+  /// Every recorded voice of a clip (tone sets are recorded in all of them).
+  List<String> audioPaths(String text) {
+    try {
+      return [
+        for (final r in _db.select(
+          "SELECT path FROM audio WHERE lang = 'yue' AND text = ? AND rate = 'normal' "
+          'ORDER BY voice',
+          [text],
+        ))
+          r['path'] as String,
+      ];
+    } on SqliteException {
+      return const [];
+    }
+  }
+
+  /// A newcomer word's card by its Cantonese (situations first), for examples.
+  CardRow? wordCard(String zh) {
+    final row = _db.select(
+      "SELECT id, deck_id, alt, note, flagged FROM card WHERE zh = ? "
+      "AND (deck_id LIKE 'sit-%' OR deck_id LIKE 'prc-%') "
+      "ORDER BY deck_id LIKE 'sit-%' DESC LIMIT 1",
+      [zh],
+    ).firstOrNull;
+    if (row == null) return null;
+    final id = row['id'] as String;
+    return CardRow(
+      id: id,
+      deckId: row['deck_id'] as String,
+      zh: zh,
+      alt: row['alt'] as String,
+      note: row['note'] as String,
+      flagged: (row['flagged'] as int) == 1,
+      tokens: [
+        for (final t in _db.select(
+          'SELECT surface, kind, reading, item_id, flagged FROM card_token '
+          'WHERE card_id = ? ORDER BY idx',
+          [id],
+        ))
+          TokenRow(
+            t['surface'] as String,
+            t['kind'] as String,
+            t['reading'] as String?,
+            t['item_id'] as String?,
+            (t['flagged'] as int) == 1,
+          ),
+      ],
+    );
+  }
+}
+
+final _practice = Expando<Map<String, List<PracticeRow>>>();

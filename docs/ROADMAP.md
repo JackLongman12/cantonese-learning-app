@@ -4,7 +4,7 @@ Work top to bottom. Do not start a phase until the previous phase's "Done when" 
 
 **Goals (2026-11-16):** first run asks what you want Cantonese for (get around, eat out and shop, daily life, work, make friends, a bit of everything); the path puts those topics first and Today's Learn/Speak draw from them; change it on Today (Goal · Change) or in Settings (engine/goals.dart). Grouped controls: one Listen button (hold for slow), no Skip; one 'Practise my words' in Words.
 
-**Status (2026-11-17, newcomer mode: situations of essential words, English-first drill, search; Home A/B by level; see CHANGELOG):** DuckLearn is now for beginners (speakers who can't read, and learners); the reader is read first, then Check; opt-in anonymous usage and crash data go to a Cloudflare Worker and `duk telemetry report` says what to change (docs/TELEMETRY.md); two A/B tests run. Before that: Android arm64 is the release target. 18 topics (each ≥ 100 sentences, 5+ conversations), 18 stories, 1,077 flashcards, word variants, a voice picker in every exercise (phone voice by default). Audio ships as Opus; conversation pictures download on first launch. Content is LLM-drafted and accepted by the owner as-is (2026-11-16). Next open work: 1.3/1.4 planner polish, 1.6 placement test, 2.8 error drills. History: `docs/CHANGELOG.md`.
+**Status (2026-11-17, newcomer mode: situations of essential words, English-first drill, search, understanding replies, tone ear training, sentence frames, a Jyutping guide, real-world challenges, word pictures; Home A/B by level; see CHANGELOG):** DuckLearn is now for beginners (speakers who can't read, and learners); the reader is read first, then Check; opt-in anonymous usage and crash data go to a Cloudflare Worker and `duk telemetry report` says what to change (docs/TELEMETRY.md); two A/B tests run. Before that: Android arm64 is the release target. 18 topics (each ≥ 100 sentences, 5+ conversations), 18 stories, 1,077 flashcards, word variants, a voice picker in every exercise (phone voice by default). Audio ships as Opus; conversation pictures download on first launch. Content is LLM-drafted and accepted by the owner as-is (2026-11-16). Next open work: 1.3/1.4 planner polish, 1.6 placement test, 2.8 error drills. History: `docs/CHANGELOG.md`.
 
 ## Product principle: serve the unmet need, not a Duolingo copy
 
@@ -185,6 +185,8 @@ readings by eye (pin wrong ones with `fix_yue`) → `duk tts` → `duk bundle`.
 - [ ] 5.3 Bandit over pacing parameters; smart notification timing.
 
 ## Phase 6 — Extras
+
+- [ ] 6.x Your own photo for a word (owner's idea, 2026-11-17): personal or funny pictures are remembered best. Kept on the device only, never uploaded.
 
 Claude "explain this" and roleplay; local-LLM weekly report; desktop clipboard hotkey reader; Android widget; `.srt` import; Jyutping typing practice; LLM on-demand sentence generation for planner gaps; browser extension; Anki export.
 

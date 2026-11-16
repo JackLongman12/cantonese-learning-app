@@ -75,8 +75,10 @@ flutter:
   # Built by the pipeline (`duk build && duk tts && duk bundle`); not committed.
   assets:
     - assets/content/content.db
+    - assets/content/content.stamp
     - assets/content/audio/
     - assets/sfx/
+    - assets/icons/
     - assets/cards/
 
   # Regional fonts decide which glyph variant of a shared code point is drawn.

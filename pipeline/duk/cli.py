@@ -31,12 +31,20 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="allow a build without audio (CI, which cannot synthesise speech)",
     )
+    pic = sub.add_parser("pictures", help="photos and icons for newcomer words")
+    pic.add_argument("action", choices=["match", "sheets"])
     tel = sub.add_parser("telemetry", help="anonymous usage data from the app")
     tel.add_argument("action", choices=["pull", "report"])
     args = ap.parse_args(argv)
 
     try:
-        if args.cmd == "telemetry":
+        if args.cmd == "pictures":
+            from . import pictures
+
+            if args.action == "match":
+                print(pictures.match())
+            print(f"review sheet -> {pictures.sheets()}")
+        elif args.cmd == "telemetry":
             from . import telemetry
 
             if args.action == "pull":
@@ -125,9 +133,41 @@ def main(argv: list[str] | None = None) -> int:
             from .audio_pack import pack_audio
 
             shipped = pack_audio(wanted, paths.AUDIO, dest / "audio", dest / "content.db")
-            # Reading font cut down to the characters the app uses (content, cards,
-            # dictionary), from the full copy in data/fonts-full (git-ignored). Text with
-            # other characters (pasted) falls back to the phone's own Chinese font.
+            # Word icons: the OpenMoji SVGs pictures.yaml uses, as 96 px PNGs (stale ones go)
+            icons_dir = paths.ROOT / "app" / "assets" / "icons"
+            with sqlite3.connect(dest / "content.db") as check:
+                codes = sorted(
+                    {r[0] for r in check.execute("SELECT ref FROM card_picture WHERE kind='icon'")}
+                )
+            icons_dir.mkdir(parents=True, exist_ok=True)
+            for old in icons_dir.glob("*.png"):
+                if old.stem not in codes:
+                    old.unlink()
+            tools = paths.ROOT / "data" / "tools" / "svgrender" / "node_modules"
+            if codes and tools.exists():
+                import os
+                import subprocess
+
+                out = subprocess.run(
+                    ["node", str(Path(__file__).with_name("render_icons.js")),
+                     str(paths.RAW / "openmoji"), str(icons_dir), "96", *codes],
+                    capture_output=True, text=True, env={**os.environ, "NODE_PATH": str(tools)},
+                    check=False,
+                )  # fmt: skip
+                print(out.stdout.strip() or out.stderr.strip())
+            elif codes:
+                print("icons: data/tools/svgrender missing (npm i @resvg/resvg-js there)")
+            # a fingerprint of the bundled database: the app copies content.db out only
+            # when this changes, instead of on every launch
+            import hashlib
+
+            (dest / "content.stamp").write_text(
+                hashlib.sha256((dest / "content.db").read_bytes()).hexdigest()[:32], "utf-8"
+            )
+            # Reading font cut down to the characters the app uses (content, cards) plus the
+            # 2,632 characters Hong Kong primary schools teach (Unihan kGradeLevel), from the
+            # full copy in data/fonts-full (git-ignored): 4.5 MB to about 2 MB. Rarer
+            # characters (in dictionary entries or pasted text) use the phone's own font.
             full_font = paths.ROOT / "data" / "fonts-full" / "NotoSansHK.ttf"
             if full_font.exists():
                 from fontTools import subset
@@ -137,7 +177,6 @@ def main(argv: list[str] | None = None) -> int:
                     for q in (
                         "SELECT text FROM sentence",
                         "SELECT zh FROM card",
-                        "SELECT trad FROM dict_entry",
                         "SELECT key FROM item",
                         "SELECT zh || example FROM skill_entry",
                         "SELECT semantic FROM char_info WHERE semantic IS NOT NULL",
@@ -146,7 +185,20 @@ def main(argv: list[str] | None = None) -> int:
                     ):
                         for (t,) in check.execute(q):
                             chars.update(t)
+                grade = paths.RAW / "unihan" / "Unihan_DictionaryLikeData.txt"
+                if grade.exists():
+                    for line in grade.read_text("utf-8").splitlines():
+                        if "\tkGradeLevel\t" in line:
+                            chars.add(chr(int(line.split("\t")[0][2:], 16)))
+                # Chinese written in the app's own code (labels, frame gaps like ＿, the ads)
+                code = list((paths.ROOT / "app" / "lib").rglob("*.dart"))
+                code.append(paths.ROOT / "app" / "test" / "ui" / "banner_test.dart")
+                for f in code:
+                    chars.update(
+                        ch for ch in f.read_text("utf-8") if ord(ch) >= 0x2E80
+                    )
                 chars.update(chr(c) for c in range(0x20, 0x7F))
+                chars.update("＿")
                 chars.update("，。！？、：；「」『』（）《》…—～·→←↔")
                 opts = subset.Options()
                 opts.layout_features = ["*"]

@@ -13,6 +13,7 @@ import 'engine/memory.dart';
 import 'engine/planner.dart';
 import 'engine/scaffold.dart';
 import 'engine/signals.dart';
+import 'engine/practice_log.dart';
 import 'engine/word_book.dart';
 import 'events/event_logger.dart';
 import 'platform/reminders.dart';
@@ -88,6 +89,14 @@ class AppServices {
 
   /// Words saved from reading ("My words"), rebuilt from the event log.
   late final WordBook words = WordBook.replay(logger.store.readAll());
+
+  /// Replies heard, tone sets, sentences said and challenges done (newcomer practice),
+  /// rebuilt from the event log.
+  late final PracticeLog practiceLog = PracticeLog.replay(logger.store.readAll());
+
+  /// Logs a practice event and applies it at once.
+  void logPractice(String type, Map<String, Object?> payload) =>
+      practiceLog.apply(logger.log(type, payload));
 
   /// A fresh shuffle for picking what to study, so sessions vary. Fixed under tests so
   /// previews and flows stay the same run to run.

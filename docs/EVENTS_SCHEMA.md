@@ -48,6 +48,10 @@ Stored one JSON object per line (`.jsonl`), gzip-compressed for sync.
 - `word.remove` `{text, lang}`
 - `word.flag` `{text, lang, reason: read|say, reading?, sentence_id?, context?, context_en?}` — automatic: you revealed a reading you were meant to read, or read-aloud heard the word wrong; it joins the practice list
 - `word.practice` `{text, lang, ok}` — one practice of a flagged word (mic-graded, or self-graded without a mic); two `ok` in a row take it off the list
+- `listen.answer` `{id, correct, slow}` — newcomer Listen drill: a reply (`rep:<situation>:<zh>`, content/practice.yaml) was heard and its meaning picked; `slow`: the slow play was used. Missed ones come first next time (`engine/practice_log.dart`)
+- `tone.answer` `{set, played, picked, correct, voice}` — tone ear training: which member of a tone set played and which was picked; `voice`: the round, which picks the speaker
+- `frame.say` `{id, ok, via: mic|self}` — Build a sentence: a frame sentence (`frame:<frame>:<word>`) said, graded by the learner (after the mic check, if any)
+- `challenge.done` `{id}` — "I did it" on a real-world challenge; done ones stop showing (no streaks)
 - `plan.step` `{step: review|learn|weak|words|cards, day}` — a step of Today's plan was finished
 - `conv.choice` `{exposure_id, sentence_id, correct, tries}` — the learner picked a line on their turn in a conversation (visual-novel mode); wrong options are lines from other conversations of the topic
 - `reader.scrollback` `{from_idx, to_idx}`

@@ -1,0 +1,215 @@
+# Newcomer practice beyond single words (2026-11-17): understanding what people say back,
+# hearing tones, putting words into sentences, and using them for real.
+#
+# replies:    what you are likely to hear back in a situation. The Listen drill plays one
+#             and asks what it means (the wrong options are other replies of the situation).
+#             [Cantonese, English]; at least four per situation.
+# tone_sets:  characters that differ only by tone. Readings come from the dictionaries and
+#             `duk build` checks that every member has the same syllable and its own tone.
+#             [character, English]
+# frames:     a sentence with a gap (＿) and the words that fit it, each with the English of
+#             the whole sentence's gap ("the toilet"). The English frame uses ___.
+# challenges: one small thing to do for real, with the words to use.
+#
+# Ids are permanent (event logs refer to them). Readings are never typed here.
+# Drafted by an LLM; the owner accepted LLM content as-is on 2026-11-16.
+
+replies:
+  sit-basics:
+    - [你講咩話？, "What did you say?"]
+    - [你識唔識講廣東話？, "Do you speak Cantonese?"]
+    - [你講得好好喎, "You speak really well!"]
+    - [我唔識講英文, "I don't speak English."]
+    - [唔使客氣, "You're welcome."]
+    - [你係咪新嚟㗎？, "Are you new here?"]
+  sit-around:
+    - [行過去轉左, "Walk over there and turn left."]
+    - [直行就到, "Go straight and you're there."]
+    - [喺對面, "It's across the road."]
+    - [過咗馬路就係, "It's just across the road."]
+    - [唔係好遠，行五分鐘, "Not far, a five-minute walk."]
+    - [搭地鐵快啲, "The metro is quicker."]
+    - [我都唔知喎, "I don't know either."]
+    - [喺樓上, "It's upstairs."]
+    - [去邊度？, "Where to?"]
+    - [呢度唔停得, "I can't stop here."]
+  sit-food:
+    - [幾多位？, "How many people?"]
+    - [要等位, "You'll have to wait for a table."]
+    - [搭唔搭枱？, "OK to share a table?"]
+    - [食咩呀？, "What will you have?"]
+    - [賣晒喇, "It's sold out."]
+    - [要唔要飲嘢？, "Anything to drink?"]
+    - [堂食定拎走？, "Eat here or take away?"]
+    - [去收銀處俾錢, "Pay at the cashier."]
+  sit-cafe:
+    - [凍定熱？, "Iced or hot?"]
+    - [大杯定細杯？, "Large or small?"]
+    - [少甜定正常？, "Less sweet or normal?"]
+    - [等一陣，好快, "Wait a moment, it won't be long."]
+    - [仲要唔要其他嘢？, "Anything else?"]
+  sit-pay:
+    - [唔收卡, "We don't take cards."]
+    - [淨係收現金, "Cash only."]
+    - [有冇散紙？, "Do you have small change?"]
+    - [八達通定現金？, "Octopus or cash?"]
+    - [要唔要膠袋？, "Do you need a plastic bag?"]
+    - [膠袋要收錢, "Bags cost extra."]
+    - [要唔要收據？, "Do you want a receipt?"]
+  sit-shop:
+    - [隨便睇, "Feel free to look around."]
+    - [冇貨喇, "We're out of stock."]
+    - [搵咩呀？, "Looking for something?"]
+    - [呢個減緊價, "This one is on sale."]
+    - [可以試, "You can try it on."]
+    - [唔可以退, "No returns."]
+  sit-phone:
+    - [你搵邊位？, "Who are you looking for?"]
+    - [佢唔喺度, "They're not here."]
+    - [打錯咗, "Wrong number."]
+    - [等陣打俾你, "I'll call you back."]
+    - [聽唔到呀, "I can't hear you."]
+  sit-health:
+    - [邊度痛？, "Where does it hurt?"]
+    - [痛咗幾耐？, "How long has it hurt?"]
+    - [有冇發燒？, "Do you have a fever?"]
+    - [一日食三次, "Take it three times a day."]
+    - [飯後食, "Take it after meals."]
+    - [多啲飲水, "Drink more water."]
+    - [有冇藥物敏感？, "Are you allergic to any medicine?"]
+  sit-errands:
+    - [攞籌先, "Take a number first."]
+    - [帶咗身份證未？, "Did you bring your ID card?"]
+    - [填咗表未？, "Have you filled in the form?"]
+    - [喺度簽名, "Sign here."]
+    - [等叫你個號碼, "Wait until your number is called."]
+
+tone_sets:
+  - id: tones-si
+    title: "si: six tones"
+    chars: [[詩, poem], [史, history], [試, try], [時, time], [市, market], [事, matter]]
+  - id: tones-ji
+    title: "ji: six tones"
+    chars: [[醫, heal], [椅, chair], [意, meaning], [兒, child], [耳, ear], [二, two]]
+  - id: tones-ma
+    title: "ma: mother or horse"
+    chars: [[媽, mother], [麻, numb], [馬, horse], [罵, scold]]
+  - id: tones-jau
+    title: "jau: oil, have, again"
+    chars: [[休, rest], [幼, fine], [油, oil], [有, have], [又, again]]
+  - id: tones-fan
+    title: "fan: minute or sleep"
+    chars: [[分, minute], [粉, powder], [瞓, sleep], [份, portion]]
+  - id: tones-gau
+    title: "gau: nine, enough, old"
+    chars: [[九, nine], [夠, enough], [舊, old]]
+  - id: tones-sei
+    title: "sei: four or die"
+    chars: [[死, die], [四, four]]
+  - id: tones-gwai
+    title: "gwai: expensive or ghost"
+    chars: [[鬼, ghost], [貴, expensive], [跪, kneel]]
+  - id: tones-tong
+    title: "tong: soup or sugar"
+    chars: [[湯, soup], [燙, iron (clothes)], [糖, sugar]]
+  - id: tones-seoi
+    title: "seoi: water or tax"
+    chars: [[水, water], [稅, tax], [誰, who], [睡, sleep]]
+  - id: tones-maai
+    title: "maai: buy or sell"
+    chars: [[買, buy], [賣, sell]]
+  - id: tones-hai
+    title: "hai: is or at"
+    chars: [[係, is], [喺, at]]
+
+frames:
+  - id: fr-where
+    zh: ＿喺邊？
+    en: "Where's ___?"
+    fill:
+      洗手間: the toilet
+      地鐵站: the metro station
+      巴士站: the bus stop
+      出口: the exit
+      銀行: the bank
+      便利店: a convenience store
+      藥房: a pharmacy
+      醫院: the hospital
+  - id: fr-want
+    zh: 我想要＿
+    en: "I'd like ___."
+    fill:
+      呢個: this one
+      凍檸茶: an iced lemon tea
+      奶茶: a milk tea
+      咖啡: a coffee
+      水: some water
+      收據: a receipt
+  - id: fr-have
+    zh: 有冇＿？
+    en: "Do you have ___?"
+    fill:
+      餐牌: a menu
+      散紙: small change
+      膠袋: a plastic bag
+      細碼: a small size
+      地圖: a map
+      紙巾: tissues
+  - id: fr-please
+    zh: 唔該＿
+    en: "___, please."
+    fill:
+      埋單: the bill
+      走冰: no ice
+      少甜: less sweet
+      講慢啲: speak slower
+      筷子: chopsticks
+      匙羹: a spoon
+  - id: fr-go
+    zh: 我想去＿
+    en: "I want to go to ___."
+    fill:
+      機場: the airport
+      酒店: the hotel
+      碼頭: the ferry pier
+      超市: the supermarket
+      街市: the wet market
+      醫院: the hospital
+  - id: fr-price
+    zh: ＿幾錢？
+    en: "How much is ___?"
+    fill:
+      呢個: this one
+      車費: the fare
+      蝦餃: the shrimp dumplings
+      燒賣: the siu mai
+      奶茶: a milk tea
+  - id: fr-hurts
+    zh: 我＿痛
+    en: "My ___ hurts."
+    fill:
+      頭: head
+      肚: belly
+      喉嚨: throat
+      牙: tooth
+      腳: foot
+
+challenges:
+  - {id: ch-morning, zh: 早晨, en: "Say 早晨 to a neighbor, a guard or a shopkeeper before noon.", sit: sit-basics}
+  - {id: ch-thanks, zh: 唔該, en: "Say 唔該 when someone serves you or holds a door.", sit: sit-basics}
+  - {id: ch-squeeze, zh: 唔該借借, en: "Get past someone in a crowd with 唔該借借.", sit: sit-polite}
+  - {id: ch-slow, zh: 唔該講慢啲, en: "When someone talks too fast, ask them to slow down.", sit: sit-basics}
+  - {id: ch-where, zh: 洗手間喺邊？, en: "Ask a stranger where something is with ＿喺邊？.", sit: sit-around}
+  - {id: ch-table, zh: 兩位, en: "At a restaurant, answer 幾多位？ with your number, like 兩位.", sit: sit-food}
+  - {id: ch-noice, zh: 走冰, en: "Order a cold drink without ice: say 走冰.", sit: sit-cafe}
+  - {id: ch-lesssweet, zh: 少甜, en: "Order a milk tea or lemon tea 少甜.", sit: sit-cafe}
+  - {id: ch-takeaway, zh: 拎走, en: "Order food to take away: say 拎走.", sit: sit-food}
+  - {id: ch-bill, zh: 唔該埋單, en: "Ask for the bill with 唔該埋單.", sit: sit-food}
+  - {id: ch-price, zh: 幾錢？, en: "Ask the price of something at a market stall.", sit: sit-pay}
+  - {id: ch-bag, zh: 唔要膠袋, en: "Turn down a plastic bag at the checkout.", sit: sit-pay}
+  - {id: ch-tasty, zh: 好好食, en: "Tell the server or cook the food was 好好食.", sit: sit-food}
+  - {id: ch-dimsum, zh: 蝦餃, en: "At dim sum, order 蝦餃 or 燒賣 yourself.", sit: sit-dimsum}
+  - {id: ch-getoff, zh: 前面有落, en: "On a minibus, call out 前面有落 to get off at the next stop.", sit: sit-around}
+  - {id: ch-weather, zh: 今日好熱, en: "Chat about the weather: 今日好熱呀 or 今日好凍.", sit: sit-weather}
+  - {id: ch-bye, zh: 唔該晒, en: "Leave a shop with 唔該晒 or 拜拜.", sit: sit-basics}
+  - {id: ch-repeat, zh: 再講一次, en: "Didn't catch it? Ask them to say it again.", sit: sit-basics}

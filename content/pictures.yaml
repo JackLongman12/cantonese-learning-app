@@ -1,0 +1,2378 @@
+# Word pictures (duk pictures match; reviewed by eye with duk pictures sheets).
+# photo: a Wikimedia Commons file (shown on the phone, never bundled, with credit);
+# icon: an OpenMoji hexcode (CC BY-SA 4.0); none: no picture fits.
+# Add `fixed: true` to an entry you checked or corrected so `match` leaves it.
+card:sit-around:洗手間:
+  icon: 1F6BB
+  fixed: true
+card:sit-around:巴士站:
+  icon: 1F68F
+  fixed: true
+card:sit-around:地鐵站:
+  photo: Paris Metro St Lazare.jpg
+  credit: 'Photo: User:FloSch (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-around:機場:
+  photo: Heathrow Airport 010.jpg
+  credit: 'Photo: Panhard (CC BY 2.5), Wikimedia Commons'
+  license: CC BY 2.5
+card:sit-around:落車:
+  none: true
+  fixed: true
+card:sit-around:港鐵:
+  photo: Tung Chung Line Train.jpg
+  credit: 'Photo: Baycrest (CC BY-SA 2.5), Wikimedia Commons'
+  license: CC BY-SA 2.5
+card:sit-around:輕軌:
+  photo: Tram stop - nagasaki.jpg
+  credit: 'Photo: Kanko from Nagasaki, Japan (CC BY 2.0), Wikimedia Commons'
+  license: CC BY 2.0
+card:sit-around:小巴:
+  icon: 1F690
+  fixed: true
+card:sit-around:船:
+  icon: 26F4
+  fixed: true
+card:sit-around:出口:
+  none: true
+  fixed: true
+card:sit-around:入口:
+  none: true
+  fixed: true
+card:sit-around:紅綠燈:
+  icon: 1F6A6
+  fixed: true
+card:sit-around:隔籬:
+  none: true
+  fixed: true
+card:sit-around:對面:
+  none: true
+  fixed: true
+card:sit-around:地圖:
+  icon: 1F5FA
+  fixed: true
+card:sit-around:巴士:
+  photo: Setra S6 - Empresa Mosquera - 02.jpg
+  credit: 'Photo: Xosema (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-around:叮叮:
+  photo: 13-08-09-hongkong-by-RalfR-023.jpg
+  credit: 'Photo: Ralf Roletschek (CC BY 3.0), Wikimedia Commons'
+  license: CC BY 3.0
+card:sit-around:站:
+  none: true
+  fixed: true
+card:sit-around:尾班車:
+  none: true
+  fixed: true
+card:sit-around:司機:
+  none: true
+  fixed: true
+card:sit-around:天橋:
+  none: true
+  fixed: true
+card:sit-around:隧道:
+  none: true
+  fixed: true
+card:sit-places:商場:
+  photo: Tiranë, Albania January 2023 - Toptani Qendra tregtare shopping center Christmas tree.jpg
+  credit: 'Photo: Sharon Hahn Darlin (CC BY 2.0), Wikimedia Commons'
+  license: CC BY 2.0
+card:sit-places:餐廳:
+  photo: Gaggenau 2016 -Restaurant- by-RaBoe 118.jpg
+  credit: 'Photo: © Ra Boe / Wikipedia (CC BY-SA 3.0 de), Wikimedia Commons'
+  license: CC BY-SA 3.0 de
+card:sit-places:茶餐廳:
+  photo: Cha Chaan Teng 7267.JPG
+  credit: 'Photo: T1NH0 (talk) (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-places:酒店:
+  photo: PNY Exterior with Rolls Royce.jpg
+  credit: 'Photo: Kimberlypeninsula (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-places:便利店:
+  icon: 1F3EA
+  fixed: true
+card:sit-places:教堂:
+  photo: CathedraleNotre-DameDeParis.jpg
+  credit: 'Photo: Traktorminze (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-places:廟:
+  none: true
+  fixed: true
+card:sit-places:海灘:
+  photo: Beach, Gili Meno Island, Indonesia.jpg
+  credit: 'Photo: Vyacheslav Argenberg (CC BY 4.0), Wikimedia Commons'
+  license: CC BY 4.0
+card:sit-places:戲院:
+  icon: 1F3A6
+  fixed: true
+card:sit-places:健身室:
+  photo: Salle de musculation de l'École polytechnique.jpg
+  credit: 'Photo: Jérémy Barande (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-places:圖書館:
+  none: true
+  fixed: true
+card:sit-places:街:
+  none: true
+  fixed: true
+card:sit-places:大廈:
+  icon: 1F3E2
+  fixed: true
+card:sit-places:樓:
+  none: true
+  fixed: true
+card:sit-places:地下:
+  none: true
+  fixed: true
+card:sit-places:銀行:
+  photo: National Bank of Liechtenstein.JPG
+  credit: 'Photo: Chongkian (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-places:洗衣舖:
+  photo: Metory Laundry.jpg
+  credit: 'Photo: Chongkian (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-places:髮型屋:
+  icon: 1F488
+  fixed: true
+card:sit-places:舖頭:
+  photo: Comercio en la plaza del 9 de abril de 1947, Tánger, Marruecos, 2015-12-11, DD 78.JPG
+  credit: 'Photo: Diego Delso (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-places:村:
+  none: true
+  fixed: true
+card:sit-places:路:
+  photo: B172.söKrietzschwitz.Sommer.JPG
+  credit: 'Photo: Hans-Joachim Fröde (User:Acf) (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-places:巷:
+  photo: Karat Muo Alley.jpg
+  credit: 'Photo: Chongkian (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-food:餐牌:
+  photo: Kulmbach Zunftstube Speisekarte Jan 2015.JPG
+  credit: 'Photo: Benreis (CC BY 3.0), Wikimedia Commons'
+  license: CC BY 3.0
+card:sit-food:飽:
+  none: true
+  fixed: true
+card:sit-food:筷子:
+  photo: Comment tenir des baguettes - Troisième étape.JPG
+  credit: 'Photo: Magohurion (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-food:匙羹:
+  photo: SpoonCollection.jpg
+  credit: 'Photo: THOR (CC BY 2.0), Wikimedia Commons'
+  license: CC BY 2.0
+card:sit-food:紙巾:
+  photo: Tissue (46057881222).jpg
+  credit: 'Photo: NIAID (CC BY 2.0), Wikimedia Commons'
+  license: CC BY 2.0
+card:sit-food:水:
+  icon: 1F4A7
+  fixed: true
+card:sit-food:飯:
+  photo: Meshi 001.jpg
+  credit: 'Photo: Ocdp (CC0), Wikimedia Commons'
+  license: CC0
+card:sit-food:麵:
+  photo: Noodles 2.png
+  credit: 'Photo: Tiia Monto (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-food:粥:
+  photo: Chinese rice congee.jpg
+  credit: 'Photo: Daiju Azuma (CC BY-SA 2.5), Wikimedia Commons'
+  license: CC BY-SA 2.5
+card:sit-food:雞:
+  icon: 1F414
+  fixed: true
+card:sit-food:豬肉:
+  photo: Pork loin ham 2.jpg
+  credit: 'Photo: ja:User:NEON / User:NEON_ja (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-food:牛肉:
+  photo: Standing-rib-roast.jpg
+  credit: 'Photo: Michael C. Berch, aka MCB at en.wikipedia (CC BY-SA 2.5), Wikimedia Commons'
+  license: CC BY-SA 2.5
+card:sit-food:海鮮:
+  photo: Plateau van zeevruchten.jpg
+  credit: 'Photo: Frits Hoogesteger at nl.wikibooks (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-food:菜:
+  photo: Kleinmarkthalle Frankfurt Gemüsestand.jpg
+  credit: 'Photo: EvaK (CC BY-SA 2.5), Wikimedia Commons'
+  license: CC BY-SA 2.5
+card:sit-food:叉燒:
+  photo: Charsiu.jpg
+  credit: 'Photo: Simon Shek (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-food:燒鵝:
+  photo: Christmas-goose-(Weihnachtsgans) 1.jpg
+  credit: 'Photo: Jürgen Howaldt (CC BY-SA 2.0 de), Wikimedia Commons'
+  license: CC BY-SA 2.0 de
+card:sit-food:飯盒:
+  photo: HK 觀塘 Kwun Tong Hung Sing Fortune restaurant take-away curry chicken rice box lunch November 2018 SSG 01.jpg
+  credit: 'Photo: ZHUM Deaimr Kwan (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-food:鹽:
+  icon: 1F9C2
+  fixed: true
+card:sit-food:糖:
+  photo: Sugar 2xmacro.jpg
+  credit: 'Photo: Lauri Andler (Phantom) (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-food:豉油:
+  photo: Soja Sauce zum Sushi (25966205154).jpg
+  credit: 'Photo: Tim Reckmann from Hamm, Deutschland (CC BY 2.0), Wikimedia Commons'
+  license: CC BY 2.0
+card:sit-food:苦:
+  none: true
+  fixed: true
+card:sit-food:碟:
+  photo: Unglazed plates.jpg
+  credit: 'Photo: Egan Snow (CC BY-SA 2.0), Wikimedia Commons'
+  license: CC BY-SA 2.0
+card:sit-food:碗:
+  photo: Ancient Roman clay bowl.jpg
+  credit: 'Photo: Unknown authorUnknown author (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-food:杯:
+  photo: Kaffeetasse halbhoch Golddekor 05, KPM.jpg
+  credit: 'Photo: Christoph Kaiser (CC BY-SA 2.0), Wikimedia Commons'
+  license: CC BY-SA 2.0
+card:sit-cafe:奶茶:
+  photo: Tea and Milk.jpeg
+  credit: 'Photo: User:MarkBTomlinson (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-cafe:檸檬茶:
+  none: true
+  fixed: true
+card:sit-cafe:鴛鴦:
+  photo: Yuanyang (drink).jpg
+  credit: 'Photo: OhanaUnitedTalk page (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-cafe:多士:
+  photo: Toast-2.jpg
+  credit: 'Photo: Rainer Z ... (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-cafe:菠蘿包:
+  photo: Pineapple bun from Heung Heung Bakery HK.jpg
+  credit: 'Photo: Peachyeung316 (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-cafe:西多士:
+  photo: FrenchToast.JPG
+  credit: 'Photo: Jonathunder (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-cafe:蛋撻:
+  photo: HK Tsuen Wan 建明街 Kin Ming Street sign Cheong Wah Building Tasty Bakery 09 Egg tarts a.jpg
+  credit: 'Photo: Homkinsming (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-cafe:炒蛋:
+  photo: Scrambed eggs.jpg
+  credit: 'Photo: Takeaway (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-cafe:火腿:
+  photo: Jamón ibérico de bellota Gran Reserva Or.jpg
+  credit: 'Photo: Guanbirra (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-cafe:通粉:
+  photo: Macaronis.jpeg
+  credit: 'Photo: Popo le Chien (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-cafe:檸水:
+  photo: 02014 Zitronenwasser.JPG
+  credit: 'Photo: Silar (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-cafe:阿華田:
+  photo: Ovomaltine Pulver.jpg
+  credit: 'Photo: Tiia Monto (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-cafe:腸仔:
+  photo: Pølse med potetmos.jpg
+  credit: 'Photo: Kjetil Ree (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-cafe:煎蛋:
+  photo: Pan-fried egg.jpg
+  credit: 'Photo: Horacio Cambeiro (CC BY 3.0), Wikimedia Commons'
+  license: CC BY 3.0
+card:sit-cafe:牛油:
+  photo: Butter at the Borough Market.jpg
+  credit: 'Photo: Charles Haynes from Bangalore, India (CC BY-SA 2.0), Wikimedia Commons'
+  license: CC BY-SA 2.0
+card:sit-cafe:雞尾包:
+  photo: Cocktail Bun fancy.JPG
+  credit: 'Photo: Jp384 (CC BY 3.0), Wikimedia Commons'
+  license: CC BY 3.0
+card:sit-dimsum:飲茶:
+  photo: Yumcha Dining.jpg
+  credit: 'Photo: Infomofo from (optional) (CC BY-SA 2.0), Wikimedia Commons'
+  license: CC BY-SA 2.0
+card:sit-dimsum:點心:
+  photo: Chinesische Küche.jpg
+  credit: 'Photo: Kolumbusjogger (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-dimsum:蝦餃:
+  photo: Xiajiao.jpg
+  credit: 'Photo: sfllaw of Flickr (CC BY-SA 2.0), Wikimedia Commons'
+  license: CC BY-SA 2.0
+card:sit-dimsum:燒賣:
+  photo: Shaomai by Kent Wang in Seattle, Vancouver.jpg
+  credit: 'Photo: Kent Wang from Chinese restaurant Kirin in Seattle, Vancouver (CC BY-SA 2.0), Wikimedia Commons'
+  license: CC BY-SA 2.0
+card:sit-dimsum:叉燒包:
+  photo: Char siu bao.jpg
+  credit: 'Photo: Takeaway (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-dimsum:腸粉:
+  photo: GD Rice Product 1.JPG
+  credit: 'Photo: No machine-readable author provided. GS417~commonswiki assumed (based on copyrig (CC BY-SA 2.5), Wikimedia Commons'
+  license: CC BY-SA 2.5
+card:sit-dimsum:鳳爪:
+  photo: Chicken feet.jpg
+  credit: 'Photo: User:Anna Frodesiak (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-dimsum:蘿蔔糕:
+  photo: Turnip cake at Chua Lam's Dim Sum (20201120174336).jpg
+  credit: 'Photo: N509FZ (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-dimsum:春卷:
+  photo: Spring rolls on sale.jpg
+  credit: 'Photo: No machine-readable author provided. Rose SP Ring~commonswiki assumed (based on  (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-dimsum:糯米雞:
+  photo: Lo mai gai 2.JPG
+  credit: 'Photo: Terence Ong (CC BY 2.5), Wikimedia Commons'
+  license: CC BY 2.5
+card:sit-dimsum:普洱:
+  photo: Xiaguan 1992 tuo cha.jpg
+  credit: 'Photo: Jason Fasi (CC BY 2.5), Wikimedia Commons'
+  license: CC BY 2.5
+card:sit-dimsum:茶:
+  photo: Longjing tea after steeping.jpg
+  credit: 'Photo: Difference engine (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-pay:現金:
+  photo: American Cash.JPG
+  credit: 'Photo: Revised by Reworked (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-pay:收據:
+  photo: ReceiptSwiss.jpg
+  credit: 'Photo: Audrius Meskauskas (Audriusa) (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-pay:膠袋:
+  photo: Hemdchentuete.jpg
+  credit: 'Photo: Phrontis (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-pay:信用卡:
+  photo: Credit-cards.jpg
+  credit: 'Photo: Lotus Head from Johannesburg, Gauteng, South Africa (CC BY-SA 2.5), Wikimedia Commons'
+  license: CC BY-SA 2.5
+card:sit-pay:用手機俾:
+  none: true
+  fixed: true
+card:sit-pay:葡幣:
+  photo: 1 Pataca 2007 Macao.jpg
+  credit: 'Photo: J. Patrick Fischer (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-pay:收銀:
+  photo: Cashier at her register.jpg
+  credit: 'Photo: photo taken by flickr user Young in Panama (CC BY 2.0), Wikimedia Commons'
+  license: CC BY 2.0
+card:sit-pay:貼士:
+  none: true
+  fixed: true
+card:sit-shop:超市:
+  photo: Scheck In - (1).jpg
+  credit: 'Photo: Rob (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-shop:街市:
+  photo: Moore Street market, Dublin.jpg
+  credit: 'Photo: Marek Ślusarczyk (Tupungato) Photo gallery (CC BY 2.5), Wikimedia Commons'
+  license: CC BY 2.5
+card:sit-shop:斤:
+  none: true
+  fixed: true
+card:sit-shop:衫:
+  photo: Clothes.jpg
+  credit: 'Photo: Unknown authorUnknown author (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-shop:褲:
+  photo: Broek en jas van uniform ROTEB, objectnr 62773-B-C(2).JPG
+  credit: 'Photo: R. Determeyer (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-shop:鞋:
+  photo: Skor från 1700- till 1960-talet - Nordiska Museet - NMA.0056302.jpg
+  credit: 'Photo: Wikimedia Commons (CC BY 3.0 no), Wikimedia Commons'
+  license: CC BY 3.0 no
+card:sit-shop:襪:
+  photo: Villased sokid, STM 1998.jpg
+  credit: 'Photo: Venemaa; Petseri rajoon, Põrste küla; valmistaja: Helü, Linda; fotograaf: Tuul,  (CC0), Wikimedia Commons'
+  license: CC0
+card:sit-shop:碼:
+  none: true
+  fixed: true
+card:sit-shop:細碼:
+  none: true
+  fixed: true
+card:sit-shop:中碼:
+  none: true
+  fixed: true
+card:sit-shop:大碼:
+  none: true
+  fixed: true
+card:sit-shop:禮物:
+  photo: Klein meisje geeft groot cadeau aan haar vader - Little girl handing over a big present to her father (6437677653).jpg
+  credit: 'Photo: Nationaal Archief (No restrictions), Wikimedia Commons'
+  license: No restrictions
+card:sit-shop:冇貨:
+  photo: Regallücke Hundefutter-102329.jpg
+  credit: 'Photo: Raimond Spekking (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-shop:試身室:
+  photo: Grey Fitting Room Curtains-direct-fabrics.co.uk.jpg
+  credit: 'Photo: Julesbishop (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-shop:收銀處:
+  photo: US Navy 020807-N-0872M-515 A Shopper pays for his purchase at one of the cashier counters inside the Navy Exchange located at Naval Base Little Creek.jpg
+  credit: 'Photo: U.S. Navy photo by Photographer’s Mate 1st Class Martin Maddock. (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-shop:價錢:
+  photo: Wireless in-store price display at a clothing retailer in NJ.jpg
+  credit: 'Photo: Tomwsulcer (CC0), Wikimedia Commons'
+  license: CC0
+card:sit-clothes:裙:
+  photo: Peasant skirt 1435043608.jpg
+  credit: 'Photo: iluvrhinestones from seattle, oceania, upload by Herrick (CC BY-SA 2.0), Wikimedia Commons'
+  license: CC BY-SA 2.0
+card:sit-clothes:T恤:
+  photo: T-shirt (drawing).jpg
+  credit: 'Photo: David Ring (CC0), Wikimedia Commons'
+  license: CC0
+card:sit-clothes:恤衫:
+  photo: Shirt, men's (AM 2015.44.1-1).jpg
+  credit: 'Photo: Manhattan (CC BY 4.0), Wikimedia Commons'
+  license: CC BY 4.0
+card:sit-clothes:短褲:
+  photo: Shorts (clothing).jpg
+  credit: 'Photo: David Ring (CC0), Wikimedia Commons'
+  license: CC0
+card:sit-clothes:牛仔褲:
+  photo: Levi's 506 front.jpg
+  credit: 'Photo: M62 (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-clothes:波鞋:
+  photo: Nike shoes 2.jpg
+  credit: 'Photo: User:rrafson (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-clothes:拖鞋:
+  photo: 2023 Kapcie.jpg
+  credit: 'Photo: Jacek Halicki (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-clothes:帽:
+  photo: A local grass hat.jpg
+  credit: 'Photo: ALHASSAN MOHAMED NURIDEEN (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-clothes:眼鏡:
+  photo: 2023 Okulary korekcyjne.jpg
+  credit: 'Photo: Jacek Halicki (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-clothes:手袋:
+  photo: A handbag.jpg
+  credit: 'Photo: ALHASSAN MOHAMED NURIDEEN (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-clothes:銀包:
+  photo: WalletMpegMan.jpg
+  credit: 'Photo: The original uploader was TheArmadillo at English Wikipedia.. Uploaded to Common (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-clothes:手錶:
+  icon: 231A
+  fixed: true
+card:sit-clothes:頸巾:
+  photo: Scarf (costume accessory).jpg
+  credit: 'Photo: David Ring (CC0), Wikimedia Commons'
+  license: CC0
+card:sit-groceries:蘋果:
+  photo: Honeycrisp.jpg
+  credit: 'Photo: Jonathunder (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-groceries:橙:
+  icon: 1F34A
+  fixed: true
+card:sit-groceries:西瓜:
+  photo: Water melon 2015.jpg
+  credit: 'Photo: MBargo (CC0), Wikimedia Commons'
+  license: CC0
+card:sit-groceries:白菜:
+  photo: ChineseCabbage.jpg
+  credit: 'Photo: Jamie Nettles (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-groceries:番茄:
+  photo: Bright red tomato and cross section02.jpg
+  credit: "Photo: fir0002  flagstaffotos [at] gmail.com\n\t\tCanon 20D + Sigma 150mm f/2.8 (GFDL 1.2), Wikimedia Commons"
+  license: GFDL 1.2
+card:sit-groceries:薯仔:
+  photo: Patates.jpg
+  credit: 'Photo: Scott Bauer, USDA ARS (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-groceries:雞蛋:
+  photo: Day 017 Photo365 Eggs (95960053).jpeg
+  credit: 'Photo: Makia Minich (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-groceries:米:
+  icon: 1F33E
+  fixed: true
+card:sit-groceries:牛奶:
+  photo: Milk-bottle&cap,japan.JPG
+  credit: 'Photo: katorisi (CC BY 3.0), Wikimedia Commons'
+  license: CC BY 3.0
+card:sit-groceries:麵包:
+  photo: Assorted bread.jpg
+  credit: 'Photo: The original uploader was Klaus Höpfner at German Wikipedia.
+
+
+    (Original text: He (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-groceries:雞翼:
+  photo: HK Food Chicken Wings Party 903 a.jpg
+  credit: 'Photo: WINGSEN (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-groceries:蝦:
+  photo: Palaemon serratus Croazia.jpg
+  credit: 'Photo: Etrusko25 (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-groceries:生果:
+  photo: Fruit Stall in Barcelona Market.jpg
+  credit: 'Photo: By en:User:Daderot. (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-groceries:菜:
+  photo: Kleinmarkthalle Frankfurt Gemüsestand.jpg
+  credit: 'Photo: EvaK (CC BY-SA 2.5), Wikimedia Commons'
+  license: CC BY-SA 2.5
+card:sit-groceries:芒果:
+  photo: Mangga aneka 071019-0835 tmo.jpg
+  credit: 'Photo: W.A. Djatmiko (Wie146) (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-groceries:提子:
+  photo: Wine grapes03.jpg
+  credit: 'Photo: Fir0002 (GFDL 1.2), Wikimedia Commons'
+  license: GFDL 1.2
+card:sit-groceries:士多啤梨:
+  icon: 1F353
+  fixed: true
+card:sit-groceries:檸檬:
+  photo: Lemon.jpg
+  credit: 'Photo: André Karwath aka Aka (CC BY-SA 2.5), Wikimedia Commons'
+  license: CC BY-SA 2.5
+card:sit-groceries:紅蘿蔔:
+  photo: Carrots of many colors.jpg
+  credit: 'Photo: Stephen Ausmus (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-groceries:粟米:
+  photo: Zea mays.jpg
+  credit: 'Photo: Wikimedia Commons (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-groceries:菇:
+  none: true
+  fixed: true
+card:sit-groceries:豬扒:
+  photo: BBQ RIBS pork side ribs.jpg
+  credit: 'Photo: WorldwrestlingfederationVKM (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-groceries:牛扒:
+  photo: Beef steak (11888070325).jpg
+  credit: 'Photo: pelican from Tokyo, Japan (CC BY-SA 2.0), Wikimedia Commons'
+  license: CC BY-SA 2.0
+card:sit-groceries:三文魚:
+  photo: Atlantischer Lachs.jpg
+  credit: 'Photo: Hartley, William W. (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-groceries:芝士:
+  photo: Hartkaese HardCheeses.jpg
+  credit: 'Photo: Eva K. / Eva K. (GFDL 1.2), Wikimedia Commons'
+  license: GFDL 1.2
+card:sit-groceries:乳酪:
+  photo: Joghurt.jpg
+  credit: 'Photo: No machine-readable author provided. Rainer Zenz assumed (based on copyright cla (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-sport:單車:
+  photo: 00 8327 Historisches Fahrrad.jpg
+  credit: 'Photo: W. Bulach (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-sport:球場:
+  photo: The Coliseum Alfonso Pérez in 2018.jpg
+  credit: 'Photo: Vincenzo.togni (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-phone:喺度:
+  none: true
+  fixed: true
+card:sit-phone:電話:
+  photo: Telefon BW 2012-02-18 13-44-32.JPG
+  credit: 'Photo: Berthold Werner (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-phone:地址:
+  photo: Letter from HAH to HMW, 1937-08-06, envelope front.png
+  credit: 'Photo: Harold Aubrey Hall (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-phone:短訊:
+  photo: Mehrere SMS mit Boarding-Informationen von Lufthansa (Android) screenshot — 2024-01-29 Mattes.jpg
+  credit: 'Photo: Lufthansa AG (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-phone:視像:
+  none: true
+  fixed: true
+card:sit-phone:手機:
+  icon: 1F4F1
+  fixed: true
+card:sit-phone:叉電器:
+  photo: Ladegerät.jpg
+  credit: 'Photo: Medvedev (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-phone:上網:
+  none: true
+  fixed: true
+card:sit-phone:數據:
+  none: true
+  fixed: true
+card:sit-phone:密碼:
+  photo: Passwort-Feld.png
+  credit: 'Photo: Kopiersperre (talk) (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-home:租:
+  none: true
+  fixed: true
+card:sit-home:速遞:
+  icon: 1F4E6
+  fixed: true
+card:sit-home:冷氣:
+  photo: TECO MA-750B in Nangang 20110217.jpg
+  credit: 'Photo: Solomon203 (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-home:壞咗:
+  none: true
+  fixed: true
+card:sit-home:漏水:
+  none: true
+  fixed: true
+card:sit-home:鎖匙:
+  icon: 1F511
+  fixed: true
+card:sit-home:垃圾:
+  icon: 1F5D1
+  fixed: true
+card:sit-home:鄰居:
+  none: true
+  fixed: true
+card:sit-home:嘈:
+  none: true
+  fixed: true
+card:sit-home:𨋢:
+  photo: Amsterdam Schiphol Treinstation lift.jpg
+  credit: 'Photo: Renée Kools (CC BY 4.0), Wikimedia Commons'
+  license: CC BY 4.0
+card:sit-home:廚房:
+  photo: Kitchenwhitehouse.jpg
+  credit: 'Photo: Samantha Appleton /  United states of America (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-home:房:
+  photo: Japanese youth hostel room.jpg
+  credit: 'Photo: Flickr.com user "Blue Lotus" (CC BY 2.0), Wikimedia Commons'
+  license: CC BY 2.0
+card:sit-home:床:
+  icon: 1F6CF
+  fixed: true
+card:sit-home:窗:
+  icon: 1FA9F
+  fixed: true
+card:sit-home:門:
+  icon: 1F6AA
+  fixed: true
+card:sit-home:燈:
+  icon: 1F4A1
+  fixed: true
+card:sit-home:熱水爐:
+  photo: Japanese Electric Water Heater.jpg
+  credit: 'Photo: DryPot (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-home:停電:
+  photo: Calle Larga at night during power cut.jpg
+  credit: 'Photo: Jen (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-home:客廳:
+  photo: Cliffe Castle Small Drawing Room (185060597).jpeg
+  credit: 'Photo: Michael D Beckwith (CC0), Wikimedia Commons'
+  license: CC0
+card:sit-home:沖涼房:
+  icon: 1F6BF
+  fixed: true
+card:sit-home:梳化:
+  photo: 19CentSofaMusDF.JPG
+  credit: 'Photo: AlejandroLinaresGarcia (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-home:枱:
+  photo: Parsons Table.jpg
+  credit: 'Photo: Jean-Michel Frank (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-home:櫈:
+  icon: 1FA91
+  fixed: true
+card:sit-home:雪櫃:
+  photo: LG refrigerator interior.jpg
+  credit: 'Photo: Milad Mosapoor (Attribution), Wikimedia Commons'
+  license: Attribution
+card:sit-home:洗衣機:
+  photo: LG 드럼세탁기와 식기세척기, 영국서 물사용 효율 최우수 제품 수상.jpg
+  credit: 'Photo: LG전자 (CC BY 2.0), Wikimedia Commons'
+  license: CC BY 2.0
+card:sit-home:鎖:
+  icon: 1F512
+  fixed: true
+card:sit-home:門鐘:
+  photo: Doorbell.JPG
+  credit: 'Photo: Albertyanks  Albert Jankowski (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-home:搬屋:
+  none: true
+  fixed: true
+card:sit-kitchen:煲:
+  none: true
+  fixed: true
+card:sit-kitchen:煎:
+  photo: Pan frying sausages.jpg
+  credit: 'Photo: Rene Ehrhardt (CC BY 2.0), Wikimedia Commons'
+  license: CC BY 2.0
+card:sit-kitchen:焗:
+  photo: Bakery-2.jpg
+  credit: 'Photo: Visitor7 (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-kitchen:鑊:
+  photo: Wok cooking and the heat source by The Pocket in Nanjing.jpg
+  credit: 'Photo: The Pocket from Nanjin, China (CC BY 2.0), Wikimedia Commons'
+  license: CC BY 2.0
+card:sit-kitchen:刀:
+  icon: 1F52A
+  fixed: true
+card:sit-kitchen:砧板:
+  photo: Chopping Board.jpg
+  credit: 'Photo: Donovan Govan. (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-kitchen:爐:
+  none: true
+  fixed: true
+card:sit-kitchen:微波爐:
+  photo: Panasonic NN-SD69LS 20220410.jpg
+  credit: 'Photo: Mrbeastmodeallday (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-kitchen:熟:
+  none: true
+  fixed: true
+card:sit-health:肚痛:
+  none: true
+  fixed: true
+card:sit-health:醫生:
+  photo: Auscultation of a women.jpg
+  credit: 'Photo: Wesley Carter, U.S. Air Force (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-health:診所:
+  photo: Expo 2012 Medical Clinic Center.JPG
+  credit: 'Photo: hyolee2 (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-health:醫院:
+  photo: Hospital room ubt.jpeg
+  credit: 'Photo: Tomasz Sienicki [user: tsca, mail: tomasz.sienicki at gmail.com] (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-health:藥房:
+  photo: Inneres einer historischen Apotheke.jpg
+  credit: 'Photo: Wikimedia Commons (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-health:病假紙:
+  photo: Colonel T. C. Ashcraft medical certificate.jpg
+  credit: 'Photo: C.S. War Department (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-health:喉嚨痛:
+  photo: US Navy 040113-N-4614W-005 Capt. Wan Mun Chin examines a patient suffering from a sore throat and high fever.jpg
+  credit: 'Photo: U.S. Navy photo by Journalist 1st Class Jeremy L. Wood. (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-health:流鼻水:
+  none: true
+  fixed: true
+card:sit-health:肚屙:
+  none: true
+  fixed: true
+card:sit-health:掛號:
+  none: true
+  fixed: true
+card:sit-health:牙醫:
+  photo: US Navy 040227-N-0000W-057 Navy Dental Officer Lt. Raul Barrientos, right, a native of El Salvador, provides care to a patient at U.S. Naval Dental Center (USNDC) Far East.jpg
+  credit: 'Photo: U.S. Navy Photo by Tom Watanabe (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-health:驗血:
+  photo: Näytteenotto.jpg
+  credit: 'Photo: Innopart (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-health:藥膏:
+  photo: Cream in round container.jpg
+  credit: 'Photo: stux (CC0), Wikimedia Commons'
+  license: CC0
+card:sit-health:膠布:
+  icon: 1FA79
+  fixed: true
+card:sit-health:口罩:
+  icon: 1F637
+  fixed: true
+card:sit-health:痕:
+  photo: Itch.jpg
+  credit: 'Photo: Orrling and Tomer S (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-health:腫:
+  none: true
+  fixed: true
+card:sit-health:扭親:
+  photo: Sprained foot.jpg
+  credit: 'Photo: Boldie (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-body:頭:
+  none: true
+  fixed: true
+card:sit-body:眼:
+  photo: 201405 eye.png
+  credit: 'Photo: DataBase Center for Life Science (DBCLS) (CC BY 4.0), Wikimedia Commons'
+  license: CC BY 4.0
+card:sit-body:耳仔:
+  photo: Closeup of a human ear.jpg
+  credit: 'Photo: צולם על ידי he:משתמש:אנדר-ויק (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-body:鼻:
+  icon: 1F443
+  fixed: true
+card:sit-body:口:
+  icon: 1F444
+  fixed: true
+card:sit-body:牙:
+  photo: Lower wisdom tooth.jpg
+  credit: 'Photo: No machine-readable author provided. Gleam~commonswiki assumed (based on copyrig (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-body:頸:
+  none: true
+  fixed: true
+card:sit-body:膊頭:
+  photo: Photo of male right shoulder, combined with an anatomical drawing from Leonardo da Vinci.jpg
+  credit: 'Photo: File:Leonardo da Vinci - Anatomical studies of the shoulder - WGA12824.jpg: Leon (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-body:手:
+  photo: Playing with hands.JPG
+  credit: 'Photo: Ibex73 (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-body:手指:
+  photo: Human fingers both sides 2.jpg
+  credit: 'Photo: Sciencia58 (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-body:肚:
+  none: true
+  fixed: true
+card:sit-body:背脊:
+  none: true
+  fixed: true
+card:sit-body:腳:
+  icon: 1F9B6
+  fixed: true
+card:sit-body:心口:
+  none: true
+  fixed: true
+card:sit-body:皮膚:
+  none: true
+  fixed: true
+card:sit-body:頭髮:
+  photo: Birthday Hair (24589372980).jpg
+  credit: 'Photo: Becky Stern from Brooklyn, USA (CC BY-SA 2.0), Wikimedia Commons'
+  license: CC BY-SA 2.0
+card:sit-body:面:
+  none: true
+  fixed: true
+card:sit-body:喉嚨:
+  none: true
+  fixed: true
+card:sit-body:膝頭:
+  photo: Knee.female.jpg
+  credit: 'Photo: ArnoldReinhold (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-body:腳趾:
+  photo: Toes.png
+  credit: 'Photo: Stoneisland24 (CC0), Wikimedia Commons'
+  license: CC0
+card:sit-body:骨:
+  photo: Bone, England, 1870-1909 Wellcome L0057379.jpg
+  credit: 'Photo: Wikimedia Commons (CC BY 4.0), Wikimedia Commons'
+  license: CC BY 4.0
+card:sit-body:血:
+  photo: Venous and arterial blood.jpg
+  credit: 'Photo: Wesalius (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-help:警察:
+  photo: Harley-politie.jpg
+  credit: 'Photo: nl:User:Gvdbor (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-help:白車:
+  photo: Krankentransportwagen in Passau.JPG
+  credit: 'Photo: High Contrast (CC BY 3.0 de), Wikimedia Commons'
+  license: CC BY 3.0 de
+card:sit-help:差館:
+  none: true
+  fixed: true
+card:sit-help:急症室:
+  none: true
+  fixed: true
+card:sit-help:消防:
+  photo: CarFireTraining4.jpg
+  credit: 'Photo: Bokske (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-help:搶劫:
+  photo: Shafer cartoon about mugging.jpg
+  credit: 'Photo: Claude Shafer (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-help:意外:
+  none: true
+  fixed: true
+card:sit-help:撞車:
+  photo: Indonesian fire fighters during a traffic accident.jpg
+  credit: 'Photo: Gitoyo aryo (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-help:翻譯:
+  photo: Rosetta Stone.JPG
+  credit: 'Photo: Hans Hillewaert (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-weather:天氣:
+  photo: Wikinews weather.png
+  credit: 'Photo: Wikimedia Commons (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-weather:遮:
+  icon: '2602'
+  fixed: true
+card:sit-weather:黑雨:
+  none: true
+  fixed: true
+card:sit-weather:潮濕:
+  none: true
+  fixed: true
+card:sit-weather:度:
+  none: true
+  fixed: true
+card:sit-weather:雷暴:
+  icon: 26C8
+  fixed: true
+card:sit-weather:太陽:
+  photo: Our Sun at a distance of 150 Mio. km.jpg
+  credit: 'Photo: Burkhard Mücke (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-weather:暴雨:
+  none: true
+  fixed: true
+card:sit-weather:颱風:
+  photo: Hagupit Dec 04 2014 0100Z.png
+  credit: 'Photo: The National Oceanic and Atmospheric Administration, NCDC (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-weather:天文台:
+  none: true
+  fixed: true
+card:sit-weather:氣象局:
+  none: true
+  fixed: true
+card:sit-work:人工:
+  photo: Daily salary IMG 0077.jpg
+  credit: 'Photo: Wikimedia Commons (CC BY-SA 2.0 fr), Wikimedia Commons'
+  license: CC BY-SA 2.0 fr
+card:sit-work:食晏:
+  photo: Sentados a la mesa en Can Masdeu.JPG
+  credit: 'Photo: Brinerustle (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-work:公司:
+  none: true
+  fixed: true
+card:sit-work:辦公室:
+  photo: Photograph of the Division of Classification and Cataloging (36341206050).jpg
+  credit: 'Photo: The U.S. National Archives (No restrictions), Wikimedia Commons'
+  license: No restrictions
+card:sit-work:電郵:
+  icon: 1F4E7
+  fixed: true
+card:sit-work:老師:
+  photo: Classroom at a seconday school in Pendembu Sierra Leone.jpg
+  credit: 'Photo: L. Lartigue (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-work:學校:
+  icon: 1F3EB
+  fixed: true
+card:sit-work:經理:
+  none: true
+  fixed: true
+card:sit-work:客人:
+  none: true
+  fixed: true
+card:sit-errands:銀行:
+  photo: National Bank of Liechtenstein.JPG
+  credit: 'Photo: Chongkian (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-errands:櫃員機:
+  photo: Bankomaty na dworcu Poznań Główny 01.JPG
+  credit: 'Photo: Adrian Grycuk (CC BY-SA 3.0 pl), Wikimedia Commons'
+  license: CC BY-SA 3.0 pl
+card:sit-errands:郵局:
+  photo: Postal facility interior.JPG
+  credit: 'Photo: P199 (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-errands:包裹:
+  icon: 1F4E6
+  fixed: true
+card:sit-errands:身份證:
+  none: true
+  fixed: true
+card:sit-errands:證件:
+  none: true
+  fixed: true
+card:sit-errands:續期:
+  none: true
+  fixed: true
+card:sit-errands:郵票:
+  photo: Salvador 1892 Sc74.jpg
+  credit: 'Photo: Salvadorian government (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-travel:行李:
+  icon: 1F9F3
+  fixed: true
+card:sit-travel:房卡:
+  photo: Magnetic stripe card - hotel key card.jpg
+  credit: 'Photo: Jackie (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-travel:早餐:
+  photo: Breakfast in german hotel.jpg
+  credit: 'Photo: Burkhard Mücke (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-travel:景點:
+  none: true
+  fixed: true
+card:sit-travel:門票:
+  photo: Kyiv Opera tickets 2007 (16264583247).jpg
+  credit: 'Photo: anntinomy from Kyiv, Ukraine (CC BY 2.0), Wikimedia Commons'
+  license: CC BY 2.0
+card:sit-travel:手信:
+  photo: Souvenirs.jpg
+  credit: 'Photo: Wpktsfs (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-travel:導遊:
+  photo: Tour guide addressing a group in China.JPG
+  credit: 'Photo: Ctny (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-travel:機票:
+  photo: NWA Airline Ticket JL2703.jpg
+  credit: 'Photo: Cassiopeia sweet (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-travel:船飛:
+  photo: Fährticket Autoschnellfähre Bad Breisig-Bad Hönningen - 2 Personen mit Fahrrad 2019.jpg
+  credit: 'Photo: Hirzmann GmbH Fährbetrieb (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-travel:簽證:
+  photo: Visa usa.jpg
+  credit: 'Photo: Usuarioparaguayo (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-travel:博物館:
+  photo: GD-EG-Caire-Musée007.JPG
+  credit: 'Photo: Gérard Ducher (user:Néfermaât) (CC BY-SA 2.5), Wikimedia Commons'
+  license: CC BY-SA 2.5
+card:sit-travel:夜景:
+  photo: Hong Kong Night view.jpg
+  credit: 'Photo: Barrychum (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-festivals:新年:
+  photo: New Year 2016 in the city of Helsinki.jpg
+  credit: 'Photo: Olga1969 (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-festivals:農曆新年:
+  photo: Nouvel an chinois 2015 Paris 13 autel.jpg
+  credit: 'Photo: Myrabella (CC BY-SA 4.0), Wikimedia Commons'
+  license: CC BY-SA 4.0
+card:sit-festivals:中秋節:
+  photo: Mid-Autumn Festival-beijing.jpg
+  credit: 'Photo: Shizhao (CC BY-SA 2.5), Wikimedia Commons'
+  license: CC BY-SA 2.5
+card:sit-festivals:月餅:
+  photo: Mooncake.jpg
+  credit: 'Photo: Lybil BER (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-festivals:燈籠:
+  icon: 1F3EE
+  fixed: true
+card:sit-festivals:聖誕節:
+  icon: 1F384
+  fixed: true
+card:sit-festivals:端午節:
+  photo: Qing Dynasty Dragon Boat Festival.jpg
+  credit: 'Photo: After Wen Jia (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-festivals:糭:
+  photo: Yellowzongzi.jpg
+  credit: 'Photo: Benjwong (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-festivals:公眾假期:
+  none: true
+  fixed: true
+card:sit-animals:狗:
+  photo: Greenland 467 (35130903436) (cropped).jpg
+  credit: 'Photo: Markus Trienke (CC BY-SA 2.0), Wikimedia Commons'
+  license: CC BY-SA 2.0
+card:sit-animals:貓:
+  photo: Cat grooming.jpg
+  credit: 'Photo: TeamK (Karin Laurila) https://pixabay.com/en/users/TeamK-222368/ (CC0), Wikimedia Commons'
+  license: CC0
+card:sit-animals:雀仔:
+  icon: 1F426
+  fixed: true
+card:sit-animals:曱甴:
+  photo: Blaberus giganteus MHNT dos.jpg
+  credit: 'Photo: Didier Descouens (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-animals:老鼠:
+  photo: CrycetomysGambianus Apsilia.JPG
+  credit: 'Photo: Laëtitia Dudous (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-animals:牛:
+  photo: Bulgarian gray cattle.jpg
+  credit: 'Photo: dr. Plamen Ivanov (Public domain), Wikimedia Commons'
+  license: Public domain
+card:sit-animals:蛇:
+  photo: Natrix natrix (Marek Szczepanek).jpg
+  credit: 'Photo: Wikimedia Commons (CC BY-SA 3.0), Wikimedia Commons'
+  license: CC BY-SA 3.0
+card:sit-animals:狗仔:
+  photo: Day 354 - West Midlands Police - Newly born police puppies (8288060774).jpg
+  credit: 'Photo: West Midlands Police from West Midlands, United Kingdom (CC BY-SA 2.0), Wikimedia Commons'
+  license: CC BY-SA 2.0
+card:sit-animals:貓仔:
+  photo: Six weeks old cat (aka).jpg
+  credit: 'Photo: André Karwath aka Aka (CC BY-SA 2.5), Wikimedia Commons'
+  license: CC BY-SA 2.5
+card:sit-basics:唔該:
+  icon: 1F64F
+card:sit-basics:多謝:
+  icon: 1F381
+card:sit-basics:唔好意思:
+  icon: 1F647
+card:sit-basics:對唔住:
+  icon: 1F647
+card:sit-basics:你好:
+  icon: 1F44B
+card:sit-basics:早晨:
+  icon: 1F305
+card:sit-basics:拜拜:
+  icon: 1F44B
+card:sit-basics:係:
+  icon: '2705'
+card:sit-basics:唔係:
+  icon: 274C
+card:sit-basics:好:
+  icon: 1F44C
+card:sit-basics:要:
+  none: true
+card:sit-basics:唔要:
+  icon: 1F645
+card:sit-basics:冇問題:
+  icon: 1F44C
+card:sit-basics:唔緊要:
+  icon: 1F60C
+card:sit-basics:我唔明:
+  icon: '2753'
+card:sit-basics:講慢啲:
+  icon: 1F422
+card:sit-basics:再講一次:
+  icon: 1F501
+card:sit-basics:識唔識講英文:
+  icon: 1F5E3
+card:sit-basics:唔使客氣:
+  icon: 1F60A
+card:sit-basics:唔該晒:
+  icon: 1F64F
+card:sit-basics:冇事:
+  icon: 1F44C
+card:sit-basics:得:
+  icon: '2705'
+card:sit-basics:唔得:
+  icon: 274C
+card:sit-basics:可以:
+  icon: '2705'
+card:sit-basics:唔可以:
+  icon: 1F6AB
+card:sit-basics:知道:
+  icon: 1F4A1
+card:sit-basics:唔知:
+  icon: 1F937
+card:sit-basics:等等:
+  icon: 23F3
+card:sit-basics:真係:
+  none: true
+card:sit-basics:係咪:
+  icon: '2753'
+card:sit-basics:好耐冇見:
+  icon: 1F917
+card:sit-basics:晚安:
+  icon: 1F319
+card:sit-basics:唔好:
+  icon: 1F6AB
+card:sit-basics:冇所謂:
+  icon: 1F937
+card:sit-basics:慢慢嚟:
+  icon: 1F422
+card:sit-basics:小心啲:
+  icon: 26A0
+card:sit-basics:一陣見:
+  icon: 1F44B
+card:sit-basics:聽日見:
+  icon: 1F44B
+card:sit-basics:好呀:
+  icon: 1F44D
+card:sit-basics:唔使喇:
+  icon: 1F645
+card:sit-basics:係呀:
+  icon: '2705'
+card:sit-polite:請問:
+  icon: 1F64B
+card:sit-polite:麻煩你:
+  icon: 1F647
+card:sit-polite:辛苦晒:
+  icon: 1F4AA
+card:sit-polite:慢慢行:
+  icon: 1F44B
+card:sit-polite:早啲休息:
+  icon: 1F6CC
+card:sit-polite:恭喜:
+  icon: 1F389
+card:sit-polite:唔使擔心:
+  icon: 1F60C
+card:sit-polite:有心:
+  icon: '2764'
+card:sit-polite:隨便坐:
+  icon: 1FA91
+card:sit-polite:打擾晒:
+  icon: 1F647
+card:sit-numbers:一:
+  none: true
+card:sit-numbers:二:
+  none: true
+card:sit-numbers:兩:
+  none: true
+card:sit-numbers:三:
+  none: true
+card:sit-numbers:四:
+  none: true
+card:sit-numbers:五:
+  none: true
+card:sit-numbers:六:
+  none: true
+card:sit-numbers:七:
+  none: true
+card:sit-numbers:八:
+  none: true
+card:sit-numbers:九:
+  none: true
+card:sit-numbers:十:
+  none: true
+card:sit-numbers:一百:
+  icon: 1F4AF
+card:sit-numbers:幾點:
+  icon: 1F570
+card:sit-numbers:半:
+  none: true
+card:sit-numbers:而家:
+  none: true
+card:sit-numbers:今日:
+  icon: 1F4C5
+card:sit-numbers:聽日:
+  icon: 1F4C5
+card:sit-numbers:尋日:
+  icon: 1F4C5
+card:sit-numbers:星期:
+  icon: 1F4C5
+card:sit-numbers:分鐘:
+  icon: 23F1
+card:sit-numbers:一個鐘:
+  icon: 23F1
+card:sit-numbers:零:
+  none: true
+card:sit-numbers:一千:
+  none: true
+card:sit-numbers:一萬:
+  none: true
+card:sit-numbers:第一:
+  icon: 1F947
+card:sit-numbers:朝早:
+  icon: 1F305
+card:sit-numbers:晏晝:
+  none: true
+card:sit-numbers:夜晚:
+  icon: 1F303
+card:sit-numbers:星期一:
+  icon: 1F4C5
+card:sit-numbers:星期六:
+  icon: 1F4C5
+card:sit-numbers:星期日:
+  icon: 1F4C5
+card:sit-numbers:月:
+  icon: 1F4C5
+card:sit-numbers:年:
+  icon: 1F4C5
+card:sit-numbers:幾多:
+  icon: 1F522
+card:sit-numbers:個字:
+  icon: 1F552
+card:sit-numbers:十一:
+  none: true
+card:sit-numbers:二十:
+  none: true
+card:sit-numbers:廿:
+  none: true
+card:sit-numbers:第二:
+  icon: 1F948
+card:sit-numbers:最後:
+  none: true
+card:sit-numbers:每日:
+  icon: 1F4C5
+card:sit-numbers:下個禮拜:
+  icon: 1F4C5
+card:sit-numbers:上個月:
+  icon: 1F4C5
+card:sit-numbers:今年:
+  icon: 1F4C5
+card:sit-numbers:出年:
+  icon: 1F4C5
+card:sit-numbers:舊年:
+  icon: 1F4C5
+card:sit-numbers:禮拜:
+  icon: 1F4C5
+card:sit-numbers:鐘頭:
+  icon: 23F1
+card:sit-questions:乜嘢:
+  icon: '2753'
+card:sit-questions:咩:
+  none: true
+card:sit-questions:點解:
+  icon: 1F914
+card:sit-questions:點樣:
+  none: true
+card:sit-questions:點:
+  none: true
+card:sit-questions:邊度:
+  icon: 1F4CD
+card:sit-questions:邊:
+  none: true
+card:sit-questions:邊個:
+  icon: 1F464
+card:sit-questions:幾時:
+  icon: 1F552
+card:sit-questions:幾多:
+  icon: 1F522
+card:sit-questions:幾耐:
+  icon: 23F3
+card:sit-questions:未:
+  none: true
+card:sit-questions:呢:
+  none: true
+card:sit-questions:係咪:
+  icon: '2753'
+card:sit-questions:做乜:
+  none: true
+card:sit-questions:點算:
+  icon: 1F914
+card:sit-questions:定:
+  none: true
+card:sit-questions:得唔得:
+  none: true
+card:sit-questions:係唔係:
+  none: true
+card:sit-questions:好唔好:
+  none: true
+card:sit-questions:要唔要:
+  none: true
+card:sit-questions:識唔識:
+  none: true
+card:sit-questions:去唔去:
+  none: true
+card:sit-verbs:食:
+  icon: 1F37D
+card:sit-verbs:飲:
+  icon: 1F964
+card:sit-verbs:去:
+  icon: 27A1
+card:sit-verbs:嚟:
+  none: true
+card:sit-verbs:返:
+  none: true
+card:sit-verbs:睇:
+  icon: 1F440
+card:sit-verbs:聽:
+  icon: 1F442
+card:sit-verbs:講:
+  icon: 1F5E3
+card:sit-verbs:買:
+  icon: 1F6D2
+card:sit-verbs:賣:
+  icon: 1F3F7
+card:sit-verbs:等:
+  icon: 23F3
+card:sit-verbs:坐低:
+  icon: 1FA91
+card:sit-verbs:企:
+  icon: 1F9CD
+card:sit-verbs:行:
+  icon: 1F6B6
+card:sit-verbs:搭:
+  icon: 1F68C
+card:sit-verbs:揸車:
+  icon: 1F697
+card:sit-verbs:瞓覺:
+  icon: 1F634
+card:sit-verbs:起身:
+  icon: 23F0
+card:sit-verbs:沖涼:
+  icon: 1F6BF
+card:sit-verbs:做嘢:
+  icon: 1F4BC
+card:sit-verbs:玩:
+  icon: 1F3AE
+card:sit-verbs:用:
+  none: true
+card:sit-verbs:俾:
+  none: true
+card:sit-verbs:攞:
+  none: true
+card:sit-verbs:搵:
+  icon: 1F50D
+card:sit-verbs:識:
+  icon: 1F4A1
+card:sit-verbs:鍾意:
+  icon: '2764'
+card:sit-verbs:想:
+  icon: 1F4AD
+card:sit-verbs:覺得:
+  icon: 1F4AD
+card:sit-verbs:明:
+  icon: 1F4A1
+card:sit-verbs:記得:
+  none: true
+card:sit-verbs:唔記得:
+  none: true
+card:sit-verbs:幫:
+  icon: 1F91D
+card:sit-verbs:開:
+  icon: 1F513
+card:sit-verbs:熄:
+  none: true
+card:sit-verbs:閂:
+  icon: 1F512
+card:sit-verbs:煮:
+  icon: 1F373
+card:sit-verbs:洗:
+  icon: 1F9FC
+card:sit-verbs:寫:
+  icon: 270D
+card:sit-verbs:讀:
+  icon: 1F4D6
+card:sit-verbs:學:
+  icon: 1F393
+card:sit-verbs:教:
+  none: true
+card:sit-verbs:試:
+  none: true
+card:sit-verbs:換:
+  icon: 1F504
+card:sit-verbs:借:
+  none: true
+card:sit-verbs:送:
+  icon: 1F381
+card:sit-verbs:帶:
+  none: true
+card:sit-verbs:叫:
+  icon: 1F4E3
+card:sit-verbs:問:
+  icon: '2753'
+card:sit-verbs:答:
+  icon: 1F4AC
+card:sit-verbs:諗:
+  icon: 1F914
+card:sit-verbs:跑:
+  icon: 1F3C3
+card:sit-verbs:唱歌:
+  icon: 1F3A4
+card:sit-verbs:跳舞:
+  icon: 1F483
+card:sit-verbs:笑:
+  icon: 1F604
+card:sit-verbs:喊:
+  icon: 1F62D
+card:sit-verbs:執:
+  icon: 1F9F9
+card:sit-verbs:掉:
+  icon: 1F5D1
+card:sit-describe:大:
+  none: true
+card:sit-describe:細:
+  none: true
+card:sit-describe:多:
+  none: true
+card:sit-describe:少:
+  none: true
+card:sit-describe:新:
+  icon: 1F195
+card:sit-describe:舊:
+  none: true
+card:sit-describe:靚:
+  icon: '2728'
+card:sit-describe:差:
+  none: true
+card:sit-describe:快:
+  icon: 1F407
+card:sit-describe:慢:
+  icon: 1F422
+card:sit-describe:遠:
+  none: true
+card:sit-describe:近:
+  none: true
+card:sit-describe:長:
+  none: true
+card:sit-describe:短:
+  none: true
+card:sit-describe:高:
+  none: true
+card:sit-describe:矮:
+  none: true
+card:sit-describe:乾淨:
+  icon: 1F9FC
+card:sit-describe:污糟:
+  none: true
+card:sit-describe:新鮮:
+  none: true
+card:sit-describe:易:
+  none: true
+card:sit-describe:難:
+  none: true
+card:sit-describe:早:
+  none: true
+card:sit-describe:遲:
+  none: true
+card:sit-describe:方便:
+  none: true
+card:sit-describe:得意:
+  icon: 1F970
+card:sit-describe:紅色:
+  icon: 1F7E5
+card:sit-describe:白色:
+  icon: 2B1C
+card:sit-describe:黑色:
+  icon: 2B1B
+card:sit-describe:藍色:
+  icon: 1F7E6
+card:sit-describe:綠色:
+  icon: 1F7E9
+card:sit-describe:黃色:
+  icon: 1F7E8
+card:sit-describe:暖:
+  none: true
+card:sit-describe:涼:
+  none: true
+card:sit-describe:濕:
+  icon: 1F4A7
+card:sit-describe:乾:
+  none: true
+card:sit-describe:重:
+  icon: 1F3CB
+card:sit-describe:好輕:
+  icon: 1FAB6
+card:sit-describe:靜:
+  icon: 1F92B
+card:sit-describe:安全:
+  icon: 1F6E1
+card:sit-describe:錯:
+  icon: 274C
+card:sit-describe:一樣:
+  none: true
+card:sit-describe:唔同:
+  none: true
+card:sit-describe:粉紅色:
+  none: true
+card:sit-describe:灰色:
+  none: true
+card:sit-describe:橙色:
+  icon: 1F7E7
+card:sit-describe:啡色:
+  icon: 1F7EB
+card:sit-describe:紫色:
+  icon: 1F7EA
+card:sit-around:喺邊:
+  icon: 1F4CD
+card:sit-around:的士:
+  icon: 1F695
+card:sit-around:碼頭:
+  icon: 26F4
+card:sit-around:有落:
+  none: true
+card:sit-around:前面:
+  icon: 2B06
+card:sit-around:左邊:
+  icon: 2B05
+card:sit-around:右邊:
+  icon: 27A1
+card:sit-around:直行:
+  icon: 2B06
+card:sit-around:轉左:
+  icon: 21A9
+card:sit-around:轉右:
+  icon: 21AA
+card:sit-around:幾遠:
+  icon: 1F4CF
+card:sit-around:增值:
+  icon: 1F4B3
+card:sit-around:蕩失路:
+  icon: 1F5FA
+card:sit-around:過馬路:
+  icon: 1F6B6
+card:sit-around:附近:
+  icon: 1F4CD
+card:sit-around:上車:
+  icon: 1F68C
+card:sit-around:塞車:
+  icon: 1F697
+card:sit-around:行路:
+  icon: 1F6B6
+card:sit-around:轉車:
+  icon: 1F504
+card:sit-around:頭班車:
+  none: true
+card:sit-around:車費:
+  icon: 1F4B5
+card:sit-around:過海:
+  none: true
+card:sit-around:停:
+  icon: 1F6D1
+card:sit-places:公園:
+  none: true
+card:sit-places:樓上:
+  none: true
+card:sit-places:樓下:
+  none: true
+card:sit-places:前地:
+  none: true
+card:sit-places:屋邨:
+  none: true
+card:sit-places:海旁:
+  none: true
+card:sit-places:山頂:
+  none: true
+card:sit-food:幾位:
+  icon: 1F465
+card:sit-food:兩位:
+  icon: 1F465
+card:sit-food:呢個:
+  icon: 1F449
+card:sit-food:埋單:
+  icon: 1F9FE
+card:sit-food:拎走:
+  icon: 1F961
+card:sit-food:堂食:
+  icon: 1F37D
+card:sit-food:走辣:
+  icon: 1F336
+card:sit-food:走蔥:
+  none: true
+card:sit-food:少甜:
+  icon: 1F36C
+card:sit-food:走冰:
+  icon: 1F9CA
+card:sit-food:凍:
+  icon: '2744'
+card:sit-food:熱:
+  icon: 1F525
+card:sit-food:好食:
+  icon: 1F60B
+card:sit-food:食素:
+  icon: 1F966
+card:sit-food:敏感:
+  icon: 26A0
+card:sit-food:打包:
+  icon: 1F961
+card:sit-food:辣:
+  icon: 1F336
+card:sit-food:甜:
+  icon: 1F36C
+card:sit-food:鹹:
+  icon: 1F9C2
+card:sit-food:再嚟一個:
+  none: true
+card:sit-food:唔夠:
+  none: true
+card:sit-food:外賣:
+  icon: 1F961
+card:sit-food:酸:
+  icon: 1F34B
+card:sit-food:唔辣:
+  none: true
+card:sit-cafe:咖啡:
+  none: true
+card:sit-cafe:常餐:
+  none: true
+card:sit-cafe:搭枱:
+  icon: 1F465
+card:sit-cafe:加:
+  icon: '2795'
+card:sit-cafe:另上:
+  none: true
+card:sit-cafe:凍檸茶:
+  none: true
+card:sit-cafe:熱飲:
+  none: true
+card:sit-cafe:凍飲:
+  none: true
+card:sit-cafe:走甜:
+  icon: 1F36C
+card:sit-cafe:公仔麵:
+  none: true
+card:sit-cafe:下午茶:
+  none: true
+card:sit-dimsum:流沙包:
+  none: true
+card:sit-dimsum:鐵觀音:
+  none: true
+card:sit-dimsum:加水:
+  none: true
+card:sit-dimsum:點心紙:
+  none: true
+card:sit-pay:幾錢:
+  icon: 1F4B2
+card:sit-pay:一共:
+  icon: 1F9FE
+card:sit-pay:碌卡:
+  icon: 1F4B3
+card:sit-pay:八達通:
+  icon: 1F4B3
+card:sit-pay:澳門通:
+  icon: 1F4B3
+card:sit-pay:散紙:
+  icon: 1FA99
+card:sit-pay:找錢:
+  icon: 1FA99
+card:sit-pay:貴:
+  none: true
+card:sit-pay:好平:
+  none: true
+card:sit-pay:平啲:
+  none: true
+card:sit-pay:唔使:
+  none: true
+card:sit-pay:蚊:
+  none: true
+card:sit-pay:折:
+  icon: 1F3F7
+card:sit-pay:減價:
+  icon: 1F3F7
+card:sit-pay:免費:
+  icon: 1F193
+card:sit-pay:一人一半:
+  none: true
+card:sit-pay:夾錢:
+  icon: 1F91D
+card:sit-pay:港紙:
+  icon: 1F4B5
+card:sit-pay:轉數:
+  icon: 1F4F2
+card:sit-pay:收唔收:
+  none: true
+card:sit-pay:找唔開:
+  none: true
+card:sit-pay:會員:
+  none: true
+card:sit-pay:優惠:
+  icon: 1F3F7
+card:sit-pay:加一:
+  none: true
+card:sit-shop:有冇:
+  none: true
+card:sit-shop:冇:
+  none: true
+card:sit-shop:試吓:
+  none: true
+card:sit-shop:大啲:
+  none: true
+card:sit-shop:細啲:
+  none: true
+card:sit-shop:顏色:
+  none: true
+card:sit-shop:賣晒:
+  none: true
+card:sit-shop:退貨:
+  icon: 21A9
+card:sit-shop:換:
+  icon: 1F504
+card:sit-shop:睇吓先:
+  none: true
+card:sit-shop:啱:
+  icon: '2705'
+card:sit-shop:唔啱:
+  icon: 274C
+card:sit-shop:退錢:
+  icon: 1F4B8
+card:sit-shop:有貨:
+  none: true
+card:sit-shop:買一送一:
+  none: true
+card:sit-clothes:外套:
+  none: true
+card:sit-clothes:褸:
+  none: true
+card:sit-groceries:香蕉:
+  none: true
+card:sit-groceries:菜心:
+  none: true
+card:sit-groceries:洋蔥:
+  none: true
+card:sit-groceries:豆腐:
+  none: true
+card:sit-people:我叫:
+  none: true
+card:sit-people:你叫咩名:
+  none: true
+card:sit-people:邊度人:
+  none: true
+card:sit-people:朋友:
+  none: true
+card:sit-people:同事:
+  none: true
+card:sit-people:得閒:
+  none: true
+card:sit-people:唔得閒:
+  none: true
+card:sit-people:食飯:
+  none: true
+card:sit-people:飲嘢:
+  none: true
+card:sit-people:一齊:
+  none: true
+card:sit-people:等陣:
+  none: true
+card:sit-people:遲到:
+  none: true
+card:sit-people:幾時:
+  icon: 1F552
+card:sit-people:邊個:
+  icon: 1F464
+card:sit-people:做咩:
+  none: true
+card:sit-people:你好嗎:
+  none: true
+card:sit-people:幾好:
+  none: true
+card:sit-people:好高興識你:
+  none: true
+card:sit-people:拍拖:
+  none: true
+card:sit-people:結婚:
+  none: true
+card:sit-people:住:
+  none: true
+card:sit-people:返屋企:
+  none: true
+card:sit-people:再見:
+  none: true
+card:sit-people:外國人:
+  none: true
+card:sit-people:本地人:
+  none: true
+card:sit-people:香港人:
+  none: true
+card:sit-people:澳門人:
+  none: true
+card:sit-people:內地:
+  none: true
+card:sit-people:英國:
+  none: true
+card:sit-people:美國:
+  none: true
+card:sit-people:菲律賓:
+  none: true
+card:sit-people:印尼:
+  none: true
+card:sit-people:日本:
+  none: true
+card:sit-people:韓國:
+  none: true
+card:sit-freetime:睇戲:
+  icon: 1F3AC
+card:sit-freetime:唱K:
+  icon: 1F3A4
+card:sit-freetime:行街:
+  icon: 1F6CD
+card:sit-freetime:打機:
+  icon: 1F3AE
+card:sit-freetime:行山:
+  icon: 1F97E
+card:sit-freetime:去旅行:
+  icon: '2708'
+card:sit-freetime:約:
+  none: true
+card:sit-freetime:週末:
+  none: true
+card:sit-freetime:聽歌:
+  icon: 1F3A7
+card:sit-freetime:睇書:
+  icon: 1F4D6
+card:sit-freetime:飲酒:
+  icon: 1F37B
+card:sit-freetime:宵夜:
+  icon: 1F319
+card:sit-freetime:打邊爐:
+  icon: 1F372
+card:sit-sport:運動:
+  icon: 1F3C5
+card:sit-sport:跑步:
+  icon: 1F3C3
+card:sit-sport:游水:
+  icon: 1F3CA
+card:sit-sport:踢波:
+  icon: 26BD
+card:sit-sport:打籃球:
+  icon: 1F3C0
+card:sit-sport:做gym:
+  icon: 1F3CB
+card:sit-sport:踩單車:
+  icon: 1F6B4
+card:sit-sport:睇波:
+  icon: 26BD
+card:sit-sport:贏:
+  icon: 1F3C6
+card:sit-sport:輸:
+  icon: 1F61E
+card:sit-family:屋企人:
+  none: true
+card:sit-family:阿爸:
+  none: true
+card:sit-family:阿媽:
+  none: true
+card:sit-family:老公:
+  none: true
+card:sit-family:老婆:
+  none: true
+card:sit-family:仔:
+  none: true
+card:sit-family:女:
+  none: true
+card:sit-family:哥哥:
+  none: true
+card:sit-family:家姐:
+  none: true
+card:sit-family:細佬:
+  none: true
+card:sit-family:妹妹:
+  none: true
+card:sit-family:爺爺:
+  none: true
+card:sit-family:嫲嫲:
+  none: true
+card:sit-family:公公:
+  none: true
+card:sit-family:婆婆:
+  none: true
+card:sit-family:細路:
+  none: true
+card:sit-family:男朋友:
+  none: true
+card:sit-family:女朋友:
+  none: true
+card:sit-family:叔叔:
+  none: true
+card:sit-family:姨姨:
+  none: true
+card:sit-family:親戚:
+  none: true
+card:sit-family:老豆:
+  none: true
+card:sit-family:孫:
+  none: true
+card:sit-family:舅父:
+  none: true
+card:sit-family:姑媽:
+  none: true
+card:sit-feelings:開心:
+  icon: 1F60A
+card:sit-feelings:唔開心:
+  icon: 1F61E
+card:sit-feelings:嬲:
+  icon: 1F620
+card:sit-feelings:好驚:
+  icon: 1F628
+card:sit-feelings:攰:
+  icon: 1F62B
+card:sit-feelings:肚餓:
+  icon: 1F924
+card:sit-feelings:口渴:
+  icon: 1F964
+card:sit-feelings:悶:
+  icon: 1F971
+card:sit-feelings:緊張:
+  icon: 1F62C
+card:sit-feelings:好笑:
+  icon: 1F602
+card:sit-feelings:掛住:
+  icon: '2764'
+card:sit-feelings:憎:
+  icon: 1F621
+card:sit-feelings:好正:
+  icon: 1F44D
+card:sit-feelings:犀利:
+  icon: 1F929
+card:sit-feelings:好彩:
+  icon: 1F340
+card:sit-feelings:慘:
+  icon: 1F62B
+card:sit-feelings:頂唔順:
+  icon: 1F629
+card:sit-feelings:擔心:
+  icon: 1F61F
+card:sit-feelings:放心:
+  icon: 1F60C
+card:sit-feelings:興奮:
+  icon: 1F606
+card:sit-feelings:尷尬:
+  icon: 1F605
+card:sit-feelings:失望:
+  icon: 1F61E
+card:sit-feelings:舒服:
+  icon: 1F60C
+card:sit-feelings:好煩:
+  icon: 1F612
+card:sit-feelings:感動:
+  icon: 1F972
+card:sit-phone:收到:
+  icon: '2705'
+card:sit-phone:打俾我:
+  icon: 1F4DE
+card:sit-phone:覆:
+  none: true
+card:sit-phone:號碼:
+  none: true
+card:sit-phone:冇電:
+  icon: 1FAAB
+card:sit-phone:叉電:
+  icon: 1F50C
+card:sit-phone:冇訊號:
+  icon: 1F4F5
+card:sit-phone:到咗:
+  icon: 1F3C1
+card:sit-phone:就快到:
+  icon: 1F3C3
+card:sit-phone:語音:
+  none: true
+card:sit-phone:打錯:
+  none: true
+card:sit-phone:聽唔到:
+  none: true
+card:sit-phone:再打過:
+  none: true
+card:sit-phone:截圖:
+  icon: 1F4F8
+card:sit-phone:群組:
+  none: true
+card:sit-phone:已讀唔回:
+  icon: 1F440
+card:sit-home:業主:
+  none: true
+card:sit-home:按金:
+  none: true
+card:sit-home:管理處:
+  none: true
+card:sit-home:師傅:
+  none: true
+card:sit-home:冇水:
+  none: true
+card:sit-home:交租:
+  none: true
+card:sit-kitchen:煮飯:
+  icon: 1F373
+card:sit-kitchen:炒:
+  icon: 1F373
+card:sit-kitchen:蒸:
+  none: true
+card:sit-kitchen:洗碗:
+  icon: 1F9FD
+card:sit-kitchen:未熟:
+  none: true
+card:sit-chores:執屋:
+  icon: 1F9F9
+card:sit-chores:洗衫:
+  icon: 1F9FA
+card:sit-chores:晾衫:
+  icon: 1F455
+card:sit-chores:收衫:
+  icon: 1F455
+card:sit-chores:拖地:
+  icon: 1F9F9
+card:sit-chores:抹枱:
+  none: true
+card:sit-chores:倒垃圾:
+  icon: 1F5D1
+card:sit-chores:掃地:
+  icon: 1F9F9
+card:sit-chores:摺衫:
+  icon: 1F455
+card:sit-chores:工人:
+  none: true
+card:sit-health:唔舒服:
+  icon: 1F912
+card:sit-health:痛:
+  icon: 1F915
+card:sit-health:頭痛:
+  icon: 1F915
+card:sit-health:發燒:
+  icon: 1F912
+card:sit-health:咳:
+  icon: 1F637
+card:sit-health:感冒:
+  icon: 1F927
+card:sit-health:藥:
+  icon: 1F48A
+card:sit-health:一日三次:
+  none: true
+card:sit-health:飯後:
+  none: true
+card:sit-health:頭暈:
+  icon: 1F635
+card:sit-health:想嘔:
+  icon: 1F922
+card:sit-health:打針:
+  icon: 1F489
+card:sit-health:探熱:
+  none: true
+card:sit-health:血壓:
+  none: true
+card:sit-health:覆診:
+  none: true
+card:sit-health:跌親:
+  none: true
+card:sit-body:腰:
+  none: true
+card:sit-help:救命:
+  icon: 1F198
+card:sit-help:報警:
+  icon: 1F46E
+card:sit-help:火燭:
+  icon: 1F525
+card:sit-help:小心:
+  icon: 26A0
+card:sit-help:受傷:
+  icon: 1FA79
+card:sit-help:偷:
+  icon: 1F977
+card:sit-help:唔見咗:
+  icon: 1F50D
+card:sit-help:危險:
+  icon: 26A0
+card:sit-help:快啲:
+  icon: 1F3C3
+card:sit-help:走火通道:
+  none: true
+card:sit-help:幫手:
+  none: true
+card:sit-help:有冇人識講英文:
+  none: true
+card:sit-help:失物認領:
+  none: true
+card:sit-weather:落雨:
+  icon: 1F327
+card:sit-weather:好熱:
+  icon: 1F975
+card:sit-weather:好凍:
+  icon: 1F976
+card:sit-weather:好焗:
+  none: true
+card:sit-weather:打風:
+  icon: 1F300
+card:sit-weather:八號風球:
+  none: true
+card:sit-weather:天晴:
+  icon: '2600'
+card:sit-weather:陰天:
+  icon: '2601'
+card:sit-weather:大風:
+  icon: 1F32C
+card:sit-weather:回南天:
+  none: true
+card:sit-weather:行雷:
+  icon: 1F329
+card:sit-weather:閃電:
+  icon: 26A1
+card:sit-weather:霧:
+  icon: 1F32B
+card:sit-work:返工:
+  icon: 1F4BC
+card:sit-work:放工:
+  icon: 1F3C1
+card:sit-work:放假:
+  icon: 1F3D6
+card:sit-work:開會:
+  icon: 1F465
+card:sit-work:老細:
+  none: true
+card:sit-work:加班:
+  icon: 1F319
+card:sit-work:請假:
+  icon: 1F4C5
+card:sit-work:上堂:
+  icon: 1F3EB
+card:sit-work:功課:
+  none: true
+card:sit-work:考試:
+  icon: 1F4DD
+card:sit-work:同學:
+  none: true
+card:sit-work:大學:
+  none: true
+card:sit-work:返學:
+  icon: 1F3EB
+card:sit-work:放學:
+  icon: 1F3EB
+card:sit-work:見工:
+  icon: 1F91D
+card:sit-work:搵工:
+  icon: 1F50D
+card:sit-work:辭職:
+  icon: 1F44B
+card:sit-work:出糧:
+  icon: 1F4B0
+card:sit-work:兼職:
+  none: true
+card:sit-work:全職:
+  none: true
+card:sit-errands:攞錢:
+  icon: 1F4B5
+card:sit-errands:開戶口:
+  none: true
+card:sit-errands:寄:
+  icon: 1F4EE
+card:sit-errands:攞籌:
+  none: true
+card:sit-errands:排隊:
+  icon: 1F465
+card:sit-errands:填表:
+  icon: 1F4DD
+card:sit-errands:簽名:
+  icon: 270D
+card:sit-errands:護照:
+  none: true
+card:sit-errands:影印:
+  icon: 1F5A8
+card:sit-errands:地址證明:
+  none: true
+card:sit-errands:預約:
+  none: true
+card:sit-errands:手續費:
+  none: true
+card:sit-errands:交費:
+  none: true
+card:sit-errands:戶口:
+  none: true
+card:sit-errands:申請:
+  none: true
+card:sit-errands:寄信:
+  icon: '2709'
+card:sit-errands:打印:
+  icon: 1F5A8
+card:sit-hair:剪頭髮:
+  icon: '2702'
+card:sit-hair:洗頭:
+  icon: 1F9F4
+card:sit-hair:剪短啲:
+  icon: '2702'
+card:sit-hair:兩邊:
+  none: true
+card:sit-hair:上面:
+  none: true
+card:sit-hair:後面:
+  none: true
+card:sit-hair:染髮:
+  none: true
+card:sit-hair:電髮:
+  none: true
+card:sit-hair:吹乾:
+  icon: 1F4A8
+card:sit-travel:訂房:
+  icon: 1F3E8
+card:sit-travel:入住:
+  icon: 1F3E8
+card:sit-travel:退房:
+  icon: 1F3E8
+card:sit-travel:影相:
+  icon: 1F4F7
+card:sit-travel:過關:
+  icon: 1F6C2
+card:sit-travel:旅行:
+  none: true
+card:sit-travel:訂枱:
+  none: true
+card:sit-travel:開放時間:
+  none: true
+card:sit-festivals:恭喜發財:
+  icon: 1F9E7
+card:sit-festivals:利是:
+  icon: 1F9E7
+card:sit-festivals:拜年:
+  none: true
+card:sit-festivals:生日快樂:
+  icon: 1F382
+card:sit-animals:蚊:
+  none: true
+card:sit-animals:豬:
+  none: true
+card:sit-animals:寵物:
+  none: true
+card:sit-slang:搞掂:
+  icon: '2705'
+card:sit-slang:收工:
+  icon: 1F3C1
+card:sit-slang:得閒飲茶:
+  icon: 1F375
+card:sit-slang:冇計:
+  icon: 1F937
+card:sit-slang:算數:
+  none: true
+card:sit-slang:大鑊:
+  icon: 1F4A5
+card:sit-slang:好嘢:
+  icon: 1F389
+card:sit-slang:老友:
+  icon: 1F91D
+card:sit-slang:吹水:
+  icon: 1F4AC
+card:sit-slang:抵:
+  icon: 1F4B0
+card:sit-slang:唔抵:
+  none: true
+card:sit-slang:型:
+  icon: 1F60E
+card:sit-slang:頂:
+  icon: 1F624
+card:sit-slang:冇嘢:
+  icon: 1F44C
+card:sit-slang:頹:
+  icon: 1F62A
+card:sit-slang:勁:
+  icon: 1F4AA
+card:sit-slang:麻麻:
+  icon: 1F610
+card:sit-slang:一般般:
+  icon: 1F610
+card:sit-slang:唔錯:
+  icon: 1F44D
+card:sit-slang:收皮:
+  icon: 1F910
+card:sit-slang:黐線:
+  icon: 1F92A
+card:sit-slang:搞笑:
+  icon: 1F602
+card:sit-slang:扮嘢:
+  icon: 1F60F

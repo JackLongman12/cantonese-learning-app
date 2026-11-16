@@ -73,8 +73,14 @@ def synthesise_all(
     ).fetchone()
     if has_skills:
         cards += db.execute("SELECT example FROM skill_entry ORDER BY id").fetchall()
+    # tone ear training: every voice, so the learner hears more than one speaker
+    tone_cards = (
+        {t for (t,) in db.execute("SELECT zh FROM card WHERE deck_id = 'prc-tones'")}
+        if has_cards
+        else set()
+    )
     for (text,) in cards[:limit]:
-        for voice in VOICES["yue"][:voices_per_lang]:
+        for voice in VOICES["yue"][: None if text in tone_cards else voices_per_lang]:
             h = audio_hash("yue", voice, "normal", text)
             jobs.append((h, "yue", voice, "normal", text, audio_dir / f"{h}.mp3"))
 

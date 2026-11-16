@@ -135,6 +135,22 @@ rename a situation or change a shipped word's characters. Readings come from the
 dictionaries; a word the dictionaries read wrong gets a word-level override in
 `overrides/readings.yaml` (好平, 請假).
 
+## Practice (`content/practice.yaml`, newcomer mode)
+
+Four lists, all `source: llm`, readings never typed:
+- `replies: {sit-…: [[Cantonese, English], …]}`: what people say back in a situation, at
+  least four per situation (wrong options come from the same situation).
+- `tone_sets: [{id: tones-…, title, chars: [[character, English], …]}]`: characters that
+  differ only by tone. The build fails a set whose readings don't share one syllable with
+  distinct tones.
+- `frames: [{id: fr-…, zh: 我想要＿, en: "I'd like ___.", fill: {word: English for the gap}}]`:
+  one ＿ and one ___; prefer words from the situations so the picture shows.
+- `challenges: [{id: ch-…, zh, en, sit}]`: one small real-world task and the words for it.
+
+Each Cantonese line becomes a card in a hidden deck (`prc-replies`, `prc-tones`,
+`prc-frames`, `prc-challenges`); ids (`rep:<sit>:<zh>`, `tone:<set>:<char>`,
+`frame:<frame>:<word>`, `ch-…`) are permanent: event logs refer to them.
+
 ## Variants (`content/variants.yaml`)
 
 Groups of everyday words for one thing (白車 / 救護車 / 救傷車 / 十字車, "ambulance").

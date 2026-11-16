@@ -24,6 +24,7 @@ import 'finish.dart';
 import 'mic_check.dart';
 import 'ruby_text.dart';
 import 'tiles.dart';
+import 'word_picture.dart';
 import 'word_sheet.dart';
 
 /// Deck tiles for the Topics tab (Cantonese only: these are Cantonese names).
@@ -482,9 +483,18 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                     children: [
                       // the dish's photo, so the word and the food stick together
                       // no photo: a picture for the kind of card
-                      if (widget.englishFirst)
-                        _EnglishPrompt(card: _card, flipped: _flipped)
-                      else if (_card.image == null)
+                      if (widget.englishFirst) ...[
+                        Center(
+                          child: WordPicture(
+                            services: _s,
+                            cardId: _card.id,
+                            size: 120,
+                            showCredit: true,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        _EnglishPrompt(card: _card, flipped: _flipped),
+                      ] else if (_card.image == null)
                         Center(
                           child: Text(
                             widget.deck.id.contains('streets')
