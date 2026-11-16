@@ -164,6 +164,7 @@ readings by eye (pin wrong ones with `fix_yue`) → `duk tts` → `duk bundle`.
 
 - [ ] 3.1 Google Drive appData sync, per-device logs, merge, weekly backups; Windows loopback OAuth.
 - [ ] 3.2 Dashboard: coverage, retained items per minute, forecast, study-time heatmap.
+- [ ] 3.6 Remove the temporary Settings → Developer → Replay onboarding before a public launch (owner's test tool, 2026-11-17).
 - [x] 3.4 Opt-in anonymous usage data and crash reports (Cloudflare Worker + D1), A/B experiments per install, `duk telemetry pull/report` (2026-11-17, docs/TELEMETRY.md).
 - [ ] 3.5 Act on the first report once 30+ installs share data: end or extend each experiment, fix the hardest characters and sentences, the top crash.
 - [x] ~~3.3 Crash/error log capture.~~ Dropped (owner, 2026-11-16): few users; they report problems directly.

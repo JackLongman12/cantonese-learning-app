@@ -18,9 +18,14 @@ class OnboardingScreen extends StatefulWidget {
     super.key,
     required this.services,
     required this.onDone,
+    this.replay = false,
   });
   final AppServices services;
   final VoidCallback onDone;
+
+  /// Developer replay from Settings (temporary, 2026-11-17): progress is kept, and the
+  /// sharing answer is kept unless changed (no new anonymous id per test run).
+  final bool replay;
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -31,7 +36,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   String? _level;
   int? _help;
   String? _goal;
-  bool? _share;
+  late bool? _share = widget.replay ? widget.services.prefs.shareData : null;
 
   /// Situations a newcomer wants first (deck ids); the first four are suggested.
   late final Set<String> _picked = {
@@ -54,7 +59,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ];
     }
     p.onboarded = true;
-    setSharing(s, _share ?? false);
+    if (!widget.replay || _share != p.shareData) setSharing(s, _share ?? false);
     s.logger.log('onboarding.done', {
       'speaker': p.isSpeaker,
       'level': p.level,

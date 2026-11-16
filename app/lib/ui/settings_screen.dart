@@ -15,6 +15,8 @@ import '../platform/speech.dart';
 import '../platform/storage.dart';
 import '../engine/goals.dart';
 import 'goal_picker.dart';
+import 'home_screen.dart' show HomeScreen;
+import 'onboarding_screen.dart';
 import 'reminder_sync.dart';
 import 'ruby_text.dart';
 import 'update_ui.dart';
@@ -327,6 +329,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     trailing: const Icon(Icons.system_update_rounded),
                     onTap: _checkUpdate,
                   ),
+                // TEMPORARY developer tool (owner, 2026-11-17): remove before a public
+                // launch. Replays the first-run screens; progress is untouched.
+                section('Developer'),
+                ListTile(
+                  key: const ValueKey('replay-onboarding'),
+                  leading: const Icon(Icons.restart_alt_rounded),
+                  title: const Text('Replay onboarding'),
+                  subtitle: const Text(
+                    'Go through the first-run screens again. Your progress is kept.',
+                  ),
+                  onTap: () {
+                    final nav = Navigator.of(context);
+                    _s.logger.log('settings.change', {
+                      'key': 'replay_onboarding',
+                    });
+                    nav.pushAndRemoveUntil(
+                      MaterialPageRoute<void>(
+                        builder: (_) => OnboardingScreen(
+                          services: _s,
+                          replay: true,
+                          onDone: () => nav.pushAndRemoveUntil(
+                            MaterialPageRoute<void>(
+                              builder: (_) => HomeScreen(services: _s),
+                            ),
+                            (_) => false,
+                          ),
+                        ),
+                      ),
+                      (_) => false,
+                    );
+                  },
+                ),
                 ListTile(
                   title: const Text('About DuckLearn'),
                   subtitle: Text(

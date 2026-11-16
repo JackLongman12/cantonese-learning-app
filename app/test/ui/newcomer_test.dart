@@ -111,6 +111,46 @@ void main() {
     );
   }, skip: !hasDb);
 
+  testWidgets('replaying onboarding from Settings keeps progress', (t) async {
+    await t.binding.setSurfaceSize(const Size(420, 900));
+    addTearDown(() => t.binding.setSurfaceSize(null));
+    final db = ContentDb.open(dbPath);
+    addTearDown(db.close);
+    final prefs = Prefs.memory()
+      ..level = 'fluent'
+      ..onboarded = true
+      ..shareData = true
+      ..telemetryId = 'tid';
+    final (s, store) = make(db, prefs);
+    s.logger.log('review.applied', {
+      'item_id': 'cr:yue:我:ngo5',
+      'grade': 'good',
+      'signal': 'noReveal',
+    });
+    final before = s.learner.known.length;
+    await t.pumpWidget(DukApp(services: s));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('open-settings')));
+    await t.pumpAndSettle();
+    await t.scrollUntilVisible(
+      find.byKey(const ValueKey('replay-onboarding')),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await t.tap(find.byKey(const ValueKey('replay-onboarding')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('onboard-new')));
+    await t.pumpAndSettle();
+    // the sharing answer is already filled in, so Start is ready
+    await t.tap(find.byKey(const ValueKey('onboard-start')));
+    await t.pumpAndSettle();
+    expect(prefs.newcomerMode, isTrue);
+    expect(find.byKey(const ValueKey('drill-card')), findsOneWidget);
+    expect(s.learner.known.length, before); // progress kept
+    expect(prefs.telemetryId, 'tid'); // no new anonymous id
+    expect(store.events.where((e) => e.type == 'review.applied'), hasLength(1));
+  }, skip: !hasDb);
+
   test('installs from before the question keep the reading app', () {
     final p = Prefs.memory();
     expect(p.newcomerMode, isFalse); // speaker unknown: the old default
