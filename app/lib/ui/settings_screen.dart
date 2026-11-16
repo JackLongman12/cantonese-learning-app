@@ -155,13 +155,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   key: const ValueKey('set-speaker'),
                   title: const Text('I speak Cantonese'),
                   subtitle: const Text(
-                    'On: meanings stay hidden until you want them. '
-                    'Off: meanings in English are shown with every sentence.',
+                    'On: the reading app (topics, characters, flashcards). '
+                    'Off: newcomer mode (key words for daily life, said out loud).',
                   ),
                   value: p.isSpeaker,
                   onChanged: (v) {
-                    p.speaker = v;
-                    _changed('speaker', !v, v);
+                    p.level = v ? 'fluent' : 'new';
+                    _changed('level', v ? 'new' : 'fluent', p.level);
                   },
                 ),
                 ListTile(

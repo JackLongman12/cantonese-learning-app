@@ -119,5 +119,8 @@ void main() {
     p.level = 'fluent';
     expect(p.newcomerMode, isFalse);
     expect(p.isSpeaker, isTrue);
+    p.level = 'new'; // Settings: "I speak Cantonese" off
+    expect(p.newcomerMode, isTrue);
+    expect(p.isSpeaker, isFalse);
   });
 }
