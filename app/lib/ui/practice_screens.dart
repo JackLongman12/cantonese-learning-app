@@ -233,7 +233,7 @@ class SpokenWrittenScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
               children: [
                 Text(
-                  'Chats and ads are written the way you speak. Signs, forms and news use '
+                  'Chats and ads are written the way people speak. Signs, forms and news use '
                   'standard written Chinese, which you read aloud in Cantonese. Same meaning, '
                   'different characters:',
                   style: theme.textTheme.bodyMedium,

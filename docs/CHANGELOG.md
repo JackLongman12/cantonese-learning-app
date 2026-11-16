@@ -3,6 +3,27 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17: an app for beginners; read, then check; usage data
+
+The owner found the content too basic for their own use, so DuckLearn is now for beginners:
+Cantonese speakers who can't read, and people learning the language too (onboarding asks).
+
+- **Read, then check.** A sentence with characters being tested is read first with no sound;
+  Check plays it and shows every reading; the learner taps any character they read wrong
+  (graded `missed`, like a reveal). Before, Next without a tap counted as read, and Listen did
+  not count as help, so hearing the line first earned full credit.
+- Feedback: a live count of characters read on your own, the characters light up on
+  "I read it right", and the summary shows which characters need less help next time.
+- Speakers: meanings hidden until wanted (A/B test on showing them after the check).
+  Learners: meanings always shown, Jyutping a step longer.
+- "N% of everyday Cantonese": share of characters in HKCanCor (recorded everyday Hong Kong
+  conversation) that the learner has learned, on Home and Progress, with the most useful
+  characters to learn next. Replaces "% of the app readable".
+- Home: four small tools in one row; finish screens: tools as chips.
+- Anonymous usage data and crash reports, opt-in, to a Cloudflare Worker (docs/TELEMETRY.md),
+  with `duk telemetry pull/report`. Reverses "no crash logs" (2026-11-16).
+- A/B experiments per install: `meaning_after_check`, `first_session`.
+
 ## 2026-11-16: launch prep (b2067)
 
 - Conversation pictures (Irasutoya) are downloaded on the device on first launch, never

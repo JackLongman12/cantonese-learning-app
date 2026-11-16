@@ -3,7 +3,7 @@
 The user-facing name is **DuckLearn**; the Dart package and internal ids stay `duk`.
 Read the "Product principle" section of `docs/ROADMAP.md` before adding features.
 
-Personal, non-commercial app (Android, Windows, macOS) for one user who **speaks Cantonese natively but cannot read Chinese**. It teaches reading through real Macau/HK sentences with Jyutping that fades per character as mastery grows. **Cantonese only:** the owner dropped the Mandarin track on 2026-11-15 (the market already covers Mandarin). Do not add Mandarin back without asking.
+Non-commercial app (Android, Windows, macOS) for **beginners at reading Cantonese**: speakers who can't read Chinese, and people learning the language too (onboarding asks; `prefs.speaker`). It started as the owner's personal app; they outgrew the content on 2026-11-17. It teaches reading through real Macau/HK sentences with Jyutping that fades per character as mastery grows; each sentence is read first, then checked by ear. **Cantonese only:** the owner dropped the Mandarin track on 2026-11-15 (the market already covers Mandarin). Do not add Mandarin back without asking.
 
 ## Read first
 
@@ -13,6 +13,7 @@ Personal, non-commercial app (Android, Windows, macOS) for one user who **speaks
 4. `docs/EVENTS_SCHEMA.md`: event log, the source of truth for progress.
 5. `docs/DATA_SOURCES.md`: what to download instead of building; URLs there are unverified.
 6. `docs/CHANGELOG.md`: what was built when, and why things are the way they are.
+7. `docs/TELEMETRY.md`: opt-in usage data, crash reports, A/B experiments, and how to act on the report.
 
 ## Code map
 
@@ -26,6 +27,7 @@ app/lib      engine/ + events/ (pure Dart, unit-tested), data/ (content_db.dart 
              platform/ (device features), ui/ (screens), app_services.dart, main.dart
 app/test     engine/, platform/, ui/ (widget tests, goldens in ui/goldens)
 tool/        release.sh (build, sign, tag, publish)
+worker/      Cloudflare Worker + D1 schema for opt-in usage data and crash reports
 build/, data/  generated or downloaded; git-ignored
 ```
 
@@ -54,6 +56,7 @@ recognise. Then `duk build`, check the review queue, `duk tts`, `duk bundle`.
 8. **Secrets** live in `secrets.json` (git-ignored). Never commit keys, never compile them into release builds, never print them.
 9. `content.db` and audio are build outputs. Edit YAML, not the database.
 10. Commit or push only when the owner asks.
+11. **Usage data is opt-in and anonymous.** Only event types in `events/telemetry_filter.dart` leave the device, never free text the learner typed, pasted or said; change that file, its test and `docs/TELEMETRY.md` together.
 
 ## Environment notes
 
@@ -62,6 +65,7 @@ recognise. Then `duk build`, check the review queue, `duk tts`, `duk bundle`.
 - macOS cannot be built locally; use GitHub Actions `macos-latest`.
 - Windows builds need `nuget.exe` on PATH (flutter_tts's Windows plugin fetches CppWinRT with it). Not installed yet; only matters when Windows releases resume or for `integration_test -d windows`.
 - ffmpeg (winget, on PATH) is needed by `duk bundle` to encode Opus audio; without it MP3s ship.
+- In PowerShell use `npx.cmd`, not `npx` (the .ps1 shim is blocked). Wrangler is logged in to the owner's Cloudflare account.
 - The project path contains spaces (`CLAUDE PROJECT\cantonese learning app`); quote paths in every command and script.
 
 ## Releases and auto-update
@@ -90,6 +94,7 @@ C:\src\flutter\bin\flutter analyze
 C:\src\flutter\bin\flutter test
 C:\src\flutter\bin\flutter test --update-goldens test/ui/ruby_golden_test.dart   # then LOOK at test/ui/goldens/ruby.png
 C:\src\flutter\bin\flutter run -d windows                        # run on this PC
+pipeline\.venv\Scripts\python.exe -X utf8 -m duk telemetry pull   # usage data -> build/telemetry_report.md
 C:\src\flutter\bin\flutter test integration_test -d windows      # real build, real sqlite + audio
 C:\src\flutter\bin\flutter build apk --release                   # phone build
 ```

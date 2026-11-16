@@ -98,6 +98,28 @@ class ToolGrid extends StatelessWidget {
   }
 }
 
+/// The tools as one light row of chips: the finish screen's way elsewhere, without
+/// a wall of tiles competing with "Up next".
+class ToolChips extends StatelessWidget {
+  const ToolChips({super.key, required this.onTap});
+  final ValueChanged<String> onTap;
+
+  @override
+  Widget build(BuildContext context) => Wrap(
+    spacing: 8,
+    runSpacing: 8,
+    children: [
+      for (final t in tools)
+        ActionChip(
+          key: ValueKey('tool-${t.id}'),
+          avatar: Icon(t.icon, size: 18),
+          label: Text(t.label),
+          onPressed: () => onTap(t.id),
+        ),
+    ],
+  );
+}
+
 /// Back to Home from however deep you are. What you did so far counts.
 void goHome(BuildContext context) =>
     Navigator.of(context).popUntil((r) => r.isFirst);
@@ -230,7 +252,7 @@ class FinishView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              ToolGrid(onTap: link.openTool),
+              ToolChips(onTap: link.openTool),
               const SizedBox(height: 16),
             ],
             Row(

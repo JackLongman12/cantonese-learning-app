@@ -4,16 +4,18 @@ Work top to bottom. Do not start a phase until the previous phase's "Done when" 
 
 **Goals (2026-11-16):** first run asks what you want Cantonese for (get around, eat out and shop, daily life, work, make friends, a bit of everything); the path puts those topics first and Today's Learn/Speak draw from them; change it on Today (Goal · Change) or in Settings (engine/goals.dart). Grouped controls: one Listen button (hold for slow), no Skip; one 'Practise my words' in Words.
 
-**Status (2026-11-16, launch prep, b2067):** Android arm64 is the release target and in daily use. 18 topics (each ≥ 100 sentences, 5+ conversations), 18 stories, 1,077 flashcards, word variants, a voice picker in every exercise (phone voice by default). Audio ships as Opus; conversation pictures download on first launch. Content is LLM-drafted and accepted by the owner as-is (2026-11-16). Next open work: 1.3/1.4 planner polish, 1.6 placement test, 2.8 error drills. History: `docs/CHANGELOG.md`.
+**Status (2026-11-17, beginners + read-then-check + usage data):** DuckLearn is now for beginners (speakers who can't read, and learners); the reader is read first, then Check; opt-in anonymous usage and crash data go to a Cloudflare Worker and `duk telemetry report` says what to change (docs/TELEMETRY.md); two A/B tests run. Before that: Android arm64 is the release target. 18 topics (each ≥ 100 sentences, 5+ conversations), 18 stories, 1,077 flashcards, word variants, a voice picker in every exercise (phone voice by default). Audio ships as Opus; conversation pictures download on first launch. Content is LLM-drafted and accepted by the owner as-is (2026-11-16). Next open work: 1.3/1.4 planner polish, 1.6 placement test, 2.8 error drills. History: `docs/CHANGELOG.md`.
 
 ## Product principle: serve the unmet need, not a Duolingo copy
 
 The owner was explicit: this must fill a gap the market leaves, not imitate gamified apps. Every
 feature is judged against these gaps; anything that is only engagement mechanics is out.
 
-1. **Heritage speakers who can't read.** Existing apps teach Cantonese as a foreign language
-   (vocabulary + speaking). This learner already knows the words by ear; the only missing link
-   is character → sound. The app teaches exactly that link and nothing they already know.
+1. **Beginners at reading Cantonese** (since 2026-11-17; the owner outgrew the content).
+   Two kinds, asked in onboarding: speakers who can't read (the original gap: they know the
+   words by ear, so the app teaches only character → sound, and hearing a line is the answer
+   key) and people learning the language too (meanings and Jyutping stay on longer). Every
+   sentence with characters being tested is read first, then checked by ear.
 2. **Help that fades per character.** Jyutping disappears character by character as each one is
    learned, so real text gets readable gradually instead of "pinyin on / pinyin off".
 3. **Real Macau and Hong Kong language.** Spoken written-Cantonese (佢哋、唔係) and standard
@@ -154,6 +156,8 @@ readings by eye (pin wrong ones with `fix_yue`) → `duk tts` → `duk bundle`.
 
 - [ ] 3.1 Google Drive appData sync, per-device logs, merge, weekly backups; Windows loopback OAuth.
 - [ ] 3.2 Dashboard: coverage, retained items per minute, forecast, study-time heatmap.
+- [x] 3.4 Opt-in anonymous usage data and crash reports (Cloudflare Worker + D1), A/B experiments per install, `duk telemetry pull/report` (2026-11-17, docs/TELEMETRY.md).
+- [ ] 3.5 Act on the first report once 30+ installs share data: end or extend each experiment, fix the hardest characters and sentences, the top crash.
 - [x] ~~3.3 Crash/error log capture.~~ Dropped (owner, 2026-11-16): few users; they report problems directly.
 
 **Done when:** progress made on the phone appears on the PC and survives a reinstall.

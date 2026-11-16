@@ -36,8 +36,9 @@ Stored one JSON object per line (`.jsonl`), gzip-compressed for sync.
 - `item.reveal` `{exposure_id, item_id, token_idx, what: reading|tone|meaning|translation, latency_ms, auto?}` — `auto: true` when the app showed the translation after the audio finished (not a learner request)
 - `item.audio` `{exposure_id, scope: sentence|char|word, rate: normal|slow, nth, available, auto?}` — `auto: true` when the app played it on open (not counted in `audio_plays`)
 - `item.grade` `{exposure_id, grade: again|hard|good|easy, explicit: bool, latency_ms}`
-- `item.done` `{exposure_id, dwell_ms, active_ms, reveals, audio_plays, skipped}`
-- `review.applied` `{item_id, grade, signal: no_reveal|reveal|slow|explicit|asr, r_before, s_before, s_after, due_after}` — one per item affected; this is what replay consumes
+- `item.check` `{exposure_id, read_ms, revealed, via: listen|mic}` — read, then check (2026-11-17): the learner finished reading a sentence with tested characters and asked to hear it (or read it aloud); every reading is shown from here
+- `item.done` `{exposure_id, dwell_ms, active_ms, reveals, missed, checked, audio_plays, skipped}` — `missed`: characters marked wrong after the check
+- `review.applied` `{item_id, grade, signal: noReveal|reveal|missed|slow|introduced|explicit, s_before}` — one per item affected; this is what replay consumes. `missed`: marked wrong after the check (graded again, like a reveal)
 - `error.diagnosed` `{item_id, kind: tone|sibling|polyphone|cross_lang|lookalike, given?, expected}`
 
 ### Reading and input
@@ -59,7 +60,10 @@ Stored one JSON object per line (`.jsonl`), gzip-compressed for sync.
 - `user.card_add` `{card}` / `user.sentence_add` `{sentence}` (full object so it syncs)
 
 ### System
-- `settings.change` `{key, from, to}`
+- `settings.change` `{key, from, to}` — includes `speaker` and `share_data`
+- `onboarding.done` `{speaker, help_shift, goal, share}` — first-run answers
+- `experiment.assigned` `{arms: {experiment_id: arm}}` — logged when the install's set of A/B arms changes (docs/TELEMETRY.md)
+- `app.crash` — reserved; crashes go to the Worker's crash endpoint, not the event log
 - `goal.set` `{kind: trip|topic, target, until}`
 - `notif.sent` `{notif_id, kind, planned_for}` / `notif.action` `{notif_id, action: open|dismiss|ignore}`
 - `bandit.assign` `{arm_set, arm, params}` / `bandit.reward` `{arm_set, arm, reward, window}`

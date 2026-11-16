@@ -5,6 +5,7 @@ library;
 import 'voice_picker.dart';
 import '../engine/pictures.dart';
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -13,6 +14,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
 import '../data/content_db.dart';
+import '../engine/coverage.dart' show charOfItem;
 import '../engine/scaffold.dart';
 import '../engine/signals.dart';
 import '../events/event_logger.dart';
@@ -95,6 +97,14 @@ class _ReaderScreenState extends State<ReaderScreen> {
   final Set<int> _revealedTokens = {};
   bool _showTranslation = false;
 
+  // Read, then check: a sentence with characters to test is read first with no sound
+  // (and, for speakers, no meaning). "Check" plays it and shows every reading; the
+  // learner taps any character they read wrong. Hearing it is the answer key.
+  bool _checked = false;
+  int? _readMs;
+  final Set<int> _missedTokens = {};
+  bool _celebrate = false;
+
   /// Learner's turn in a conversation: pick the line before seeing it.
   bool _choosing = false;
   List<String> _options = const [];
@@ -110,6 +120,13 @@ class _ReaderScreenState extends State<ReaderScreen> {
   final Set<String> _introduced = {};
   final Set<String> _lapsed = {};
   int _read = 0;
+
+  /// Tested characters read right on your own this session (the live count).
+  int _ownReads = 0;
+
+  /// Each character's help level the first time it was shown this session, to tell
+  /// which ones lost their Jyutping by the end.
+  final Map<String, ScaffoldLevel> _firstLevel = {};
 
   AppServices get _s => widget.services;
   SentenceRow get _sentence => _queue[_index];
@@ -222,7 +239,15 @@ class _ReaderScreenState extends State<ReaderScreen> {
     };
     _revealed.clear();
     _revealedTokens.clear();
-    _showTranslation = false;
+    // learners need the meaning to make sense of the line; speakers get it by ear
+    _showTranslation = !_s.prefs.isSpeaker;
+    _checked = false;
+    _readMs = null;
+    _missedTokens.clear();
+    _celebrate = false;
+    for (final e in _levels.entries) {
+      _firstLevel.putIfAbsent(e.key, () => e.value);
+    }
     _audioPlays = 0;
     _speech = const {};
     _myRecording = null;
@@ -365,7 +390,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
     try {
       await _s.saySentence(_sentence.text, slow: slow);
       // the meaning appears once the line has been heard (setting, on by default)
-      if (mounted && !_showTranslation && _exposure == shownAt && !_finished) {
+      if (mounted &&
+          !_showTranslation &&
+          _meaningAfterHearing &&
+          _exposure == shownAt &&
+          !_finished) {
         _s.logger.log('item.reveal', {
           'exposure_id': _exposureId,
           'what': 'translation',
@@ -376,6 +405,68 @@ class _ReaderScreenState extends State<ReaderScreen> {
     } on Object catch (e) {
       // automatic playback fails quietly; a tap on Listen says what went wrong
       if (mounted && !auto) _toast('Could not play audio: $e');
+    }
+  }
+
+  /// Speakers in the 'hidden' arm keep the meaning closed after hearing the line
+  /// (engine/experiments.dart, meaning_after_check); it is one tap away.
+  bool get _meaningAfterHearing =>
+      !_s.prefs.isSpeaker || _s.arm('meaning_after_check') == 'shown';
+
+  /// The sentence has characters being tested (not all shown with their reading).
+  bool get _needsCheck =>
+      !_choosing &&
+      // read-along plays every line as it appears: nothing left to check
+      !widget.autoplay &&
+      _levels.values.any((l) => l != ScaffoldLevel.full);
+
+  /// Ends the reading part: plays the line and shows every reading.
+  Future<void> _check({String via = 'listen'}) async {
+    if (_checked || !_needsCheck) return;
+    _s.logger.touch();
+    _readMs = _s.logger.activeMsSince(_mark);
+    _s.logger.log('item.check', {
+      'exposure_id': _exposureId,
+      'read_ms': _readMs,
+      'revealed': _revealed.length,
+      'via': via,
+    });
+    unawaited(HapticFeedback.lightImpact());
+    setState(() => _checked = true);
+    if (via == 'listen') await _play(slow: false);
+  }
+
+  /// After the check: tap a character you read wrong (again to undo).
+  void _toggleMissed(int i) {
+    final id = _sentence.tokens[i].itemId;
+    // characters shown with their reading were not being tested
+    if (id == null || _levels[id] == ScaffoldLevel.full) return;
+    if (_revealedTokens.contains(i)) return; // already counted as a lapse
+    HapticFeedback.selectionClick();
+    _s.logger.touch();
+    setState(() {
+      if (!_missedTokens.remove(i)) _missedTokens.add(i);
+    });
+  }
+
+  /// "Got it": the characters light up for a moment, then the next sentence.
+  void _confirm() {
+    if (_celebrate) return;
+    if (_missedTokens.isNotEmpty) return _next();
+    setState(() => _celebrate = true);
+    Future<void>.delayed(const Duration(milliseconds: 420), () {
+      if (mounted && _celebrate) _next();
+    });
+  }
+
+  /// The main action for the keyboard and the swipe: Check, then Next.
+  void _primary() {
+    if (_needsCheck && !_checked) {
+      _check();
+    } else if (_needsCheck) {
+      _confirm();
+    } else {
+      _next();
     }
   }
 
@@ -396,9 +487,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
       await Future<void>.delayed(const Duration(milliseconds: 16));
       _scoreSpeech(eng.recognise(samples, lang: widget.lang));
       if (mounted) {
+        if (_needsCheck && !_checked) unawaited(_check(via: 'mic'));
         setState(() {
           _mic = _Mic.idle;
-          _showTranslation = true; // you tried: the meaning is yours to check
+          // you tried: the meaning is yours to check
+          if (_meaningAfterHearing) _showTranslation = true;
         });
       }
       // below the pass mark: hear yours, then the native; the recording is not kept
@@ -501,12 +594,17 @@ class _ReaderScreenState extends State<ReaderScreen> {
   void _finishCurrent({required bool skipped}) {
     _s.logger.touch();
     final activeMs = _s.logger.activeMsSince(_mark);
+    final missed = {
+      for (final i in _missedTokens) ?_sentence.tokens[i].itemId,
+    };
     final List<ItemOutcome> outcomes = skipped
         ? const []
         : _s.signals.outcomes(
             shown: _levels,
             revealed: _revealed,
-            activeMs: activeMs,
+            missed: missed,
+            // how long the reading took, not the listening after it
+            activeMs: _readMs ?? activeMs,
           );
     for (final o in outcomes) {
       final before = _s.learner.stateOf(o.itemId);
@@ -519,7 +617,10 @@ class _ReaderScreenState extends State<ReaderScreen> {
       });
       _practiced.add(o.itemId);
       if (o.signal == Signal.introduced) _introduced.add(o.itemId);
-      if (o.signal == Signal.reveal) _lapsed.add(o.itemId);
+      if (o.signal == Signal.reveal || o.signal == Signal.missed) {
+        _lapsed.add(o.itemId);
+      }
+      if (o.signal == Signal.noReveal || o.signal == Signal.slow) _ownReads++;
     }
     if (outcomes.isNotEmpty) _read++;
     // words on the practice list read right here, without help: that counts as a practice
@@ -548,7 +649,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
     // characters you had to reveal: their words go on the practice list
     if (!skipped) {
       final seen = <int>{};
-      for (final i in _revealedTokens) {
+      for (final i in {..._revealedTokens, ..._missedTokens}) {
         final w = _sentence.wordRange(i).$1;
         if (seen.add(w)) flagWord(_s, _sentence, i, 'read');
       }
@@ -557,6 +658,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
       'exposure_id': _exposureId,
       'active_ms': activeMs,
       'reveals': _revealed.length,
+      'missed': missed.length,
+      'checked': _checked,
       'audio_plays': _audioPlays,
       'skipped': skipped || outcomes.isEmpty,
     });
@@ -642,6 +745,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
         practiced: _practiced.length,
         introduced: _introduced.length,
         checked: _lapsed.length,
+        ownReads: _ownReads,
+        faded: _fadedChars(),
         onKeepGoing: _canKeepGoing ? _keepGoing : null,
         newChars: [
           for (final id in _introduced)
@@ -651,9 +756,9 @@ class _ReaderScreenState extends State<ReaderScreen> {
     }
     return CallbackShortcuts(
       bindings: {
-        const SingleActivator(LogicalKeyboardKey.enter): _next,
-        const SingleActivator(LogicalKeyboardKey.space): _next,
-        const SingleActivator(LogicalKeyboardKey.arrowRight): _next,
+        const SingleActivator(LogicalKeyboardKey.enter): _primary,
+        const SingleActivator(LogicalKeyboardKey.space): _primary,
+        const SingleActivator(LogicalKeyboardKey.arrowRight): _primary,
         const SingleActivator(LogicalKeyboardKey.keyL): () =>
             _play(slow: false),
         const SingleActivator(LogicalKeyboardKey.keyS): () => _play(slow: true),
@@ -667,6 +772,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
             leading: closeToHome(context),
             title: Text(widget.title),
             actions: [
+              if (_ownReads > 0) _OwnReadsCount(count: _ownReads),
               VoiceButton(_s),
               IconButton(
                 tooltip: 'How reading help works',
@@ -681,7 +787,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
             key: const ValueKey('swipe-area'),
             behavior: HitTestBehavior.translucent,
             onHorizontalDragEnd: (d) {
-              if ((d.primaryVelocity ?? 0) < -400) _next();
+              if ((d.primaryVelocity ?? 0) < -400) _primary();
             },
             child: SafeArea(
               child: LayoutBuilder(
@@ -694,19 +800,38 @@ class _ReaderScreenState extends State<ReaderScreen> {
     );
   }
 
+  /// Characters that need less help now than when this session first showed them
+  /// (Jyutping to tone only, tone only to nothing): the fading you can see.
+  List<String> _fadedChars() {
+    final now = _s.logger.now();
+    return <String>{
+      for (final e in _firstLevel.entries)
+        if (_s.scaffold
+                .levelFor(_s.learner.stateOf(e.key), _s.memory, now)
+                .index >
+            e.value.index)
+          ?charOfItem(e.key),
+    }.toList();
+  }
+
+  /// Token [i] is a character being tested and was not revealed.
+  bool _tested(int i) {
+    final l = _levels[_sentence.tokens[i].itemId];
+    return l != null && l != ScaffoldLevel.full && !_revealedTokens.contains(i);
+  }
+
   Widget _body(BuildContext context, {required bool wide}) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final s = _sentence;
     final savedChars = _savedTokens(s);
-    final levels = _levels.values.toSet();
-    final hint =
-        levels.contains(ScaffoldLevel.tap) ||
-            levels.contains(ScaffoldLevel.hint)
-        ? 'Read it in your head. Tap any character you can\'t read to see it.'
-        : levels.contains(ScaffoldLevel.full)
-        ? 'New characters have Jyutping on top. Read along, then tap Listen.'
-        : 'No help needed here. Read it, then move on.';
+    final hint = _checked
+        ? (_missedTokens.isEmpty
+              ? 'Did you read it like that? Tap any character you got wrong.'
+              : 'Tap again to undo. Those come back sooner.')
+        : _needsCheck
+        ? 'Read it first, in your head or out loud. Stuck? Tap the character. Then Check.'
+        : 'New characters have Jyutping on top. Read along, then tap Listen.';
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 760),
@@ -828,6 +953,9 @@ class _ReaderScreenState extends State<ReaderScreen> {
                             onReveal: _reveal,
                             onSpeak: _speakWord,
                             wordOf: s.wordOf,
+                            onMark: _checked && !_celebrate
+                                ? _toggleMissed
+                                : null,
                             onLookup: (i) {
                               _reveal(i);
                               showWordLookup(
@@ -847,13 +975,21 @@ class _ReaderScreenState extends State<ReaderScreen> {
                                   surface: s.tokens[i].surface,
                                   kind: s.tokens[i].kind,
                                   reading: s.tokens[i].reading,
-                                  level:
-                                      _levels[s.tokens[i].itemId] ??
-                                      ScaffoldLevel.full,
-                                  revealed: _revealedTokens.contains(i),
+                                  // after the check every reading is on show
+                                  level: _checked
+                                      ? ScaffoldLevel.full
+                                      : _levels[s.tokens[i].itemId] ??
+                                            ScaffoldLevel.full,
+                                  revealed:
+                                      _revealedTokens.contains(i) ||
+                                      _missedTokens.contains(i),
                                   flagged: s.tokens[i].flagged,
                                   saved: savedChars.contains(i),
-                                  mark: switch (_speech[i]?.verdict) {
+                                  mark: _missedTokens.contains(i)
+                                      ? SpeechMark.wrong
+                                      : _celebrate && _tested(i)
+                                      ? SpeechMark.ok
+                                      : switch (_speech[i]?.verdict) {
                                     Verdict.ok => SpeechMark.ok,
                                     Verdict.tone => SpeechMark.tone,
                                     Verdict.wrong => SpeechMark.wrong,
@@ -913,6 +1049,14 @@ class _ReaderScreenState extends State<ReaderScreen> {
               ),
             ),
             _BottomBar(
+              phase: !_needsCheck
+                  ? _Phase.plain
+                  : _checked
+                  ? _Phase.checked
+                  : _Phase.read,
+              missed: _missedTokens.length,
+              onCheck: _check,
+              onConfirm: _confirm,
               isLast: _index + 1 >= _queue.length,
               slowNext: _audioPlays.isOdd,
               onListen: () async {
@@ -1033,8 +1177,63 @@ class _MeaningPanel extends StatelessWidget {
   }
 }
 
+/// Where the sentence on screen is: [plain] nothing to test (Listen, Next); [read]
+/// reading it first (Check); [checked] heard it, marking misses (Got it / Next).
+enum _Phase { plain, read, checked }
+
+/// The live count in the top bar: characters read right on your own this session.
+class _OwnReadsCount extends StatelessWidget {
+  const _OwnReadsCount({required this.count});
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Tooltip(
+      message: 'Characters you read on your own this session',
+      child: Container(
+        key: const ValueKey('own-reads'),
+        margin: const EdgeInsets.only(right: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: const Color(0xFF2F6F62).withValues(alpha: 0.14),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.check_rounded, size: 18, color: Color(0xFF2F6F62)),
+            const SizedBox(width: 4),
+            // pops a little each time it goes up
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 260),
+              transitionBuilder: (child, a) => ScaleTransition(
+                scale: Tween(begin: 1.6, end: 1.0).animate(
+                  CurvedAnimation(parent: a, curve: Curves.easeOutBack),
+                ),
+                child: child,
+              ),
+              child: Text(
+                '$count',
+                key: ValueKey(count),
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: scheme.onSurface,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _BottomBar extends StatelessWidget {
   const _BottomBar({
+    required this.phase,
+    required this.missed,
+    required this.onCheck,
+    required this.onConfirm,
     required this.isLast,
     required this.onListen,
     required this.slowNext,
@@ -1045,6 +1244,10 @@ class _BottomBar extends StatelessWidget {
     this.onMic,
   });
 
+  final _Phase phase;
+  final int missed;
+  final VoidCallback onCheck;
+  final VoidCallback onConfirm;
   final bool isLast;
   final VoidCallback onListen;
 
@@ -1072,13 +1275,22 @@ class _BottomBar extends StatelessWidget {
           children: [
             Row(
               children: [
-                // one button, no holding: tap to listen, tap again for slower
-                FilledButton.tonalIcon(
-                  key: const ValueKey('listen'),
-                  onPressed: mic == _Mic.recording ? null : onListen,
-                  icon: const Icon(Icons.volume_up_rounded),
-                  label: Text(slowNext ? 'Slower' : 'Listen'),
-                ),
+                // one button, no holding: tap to listen, tap again for slower.
+                // While reading first there is none: hearing it is the check.
+                if (phase == _Phase.plain)
+                  FilledButton.tonalIcon(
+                    key: const ValueKey('listen'),
+                    onPressed: mic == _Mic.recording ? null : onListen,
+                    icon: const Icon(Icons.volume_up_rounded),
+                    label: Text(slowNext ? 'Slower' : 'Listen'),
+                  )
+                else if (phase == _Phase.checked)
+                  IconButton.filledTonal(
+                    key: const ValueKey('listen'),
+                    tooltip: slowNext ? 'Hear it slower' : 'Hear it again',
+                    onPressed: mic == _Mic.recording ? null : onListen,
+                    icon: const Icon(Icons.volume_up_rounded),
+                  ),
                 if (mic != null) ...[
                   const SizedBox(width: 4),
                   mic == _Mic.recording
@@ -1105,20 +1317,49 @@ class _BottomBar extends StatelessWidget {
                 const SizedBox(width: 8),
                 // takes the remaining width, so the bar fits small phones
                 Expanded(
-                  child: FilledButton.icon(
-                    key: const ValueKey('next'),
-                    onPressed: onNext,
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size(0, 48),
+                  child: switch (phase) {
+                    _Phase.read => FilledButton.icon(
+                      key: const ValueKey('check'),
+                      onPressed: mic == _Mic.recording ? null : onCheck,
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size(0, 48),
+                      ),
+                      icon: const Icon(Icons.hearing_rounded),
+                      label: const Text('Check'),
                     ),
-                    iconAlignment: IconAlignment.end,
-                    icon: Icon(
-                      isLast
-                          ? Icons.check_rounded
-                          : Icons.arrow_forward_rounded,
+                    _Phase.checked when missed == 0 => FilledButton.icon(
+                      key: const ValueKey('got-it'),
+                      onPressed: onConfirm,
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size(0, 48),
+                        backgroundColor: const Color(0xFF2F6F62),
+                        foregroundColor: Colors.white,
+                      ),
+                      icon: const Icon(Icons.check_rounded),
+                      label: const Text('I read it right'),
                     ),
-                    label: Text(isLast ? 'Finish' : 'Next'),
-                  ),
+                    _ => FilledButton.icon(
+                      key: const ValueKey('next'),
+                      onPressed: phase == _Phase.checked ? onConfirm : onNext,
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size(0, 48),
+                      ),
+                      iconAlignment: IconAlignment.end,
+                      icon: Icon(
+                        isLast
+                            ? Icons.check_rounded
+                            : Icons.arrow_forward_rounded,
+                      ),
+                      label: Text(
+                        phase == _Phase.checked
+                            ? '$missed to practice · ${isLast ? 'Finish' : 'Next'}'
+                            : isLast
+                            ? 'Finish'
+                            : 'Next',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  },
                 ),
               ],
             ),
@@ -1126,7 +1367,7 @@ class _BottomBar extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 6),
                 child: Text(
-                  'Keys: Enter next · L listen · S slow · R read aloud · M meaning',
+                  'Keys: Enter check / next · L listen · S slow · R read aloud · M meaning',
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -1265,9 +1506,17 @@ class _SummaryScreen extends StatelessWidget {
     required this.practiced,
     required this.introduced,
     required this.checked,
+    this.ownReads = 0,
+    this.faded = const [],
     this.newChars = const [],
     this.onKeepGoing,
   });
+
+  /// Tested characters read right without help.
+  final int ownReads;
+
+  /// Characters whose Jyutping faded during the session.
+  final List<String> faded;
 
   final AppServices services;
 
@@ -1325,12 +1574,41 @@ class _SummaryScreen extends StatelessWidget {
               children: [
                 stat('$read', 'sentences read'),
                 const SizedBox(width: 8),
-                stat('$introduced', 'new characters'),
+                stat('$ownReads', 'on your own'),
                 const SizedBox(width: 8),
-                stat('$practiced', 'practiced'),
+                stat('$introduced', 'new characters'),
               ],
             ),
-            if (newChars.isNotEmpty) ...[
+            if (faded.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Text(
+                'Less help next time for ${faded.length} '
+                '${faded.length == 1 ? 'character' : 'characters'}',
+                key: const ValueKey('faded'),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleSmall,
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                alignment: WrapAlignment.center,
+                children: [
+                  for (final ch in faded.take(24))
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2F6F62).withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(ch, style: chineseStyle('yue', fontSize: 22)),
+                    ),
+                ],
+              ),
+            ] else if (newChars.isNotEmpty) ...[
               const SizedBox(height: 14),
               Wrap(
                 key: const ValueKey('new-chars'),

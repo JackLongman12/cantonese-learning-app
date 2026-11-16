@@ -18,15 +18,24 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from . import __version__, paths
-from .annotate import FLAG, HAN, Annotation, annotate, load_word_readings, spoken_readings
+from .annotate import (
+    FLAG,
+    HAN,
+    Annotation,
+    annotate,
+    char_frequency,
+    load_word_readings,
+    spoken_readings,
+)
 from .content import Content, ContentError, load_content
 from .reference import load_reference
 from .words import refine_words
 
-SCHEMA_VERSION = 11  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
+SCHEMA_VERSION = 12  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
 # 6: decks; 7: card image + credit, food deck; 8: slim dict_entry (Cantonese only);
 # 9: char_info.hint, skill / skill_entry; 10: variant (words for the same thing);
-# 11: character_pic (links the app downloads; the images are never bundled)
+# 11: character_pic (links the app downloads; the images are never bundled);
+# 12: char_freq (share of each character in HKCanCor: "% of everyday Cantonese")
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -101,6 +110,7 @@ CREATE TABLE variant(
   group_id TEXT NOT NULL, en TEXT NOT NULL, note TEXT NOT NULL, word TEXT NOT NULL,
   reading TEXT, rank INTEGER NOT NULL, PRIMARY KEY(group_id, word)) WITHOUT ROWID;
 CREATE TABLE character_pic(role TEXT PRIMARY KEY, url TEXT NOT NULL) WITHOUT ROWID;
+CREATE TABLE char_freq(ch TEXT PRIMARY KEY, share REAL NOT NULL) WITHOUT ROWID;
 CREATE TABLE audio(
   hash TEXT PRIMARY KEY, lang TEXT NOT NULL, voice TEXT NOT NULL, rate TEXT NOT NULL,
   text TEXT NOT NULL, path TEXT NOT NULL);
@@ -155,9 +165,7 @@ def build(
     ref = load_reference(raw_root)
     priors = {"yue": ref.prior("yue") if ref else {}}
     spoken = spoken_readings()  # how words are said in HKCanCor (third voter)
-    word_readings = load_word_readings(
-        raw_root / "rime_cantonese" / "jyut6ping3.words.dict.yaml"
-    )
+    word_readings = load_word_readings(raw_root / "rime_cantonese" / "jyut6ping3.words.dict.yaml")
     # dictionary words, to keep only real words as underlined groups
     vocab = None
     _entries = None
@@ -313,7 +321,7 @@ def build(
                 prior=priors["yue"],
                 names=True,
                 spoken=spoken,
-                    words=word_readings,
+                words=word_readings,
             )
         except ValueError as e:
             result.warnings.append(f"{cid}: {e}")
@@ -394,7 +402,10 @@ def build(
         for rank, e in enumerate(doc.get("entries") or []):
             try:
                 ann = annotate(
-                    e["zh"], "yue", overrides=content.overrides.get("yue"), prior=priors["yue"],
+                    e["zh"],
+                    "yue",
+                    overrides=content.overrides.get("yue"),
+                    prior=priors["yue"],
                     spoken=spoken,
                     words=word_readings,
                 )
@@ -419,6 +430,11 @@ def build(
             continue
         db.execute("INSERT INTO character_pic VALUES(?,?)", (role, url))
 
+    # How common each character is in everyday Hong Kong Cantonese (HKCanCor): the app's
+    # "you can read N% of everyday Cantonese". Characters seen at least twice.
+    for ch, share in char_frequency().items():
+        db.execute("INSERT INTO char_freq VALUES(?,?)", (ch, share))
+
     # Words for the same thing (content/variants.yaml): "Also said" on a tapped word
     vpath = content_root / "variants.yaml"
     vdoc = yaml.safe_load(vpath.read_text("utf-8")) if vpath.exists() else None
@@ -436,8 +452,12 @@ def build(
         for rank, w in enumerate(g["words"]):
             try:
                 ann = annotate(
-                    w, "yue", overrides=content.overrides.get("yue"), prior=priors["yue"],
-                    spoken=spoken, words=word_readings,
+                    w,
+                    "yue",
+                    overrides=content.overrides.get("yue"),
+                    prior=priors["yue"],
+                    spoken=spoken,
+                    words=word_readings,
                 )
             except ValueError as err:
                 problems.append(f"{gid} {w}: {err}")

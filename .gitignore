@@ -52,3 +52,9 @@ app/assets/characters/
 
 # personal-use images (not for the public repo)
 docs/local/
+
+# Wrangler local state (Cloudflare Worker)
+worker/.wrangler/
+worker/node_modules/
+# Downloaded usage data (docs/TELEMETRY.md): never committed
+data/telemetry/

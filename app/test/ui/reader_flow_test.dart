@@ -14,6 +14,8 @@ import 'package:duk/ui/reader_screen.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'reader_steps.dart';
+
 void main() {
   const dbPath = 'assets/content/content.db';
   final hasDb = File(dbPath).existsSync();
@@ -72,7 +74,7 @@ void main() {
         clock: () => now,
       ),
       playAudio: (path) async => played.add(path),
-    );
+    )..armOverrides['meaning_after_check'] = 'shown';
 
     String stat(String key) => (t.widget<Text>(
       find
@@ -131,10 +133,9 @@ void main() {
     // The planner caps new characters per session, so a first session is shorter than
     // the whole topic. Read until it ends.
     var read = 0;
-    while (find.byKey(const ValueKey('next')).evaluate().isNotEmpty) {
+    while (readerHasMore()) {
       now = now.add(const Duration(seconds: 6)); // time spent reading
-      await t.tap(find.byKey(const ValueKey('next')));
-      await t.pumpAndSettle();
+      await finishSentence(t);
       read++;
     }
     expect(read, greaterThan(0));
@@ -277,8 +278,7 @@ void main() {
         } else {
           expect(find.byKey(const ValueKey('choices')), findsNothing);
         }
-        await t.tap(find.byKey(const ValueKey('next')));
-        await t.pumpAndSettle();
+        await finishSentence(t);
       }
       // earlier lines are in the backlog
       await t.tap(find.byKey(const ValueKey('backlog')));

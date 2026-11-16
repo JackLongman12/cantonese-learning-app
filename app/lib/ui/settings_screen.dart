@@ -9,6 +9,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../app_services.dart';
+import '../platform/telemetry.dart' show setSharing;
 import '../platform/sfx.dart';
 import '../platform/speech.dart';
 import '../platform/storage.dart';
@@ -150,6 +151,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: const EdgeInsets.only(bottom: 32),
               children: [
                 section('Reading'),
+                SwitchListTile(
+                  key: const ValueKey('set-speaker'),
+                  title: const Text('I speak Cantonese'),
+                  subtitle: const Text(
+                    'On: meanings stay hidden until you want them. '
+                    'Off: meanings in English are shown with every sentence.',
+                  ),
+                  value: p.isSpeaker,
+                  onChanged: (v) {
+                    p.speaker = v;
+                    _changed('speaker', !v, v);
+                  },
+                ),
                 ListTile(
                   key: const ValueKey('set-goal'),
                   title: const Text('Your goal'),
@@ -196,6 +210,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     '字',
                     style: chineseStyle(p.lang, fontSize: 22 * p.textScale),
                   ),
+                ),
+                SwitchListTile(
+                  key: const ValueKey('set-share'),
+                  title: const Text('Share anonymous usage and crash reports'),
+                  subtitle: const Text(
+                    'Helps find hard sentences and fix crashes. No name, no account, '
+                    'nothing you type, paste or say.',
+                  ),
+                  value: p.shareData == true,
+                  onChanged: (v) => setState(() => setSharing(_s, v)),
                 ),
                 SwitchListTile(
                   key: const ValueKey('set-sfx'),
@@ -306,7 +330,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ListTile(
                   title: const Text('About DuckLearn'),
                   subtitle: Text(
-                    'Learn to read the Cantonese you already speak. '
+                    'Learn to read Cantonese with real Hong Kong and Macau sentences. '
                     '${Platform.operatingSystem} · $_version',
                   ),
                   onTap: () => showLicensePage(

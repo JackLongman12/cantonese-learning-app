@@ -11,6 +11,8 @@ import 'package:duk/events/event_store.dart';
 import 'package:duk/ui/reader_screen.dart';
 import 'package:duk/ui/words_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'reader_steps.dart';
 import 'package:material_ui/material_ui.dart';
 
 void main() {
@@ -143,8 +145,7 @@ void main() {
     // the tap opened the meaning too: close it
     await t.tapAt(const Offset(5, 5));
     await t.pumpAndSettle();
-    await t.tap(find.byKey(const ValueKey('next')));
-    await t.pumpAndSettle();
+    await finishSentence(t);
     final flag = store.events.lastWhere((e) => e.type == 'word.flag');
     expect(flag.payload['reason'], 'read');
     final word = flag.payload['text']! as String;

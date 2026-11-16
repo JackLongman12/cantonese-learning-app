@@ -1,0 +1,18 @@
+﻿# DuckLearn telemetry Worker (docs/TELEMETRY.md). Deploy from this folder:
+#   npx.cmd wrangler@4 deploy
+# The admin token for exports is a Worker secret (wrangler secret put ADMIN_TOKEN) and a
+# copy lives in the git-ignored secrets.json; it is never in this file or in the app.
+name = "ducklearn-telemetry"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ducklearn-telemetry"
+database_id = "91864627-d21e-4ee5-acfb-72d1f94029ac"
+
+[triggers]
+crons = ["17 3 * * *"]
+
+[observability]
+enabled = true

@@ -65,7 +65,13 @@ moves every level by one for a session.
 - Fuzzing is off: replaying the log must give identical state on every device.
 - Reviews happen **inside sentences**, graded from behaviour (`engine/signals.dart`):
   shown in full → introduction (good); hidden and not revealed → good; hidden, not revealed
-  but slow (> 2.5 s per character) → hard; revealed → again.
+  but slow (> 2.5 s per character, reading time before the check) → hard; revealed → again;
+  marked wrong after the check → again (`missed`).
+- **Read, then check** (2026-11-17): a sentence with any character not shown in full is read
+  first with no sound (and, for speakers, no meaning). Check (or a read-aloud attempt) plays
+  it and shows every reading; the learner taps characters they read wrong, then "I read it
+  right" or Next. Listening is not available before the check, because hearing the line is
+  the answer. Read-along stories (audio on open) skip the check.
 - A sentence left in under 150 ms per character was skipped, not read: nothing is graded.
 - Explicit grading is only asked when no implicit signal exists.
 

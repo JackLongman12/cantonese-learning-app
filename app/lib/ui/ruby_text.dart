@@ -67,6 +67,7 @@ class RubyText extends StatelessWidget {
     this.onReveal,
     this.onLookup,
     this.onSpeak,
+    this.onMark,
     this.wordOf,
   });
 
@@ -83,6 +84,10 @@ class RubyText extends StatelessWidget {
   /// Tap: say the word this character belongs to. A hidden reading is revealed too
   /// (hearing it gives the reading away, so it counts like a reveal).
   final void Function(int index)? onSpeak;
+
+  /// After checking a sentence: tap marks a character as one you got wrong (or unmarks
+  /// it). Takes over the tap; long-press still looks the word up.
+  final void Function(int index)? onMark;
 
   /// Word number per token (tokens of one word share it). When set, each word is
   /// underlined as one unit, like Duolingo, so 銀行 reads as one word, 帶 遮 as two.
@@ -181,6 +186,19 @@ class RubyText extends StatelessWidget {
           t.reading != null &&
           !t.revealed &&
           t.level != ScaffoldLevel.full;
+      if (onMark != null && t.isHan) {
+        return Semantics(
+          label: t.surface,
+          hint: 'Tap if you read this one wrong',
+          child: GestureDetector(
+            key: ValueKey('cell-$i'),
+            behavior: HitTestBehavior.opaque,
+            onTap: () => onMark!(i),
+            onLongPress: onLookup == null ? null : () => onLookup!(i),
+            child: column,
+          ),
+        );
+      }
       if (!canLongPress ||
           (onReveal == null && onLookup == null && onSpeak == null)) {
         return column;

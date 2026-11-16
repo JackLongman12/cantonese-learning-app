@@ -68,6 +68,31 @@ class Prefs {
   bool get onboarded => _data['onboarded'] == true;
   set onboarded(bool v) => _set('onboarded', v);
 
+  /// Speaks Cantonese already (reads to learn the characters for words they know) or is
+  /// learning the language too. Null: not asked (installs from before 2026-11-17 were
+  /// all speakers). Sets what help and meanings the reader shows.
+  bool? get speaker => _data['speaker'] as bool?;
+  set speaker(bool? v) => _set('speaker', v);
+  bool get isSpeaker => speaker ?? true;
+
+  /// Anonymous usage and crash reports (docs/TELEMETRY.md). Null: not asked yet;
+  /// nothing is sent until this is true.
+  bool? get shareData => _data['share_data'] as bool?;
+  set shareData(bool? v) => _set('share_data', v);
+
+  /// Random id sent with shared data instead of the device id; a new one each time
+  /// sharing is turned on, so turning it off and on starts a fresh, unlinked record.
+  String? get telemetryId => _data['telemetry_id'] as String?;
+  set telemetryId(String? v) => _set('telemetry_id', v);
+
+  /// Sharing was turned on at some point (history is only sent the first time).
+  bool get sharedBefore => _data['shared_before'] == true;
+  set sharedBefore(bool v) => _set('shared_before', v);
+
+  /// The experiment arms last logged (`experiment.assigned` once per change).
+  String? get armsLogged => _data['arms_logged'] as String?;
+  set armsLogged(String? v) => _set('arms_logged', v);
+
   /// Soft UI sounds on taps, next, save, results (on by default).
   bool get soundEffects => _data['sound_effects'] != false;
   set soundEffects(bool v) => _set('sound_effects', v);

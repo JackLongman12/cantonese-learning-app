@@ -179,6 +179,24 @@ void main() {
       expect(out.firstWhere((o) => o.itemId == 'read').grade, Grade.hard);
       expect(out.firstWhere((o) => o.itemId == 'intro').grade, Grade.good);
     });
+
+    test('characters marked wrong after the check are lapses', () {
+      final out = {
+        for (final o in signals.outcomes(
+          shown: shown,
+          revealed: {'revealed'},
+          missed: {'read', 'intro'},
+          activeMs: 4000,
+        ))
+          o.itemId: o,
+      };
+      expect(out['read']!.grade, Grade.again);
+      expect(out['read']!.signal, Signal.missed);
+      // a character shown with its reading was not being tested
+      expect(out['intro']!.signal, Signal.introduced);
+      expect(out['revealed']!.signal, Signal.reveal);
+      expect(out['mastered']!.grade, Grade.good);
+    });
   });
 
   group('replay', () {

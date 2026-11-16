@@ -10,6 +10,8 @@ import 'package:duk/events/event_store.dart';
 import 'package:duk/ui/home_screen.dart';
 import 'package:duk/ui/paste_reader_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'reader_steps.dart';
 import 'package:material_ui/material_ui.dart';
 
 void main() {
@@ -66,11 +68,10 @@ void main() {
     ); // nothing due yet
     await t.tap(find.byKey(const ValueKey('start-daily')));
     await t.pumpAndSettle();
-    expect(find.byKey(const ValueKey('next')), findsOneWidget); // in the reader
+    expect(readerHasMore(), isTrue); // in the reader
     // finishing the session ticks the step
-    while (find.byKey(const ValueKey('next')).evaluate().isNotEmpty) {
-      await t.tap(find.byKey(const ValueKey('next')));
-      await t.pumpAndSettle();
+    while (readerHasMore()) {
+      await finishSentence(t);
     }
     final day = services.logger.now().toLocal().toIso8601String().substring(
       0,

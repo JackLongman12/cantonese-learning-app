@@ -6,6 +6,7 @@ import 'dart:math';
 
 import 'data/content_db.dart';
 import 'data/prefs.dart';
+import 'engine/experiments.dart';
 import 'engine/learner_model.dart';
 import 'engine/insights.dart' as insights;
 import 'engine/memory.dart';
@@ -19,6 +20,7 @@ import 'platform/sfx.dart';
 import 'platform/share_inbox.dart';
 import 'platform/updater.dart';
 import 'platform/speech.dart';
+import 'platform/telemetry.dart';
 import 'platform/word_voice.dart';
 
 /// Plays a bundled clip. Implemented outside the engine so tests need no audio device.
@@ -57,6 +59,7 @@ class AppServices {
     this.reminders,
     this.sfx,
     this.voice,
+    this.telemetry,
     this.signals = const SignalPolicy(),
     this.planner = const Planner(),
   }) : _playAudio = playAudio, // ignore: prefer_initializing_formals
@@ -69,6 +72,19 @@ class AppServices {
     logger.addListener(learner.apply);
     logger.addListener((e) => words.apply(e));
   }
+
+  /// Anonymous usage and crash reports (null in tests).
+  final Telemetry? telemetry;
+
+  /// This install's arm of an A/B experiment (engine/experiments.dart), from the random
+  /// device id, so it never changes. Tests can pin arms with [armOverrides].
+  String arm(String experimentId) =>
+      armOverrides[experimentId] ??
+      armFor(
+        logger.deviceId,
+        experiments.firstWhere((e) => e.id == experimentId),
+      );
+  final Map<String, String> armOverrides = {};
 
   /// Words saved from reading ("My words"), rebuilt from the event log.
   late final WordBook words = WordBook.replay(logger.store.readAll());

@@ -177,7 +177,7 @@ class ProgressView extends StatelessWidget {
                     _Metric(value: '$learned', label: 'learned'),
                     _Metric(
                       value: readablePct == null ? '–' : '$readablePct%',
-                      label: 'of the app readable',
+                      label: 'of everyday Cantonese',
                     ),
                   ],
                 ),

@@ -10,6 +10,8 @@ import 'package:duk/events/event_store.dart';
 import 'package:duk/ui/reader_screen.dart';
 import 'package:duk/ui/speak_drill_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'reader_steps.dart';
 import 'package:material_ui/material_ui.dart';
 
 void main() {
@@ -104,10 +106,9 @@ void main() {
     );
     await t.pumpAndSettle();
     Future<void> readAll() async {
-      while (find.byKey(const ValueKey('next')).evaluate().isNotEmpty) {
+      while (readerHasMore()) {
         now = now.add(const Duration(seconds: 6));
-        await t.tap(find.byKey(const ValueKey('next')));
-        await t.pumpAndSettle();
+        await finishSentence(t);
       }
     }
 

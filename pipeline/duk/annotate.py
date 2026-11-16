@@ -178,6 +178,20 @@ SPOKEN_SKIP_SINGLE = frozenset("重呢會")
 _spoken_cache: dict[str, str] | None = None
 
 
+def char_frequency(min_count: int = 2) -> dict[str, float]:
+    """character -> its share of all Han characters in HKCanCor (recorded everyday Hong
+    Kong conversation). Characters seen fewer than [min_count] times are left out."""
+    import collections
+
+    import pycantonese
+
+    counts: collections.Counter = collections.Counter()
+    for tok in pycantonese.hkcancor().tokens():
+        counts.update(c for c in tok.word or "" if is_han(c))
+    total = sum(counts.values()) or 1
+    return {c: n / total for c, n in counts.most_common() if n >= min_count}
+
+
 def spoken_readings() -> dict[str, str]:
     """word -> its dominant reading in HKCanCor ('nei5' / 'ou3 mun2'), only for words
     where one reading has at least SPOKEN_MIN_COUNT uses and SPOKEN_MIN_SHARE of them."""

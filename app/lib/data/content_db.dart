@@ -761,3 +761,20 @@ extension CharacterPicQueries on ContentDb {
     }
   }
 }
+
+extension CharFreqQueries on ContentDb {
+  /// Character -> its share of everyday Hong Kong Cantonese (HKCanCor, engine/coverage.dart).
+  /// Read once and kept; empty for an older content.db.
+  Map<String, double> charShares() => _charShares[this] ??= () {
+    try {
+      return {
+        for (final r in _db.select('SELECT ch, share FROM char_freq'))
+          r['ch'] as String: (r['share'] as num).toDouble(),
+      };
+    } on SqliteException {
+      return <String, double>{};
+    }
+  }();
+}
+
+final _charShares = Expando<Map<String, double>>();

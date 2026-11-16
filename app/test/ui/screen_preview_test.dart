@@ -21,6 +21,8 @@ import 'package:duk/ui/theme.dart';
 import 'package:duk/ui/visual_novel.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'reader_steps.dart';
 import 'package:material_ui/material_ui.dart';
 
 Future<void> loadFont(String family, String path) async {
@@ -76,7 +78,7 @@ void main() {
         clock: clock,
       ),
       playAudio: (_) async {},
-    );
+    )..armOverrides['meaning_after_check'] = 'shown';
   }
 
   for (final (name, size) in [
@@ -91,12 +93,21 @@ void main() {
       await t.pumpWidget(DukApp(services: s));
       await t.pumpAndSettle();
       // first run: the setup screen
-      await t.tap(find.byKey(const ValueKey('onboard-level-1')));
+      await t.tap(find.byKey(const ValueKey('onboard-speaker')));
+      await t.tap(find.byKey(const ValueKey('onboard-level-0')));
       await t.pumpAndSettle();
       await expectLater(
         find.byType(MaterialApp),
         matchesGoldenFile('goldens/preview_${name}_onboarding.png'),
       );
+      await t.scrollUntilVisible(
+        find.byKey(const ValueKey('onboard-share-no')),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const ValueKey('onboard-share-no')));
+      await t.pumpAndSettle();
       await t.tap(find.byKey(const ValueKey('onboard-start')));
       await t.pumpAndSettle();
       await expectLater(
@@ -144,10 +155,9 @@ void main() {
       await t.tap(find.byKey(const ValueKey('practice')));
       await t.pumpAndSettle();
       await shot('reader_new');
-      while (find.byKey(const ValueKey('next')).evaluate().isNotEmpty) {
+      while (readerHasMore()) {
         now = now.add(const Duration(seconds: 6));
-        await t.tap(find.byKey(const ValueKey('next')));
-        await t.pumpAndSettle();
+        await finishSentence(t);
       }
       await shot('summary');
       await t.tap(find.byKey(const ValueKey('done')));
@@ -160,9 +170,15 @@ void main() {
       await shot('home_day2');
       await t.tap(find.byKey(const ValueKey('start-daily')));
       await t.pumpAndSettle();
-      await t.tap(find.byKey(const ValueKey('meaning')));
-      await t.pumpAndSettle();
+      // read first: no sound, no meaning, just Check
       await shot('reader_day2');
+      now = now.add(const Duration(seconds: 6));
+      await t.tap(find.byKey(const ValueKey('check')));
+      await t.pumpAndSettle();
+      // every reading shows; one character marked as read wrong
+      await t.tap(find.byKey(const ValueKey('cell-0')));
+      await t.pumpAndSettle();
+      await shot('reader_checked');
       await t.tap(find.byTooltip('How reading help works'));
       await t.pumpAndSettle();
       await shot('help');
@@ -200,8 +216,7 @@ void main() {
     await t.pumpAndSettle();
     for (var i = 0; i < 3; i++) {
       now = now.add(const Duration(seconds: 6));
-      await t.tap(find.byKey(const ValueKey('next')));
-      await t.pumpAndSettle();
+      await finishSentence(t);
     }
     // Character pictures (Irasutoya) are left undecoded here on purpose: these
     // snapshots are committed to a public repo, and the pictures must not be.

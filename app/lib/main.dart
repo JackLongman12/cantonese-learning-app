@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' show PlatformDispatcher;
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +13,7 @@ import 'package:ulid/ulid.dart';
 import 'app_services.dart';
 import 'data/content_db.dart';
 import 'data/prefs.dart';
+import 'engine/experiments.dart';
 import 'engine/learner_model.dart';
 import 'engine/memory.dart';
 import 'events/event_logger.dart';
@@ -17,6 +21,7 @@ import 'events/event_store.dart';
 import 'platform/reminders.dart';
 import 'platform/sfx.dart';
 import 'platform/storage.dart';
+import 'platform/telemetry.dart';
 import 'platform/speech.dart';
 import 'platform/word_voice.dart';
 import 'platform/updater.dart';
@@ -36,7 +41,25 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // one fixed folder for the audio player's clip copies, reused across launches
   AudioCache.instance = AudioCache(prefix: 'assets/', cacheId: audioCacheId);
-  runApp(DukApp(services: await _bootstrap()));
+  final services = await _bootstrap();
+  final telemetry = services.telemetry!;
+  // Crashes are kept on the device and sent only if the learner agreed to share.
+  final previous = FlutterError.onError;
+  FlutterError.onError = (details) {
+    telemetry.recordCrash(details.exception, details.stack, where: 'flutter');
+    previous?.call(details);
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    telemetry.recordCrash(error, stack, where: 'async');
+    return false; // still reported the usual way
+  };
+  // send what is new now and whenever the app goes to the background
+  AppLifecycleListener(onPause: () => unawaited(telemetry.upload()));
+  Future<void>.delayed(
+    const Duration(seconds: 10),
+    telemetry.upload,
+  ).ignore();
+  runApp(DukApp(services: services));
 }
 
 Future<AppServices> _bootstrap() async {
@@ -101,6 +124,19 @@ Future<AppServices> _bootstrap() async {
     'source': 'icon',
     'replayed_items': learner.known.length,
   });
+  final prefs = Prefs(File(p.join(support.path, 'prefs.json')));
+  // which A/B arm this install is in, logged whenever the set of experiments changes
+  final arms = jsonEncode(armsFor(deviceId));
+  if (prefs.armsLogged != arms) {
+    logger.log('experiment.assigned', {'arms': armsFor(deviceId)});
+    prefs.armsLogged = arms;
+  }
+  final telemetry = Telemetry(
+    prefs: prefs,
+    eventDir: Directory(p.join(support.path, 'events', deviceId)),
+    stateDir: support,
+    appVersion: appVersion,
+  );
 
   return AppServices(
     content: content,
@@ -126,7 +162,8 @@ Future<AppServices> _bootstrap() async {
         Future<void>.delayed(const Duration(seconds: 15)),
       ]);
     },
-    prefs: Prefs(File(p.join(support.path, 'prefs.json'))),
+    prefs: prefs,
+    telemetry: telemetry,
     updater: Updater(),
     sfx: SoundEffects(),
     stopAudio: () async {

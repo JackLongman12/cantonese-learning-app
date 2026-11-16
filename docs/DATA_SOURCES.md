@@ -53,7 +53,7 @@ Everything below is still unverified.
 | Source | Used for | Where to look |
 |---|---|---|
 | Tatoeba | Cantonese (`yue`) and Mandarin (`cmn`) sentences with translations | tatoeba.org downloads |
-| HKCanCor | Spoken HK Cantonese corpus | bundled with `pycantonese` |
+| HKCanCor | Spoken HK Cantonese corpus; character shares → `char_freq` ("% of everyday Cantonese", 2026-11-17) | bundled with `pycantonese` |
 | Cantonese Wikipedia dump | Character/word frequency (written Cantonese) | dumps.wikimedia.org `zh_yuewiki` |
 | Owner's own text | Personal frequency list from paste/OCR (character IDs only) | event log |
 

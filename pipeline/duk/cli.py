@@ -31,10 +31,19 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="allow a build without audio (CI, which cannot synthesise speech)",
     )
+    tel = sub.add_parser("telemetry", help="anonymous usage data from the app")
+    tel.add_argument("action", choices=["pull", "report"])
     args = ap.parse_args(argv)
 
     try:
-        if args.cmd == "fetch":
+        if args.cmd == "telemetry":
+            from . import telemetry
+
+            if args.action == "pull":
+                added = telemetry.pull()
+                print(", ".join(f"{k}: {v} new" for k, v in added.items()))
+            print(f"report -> {telemetry.write_report()}")
+        elif args.cmd == "fetch":
             from .fetch_sources import fetch
 
             only = args.only or None
@@ -133,6 +142,7 @@ def main(argv: list[str] | None = None) -> int:
                         "SELECT zh || example FROM skill_entry",
                         "SELECT semantic FROM char_info WHERE semantic IS NOT NULL",
                         "SELECT phonetic FROM char_info WHERE phonetic IS NOT NULL",
+                        "SELECT ch FROM char_freq",
                     ):
                         for (t,) in check.execute(q):
                             chars.update(t)

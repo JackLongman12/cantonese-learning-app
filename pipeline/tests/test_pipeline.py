@@ -152,7 +152,7 @@ def test_build_writes_aligned_tokens_and_items(tmp_path):
     assert toks[0] == ("唔", "m4", "cr:yue:唔:m4") and toks[2][1] is None
     assert db.execute("SELECT COUNT(*) FROM item WHERE kind='word' AND key='唔該'").fetchone()[0]
     assert db.execute("SELECT COUNT(*) FROM sentence WHERE lang!='yue'").fetchone()[0] == 0
-    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "11"
+    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "12"
 
 
 def test_flags_reach_review_queue_until_fixed(tmp_path):

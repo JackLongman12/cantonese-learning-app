@@ -11,6 +11,8 @@ import 'package:duk/ui/home_screen.dart';
 import 'package:duk/ui/practice_screens.dart';
 import 'package:duk/ui/stories_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'reader_steps.dart';
 import 'package:material_ui/material_ui.dart';
 
 void main() {
@@ -78,8 +80,7 @@ void main() {
       await t.tap(find.byKey(const ValueKey('story-sty-breakfast-yue')));
       await t.pumpAndSettle();
       for (var i = 0; i < 3; i++) {
-        await t.tap(find.byKey(const ValueKey('next')));
-        await t.pumpAndSettle();
+        await finishSentence(t);
       }
       final lines = db.dialogueLines('sty-breakfast-yue', 'yue');
       expect(

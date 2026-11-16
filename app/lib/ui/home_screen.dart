@@ -7,6 +7,8 @@ import 'dart:async';
 import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
+import '../platform/telemetry.dart' show setSharing;
+import '../engine/coverage.dart';
 import '../data/content_db.dart';
 import '../engine/item_state.dart';
 import '../engine/adaptive.dart';
@@ -36,7 +38,6 @@ import '../platform/updater.dart';
 import 'ruby_text.dart';
 
 /// An item counts as solid once its memory lasts three weeks.
-const _solidStabilityDays = 21.0;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.services});
@@ -534,9 +535,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final itemsByScenario = _s.content.charItemsByScenario(_lang);
     final states = _s.learner.known.where(_isLang).toList();
     final met = states.length;
-    final solid = states
-        .where((x) => (x.stability ?? 0) >= _solidStabilityDays)
-        .length;
     final due = states
         .where((x) => x.due != null && !x.due!.isAfter(now))
         .length;
@@ -545,7 +543,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final learned = states
         .where((x) => x.reps >= 2 && (x.stability ?? 0) >= 1)
         .length;
-    final totalChars = itemsByScenario.values.expand((x) => x).toSet().length;
+    final shares = _s.content.charShares();
+    final known = learnedChars(states);
+    final coverage = everydayCoverage(shares, known);
+    final taught = {
+      for (final ids in itemsByScenario.values)
+        for (final id in ids) ?charOfItem(id),
+    };
     final path = _pathOrder(scenarios, itemsByScenario);
     final upNextId = upNext(
       [for (final sc in path) sc.id],
@@ -661,8 +665,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               mode: 'path',
               scenarioId: nextTopic.id,
               // a first session is short: finish it, feel the win, come back
-              count: met == 0 ? 5 : overview.session.count,
-              maxNew: met == 0 ? 4 : overview.session.maxNew,
+              // A/B (engine/experiments.dart, first_session): 5 sentences with 4
+              // new characters, or 8 with 6
+              count: met == 0
+                  ? (_s.arm('first_session') == 'longer' ? 8 : 5)
+                  : overview.session.count,
+              maxNew: met == 0
+                  ? (_s.arm('first_session') == 'longer' ? 6 : 4)
+                  : overview.session.maxNew,
               onComplete: () => finished('learn'),
             );
           },
@@ -823,12 +833,32 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ),
             ],
           ),
+        if (shares.isNotEmpty && met > 0)
+          _CoverageCard(
+            percent: 100 * coverage,
+            // only characters the app teaches, so each one can be learned here
+            next: mostUsefulNext(
+              {
+                for (final e in shares.entries)
+                  if (taught.contains(e.key)) e.key: e.value,
+              },
+              known,
+              count: 5,
+            ),
+            onChar: (c) => sayOrExplain(context, _s, c, _lang),
+          ),
+        if (_s.prefs.shareData == null && _s.prefs.onboarded) ...[
+          const SizedBox(height: 8),
+          _ShareAsk(
+            onAnswer: (yes) => setState(() => setSharing(_s, yes)),
+          ),
+        ],
         const SizedBox(height: 8),
         for (final (i, step) in plan.indexed)
           _PlanTile(step: step, number: i + 1, current: step == nextStep),
         const SizedBox(height: 14),
         Text(
-          'Or pick something',
+          'More practice',
           style: theme.textTheme.labelLarge?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -836,9 +866,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         const SizedBox(height: 8),
         ToolGrid(
           onTap: _openTool,
-          // Topics and Stories are tabs; the rest as four big tiles
+          // Topics and Stories are tabs; the rest in one row
           hide: const {'topics', 'stories'},
-          columns: 2,
+          columns: 4,
           badges: {
             if (cardsDue.isNotEmpty) 'cards': '${cardsDue.length} due',
             if (practiceWords.isNotEmpty) 'words': '${practiceWords.length}',
@@ -896,9 +926,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ProgressView(
           met: met,
           learned: learned,
-          readablePct: totalChars == 0
-              ? null
-              : (100 * solid / totalChars).round(),
+          // share of everyday Hong Kong Cantonese written in characters you know
+          readablePct: shares.isEmpty ? null : (100 * coverage).round(),
           thisWeek: overview.time.thisWeek,
           lastWeek: overview.time.lastWeek,
           firstWeek: overview.time.firstWeek,
@@ -1283,6 +1312,139 @@ class _TopicTile extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// "You can read 23% of everyday Cantonese": the share of characters in recorded
+/// everyday Hong Kong conversation (HKCanCor) that you have learned, and the most
+/// common ones still to learn.
+class _CoverageCard extends StatelessWidget {
+  const _CoverageCard({
+    required this.percent,
+    required this.next,
+    required this.onChar,
+  });
+  final double percent;
+  final List<String> next;
+  final ValueChanged<String> onChar;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Card(
+      key: const ValueKey('coverage'),
+      margin: const EdgeInsets.only(top: 4),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  '${percent.round()}%',
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    color: scheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'of everyday Cantonese is in characters you can read',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: LinearProgressIndicator(
+                value: (percent / 100).clamp(0.0, 1.0),
+                minHeight: 8,
+              ),
+            ),
+            if (next.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 6,
+                runSpacing: 4,
+                children: [
+                  Text(
+                    'Most useful next:',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
+                  for (final c in next)
+                    InkWell(
+                      borderRadius: BorderRadius.circular(8),
+                      onTap: () => onChar(c),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        child: Text(c, style: chineseStyle('yue', fontSize: 20)),
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Asked once on Home for installs from before the question was in onboarding.
+class _ShareAsk extends StatelessWidget {
+  const _ShareAsk({required this.onAnswer});
+  final ValueChanged<bool> onAnswer;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      key: const ValueKey('share-ask'),
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Help improve DuckLearn?', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Text(
+              'Share anonymous usage and crash reports. No name, no account, nothing '
+              'you type, paste or say. You can change this in Settings.',
+              style: theme.textTheme.bodySmall,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  key: const ValueKey('share-no'),
+                  onPressed: () => onAnswer(false),
+                  child: const Text("Don't share"),
+                ),
+                FilledButton.tonal(
+                  key: const ValueKey('share-yes'),
+                  onPressed: () => onAnswer(true),
+                  child: const Text('Share'),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
