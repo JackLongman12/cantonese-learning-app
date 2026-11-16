@@ -123,6 +123,17 @@ Card directions generated per place: `zh→sound`, `foreign→zh`, `sound→zh`,
 
 Planned decks: `signs`, `emergency` (typhoon/rainstorm signals, hospital), `menu-cha-chaan-teng`, `menu-macanese`, `dim-sum`, `forms`, `surnames` (with HK and Macau romanisations), `brands`, `numbers-money-time`, `transport-hk`, `transport-macau`, `particles` (audio-first), `trad-simp`, `yue-cmn-vocab`.
 
+## Situations (`content/situations.yaml`, newcomer mode)
+
+Each situation is a deck of **essential words and short chunks** (not sentences), drilled
+English first. Format: `id: sit-…`, `title`, `icon` (a name `situationIcon` knows), a
+one-line `description`, and `words: [[Cantonese, English, optional tip], …]` in teaching
+order. Pick words a newcomer needs to get the point across (埋單, 洗手間, 喺邊, 走冰); leave out
+niche or hyper-specific ones. Card ids are `card:<situation>:<word>` and permanent: never
+rename a situation or change a shipped word's characters. Readings come from the
+dictionaries; a word the dictionaries read wrong gets a word-level override in
+`overrides/readings.yaml` (好平, 請假).
+
 ## Variants (`content/variants.yaml`)
 
 Groups of everyday words for one thing (白車 / 救護車 / 救傷車 / 十字車, "ambulance").

@@ -3,6 +3,26 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2071): newcomer mode, Home A and B
+
+The owner set the direction: an app for newcomers to Hong Kong and Macau who need key words
+to get their point across, not whole sentences.
+
+- Onboarding asks "Which sounds most like you?": new to Cantonese / know a little →
+  newcomer mode; speak it but can't read → the reading app. Existing installs keep their
+  mode (`prefs.level`, from the earlier speaker answer).
+- Newcomer mode (Home B): "What do you want to say?" search over the words and short
+  sentences; today's drill (due words first, then new ones, from your situations); next
+  situation; your situations; words you can say. Tabs: Home, Situations, Drill, Progress.
+- 15 situations, 214 essential words and short chunks (content/situations.yaml), each with
+  English and a tip where useful; readings from the dictionaries (overrides for 好平, 請假).
+- Cards: an English-first mode for the drill (see the English, say it with the mic check,
+  then see and hear the word); only the word is graded, not character reading.
+- Reading app (Home A): Continue your topic as the main button, your topics, a flashcards
+  block with "drill out loud", a small "characters fading" chip instead of the Review step,
+  and stories, speaking, my words and skills behind one chip. Tabs: Home, Topics, Cards,
+  Progress. The three-step plan is gone (it was finished twice in the owner's data).
+
 ## 2026-11-17 (b2070): repeat after me plays every line
 
 - Speak drill: Next and Skip now wait for the recording and the old line's audio to stop

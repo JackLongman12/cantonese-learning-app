@@ -522,7 +522,9 @@ extension DeckQueries on ContentDb {
       return [
         for (final r in _db.select(
           'SELECT d.id, d.title, d.region, d.description, COUNT(c.id) AS n '
-          'FROM deck d JOIN card c ON c.deck_id = d.id GROUP BY d.id '
+          'FROM deck d JOIN card c ON c.deck_id = d.id '
+          // newcomer situations are decks too, but listed on their own
+          "WHERE d.id NOT LIKE 'sit-%' GROUP BY d.id "
           "ORDER BY d.id = 'food' DESC, d.region = 'macau' DESC, d.rowid",
         ))
           DeckRow(
@@ -796,3 +798,37 @@ extension CharFreqQueries on ContentDb {
 }
 
 final _charShares = Expando<Map<String, double>>();
+
+/// A newcomer situation (content/situations.yaml): a deck of essential words.
+class SituationRow {
+  const SituationRow(this.deck, this.icon);
+  final DeckRow deck;
+  final String icon;
+}
+
+extension SituationQueries on ContentDb {
+  /// Newcomer situations in their teaching order; empty on older databases.
+  List<SituationRow> situations() {
+    try {
+      return [
+        for (final r in _db.select(
+          'SELECT d.id, d.title, d.region, d.description, s.icon, '
+          '(SELECT COUNT(*) FROM card c WHERE c.deck_id = d.id) AS n '
+          'FROM situation s JOIN deck d ON d.id = s.id ORDER BY s.rank',
+        ))
+          SituationRow(
+            DeckRow(
+              r['id'] as String,
+              r['title'] as String,
+              r['region'] as String,
+              r['description'] as String,
+              r['n'] as int,
+            ),
+            r['icon'] as String,
+          ),
+      ];
+    } on SqliteException {
+      return const [];
+    }
+  }
+}

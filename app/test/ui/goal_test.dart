@@ -43,17 +43,21 @@ void main() {
     await t.pumpAndSettle();
     expect(prefs.goal, 'food');
     expect(find.byKey(const ValueKey('goal-ask')), findsNothing);
-    expect(find.text('Goal: Eat out and shop'), findsOneWidget);
-    // the next topic to learn is a food/shopping/numbers one
-    final learn = find.descendant(
-      of: find.byKey(const ValueKey('plan-learn')),
-      matching: find.textContaining('Learn:'),
-    );
-    final title = (t.widget<Text>(learn)).data!;
+    // the topic to continue with is a food/shopping/numbers one
+    final texts = [
+      for (final w in t.widgetList<Text>(
+        find.descendant(
+          of: find.byKey(const ValueKey('continue-topic')),
+          matching: find.byType(Text),
+        ),
+      ))
+        w.data ?? '',
+    ];
+    final title = texts.join(' | ');
     expect(
       [
         'Eating out',
-        'Cantonese food',
+        'Dishes and menus',
         'Shopping',
         'Numbers',
       ].any(title.contains),

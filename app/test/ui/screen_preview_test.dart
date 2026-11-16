@@ -95,6 +95,7 @@ void main() {
       await t.pumpAndSettle();
       // first run: the setup screen
       await t.tap(find.byKey(const ValueKey('onboard-speaker')));
+      await t.pumpAndSettle();
       await t.tap(find.byKey(const ValueKey('onboard-level-0')));
       await t.pumpAndSettle();
       await expectLater(
@@ -127,11 +128,9 @@ void main() {
       await shot('topics');
       await t.tap(find.byKey(const ValueKey('tab-today')));
       await t.pumpAndSettle();
-      await t.tap(find.byKey(const ValueKey('tool-cards')));
+      await t.tap(find.byKey(const ValueKey('tab-cards')));
       await t.pumpAndSettle();
       await shot('cards');
-      await t.pageBack();
-      await t.pumpAndSettle();
       await t.tap(find.byKey(const ValueKey('tab-topics')));
       await t.pumpAndSettle();
       await t.scrollUntilVisible(
@@ -185,6 +184,46 @@ void main() {
       await shot('help');
     }, skip: !hasDb);
   }
+
+  testWidgets('preview newcomer', (t) async {
+    await t.binding.setSurfaceSize(const Size(400, 860));
+    addTearDown(() => t.binding.setSurfaceSize(null));
+    var now = DateTime.utc(2026, 11, 15, 9);
+    final s = await services(() => now);
+    Future<void> shot(String what) => expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('goldens/preview_newcomer_$what.png'),
+    );
+    await t.pumpWidget(DukApp(services: s));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('onboard-new')));
+    await t.pumpAndSettle();
+    await shot('onboarding');
+    await t.scrollUntilVisible(
+      find.byKey(const ValueKey('onboard-share-no')),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await t.tap(find.byKey(const ValueKey('onboard-share-no')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('onboard-start')));
+    await t.pumpAndSettle();
+    await shot('home');
+    await t.tap(find.byKey(const ValueKey('start-drill')));
+    await t.pumpAndSettle();
+    await shot('drill');
+    await t.tap(find.byKey(const ValueKey('flip')));
+    await t.pumpAndSettle();
+    await shot('drill_checked');
+    await t.tap(find.byKey(const ValueKey('close')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('tab-situations')));
+    await t.pumpAndSettle();
+    await shot('situations');
+    await t.tap(find.byKey(const ValueKey('situation-sit-food')));
+    await t.pumpAndSettle();
+    await shot('situation');
+  }, skip: !hasDb);
 
   testWidgets('preview conversation', (t) async {
     await t.binding.setSurfaceSize(const Size(400, 860));

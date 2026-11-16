@@ -1,0 +1,312 @@
+# Newcomer mode (2026-11-17): situations for people new to Cantonese, each a deck of
+# essential words and short chunks, not whole sentences. The aim is getting the point
+# across with a few keywords ("洗手間喺邊？" or just "洗手間？"), not perfect speech.
+# Each word: [Cantonese, English, optional tip]. Readings come from the dictionaries
+# (`duk build`); never type Jyutping here. Card ids are `card:<situation>:<word>` and are
+# permanent: don't rename a situation id or change a word's characters once shipped
+# (add a new word instead).
+# Drafted by an LLM; the owner accepted LLM content as-is on 2026-11-16.
+situations:
+  - id: sit-basics
+    title: First words
+    icon: waving
+    description: "Please, thank you, sorry, yes, no: the words you'll use every day."
+    words:
+      - [唔該, "please / thanks (for help)", "For a favour, a service, or squeezing past someone."]
+      - [多謝, "thank you (for a gift)", "For gifts and compliments."]
+      - [唔好意思, "excuse me / sorry"]
+      - [對唔住, "sorry"]
+      - [你好, "hello"]
+      - [早晨, "good morning"]
+      - [拜拜, "bye"]
+      - [係, "yes (it is)"]
+      - [唔係, "no (it isn't)"]
+      - [好, "OK / good"]
+      - [要, "I want it"]
+      - [唔要, "I don't want it"]
+      - [冇問題, "no problem"]
+      - [唔緊要, "never mind / it's OK"]
+      - [我唔明, "I don't understand"]
+      - [講慢啲, "speak slower"]
+      - [再講一次, "say it again"]
+      - [識唔識講英文, "do you speak English?"]
+
+  - id: sit-numbers
+    title: Numbers and time
+    icon: numbers
+    description: "Counting, prices and times: enough to pay, book and meet up."
+    words:
+      - [一, "one"]
+      - [二, "two (the number)", "For counting: 一、二、三."]
+      - [兩, "two (of something)", "兩個 = two of them; 兩點 = two o'clock."]
+      - [三, "three"]
+      - [四, "four"]
+      - [五, "five"]
+      - [六, "six"]
+      - [七, "seven"]
+      - [八, "eight"]
+      - [九, "nine"]
+      - [十, "ten"]
+      - [一百, "a hundred"]
+      - [幾點, "what time?"]
+      - [半, "half", "三點半 = half past three."]
+      - [而家, "now"]
+      - [今日, "today"]
+      - [聽日, "tomorrow"]
+      - [尋日, "yesterday"]
+      - [星期, "week / day of the week", "星期一 = Monday, 星期日 = Sunday."]
+      - [分鐘, "minute(s)"]
+      - [一個鐘, "one hour"]
+
+  - id: sit-around
+    title: Getting around
+    icon: bus
+    description: "Ask where things are, take buses, taxis and the metro, and get off at the right place."
+    words:
+      - [喺邊, "where is it?", "Put the place first: 洗手間喺邊？"]
+      - [洗手間, "toilet"]
+      - [巴士站, "bus stop"]
+      - [地鐵站, "metro station"]
+      - [的士, "taxi"]
+      - [碼頭, "ferry pier"]
+      - [機場, "airport"]
+      - [落車, "get off (a bus or car)"]
+      - [有落, "getting off!", "Call it out on a Hong Kong minibus."]
+      - [前面, "ahead"]
+      - [左邊, "the left"]
+      - [右邊, "the right"]
+      - [直行, "go straight"]
+      - [轉左, "turn left"]
+      - [轉右, "turn right"]
+      - [幾遠, "how far?"]
+      - [增值, "top up (a card)"]
+      - [蕩失路, "lost (my way)"]
+
+  - id: sit-food
+    title: Eating out
+    icon: restaurant
+    description: "Get a table, order, ask for changes, and pay the bill."
+    words:
+      - [幾位, "how many people?", "What staff ask at the door."]
+      - [兩位, "two people"]
+      - [餐牌, "menu"]
+      - [呢個, "this one", "Point and say it."]
+      - [埋單, "the bill"]
+      - [拎走, "takeaway"]
+      - [堂食, "eat in"]
+      - [走辣, "no chilli"]
+      - [走蔥, "no spring onion"]
+      - [少甜, "less sweet"]
+      - [走冰, "no ice"]
+      - [凍, "cold / iced"]
+      - [熱, "hot"]
+      - [好食, "tasty"]
+      - [飽, "full"]
+      - [食素, "vegetarian"]
+      - [敏感, "allergic", "花生敏感 = allergic to peanuts."]
+      - [打包, "pack it to go"]
+
+  - id: sit-cafe
+    title: Cha chaan teng
+    icon: cafe
+    description: "The Hong Kong-style café: drinks, set meals and how ordering works."
+    words:
+      - [奶茶, "milk tea"]
+      - [檸檬茶, "lemon tea"]
+      - [咖啡, "coffee"]
+      - [鴛鴦, "coffee and tea mixed"]
+      - [常餐, "set meal"]
+      - [多士, "toast"]
+      - [菠蘿包, "pineapple bun"]
+      - [搭枱, "share a table"]
+      - [加, "add / extra"]
+      - [另上, "on the side"]
+
+  - id: sit-pay
+    title: Paying
+    icon: payments
+    description: "Prices, cash or card, change and receipts."
+    words:
+      - [幾錢, "how much?"]
+      - [一共, "altogether"]
+      - [現金, "cash"]
+      - [碌卡, "pay by card"]
+      - [八達通, "Octopus card (Hong Kong)"]
+      - [澳門通, "Macau Pass"]
+      - [散紙, "small change"]
+      - [找錢, "give change"]
+      - [收據, "receipt"]
+      - [貴, "expensive"]
+      - [好平, "very cheap"]
+      - [平啲, "cheaper"]
+      - [膠袋, "plastic bag"]
+      - [唔使, "no need"]
+      - [蚊, "dollar(s)", "十蚊 = ten dollars."]
+
+  - id: sit-shop
+    title: Shopping
+    icon: shopping
+    description: "Shops and markets: sizes, trying on, sold out and returns."
+    words:
+      - [有冇, "do you have…?", "有冇大啲？ = Do you have a bigger one?"]
+      - [冇, "don't have / there isn't"]
+      - [試吓, "try it"]
+      - [大啲, "bigger"]
+      - [細啲, "smaller"]
+      - [顏色, "colour"]
+      - [賣晒, "sold out"]
+      - [退貨, "return (an item)"]
+      - [換, "exchange"]
+      - [超市, "supermarket"]
+      - [街市, "wet market"]
+      - [斤, "catty (about 600 g)", "Market prices are per catty."]
+      - [睇吓先, "just looking"]
+
+  - id: sit-people
+    title: Meeting people
+    icon: people
+    description: "Names, where you're from, and making plans with friends."
+    words:
+      - [我叫, "my name is"]
+      - [你叫咩名, "what's your name?"]
+      - [邊度人, "where are you from?"]
+      - [朋友, "friend"]
+      - [同事, "colleague"]
+      - [得閒, "free (not busy)"]
+      - [唔得閒, "busy"]
+      - [食飯, "have a meal"]
+      - [飲嘢, "have a drink"]
+      - [一齊, "together"]
+      - [等陣, "in a moment / wait a bit"]
+      - [遲到, "late"]
+      - [幾時, "when?"]
+      - [邊個, "who?"]
+      - [做咩, "what for? / what's up?"]
+
+  - id: sit-phone
+    title: Phone and messages
+    icon: phone
+    description: "Calls, texts and the short replies people send."
+    words:
+      - [收到, "got it (message received)"]
+      - [喺度, "here / I'm here"]
+      - [打俾我, "call me"]
+      - [覆, "reply"]
+      - [電話, "phone"]
+      - [號碼, "number"]
+      - [冇電, "battery dead"]
+      - [叉電, "charge (a phone)"]
+      - [冇訊號, "no signal"]
+      - [地址, "address"]
+      - [到咗, "arrived"]
+      - [就快到, "almost there"]
+
+  - id: sit-home
+    title: Home and your building
+    icon: home
+    description: "Renting, repairs, deliveries and neighbours."
+    words:
+      - [租, "rent"]
+      - [業主, "landlord"]
+      - [按金, "deposit"]
+      - [管理處, "management office"]
+      - [速遞, "delivery / courier"]
+      - [冷氣, "air conditioning"]
+      - [壞咗, "broken"]
+      - [漏水, "leaking"]
+      - [師傅, "repairman / worker"]
+      - [鎖匙, "key"]
+      - [垃圾, "rubbish"]
+      - [鄰居, "neighbour"]
+      - [嘈, "noisy"]
+      - [𨋢, "lift (elevator)", "The spoken word; signs say 升降機."]
+
+  - id: sit-health
+    title: Doctor and pharmacy
+    icon: health
+    description: "Say what hurts, see a doctor and understand how to take medicine."
+    words:
+      - [唔舒服, "unwell"]
+      - [痛, "hurts / pain"]
+      - [頭痛, "headache"]
+      - [肚痛, "stomach ache"]
+      - [發燒, "fever"]
+      - [咳, "cough"]
+      - [感冒, "a cold"]
+      - [醫生, "doctor"]
+      - [診所, "clinic"]
+      - [醫院, "hospital"]
+      - [藥房, "pharmacy"]
+      - [藥, "medicine"]
+      - [一日三次, "three times a day"]
+      - [飯後, "after meals"]
+      - [病假紙, "sick note"]
+
+  - id: sit-help
+    title: Emergencies
+    icon: emergency
+    description: "Get help fast: police, ambulance, fire, and things lost or stolen."
+    words:
+      - [救命, "help!"]
+      - [報警, "call the police"]
+      - [警察, "police"]
+      - [白車, "ambulance", "The everyday word; signs say 救護車."]
+      - [火燭, "fire!"]
+      - [小心, "careful!"]
+      - [受傷, "injured"]
+      - [偷, "steal", "俾人偷咗 = it was stolen."]
+      - [唔見咗, "lost (can't find it)"]
+      - [差館, "police station"]
+      - [急症室, "emergency room"]
+
+  - id: sit-weather
+    title: Weather and typhoons
+    icon: weather
+    description: "Rain, heat and typhoon signals, and what they mean for your day."
+    words:
+      - [天氣, "weather"]
+      - [落雨, "raining"]
+      - [遮, "umbrella"]
+      - [好熱, "very hot"]
+      - [好凍, "very cold"]
+      - [好焗, "stuffy / muggy"]
+      - [打風, "a typhoon is coming"]
+      - [八號風球, "typhoon signal No. 8", "Offices and schools close."]
+      - [黑雨, "black rainstorm warning"]
+
+  - id: sit-work
+    title: Work and study
+    icon: work
+    description: "Getting to work, meetings, time off, classes and exams."
+    words:
+      - [返工, "go to work"]
+      - [放工, "finish work"]
+      - [放假, "day off / holiday"]
+      - [開會, "have a meeting"]
+      - [老細, "boss"]
+      - [加班, "work overtime"]
+      - [請假, "take leave"]
+      - [人工, "salary"]
+      - [食晏, "lunch"]
+      - [上堂, "go to class"]
+      - [功課, "homework"]
+      - [考試, "exam"]
+
+  - id: sit-errands
+    title: Bank, post and forms
+    icon: errands
+    description: "Cash, parcels, queue numbers and the forms you'll need to fill in."
+    words:
+      - [銀行, "bank"]
+      - [櫃員機, "ATM"]
+      - [攞錢, "withdraw cash"]
+      - [開戶口, "open an account"]
+      - [郵局, "post office"]
+      - [寄, "send / post"]
+      - [包裹, "parcel"]
+      - [攞籌, "take a queue number"]
+      - [排隊, "queue"]
+      - [填表, "fill in a form"]
+      - [簽名, "sign / signature"]
+      - [身份證, "ID card"]
+      - [護照, "passport"]

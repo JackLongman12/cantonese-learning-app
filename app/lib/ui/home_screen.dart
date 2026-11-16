@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
+import 'situations.dart';
 import '../platform/telemetry.dart' show setSharing;
 import '../engine/coverage.dart';
 import '../data/content_db.dart';
@@ -27,7 +28,6 @@ import '../platform/sfx.dart';
 import 'settings_screen.dart';
 import 'speak_drill_screen.dart';
 import 'stories_screen.dart';
-import 'critters.dart';
 import 'finish.dart';
 import 'tiles.dart';
 import 'topic_screen.dart';
@@ -466,16 +466,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       case 'topics':
         setState(() => _tab = 1);
       case 'stories':
-        setState(() => _tab = 2);
-      case 'cards':
         await _push(
-          _ToolPage(
-            title: 'Flashcards',
-            children: [
-              DeckSection(services: _s, onChanged: () => setState(() {})),
-            ],
+          Scaffold(
+            appBar: AppBar(title: const Text('Stories')),
+            body: SafeArea(
+              child: StoriesScreen(services: _s, lang: _lang),
+            ),
           ),
         );
+      case 'cards':
+        setState(() => _tab = 2);
       case 'speak':
         await _push(
           SpeakDrillScreen(
@@ -710,7 +710,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     // learn something before speaking it; the rest after
     const order = ['review', 'learn', 'speak'];
     plan.sort((a, b) => order.indexOf(a.id).compareTo(order.indexOf(b.id)));
-    final nextStep = plan.where((x) => !x.done).firstOrNull;
     _lastPlan = plan;
     _lastDay = day;
     _s.home = HomeLink(
@@ -723,316 +722,426 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       openTool: (id) => _fromAnywhere(() => _openTool(id)),
     );
 
-    void startDaily() => _open(
-      title: met == 0 ? 'First steps' : "Today's reading",
-      sentences: _s.content.allSentences(_lang),
-      mode: 'daily',
-      count: overview.session.count,
-      maxNew: overview.session.maxNew,
-    );
-
-    final pages = <Widget>[
-      page([
-        _header(theme),
+    // Newcomer mode (Home B) or the reading app (Home A): onboarding's level
+    final newcomer = _s.prefs.newcomerMode;
+    final top = <Widget>[
+      _header(theme),
+      const SizedBox(height: 8),
+      if (_update case final u?)
+        UpdateBanner(
+          info: u,
+          onLater: () => setState(() => _update = null),
+          onUpdate: () => runUpdate(context, _s, u),
+        ),
+      if (_s.prefs.shareData == null && _s.prefs.onboarded) ...[
         const SizedBox(height: 8),
-        if (_update case final u?)
-          UpdateBanner(
-            info: u,
-            onLater: () => setState(() => _update = null),
-            onUpdate: () => runUpdate(context, _s, u),
-          ),
-        if (_resumable() case final r?) ...[
-          const SizedBox(height: 12),
-          Card(
-            margin: EdgeInsets.zero,
-            color: theme.colorScheme.secondaryContainer,
-            child: ListTile(
-              key: const ValueKey('resume'),
-              leading: const Icon(Icons.play_circle_outline_rounded),
-              title: Text('Resume: ${r.title}'),
-              subtitle: Text('${r.index + 1} of ${r.lines.length}'),
-              trailing: IconButton(
-                tooltip: 'Discard',
-                icon: const Icon(Icons.close_rounded),
-                onPressed: () => setState(() => _s.prefs.resume = null),
-              ),
-              onTap: () async {
-                _s.logger.log('nav.screen', {
-                  'screen': 'reader',
-                  'mode': 'resume',
-                });
-                await pushOnce(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (_) => ReaderScreen(
-                      services: _s,
-                      title: r.title,
-                      sentences: r.lines,
-                      lang: _lang,
-                      mode: r.mode,
-                      ordered: true,
-                      conversation: r.conversation,
-                      story: r.story,
-                      startAt: r.index,
-                    ),
+        _ShareAsk(onAnswer: (yes) => setState(() => setSharing(_s, yes))),
+      ],
+    ];
+
+    // Home A: the topic you're on, your topics, flashcards to drill out loud
+    final continueTopic =
+        scenarios.where((x) => x.id == _s.prefs.lastTopic(_lang)).firstOrNull ??
+        nextTopic ??
+        scenarios.firstOrNull;
+    int metIn(ScenarioRow sc) => (itemsByScenario[sc.id] ?? const {})
+        .where((id) => !_s.learner.stateOf(id).isNew)
+        .length;
+    Future<void> practiceTopic(ScenarioRow sc) {
+      _s.prefs.setLastTopic(_lang, sc.id);
+      return _open(
+        title: sc.title,
+        sentences: _s.content.sentences(sc.id, _lang),
+        mode: 'path',
+        scenarioId: sc.id,
+        // A/B (engine/experiments.dart, first_session): 5 sentences with 4
+        // new characters, or 8 with 6
+        count: met == 0
+            ? (_s.arm('first_session') == 'longer' ? 8 : 5)
+            : overview.session.count,
+        maxNew: met == 0
+            ? (_s.arm('first_session') == 'longer' ? 6 : 4)
+            : overview.session.maxNew,
+        onComplete: () => finished('learn'),
+      );
+    }
+
+    final yourTopics = [
+      for (final sc in scenarios)
+        if (sc.id != continueTopic?.id && metIn(sc) > 0) sc,
+    ]..sort((a, b) => metIn(b).compareTo(metIn(a)));
+    final reviewStep = plan.where((p) => p.id == 'review').firstOrNull;
+    final cardPreview = cardsDue.isNotEmpty
+        ? cardsDue.take(3).toList()
+        : [
+            for (final d in _s.content.decks().take(1))
+              ..._s.content.cards(d.id).take(3),
+          ];
+
+    final homeA = page([
+      ...top,
+      if (_resumable() case final r?) ...[
+        const SizedBox(height: 12),
+        Card(
+          margin: EdgeInsets.zero,
+          color: theme.colorScheme.secondaryContainer,
+          child: ListTile(
+            key: const ValueKey('resume'),
+            leading: const Icon(Icons.play_circle_outline_rounded),
+            title: Text('Resume: ${r.title}'),
+            subtitle: Text('${r.index + 1} of ${r.lines.length}'),
+            trailing: IconButton(
+              tooltip: 'Discard',
+              icon: const Icon(Icons.close_rounded),
+              onPressed: () => setState(() => _s.prefs.resume = null),
+            ),
+            onTap: () async {
+              _s.logger.log('nav.screen', {
+                'screen': 'reader',
+                'mode': 'resume',
+              });
+              await pushOnce(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (_) => ReaderScreen(
+                    services: _s,
+                    title: r.title,
+                    sentences: r.lines,
+                    lang: _lang,
+                    mode: r.mode,
+                    ordered: true,
+                    conversation: r.conversation,
+                    story: r.story,
+                    startAt: r.index,
                   ),
-                );
+                ),
+              );
+              if (mounted) setState(() {});
+            },
+          ),
+        ),
+      ],
+      if (_s.prefs.goal == null) ...[
+        const SizedBox(height: 8),
+        Card(
+          key: const ValueKey('goal-ask'),
+          margin: EdgeInsets.zero,
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'What do you want Cantonese for?',
+                  style: theme.textTheme.titleSmall,
+                ),
+                const SizedBox(height: 10),
+                GoalList(
+                  selected: null,
+                  onPick: (g) => setState(() => setGoal(_s, g)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+      if (continueTopic != null) ...[
+        const SizedBox(height: 8),
+        _ContinueCard(
+          scenario: continueTopic,
+          met: metIn(continueTopic),
+          total: itemsByScenario[continueTopic.id]?.length ?? 0,
+          first: met == 0,
+          onStart: () async {
+            await practiceTopic(continueTopic);
+            if (mounted) setState(() {});
+          },
+        ),
+      ],
+      const SizedBox(height: 14),
+      Text('Your topics', style: theme.textTheme.titleSmall),
+      const SizedBox(height: 8),
+      _TopicChips(
+        topics: yourTopics.take(3).toList(),
+        percent: (sc) {
+          final n = itemsByScenario[sc.id]?.length ?? 0;
+          return n == 0 ? 0 : (100 * metIn(sc) / n).round();
+        },
+        onTopic: (sc) {
+          _s.sound(Sfx.tap);
+          _openTopic(sc);
+        },
+        onAll: () => setState(() => _tab = 1),
+      ),
+      const SizedBox(height: 14),
+      _CardsBlock(
+        due: cardsDue.length,
+        preview: [for (final c in cardPreview) c.zh],
+        onDrill: () async {
+          if (cardsDue.isEmpty) {
+            setState(() => _tab = 2);
+            return;
+          }
+          await _push(
+            CardSessionScreen(
+              services: _s,
+              deck: const DeckRow('due', 'Cards due', 'both', '', 0),
+              cards: cardsDue.take(20).toList(),
+            ),
+          );
+        },
+      ),
+      const SizedBox(height: 12),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          if (reviewStep != null && reviewCount > 0)
+            ActionChip(
+              key: const ValueKey('review-chip'),
+              avatar: const Icon(Icons.refresh_rounded, size: 18),
+              label: Text(
+                '$reviewCount ${reviewCount == 1 ? 'character' : 'characters'} fading',
+              ),
+              onPressed: () async {
+                await reviewStep.start();
                 if (mounted) setState(() {});
               },
             ),
+          ActionChip(
+            key: const ValueKey('more-tools'),
+            avatar: const Icon(Icons.more_horiz_rounded, size: 18),
+            label: const Text('Stories, speaking, my words, skills'),
+            onPressed: _moreSheet,
           ),
         ],
-        if (_s.prefs.goal == null)
-          Card(
-            key: const ValueKey('goal-ask'),
-            margin: EdgeInsets.zero,
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    'What do you want Cantonese for?',
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Your plan will start with those topics.',
-                    style: theme.textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: 10),
-                  GoalList(
-                    selected: null,
-                    onPick: (g) => setState(() => setGoal(_s, g)),
-                  ),
-                ],
-              ),
-            ),
-          )
-        else
-          Row(
-            key: const ValueKey('goal-row'),
-            children: [
-              Chick(
-                mood: nextStep == null && plan.isNotEmpty
-                    ? ChickMood.sleepy
-                    : ChickMood.innocent,
-                size: 64,
-                sway: true,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  nextStep == null && plan.isNotEmpty
-                      ? 'All done today'
-                      : 'Goal: ${goal.title}',
-                  style: theme.textTheme.titleSmall,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              TextButton(
-                key: const ValueKey('goal-change'),
-                onPressed: () async {
-                  if (await pickGoal(context, _s)) setState(() {});
-                },
-                child: const Text('Change'),
-              ),
-            ],
+      ),
+      if (shares.isNotEmpty && met > 0) ...[
+        const SizedBox(height: 12),
+        _CoverageCard(
+          percent: 100 * coverage,
+          // only characters the app teaches, so each one can be learned here
+          next: mostUsefulNext(
+            {
+              for (final e in shares.entries)
+                if (taught.contains(e.key)) e.key: e.value,
+            },
+            known,
+            count: 5,
           ),
-        if (shares.isNotEmpty && met > 0)
-          _CoverageCard(
-            percent: 100 * coverage,
-            // only characters the app teaches, so each one can be learned here
-            next: mostUsefulNext(
-              {
-                for (final e in shares.entries)
-                  if (taught.contains(e.key)) e.key: e.value,
-              },
-              known,
-              count: 5,
-            ),
-            onChar: (c) => sayOrExplain(context, _s, c, _lang),
-          ),
-        if (_s.prefs.shareData == null && _s.prefs.onboarded) ...[
-          const SizedBox(height: 8),
-          _ShareAsk(onAnswer: (yes) => setState(() => setSharing(_s, yes))),
-        ],
-        const SizedBox(height: 8),
-        for (final (i, step) in plan.indexed)
-          _PlanTile(step: step, number: i + 1, current: step == nextStep),
-        const SizedBox(height: 14),
-        Text(
-          'More practice',
-          style: theme.textTheme.labelLarge?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 8),
-        ToolGrid(
-          onTap: _openTool,
-          // Topics and Stories are tabs; the rest in one row
-          hide: const {'topics', 'stories'},
-          columns: 4,
-          badges: {
-            if (cardsDue.isNotEmpty) 'cards': '${cardsDue.length} due',
-            if (practiceWords.isNotEmpty) 'words': '${practiceWords.length}',
-          },
-        ),
-      ], still: true),
-      page([
-        Text('Topics', style: theme.textTheme.titleLarge),
-        const SizedBox(height: 2),
-        Text(
-          'Everything is open. "Up next" is the suggested next topic.',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        if (scenarios.isEmpty)
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 24),
-            child: Text('No content yet.', textAlign: TextAlign.center),
-          ),
-        // grouped by kind of situation, each group in path order
-        for (final (name, list) in _groupTopics(
-          _pathOrder(scenarios, itemsByScenario),
-        )) ...[
-          Padding(
-            padding: const EdgeInsets.only(top: 18, bottom: 10),
-            child: Text(
-              name,
-              key: ValueKey('topic-group-$name'),
-              style: theme.textTheme.titleMedium,
-            ),
-          ),
-          TileGrid(
-            children: [
-              for (final sc in list)
-                _TopicTile(
-                  next: sc.id == upNextId,
-                  scenario: sc,
-                  total: itemsByScenario[sc.id]?.length ?? 0,
-                  met: (itemsByScenario[sc.id] ?? const {})
-                      .where((id) => !_s.learner.stateOf(id).isNew)
-                      .length,
-                  onTap: () {
-                    _s.sound(Sfx.tap);
-                    _openTopic(sc);
-                  },
-                ),
-            ],
-          ),
-        ],
-        const SizedBox(height: 24),
-      ]),
-      StoriesScreen(key: ValueKey('stories-$_lang'), services: _s, lang: _lang),
-      page([
-        ProgressView(
-          met: met,
-          learned: learned,
-          // share of everyday Hong Kong Cantonese written in characters you know
-          readablePct: shares.isEmpty ? null : (100 * coverage).round(),
-          thisWeek: overview.time.thisWeek,
-          lastWeek: overview.time.lastWeek,
-          firstWeek: overview.time.firstWeek,
-          metByWeek: overview.time.metByWeek,
-          chars: overview.chars,
-          sounds: overview.sounds,
-          wordsToPractice: practiceWords.length,
-          cardsDue: cardsDue.length,
           onChar: (c) => sayOrExplain(context, _s, c, _lang),
-          onReview: plan.where((p) => p.id == 'review').firstOrNull?.start,
-          onWords: () => _openTool('words'),
-          onCards: () => _openTool('cards'),
-          onSpeak: () => _openTool('speak'),
         ),
-      ]),
-    ];
+      ],
+    ]);
+
+    final topicsPage = page([
+      Row(
+        children: [
+          Expanded(child: Text('Topics', style: theme.textTheme.titleLarge)),
+          TextButton.icon(
+            key: const ValueKey('open-stories'),
+            onPressed: () => _openTool('stories'),
+            icon: const Icon(Icons.auto_stories_outlined),
+            label: const Text('Stories'),
+          ),
+        ],
+      ),
+      const SizedBox(height: 2),
+      Text(
+        'Everything is open. "Up next" is the suggested next topic.',
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      if (scenarios.isEmpty)
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 24),
+          child: Text('No content yet.', textAlign: TextAlign.center),
+        ),
+      // grouped by kind of situation, each group in path order
+      for (final (name, list) in _groupTopics(
+        _pathOrder(scenarios, itemsByScenario),
+      )) ...[
+        Padding(
+          padding: const EdgeInsets.only(top: 18, bottom: 10),
+          child: Text(
+            name,
+            key: ValueKey('topic-group-$name'),
+            style: theme.textTheme.titleMedium,
+          ),
+        ),
+        TileGrid(
+          children: [
+            for (final sc in list)
+              _TopicTile(
+                next: sc.id == upNextId,
+                scenario: sc,
+                total: itemsByScenario[sc.id]?.length ?? 0,
+                met: metIn(sc),
+                onTap: () {
+                  _s.sound(Sfx.tap);
+                  _openTopic(sc);
+                },
+              ),
+          ],
+        ),
+      ],
+      const SizedBox(height: 24),
+    ]);
+
+    final cardsPage = page([
+      Text('Flashcards', style: theme.textTheme.titleLarge),
+      const SizedBox(height: 2),
+      Text(
+        'Say each card out loud: the mic checks you. Cards come back just before you\'d forget them.',
+        style: theme.textTheme.bodySmall,
+      ),
+      const SizedBox(height: 12),
+      DeckSection(services: _s, onChanged: () => setState(() {})),
+    ]);
+
+    final progressPage = page([
+      ProgressView(
+        met: met,
+        learned: learned,
+        // share of everyday Hong Kong Cantonese written in characters you know
+        readablePct: shares.isEmpty ? null : (100 * coverage).round(),
+        thisWeek: overview.time.thisWeek,
+        lastWeek: overview.time.lastWeek,
+        firstWeek: overview.time.firstWeek,
+        metByWeek: overview.time.metByWeek,
+        chars: overview.chars,
+        sounds: overview.sounds,
+        wordsToPractice: practiceWords.length,
+        cardsDue: cardsDue.length,
+        onChar: (c) => sayOrExplain(context, _s, c, _lang),
+        onReview: reviewStep?.start,
+        onWords: () => _openTool('words'),
+        onCards: () => setState(() => _tab = 2),
+        onSpeak: () => _openTool('speak'),
+      ),
+    ]);
+
+    final pages = newcomer
+        ? <Widget>[
+            NewcomerToday(
+              services: _s,
+              header: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: top,
+              ),
+              onChanged: () => setState(() {}),
+              openTab: (i) => setState(() => _tab = i),
+            ),
+            SituationsPage(services: _s, onChanged: () => setState(() {})),
+            DrillPage(services: _s, onChanged: () => setState(() {})),
+            NewcomerProgress(services: _s),
+          ]
+        : <Widget>[homeA, topicsPage, cardsPage, progressPage];
+    _tabNames = newcomer
+        ? const ['today', 'situations', 'drill', 'progress']
+        : const ['today', 'topics', 'cards', 'progress'];
 
     return Scaffold(
       body: SafeArea(
         child: IndexedStack(index: _tab, children: pages),
       ),
-      // the day's main action sits right above the tabs, under the thumb
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (_tab == 0)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 720),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // a duckling joins mama for every step finished today
-                    DuckFamily(ducklings: plan.where((p) => p.done).length),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton.icon(
-                        key: const ValueKey('start-daily'),
-                        onPressed: scenarios.isEmpty
-                            ? null
-                            : nextStep?.start ?? startDaily,
-                        style: FilledButton.styleFrom(
-                          minimumSize: const Size(0, 56),
-                        ),
-                        icon: const Icon(Icons.play_arrow_rounded),
-                        label: Text(
-                          nextStep != null
-                              ? (nextStep.id == 'learn' && met == 0
-                                    ? 'Start'
-                                    : 'Start: ${nextStep.title}')
-                              : 'Read more',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                  ],
+      bottomNavigationBar: NavigationBar(
+        key: const ValueKey('nav-bar'),
+        selectedIndex: _tab,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        onDestinationSelected: (i) {
+          if (i == _tab) return;
+          _s.sound(Sfx.tap);
+          _s.logger.log('nav.screen', {
+            'screen': _tabNames[i],
+            'source': 'tab',
+          });
+          setState(() => _tab = i);
+        },
+        destinations: newcomer
+            ? const [
+                NavigationDestination(
+                  key: ValueKey('tab-today'),
+                  icon: Icon(Icons.home_outlined),
+                  selectedIcon: Icon(Icons.home_rounded),
+                  label: 'Home',
                 ),
+                NavigationDestination(
+                  key: ValueKey('tab-situations'),
+                  icon: Icon(Icons.map_outlined),
+                  selectedIcon: Icon(Icons.map_rounded),
+                  label: 'Situations',
+                ),
+                NavigationDestination(
+                  key: ValueKey('tab-drill'),
+                  icon: Icon(Icons.style_outlined),
+                  selectedIcon: Icon(Icons.style_rounded),
+                  label: 'Drill',
+                ),
+                NavigationDestination(
+                  key: ValueKey('tab-progress'),
+                  icon: Icon(Icons.insert_chart_outlined_rounded),
+                  selectedIcon: Icon(Icons.insert_chart_rounded),
+                  label: 'Progress',
+                ),
+              ]
+            : const [
+                NavigationDestination(
+                  key: ValueKey('tab-today'),
+                  icon: Icon(Icons.home_outlined),
+                  selectedIcon: Icon(Icons.home_rounded),
+                  label: 'Home',
+                ),
+                NavigationDestination(
+                  key: ValueKey('tab-topics'),
+                  icon: Icon(Icons.map_outlined),
+                  selectedIcon: Icon(Icons.map_rounded),
+                  label: 'Topics',
+                ),
+                NavigationDestination(
+                  key: ValueKey('tab-cards'),
+                  icon: Icon(Icons.style_outlined),
+                  selectedIcon: Icon(Icons.style_rounded),
+                  label: 'Cards',
+                ),
+                NavigationDestination(
+                  key: ValueKey('tab-progress'),
+                  icon: Icon(Icons.insert_chart_outlined_rounded),
+                  selectedIcon: Icon(Icons.insert_chart_rounded),
+                  label: 'Progress',
+                ),
+              ],
+      ),
+    );
+  }
+
+  /// Stories, speaking, my words and skills: still here, out of the way.
+  void _moreSheet() {
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheet) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final (id, icon, label) in const [
+              ('stories', Icons.auto_stories_outlined, 'Stories'),
+              ('speak', Icons.mic_none_rounded, 'Speak'),
+              ('words', Icons.bookmark_border_rounded, 'My words'),
+              ('skills', Icons.extension_outlined, 'Reading skills'),
+            ])
+              ListTile(
+                key: ValueKey('more-$id'),
+                leading: Icon(icon),
+                title: Text(label),
+                onTap: () {
+                  Navigator.of(sheet).pop();
+                  _openTool(id);
+                },
               ),
-            ),
-          NavigationBar(
-            key: const ValueKey('nav-bar'),
-            selectedIndex: _tab,
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-            onDestinationSelected: (i) {
-              if (i == _tab) return;
-              _s.sound(Sfx.tap);
-              _s.logger.log('nav.screen', {
-                'screen': _tabNames[i],
-                'source': 'tab',
-              });
-              setState(() => _tab = i);
-            },
-            destinations: const [
-              NavigationDestination(
-                key: ValueKey('tab-today'),
-                icon: Icon(Icons.home_outlined),
-                selectedIcon: Icon(Icons.home_rounded),
-                label: 'Home',
-              ),
-              NavigationDestination(
-                key: ValueKey('tab-topics'),
-                icon: Icon(Icons.map_outlined),
-                selectedIcon: Icon(Icons.map_rounded),
-                label: 'Topics',
-              ),
-              NavigationDestination(
-                key: ValueKey('tab-stories'),
-                icon: Icon(Icons.auto_stories_outlined),
-                selectedIcon: Icon(Icons.auto_stories_rounded),
-                label: 'Stories',
-              ),
-              NavigationDestination(
-                key: ValueKey('tab-progress'),
-                icon: Icon(Icons.insert_chart_outlined_rounded),
-                selectedIcon: Icon(Icons.insert_chart_rounded),
-                label: 'Progress',
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1051,7 +1160,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     ];
   }
 
-  static const _tabNames = ['today', 'topics', 'stories', 'progress'];
+  var _tabNames = const ['today', 'topics', 'cards', 'progress'];
 
   Widget _header(ThemeData theme) {
     return Row(
@@ -1105,74 +1214,6 @@ class _PlanStep {
   final Future<void> Function() start;
 }
 
-class _PlanTile extends StatelessWidget {
-  const _PlanTile({
-    required this.step,
-    required this.number,
-    required this.current,
-  });
-  final _PlanStep step;
-  final int number;
-  final bool current;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final fg = current ? scheme.onPrimaryContainer : null;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Material(
-        color: current ? scheme.primaryContainer : scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(12),
-        child: InkWell(
-          key: ValueKey('plan-${step.id}'),
-          borderRadius: BorderRadius.circular(12),
-          onTap: step.start,
-          // every plan tile the same height, done or not
-          child: Container(
-            height: 64,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                EggMarker(number: number, current: current, done: step.done),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        step.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: step.done ? scheme.onSurfaceVariant : fg,
-                        ),
-                      ),
-                      if (!step.done && step.detail.isNotEmpty)
-                        Text(
-                          step.detail,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: fg ?? scheme.onSurfaceVariant,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                if (current) Icon(Icons.play_arrow_rounded, color: fg),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// A plain page for a tool opened from Home (flashcards, skills).
 class _ToolPage extends StatelessWidget {
   const _ToolPage({required this.title, required this.children});
   final String title;
@@ -1462,6 +1503,192 @@ class _ShareAsk extends StatelessWidget {
                   child: const Text('Share'),
                 ),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Home A: the topic you're on, one big button.
+class _ContinueCard extends StatelessWidget {
+  const _ContinueCard({
+    required this.scenario,
+    required this.met,
+    required this.total,
+    required this.first,
+    required this.onStart,
+  });
+  final ScenarioRow scenario;
+  final int met;
+  final int total;
+  final bool first;
+  final VoidCallback onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Card(
+      key: const ValueKey('continue-topic'),
+      margin: EdgeInsets.zero,
+      color: scheme.primaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              first ? 'Start here' : 'Continue',
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: scheme.onPrimaryContainer,
+              ),
+            ),
+            Text(
+              scenario.title,
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: scheme.onPrimaryContainer,
+              ),
+            ),
+            const SizedBox(height: 8),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: total == 0 ? 0 : met / total,
+                minHeight: 6,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '$met of $total characters · due ones come back here too',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: scheme.onPrimaryContainer,
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                key: const ValueKey('start-daily'),
+                onPressed: onStart,
+                style: FilledButton.styleFrom(minimumSize: const Size(0, 52)),
+                icon: const Icon(Icons.play_arrow_rounded),
+                label: const Text('Practice this topic'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Home A: the topics you've been working on, and the way to all of them.
+class _TopicChips extends StatelessWidget {
+  const _TopicChips({
+    required this.topics,
+    required this.percent,
+    required this.onTopic,
+    required this.onAll,
+  });
+  final List<ScenarioRow> topics;
+  final int Function(ScenarioRow) percent;
+  final ValueChanged<ScenarioRow> onTopic;
+  final VoidCallback onAll;
+
+  @override
+  Widget build(BuildContext context) => Wrap(
+    spacing: 8,
+    runSpacing: 8,
+    children: [
+      for (final sc in topics)
+        ActionChip(
+          key: ValueKey('your-topic-${sc.id}'),
+          label: Text('${sc.title} · ${percent(sc)}%'),
+          onPressed: () => onTopic(sc),
+        ),
+      ActionChip(
+        key: const ValueKey('all-topics'),
+        avatar: const Icon(Icons.grid_view_rounded, size: 18),
+        label: const Text('All topics'),
+        onPressed: onAll,
+      ),
+    ],
+  );
+}
+
+/// Home A: flashcards up front, drilled out loud.
+class _CardsBlock extends StatelessWidget {
+  const _CardsBlock({
+    required this.due,
+    required this.preview,
+    required this.onDrill,
+  });
+  final int due;
+  final List<String> preview;
+  final VoidCallback onDrill;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Card(
+      key: const ValueKey('cards-block'),
+      margin: EdgeInsets.zero,
+      color: scheme.secondaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text('Flashcards', style: theme.textTheme.titleMedium),
+                ),
+                Text(
+                  due > 0 ? '$due due' : 'Dishes, stations, streets',
+                  style: theme.textTheme.labelMedium,
+                ),
+              ],
+            ),
+            if (preview.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  for (final zh in preview)
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 6),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: scheme.surface,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          zh,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: chineseStyle('yue', fontSize: 18),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.tonalIcon(
+                key: const ValueKey('drill-cards'),
+                onPressed: onDrill,
+                icon: const Icon(Icons.mic_rounded),
+                label: Text(
+                  due > 0 ? 'Drill $due cards out loud' : 'Open flashcards',
+                ),
+              ),
             ),
           ],
         ),

@@ -13,6 +13,7 @@ import 'package:material_ui/material_ui.dart';
 import '../app_services.dart';
 import '../data/content_db.dart';
 import '../engine/deck_planner.dart';
+import '../engine/signals.dart' show ItemOutcome;
 import '../engine/item_state.dart';
 import '../engine/pronunciation.dart';
 import '../engine/scaffold.dart';
@@ -161,9 +162,14 @@ class CardSessionScreen extends StatefulWidget {
     required this.deck,
     this.cards,
     this.onComplete,
+    this.englishFirst = false,
   });
   final AppServices services;
   final DeckRow deck;
+
+  /// Newcomer drill: the card shows the English; you say it in Cantonese, then Check
+  /// shows and plays the word. Only the card is graded (no character reading was tested).
+  final bool englishFirst;
 
   /// Cards to study instead of the deck's own (e.g. everything due, across decks).
   final List<CardRow>? cards;
@@ -202,17 +208,20 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
   void initState() {
     super.initState();
     final byId = {for (final c in _all) c.id: c};
-    _queue = [
-      for (final id in pickCards(
-        deckOrder: [for (final c in _all) c.id],
-        stateOf: _s.learner.stateOf,
-        recall: (st) => _s.memory.retrievability(st, _s.logger.now()),
-        now: _s.logger.now(),
-        // a fresh shuffle each visit; fixed in tests so previews stay stable
-        random: _s.variety,
-      ))
-        byId[id]!,
-    ];
+    // a newcomer drill was already picked (and previewed on Home): keep its order
+    _queue = widget.englishFirst && widget.cards != null
+        ? [..._all]
+        : [
+            for (final id in pickCards(
+              deckOrder: [for (final c in _all) c.id],
+              stateOf: _s.learner.stateOf,
+              recall: (st) => _s.memory.retrievability(st, _s.logger.now()),
+              now: _s.logger.now(),
+              // a fresh shuffle each visit; fixed in tests so previews stay stable
+              random: _s.variety,
+            ))
+              byId[id]!,
+          ];
     _s.logger.log('session.start', {
       'mode': 'deck',
       'deck_id': widget.deck.id,
@@ -270,11 +279,13 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
   void _grade(bool gotIt) {
     _s.silence(); // a comparison still playing stops with the card
     final exposure = '${_s.logger.sessionId}-card-$_index';
-    final outcomes = _s.signals.outcomes(
-      shown: _levels,
-      revealed: gotIt ? _revealed : _levels.keys.toSet(),
-      activeMs: _s.logger.activeMsSince(_mark),
-    );
+    final outcomes = widget.englishFirst
+        ? const <ItemOutcome>[]
+        : _s.signals.outcomes(
+            shown: _levels,
+            revealed: gotIt ? _revealed : _levels.keys.toSet(),
+            activeMs: _s.logger.activeMsSince(_mark),
+          );
     for (final o in outcomes) {
       _s.logger.log('review.applied', {
         'exposure_id': exposure,
@@ -292,7 +303,7 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
       's_before': _s.learner.stateOf(_card.id).stability,
     });
     gotIt ? _known++ : _again++;
-    if (!gotIt) {
+    if (!gotIt && !widget.englishFirst) {
       _s.logger.log('word.flag', {
         'text': _card.zh,
         'lang': 'yue',
@@ -304,6 +315,8 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
         'context': _card.zh,
         'context_en': _card.alt,
       });
+    }
+    if (!gotIt) {
       final n = _requeued[_card.id] ?? 0;
       if (n < 2) {
         _requeued[_card.id] = n + 1;
@@ -363,7 +376,11 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                               style: OutlinedButton.styleFrom(
                                 minimumSize: const Size(0, 56),
                               ),
-                              child: const Text("Couldn't read it"),
+                              child: Text(
+                                widget.englishFirst
+                                    ? "Didn't know it"
+                                    : "Couldn't read it",
+                              ),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -374,7 +391,9 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                               style: FilledButton.styleFrom(
                                 minimumSize: const Size(0, 56),
                               ),
-                              child: const Text('Read it'),
+                              child: Text(
+                                widget.englishFirst ? 'Said it' : 'Read it',
+                              ),
                             ),
                           ),
                         ],
@@ -463,7 +482,9 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                     children: [
                       // the dish's photo, so the word and the food stick together
                       // no photo: a picture for the kind of card
-                      if (_card.image == null)
+                      if (widget.englishFirst)
+                        _EnglishPrompt(card: _card, flipped: _flipped)
+                      else if (_card.image == null)
                         Center(
                           child: Text(
                             widget.deck.id.contains('streets')
@@ -493,50 +514,53 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                             ),
                           ),
                         ),
-                      Card(
-                        margin: EdgeInsets.zero,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 36,
-                            horizontal: 16,
-                          ),
-                          child: Center(
-                            child: RubyText(
-                              lang: 'yue',
-                              fontSize: 44 * _s.prefs.textScale,
-                              tokens: [
-                                for (var i = 0; i < _card.tokens.length; i++)
-                                  RubyToken(
-                                    surface: _card.tokens[i].surface,
-                                    kind: _card.tokens[i].kind,
-                                    reading: _card.tokens[i].reading,
-                                    level: _flipped
-                                        ? ScaffoldLevel.full
-                                        : _levels[_card.tokens[i].itemId] ??
-                                              ScaffoldLevel.full,
-                                    revealed:
-                                        !_flipped &&
-                                        _revealedTokens.contains(i),
-                                    flagged: _card.tokens[i].flagged,
-                                  ),
-                              ],
-                              onReveal: _flipped ? null : _reveal,
-                              onSpeak: (i) => _flipped
-                                  ? _play()
-                                  : sayOrExplain(
-                                      context,
-                                      _s,
-                                      _card.tokens[i].surface,
-                                      'yue',
+                      if (!widget.englishFirst || _flipped)
+                        Card(
+                          margin: EdgeInsets.zero,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 36,
+                              horizontal: 16,
+                            ),
+                            child: Center(
+                              child: RubyText(
+                                lang: 'yue',
+                                fontSize: 44 * _s.prefs.textScale,
+                                tokens: [
+                                  for (var i = 0; i < _card.tokens.length; i++)
+                                    RubyToken(
+                                      surface: _card.tokens[i].surface,
+                                      kind: _card.tokens[i].kind,
+                                      reading: _card.tokens[i].reading,
+                                      level: _flipped
+                                          ? ScaffoldLevel.full
+                                          : _levels[_card.tokens[i].itemId] ??
+                                                ScaffoldLevel.full,
+                                      revealed:
+                                          !_flipped &&
+                                          _revealedTokens.contains(i),
+                                      flagged: _card.tokens[i].flagged,
                                     ),
+                                ],
+                                onReveal: _flipped ? null : _reveal,
+                                onSpeak: (i) => _flipped
+                                    ? _play()
+                                    : sayOrExplain(
+                                        context,
+                                        _s,
+                                        _card.tokens[i].surface,
+                                        'yue',
+                                      ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
                       const SizedBox(height: 16),
                       if (!_flipped) ...[
                         Text(
-                          'Read it aloud, or in your head and check.',
+                          widget.englishFirst
+                              ? 'Say it in Cantonese (the mic checks you), or think of it and tap Check.'
+                              : 'Read it aloud, or in your head and check.',
                           textAlign: TextAlign.center,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: scheme.onSurfaceVariant,
@@ -561,7 +585,7 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                               ),
                             ),
                           ),
-                        if (_card.alt.isNotEmpty)
+                        if (_card.alt.isNotEmpty && !widget.englishFirst)
                           Text(
                             _card.alt,
                             key: const ValueKey('card-alt'),
@@ -579,7 +603,7 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                               ),
                             ),
                           ),
-                        if (_card.note.isNotEmpty)
+                        if (_card.note.isNotEmpty && !widget.englishFirst)
                           Padding(
                             padding: const EdgeInsets.only(top: 4),
                             child: Text(
@@ -620,13 +644,14 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
                             label: const Text('Listen'),
                           ),
                         ),
-                        Center(
-                          child: TextButton.icon(
-                            onPressed: () => _lookup(context),
-                            icon: const Icon(Icons.translate_rounded),
-                            label: const Text('Word meanings'),
+                        if (!widget.englishFirst)
+                          Center(
+                            child: TextButton.icon(
+                              onPressed: () => _lookup(context),
+                              icon: const Icon(Icons.translate_rounded),
+                              label: const Text('Word meanings'),
+                            ),
                           ),
-                        ),
                       ],
                     ],
                   ),
@@ -666,6 +691,51 @@ class _CardSessionScreenState extends State<CardSessionScreen> {
         tokens: c.tokens,
       ),
       tokenIndex: c.tokens.indexWhere((t) => t.kind == 'han'),
+    );
+  }
+}
+
+/// Newcomer drill prompt: the English (and a usage tip once checked).
+class _EnglishPrompt extends StatelessWidget {
+  const _EnglishPrompt({required this.card, required this.flipped});
+  final CardRow card;
+  final bool flipped;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        children: [
+          Text(
+            'Say it in Cantonese',
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: scheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            card.alt,
+            key: const ValueKey('card-prompt'),
+            textAlign: TextAlign.center,
+            style: theme.textTheme.headlineSmall,
+          ),
+          if (flipped && card.note.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                card.note,
+                key: const ValueKey('card-tip'),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

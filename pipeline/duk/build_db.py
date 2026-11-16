@@ -31,12 +31,13 @@ from .content import Content, ContentError, load_content
 from .reference import load_reference
 from .words import refine_words
 
-SCHEMA_VERSION = 13  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
+SCHEMA_VERSION = 14  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
 # 6: decks; 7: card image + credit, food deck; 8: slim dict_entry (Cantonese only);
 # 9: char_info.hint, skill / skill_entry; 10: variant (words for the same thing);
 # 11: character_pic (links the app downloads; the images are never bundled);
 # 12: char_freq (share of each character in HKCanCor: "% of everyday Cantonese");
-# 13: scenario.description (what a topic is about, shown on its tile and page)
+# 13: scenario.description (what a topic is about, shown on its tile and page);
+# 14: situation (newcomer mode: decks of essential words, content/situations.yaml)
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -105,6 +106,8 @@ CREATE TABLE card(
 CREATE TABLE card_token(
   card_id TEXT NOT NULL, idx INTEGER NOT NULL, surface TEXT NOT NULL, kind TEXT NOT NULL,
   reading TEXT, item_id TEXT, flagged INTEGER NOT NULL, PRIMARY KEY(card_id, idx)) WITHOUT ROWID;
+CREATE TABLE situation(id TEXT PRIMARY KEY REFERENCES deck(id), icon TEXT NOT NULL,
+  rank INTEGER NOT NULL) WITHOUT ROWID;
 CREATE TABLE street_pattern(
   region TEXT NOT NULL, zh TEXT NOT NULL, word TEXT NOT NULL, n INTEGER NOT NULL,
   total INTEGER NOT NULL);
@@ -395,6 +398,40 @@ def build(
             add_card(f"card:food:{c.zh}", "food", c.zh, meanings.get(c.zh) or c.en, "", rank,
                      c.image, c.credit)  # fmt: skip
         result.warnings.append(f"food deck: {len(food)} dishes")
+
+    # Newcomer situations (content/situations.yaml): each a deck of essential words and
+    # short chunks with English, drilled English-first in newcomer mode
+    import yaml
+
+    spath = content_root / "situations.yaml"
+    sdoc = yaml.safe_load(spath.read_text("utf-8")) if spath.exists() else None
+    seen_sit: set[str] = set()
+    for srank, sit in enumerate((sdoc or {}).get("situations") or []):
+        sid = str(sit.get("id", ""))
+        if not sid.startswith("sit-") or sid in seen_sit:
+            problems.append(f"situations.yaml: bad or repeated id {sid!r}")
+            continue
+        seen_sit.add(sid)
+        title, desc = str(sit.get("title", "")), str(sit.get("description", ""))
+        if not title or not 0 < len(desc) <= 160:
+            problems.append(f"situations.yaml {sid}: title and a one-line description required")
+            continue
+        db.execute(
+            "INSERT INTO deck VALUES(?,?,?,?,?)",
+            (sid, title, "both", desc, "DuckLearn (LLM-drafted; readings from dictionaries)"),
+        )
+        db.execute("INSERT INTO situation VALUES(?,?,?)", (sid, str(sit.get("icon", "")), srank))
+        words_seen: set[str] = set()
+        for wrank, w in enumerate(sit.get("words") or []):
+            if not isinstance(w, list) or len(w) < 2 or not w[0] or not w[1]:
+                problems.append(f"situations.yaml {sid}: each word is [Cantonese, English, tip?]")
+                continue
+            zh, en = str(w[0]), str(w[1])
+            if zh in words_seen:
+                problems.append(f"situations.yaml {sid}: {zh} listed twice")
+                continue
+            words_seen.add(zh)
+            add_card(f"card:{sid}:{zh}", sid, zh, en, str(w[2]) if len(w) > 2 else "", wrank)
 
     # Reading-skill lessons (content/skills/*.yaml): particles, measure words, ...
     import yaml

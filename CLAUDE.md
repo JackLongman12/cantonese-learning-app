@@ -3,7 +3,11 @@
 The user-facing name is **DuckLearn**; the Dart package and internal ids stay `duk`.
 Read the "Product principle" section of `docs/ROADMAP.md` before adding features.
 
-Non-commercial app (Android, Windows, macOS) for **beginners at reading Cantonese**: speakers who can't read Chinese, and people learning the language too (onboarding asks; `prefs.speaker`). It started as the owner's personal app; they outgrew the content on 2026-11-17. It teaches reading through real Macau/HK sentences with Jyutping that fades per character as mastery grows; each sentence is read first, then checked by ear. **Cantonese only:** the owner dropped the Mandarin track on 2026-11-15 (the market already covers Mandarin). Do not add Mandarin back without asking.
+Non-commercial app (Android, Windows, macOS). **Main audience (2026-11-17): newcomers to Hong
+Kong and Macau** who need essential words to get their point across: newcomer mode
+(situations of keywords in `content/situations.yaml`, English-first drill, search; Home B in
+`ui/situations.dart`). People who speak Cantonese but can't read get the reading app (Home A).
+Onboarding's level (`prefs.level`) picks the mode. The reading app is for **beginners at reading Cantonese**: speakers who can't read Chinese, and people learning the language too (onboarding asks; `prefs.speaker`). It started as the owner's personal app; they outgrew the content on 2026-11-17. It teaches reading through real Macau/HK sentences with Jyutping that fades per character as mastery grows; each sentence is read first, then checked by ear. **Cantonese only:** the owner dropped the Mandarin track on 2026-11-15 (the market already covers Mandarin). Do not add Mandarin back without asking.
 
 ## Read first
 
@@ -18,7 +22,8 @@ Non-commercial app (Android, Windows, macOS) for **beginners at reading Cantones
 ## Code map
 
 ```
-content/     YAML you edit: scenarios/ (topics), dialogues/ (+ advanced/), stories/, decks/,
+content/     YAML you edit: situations.yaml (newcomer keywords), scenarios/ (topics),
+             dialogues/ (+ advanced/), stories/, decks/,
              skills/, variants.yaml, characters.yaml (picture links), overrides/readings.yaml
 pipeline/duk content -> content.db: content.py (load + validate), annotate.py (readings),
              build_db.py (SQLite + review queue), tts.py (edge-tts clips), audio_pack.py

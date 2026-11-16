@@ -43,8 +43,7 @@ class UpdateInfo {
 bool trustedAssetUrl(String url) {
   final u = Uri.tryParse(url);
   if (u == null || u.scheme != 'https') return false;
-  return u.host == 'github.com' ||
-      u.host.endsWith('.githubusercontent.com');
+  return u.host == 'github.com' || u.host.endsWith('.githubusercontent.com');
 }
 
 /// A safe file name for a download: letters, digits, dot, dash, underscore; never a

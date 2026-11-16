@@ -4,13 +4,21 @@ Work top to bottom. Do not start a phase until the previous phase's "Done when" 
 
 **Goals (2026-11-16):** first run asks what you want Cantonese for (get around, eat out and shop, daily life, work, make friends, a bit of everything); the path puts those topics first and Today's Learn/Speak draw from them; change it on Today (Goal · Change) or in Settings (engine/goals.dart). Grouped controls: one Listen button (hold for slow), no Skip; one 'Practise my words' in Words.
 
-**Status (2026-11-17, after the first usage data: fixes, topic descriptions, content pass, Gen Z stories, security hardening; see CHANGELOG):** DuckLearn is now for beginners (speakers who can't read, and learners); the reader is read first, then Check; opt-in anonymous usage and crash data go to a Cloudflare Worker and `duk telemetry report` says what to change (docs/TELEMETRY.md); two A/B tests run. Before that: Android arm64 is the release target. 18 topics (each ≥ 100 sentences, 5+ conversations), 18 stories, 1,077 flashcards, word variants, a voice picker in every exercise (phone voice by default). Audio ships as Opus; conversation pictures download on first launch. Content is LLM-drafted and accepted by the owner as-is (2026-11-16). Next open work: 1.3/1.4 planner polish, 1.6 placement test, 2.8 error drills. History: `docs/CHANGELOG.md`.
+**Status (2026-11-17, newcomer mode: situations of essential words, English-first drill, search; Home A/B by level; see CHANGELOG):** DuckLearn is now for beginners (speakers who can't read, and learners); the reader is read first, then Check; opt-in anonymous usage and crash data go to a Cloudflare Worker and `duk telemetry report` says what to change (docs/TELEMETRY.md); two A/B tests run. Before that: Android arm64 is the release target. 18 topics (each ≥ 100 sentences, 5+ conversations), 18 stories, 1,077 flashcards, word variants, a voice picker in every exercise (phone voice by default). Audio ships as Opus; conversation pictures download on first launch. Content is LLM-drafted and accepted by the owner as-is (2026-11-16). Next open work: 1.3/1.4 planner polish, 1.6 placement test, 2.8 error drills. History: `docs/CHANGELOG.md`.
 
 ## Product principle: serve the unmet need, not a Duolingo copy
 
 The owner was explicit: this must fill a gap the market leaves, not imitate gamified apps. Every
 feature is judged against these gaps; anything that is only engagement mechanics is out.
 
+0. **Newcomers first** (owner, 2026-11-17, later the same day): the main audience is people
+   new to Hong Kong and Macau who want to get their point across. They learn **essential
+   words and short chunks**, not whole sentences (situations in `content/situations.yaml`,
+   drilled English first: see the English, say it, hear it). Perfection comes later; most
+   users should outgrow the app and move to fuller courses. Onboarding's level picks the
+   mode: new to Cantonese or knows a little → newcomer mode (Home B: search, today's drill,
+   situations); speaks it but can't read → the reading app (Home A: continue your topic,
+   flashcards out loud). The points below describe Home A's reading side.
 1. **Beginners at reading Cantonese** (since 2026-11-17; the owner outgrew the content).
    Two kinds, asked in onboarding: speakers who can't read (the original gap: they know the
    words by ear, so the app teaches only character → sound, and hearing a line is the answer

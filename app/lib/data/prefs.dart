@@ -73,7 +73,25 @@ class Prefs {
   /// all speakers). Sets what help and meanings the reader shows.
   bool? get speaker => _data['speaker'] as bool?;
   set speaker(bool? v) => _set('speaker', v);
-  bool get isSpeaker => speaker ?? true;
+  bool get isSpeaker => level == 'fluent';
+
+  /// Which kind of learner (onboarding, 2026-11-17): 'new' (new to Cantonese), 'some'
+  /// (knows a little) or 'fluent' (speaks it, can't read). The first two get newcomer
+  /// mode: situations and English-first drills (Home B); 'fluent' gets the reading app
+  /// (Home A). Installs from before the question: from [speaker].
+  String get level =>
+      _data['level'] as String? ?? (speaker == false ? 'some' : 'fluent');
+  set level(String v) {
+    _set('level', v);
+    speaker = v == 'fluent';
+  }
+
+  bool get newcomerMode => level != 'fluent';
+
+  /// Situations a newcomer is working on (deck ids, in the order shown).
+  List<String> get situations =>
+      (_data['situations'] as List?)?.cast<String>() ?? const [];
+  set situations(List<String> v) => _set('situations', v);
 
   /// Anonymous usage and crash reports (docs/TELEMETRY.md). Null: not asked yet;
   /// nothing is sent until this is true.

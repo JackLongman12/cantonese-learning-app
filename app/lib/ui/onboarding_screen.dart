@@ -8,7 +8,9 @@ import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
 import '../platform/telemetry.dart' show setSharing;
+import '../data/content_db.dart';
 import 'goal_picker.dart';
+import 'situations.dart' show situationIcon;
 import 'logo.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -25,24 +27,40 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  bool? _speaker;
+  /// 'new' (never learned it), 'some' (a little), 'fluent' (speaks it, can't read).
+  String? _level;
   int? _help;
   String? _goal;
   bool? _share;
 
+  /// Situations a newcomer wants first (deck ids); the first four are suggested.
+  late final Set<String> _picked = {
+    for (final sit in widget.services.content.situations().take(4)) sit.deck.id,
+  };
+
+  bool get _newcomer => _level != null && _level != 'fluent';
+
   void _finish() {
     final s = widget.services;
     final p = s.prefs;
-    p.speaker = _speaker ?? true;
+    p.level = _level ?? 'fluent';
     // someone learning the language too keeps Jyutping a step longer
     p.helpShift = ((_help ?? 0) + (p.isSpeaker ? 0 : 1)).clamp(-1, 2);
     p.goal = _goal ?? 'all';
+    if (_newcomer) {
+      p.situations = [
+        for (final sit in s.content.situations())
+          if (_picked.contains(sit.deck.id)) sit.deck.id,
+      ];
+    }
     p.onboarded = true;
     setSharing(s, _share ?? false);
     s.logger.log('onboarding.done', {
       'speaker': p.isSpeaker,
+      'level': p.level,
       'help_shift': p.helpShift,
       'goal': p.goal,
+      'situations': p.situations,
       'share': p.shareData,
     });
     widget.onDone();
@@ -136,86 +154,143 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    'Learn to read Cantonese, one character at a time, with real '
-                    'Hong Kong and Macau sentences.',
+                    'The Cantonese you need for everyday life in Hong Kong and Macau.',
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Do you speak Cantonese?',
+                    'Which sounds most like you?',
                     style: theme.textTheme.titleMedium,
                   ),
                   const SizedBox(height: 10),
+                  choice(
+                    'onboard-new',
+                    'new',
+                    _level,
+                    (v) => _level = v,
+                    "I'm new to Cantonese",
+                    'Learn the key words to get your point across: ordering, getting around, asking for help.',
+                  ),
+                  choice(
+                    'onboard-some',
+                    'some',
+                    _level,
+                    (v) => _level = v,
+                    'I know a little',
+                    'Fill in the gaps with the everyday words people really use.',
+                  ),
                   choice(
                     'onboard-speaker',
-                    true,
-                    _speaker,
-                    (v) => _speaker = v,
-                    'Yes, I speak it',
-                    'You know the words by ear. Hearing a sentence tells you if you read it right.',
+                    'fluent',
+                    _level,
+                    (v) => _level = v,
+                    'I speak it, but can\'t read',
+                    'Learn to read the characters for words you already know.',
                   ),
-                  choice(
-                    'onboard-learner',
-                    false,
-                    _speaker,
-                    (v) => _speaker = v,
-                    "I'm learning it",
-                    'Meanings in English stay on, and Jyutping stays a little longer.',
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'How much Chinese can you read now?',
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 10),
-                  level(
-                    1,
-                    'None yet',
-                    'Jyutping stays on longer while you start.',
-                  ),
-                  level(0, 'A few characters', 'The usual pace.'),
-                  level(
-                    -1,
-                    'Quite a lot',
-                    'Jyutping fades faster; you get tested sooner.',
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'What do you want Cantonese for?',
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Your topics come first. You can change this any time.',
-                    style: theme.textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: 10),
-                  GoalList(
-                    selected: _goal,
-                    onPick: (g) => setState(() => _goal = g.id),
-                  ),
-                  const SizedBox(height: 16),
-                  Text('How it works', style: theme.textTheme.titleMedium),
-                  const SizedBox(height: 10),
-                  tip(
-                    Icons.hearing_rounded,
-                    'Read each sentence first, then Check to hear it. Tap any character you got wrong.',
-                  ),
-                  tip(
-                    Icons.text_fields_rounded,
-                    'New characters have Jyutping on top. It fades as you learn each one.',
-                  ),
-                  tip(
-                    Icons.touch_app_rounded,
-                    'Tap a word to hear it and see its reading and meaning.',
-                  ),
-                  tip(
-                    Icons.translate_rounded,
-                    'Save words you want to keep to My words from there.',
-                  ),
-                  tip(
-                    Icons.mic_rounded,
-                    'Or read aloud with the mic: it checks for you.',
-                  ),
+                  if (_newcomer) ...[
+                    const SizedBox(height: 16),
+                    Text(
+                      'What do you need first?',
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Pick a few. You can add more any time.',
+                      style: theme.textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final sit in widget.services.content.situations())
+                          FilterChip(
+                            key: ValueKey('onboard-sit-${sit.deck.id}'),
+                            avatar: Icon(situationIcon(sit.icon), size: 18),
+                            label: Text(sit.deck.title),
+                            selected: _picked.contains(sit.deck.id),
+                            onSelected: (on) => setState(
+                              () => on
+                                  ? _picked.add(sit.deck.id)
+                                  : _picked.remove(sit.deck.id),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                  if (_level == 'fluent') ...[
+                    const SizedBox(height: 16),
+                    Text(
+                      'How much Chinese can you read now?',
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 10),
+                    level(
+                      1,
+                      'None yet',
+                      'Jyutping stays on longer while you start.',
+                    ),
+                    level(0, 'A few characters', 'The usual pace.'),
+                    level(
+                      -1,
+                      'Quite a lot',
+                      'Jyutping fades faster; you get tested sooner.',
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'What do you want Cantonese for?',
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Your topics come first. You can change this any time.',
+                      style: theme.textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 10),
+                    GoalList(
+                      selected: _goal,
+                      onPick: (g) => setState(() => _goal = g.id),
+                    ),
+                    const SizedBox(height: 16),
+                    Text('How it works', style: theme.textTheme.titleMedium),
+                    const SizedBox(height: 10),
+                    tip(
+                      Icons.hearing_rounded,
+                      'Read each sentence first, then Check to hear it. Tap any character you got wrong.',
+                    ),
+                    tip(
+                      Icons.text_fields_rounded,
+                      'New characters have Jyutping on top. It fades as you learn each one.',
+                    ),
+                    tip(
+                      Icons.touch_app_rounded,
+                      'Tap a word to hear it and see its reading and meaning.',
+                    ),
+                    tip(
+                      Icons.translate_rounded,
+                      'Save words you want to keep to My words from there.',
+                    ),
+                    tip(
+                      Icons.mic_rounded,
+                      'Or read aloud with the mic: it checks for you.',
+                    ),
+                  ],
+                  if (_newcomer) ...[
+                    const SizedBox(height: 16),
+                    Text('How it works', style: theme.textTheme.titleMedium),
+                    const SizedBox(height: 10),
+                    tip(
+                      Icons.style_rounded,
+                      'Each day, a short drill: see the English, say it in Cantonese, then hear it.',
+                    ),
+                    tip(
+                      Icons.search_rounded,
+                      'Need a word right now? Search "What do you want to say?" on Home.',
+                    ),
+                    tip(
+                      Icons.mic_rounded,
+                      'The mic checks how you said it. Key words are enough to get your point across.',
+                    ),
+                  ],
                   const SizedBox(height: 16),
                   Text(
                     'Help improve DuckLearn?',
@@ -262,14 +337,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: FilledButton(
                 key: const ValueKey('onboard-start'),
                 // the two questions that change how the app behaves need an answer
-                onPressed: _speaker == null || _share == null ? null : _finish,
+                onPressed: _level == null || _share == null ? null : _finish,
                 style: FilledButton.styleFrom(minimumSize: const Size(0, 56)),
                 child: Text(
-                  _speaker == null
-                      ? 'Answer: do you speak Cantonese?'
+                  _level == null
+                      ? 'Answer: which sounds most like you?'
                       : _share == null
                       ? 'Answer: share usage data? (below)'
-                      : 'Start reading',
+                      : 'Start',
                 ),
               ),
             ),
