@@ -126,4 +126,61 @@ void main() {
     expect(shown.length, greaterThan(firstBatch)); // more than the first batch
     expect(shown.toSet().length, shown.length); // no sentence twice
   }, skip: !hasDb);
+
+  testWidgets('repeat after me plays every new line, after the old one stops', (
+    t,
+  ) async {
+    await t.binding.setSurfaceSize(const Size(500, 900));
+    addTearDown(() => t.binding.setSurfaceSize(null));
+    final db = ContentDb.open(dbPath);
+    addTearDown(db.close);
+    final log = <String>[];
+    final memory = Memory();
+    final s = AppServices(
+      content: db,
+      memory: memory,
+      learner: LearnerModel(memory),
+      logger: EventLogger(
+        store: MemoryEventStore(),
+        deviceId: 'test',
+        deviceKind: 'windows',
+        appVersion: 'test',
+        contentVersion: db.contentVersion,
+      ),
+      playAudio: (path) async => log.add('play'),
+      // stopping takes a moment, like the real players
+      stopAudio: () async {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        log.add('stop');
+      },
+    );
+    final lines = pickSpeakLines(
+      s,
+      db.sentences('scn-mo-getting-around', 'yue'),
+      count: 3,
+    );
+    await t.pumpWidget(
+      MaterialApp(
+        home: SpeakDrillScreen(
+          services: s,
+          title: 'Speak',
+          sentences: lines,
+          mode: SpeakMode.repeat,
+        ),
+      ),
+    );
+    await t.pumpAndSettle();
+    expect(log, ['play']); // the first line plays on its own
+    for (var i = 0; i < 2; i++) {
+      await t.tap(find.byKey(const ValueKey('speak-said')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const ValueKey('speak-next')));
+      await t.pump(const Duration(milliseconds: 100));
+      await t.pumpAndSettle();
+      // each new line plays, and only after the old audio has stopped
+      expect(log.last, 'play');
+      expect(log[log.length - 2], 'stop');
+    }
+    expect(log.where((e) => e == 'play'), hasLength(3));
+  }, skip: !hasDb);
 }

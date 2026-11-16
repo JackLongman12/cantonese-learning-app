@@ -259,6 +259,25 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
     await _s.sayWord(word, 'yue');
   }
 
+  bool _moving = false;
+
+  /// Next or Skip: the recording and the old line's audio are stopped first, and only
+  /// then does the next line appear. Otherwise the stop lands after the new line has
+  /// started (cutting off "repeat after me"), or the still-open mic blocks it.
+  Future<void> _goNext() async {
+    if (_moving) return;
+    _moving = true;
+    try {
+      if (_phase == _Phase.listening) {
+        await _s.speech?.stopRecording();
+      }
+      await _s.silence();
+      if (mounted) _advance();
+    } finally {
+      _moving = false;
+    }
+  }
+
   void _advance() {
     _retried = false;
     if (_index + 1 >= widget.sentences.length) {
@@ -512,9 +531,8 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                               minimumSize: const Size(0, 52),
                             ),
                             onPressed: () {
-                              _s.silence();
                               _s.sound(Sfx.next);
-                              _advance();
+                              unawaited(_goNext());
                             },
                             child: const Text('Next'),
                           )
@@ -524,13 +542,7 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                             style: OutlinedButton.styleFrom(
                               minimumSize: const Size(0, 52),
                             ),
-                            onPressed: () {
-                              if (_phase == _Phase.listening) {
-                                _s.speech?.stopRecording().ignore();
-                              }
-                              _s.silence();
-                              _advance();
-                            },
+                            onPressed: () => unawaited(_goNext()),
                             child: const Text('Skip'),
                           )
                         : FilledButton(

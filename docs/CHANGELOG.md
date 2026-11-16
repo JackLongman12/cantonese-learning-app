@@ -3,6 +3,13 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2070): repeat after me plays every line
+
+- Speak drill: Next and Skip now wait for the recording and the old line's audio to stop
+  before the next line appears. Before, the stop landed after the new line had started and
+  cut off "repeat after me", and Skip during a recording left the mic open, which blocks
+  playback.
+
 ## 2026-11-17 (later): first usage data, fixes, content pass, security
 
 First telemetry pull (the owner's install, 3,805 events, Nov 14–16, no crashes). What it
