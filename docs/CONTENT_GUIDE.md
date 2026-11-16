@@ -128,7 +128,8 @@ Planned decks: `signs`, `emergency` (typhoon/rainstorm signals, hospital), `menu
 Each situation is a deck of **essential words and short chunks** (not sentences), drilled
 English first. Format: `id: sit-…`, `title`, `icon` (a name `situationIcon` knows), a
 one-line `description`, and `words: [[Cantonese, English, optional tip], …]` in teaching
-order. Pick words a newcomer needs to get the point across (埋單, 洗手間, 喺邊, 走冰); leave out
+order. The English mirrors the Cantonese unit: a single word gets a single word (要 "want",
+not "I want it"), a phrase gets a phrase (我唔明 "I don't understand"). Pick words a newcomer needs to get the point across (埋單, 洗手間, 喺邊, 走冰); leave out
 niche or hyper-specific ones. Card ids are `card:<situation>:<word>` and permanent: never
 rename a situation or change a shipped word's characters. Readings come from the
 dictionaries; a word the dictionaries read wrong gets a word-level override in

@@ -12,6 +12,7 @@ import '../engine/scaffold.dart';
 import 'cards_screen.dart' show CardSessionScreen;
 import 'finish.dart' show pushOnce;
 import 'ruby_text.dart';
+import 'skills.dart' show SkillScreen;
 
 IconData situationIcon(String name) => switch (name) {
   'waving' => Icons.waving_hand_outlined,
@@ -345,10 +346,32 @@ class SituationsPage extends StatelessWidget {
         Text('Situations', style: theme.textTheme.titleLarge),
         const SizedBox(height: 2),
         Text(
-          'The words you need for each part of daily life. Star the ones you want in your drill.',
+          'The words you need for each part of daily life. Star the ones you want in your drill. '
+          'Everything here is spoken Cantonese; formal written Chinese is not covered.',
           style: theme.textTheme.bodySmall,
         ),
         const SizedBox(height: 12),
+        if (s.content.skills().where((k) => k.id == 'tones').firstOrNull
+            case final tones?)
+          Card(
+            margin: const EdgeInsets.only(bottom: 12),
+            color: theme.colorScheme.tertiaryContainer,
+            child: ListTile(
+              key: const ValueKey('open-tones'),
+              leading: const Icon(Icons.graphic_eq_rounded),
+              title: Text(tones.title),
+              subtitle: const Text(
+                '係 hai6, 喺 hai2 and a rude one: why tones matter',
+              ),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => pushOnce(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (_) => SkillScreen(services: s, skill: tones),
+                ),
+              ),
+            ),
+          ),
         for (final sit in s.content.situations())
           _SituationTile(
             services: s,

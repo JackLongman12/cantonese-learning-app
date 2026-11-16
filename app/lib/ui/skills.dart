@@ -137,6 +137,7 @@ List<Widget> extraSkillTiles(
       icon: switch (sk.id) {
         'particles' => Icons.chat_bubble_outline_rounded,
         'measure-words' => Icons.straighten_rounded,
+        'tones' => Icons.graphic_eq_rounded,
         _ => Icons.menu_book_rounded,
       },
       title: sk.title,

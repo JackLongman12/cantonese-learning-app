@@ -3,6 +3,17 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2074): walkthrough, tones lesson, matching glosses
+
+- First-run walkthrough (intro_pages.dart, six illustrated pages, also on Replay
+  onboarding): what DuckLearn is, the two modes, the drill, search, tones change the
+  meaning, and that the app teaches spoken Cantonese, not formal written Chinese.
+- Reading skills: "Tones change the meaning" (係 hai6 / 喺 hai2 / 閪 hai1, 買 / 賣, the six
+  tones of si, 雞 and 叫雞); newcomers reach it from the Situations tab.
+- Drill cards: the English now mirrors the Cantonese unit (要 "want", not "I want it");
+  rule added to CONTENT_GUIDE and situations.yaml.
+- Settings → Developer → Replay onboarding (temporary; ROADMAP 3.6 removes it).
+
 ## 2026-11-17 (b2071): newcomer mode, Home A and B
 
 The owner set the direction: an app for newcomers to Hong Kong and Macau who need key words

@@ -1,0 +1,19 @@
+# Tones change the meaning (owner, 2026-11-17): the same syllable with a different tone is a
+# different word, and a slip can turn a polite sentence rude. Readings come from the
+# dictionaries; the meanings and warnings below are what a newcomer needs to know.
+# Drafted by an LLM; the owner accepted LLM content as-is on 2026-11-16.
+skill: tones
+title: Tones change the meaning
+subtitle: 係 喺 買 賣
+entries:
+  - {id: tone-hai6, zh: 係, emoji: "", meaning: "hai6 (low, level): 'is / am / yes'. The everyday 'to be'.", example: 我係陳生。, example_en: "I'm Mr Chan. Keep hai6 low and flat."}
+  - {id: tone-hai2, zh: 喺, emoji: "", meaning: "hai2 (rising): 'at / in (a place)'. 我喺度 = I'm here.", example: 我喺屋企。, example_en: "I'm at home. Only the tone tells it apart from 係."}
+  - {id: tone-hai1, zh: 閪, emoji: "", meaning: "hai1 (high, level): a vulgar word for female genitals, used as a strong insult. Say 我係 with a high tone and this is what people hear.", example: 我係陳生。, example_en: "Say this with hai6, never hai1."}
+  - {id: tone-maai5, zh: 買, emoji: "", meaning: "maai5 (low rising): 'buy'.", example: 我想買呢個。, example_en: "I want to buy this."}
+  - {id: tone-maai6, zh: 賣, emoji: "", meaning: "maai6 (low, level): 'sell'. Mix it up with 買 and you're offering to sell.", example: 呢度賣乜嘢？, example_en: "What do they sell here?"}
+  - {id: tone-si1, zh: 詩, emoji: "", meaning: "si1 (high, level): 'poem'. The six tones of si are a classic drill: 詩 屎 試 時 市 事.", example: 佢鍾意寫詩。, example_en: "She likes writing poems."}
+  - {id: tone-si2, zh: 屎, emoji: "", meaning: "si2 (high rising): 'poo'. Rising where you meant 試 or 時 gets a laugh.", example: 狗屎要執走。, example_en: "Dog poo must be picked up."}
+  - {id: tone-si3, zh: 試, emoji: "", meaning: "si3 (mid, level): 'try'. 試吓 = give it a try.", example: 我可唔可以試吓？, example_en: "Can I try it?"}
+  - {id: tone-si4, zh: 時, emoji: "", meaning: "si4 (low, falling): 'time'. 幾時 = when.", example: 你幾時得閒？, example_en: "When are you free?"}
+  - {id: tone-gai1, zh: 雞, emoji: "", meaning: "gai1: 'chicken', and also slang for a sex worker. Order 白切雞 or 一隻雞; 叫雞 ('call a chicken') means hiring one.", example: 我要一碟白切雞。, example_en: "A plate of white-cut chicken, please."}
+  - {id: tone-tip, zh: 慢慢講, emoji: "", meaning: "Tip: if you're not sure of a tone, slow down and use the mic check in the drill. Keywords with the right tone get your point across.", example: 唔該講慢啲。, example_en: "Please speak slower."}

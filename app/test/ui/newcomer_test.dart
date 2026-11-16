@@ -50,10 +50,15 @@ void main() {
     final (s, store) = make(db, prefs);
     await t.pumpWidget(DukApp(services: s));
     await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('intro-skip')));
+    await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('onboard-new')));
     await t.pumpAndSettle();
     // newcomers pick situations; the first four are suggested
-    expect(find.byKey(const ValueKey('onboard-sit-sit-basics')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('onboard-sit-sit-basics')),
+      findsOneWidget,
+    );
     await t.scrollUntilVisible(
       find.byKey(const ValueKey('onboard-share-no')),
       300,
@@ -138,6 +143,8 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     await t.tap(find.byKey(const ValueKey('replay-onboarding')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('intro-skip')));
     await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('onboard-new')));
     await t.pumpAndSettle();

@@ -1,7 +1,8 @@
 # Newcomer mode (2026-11-17): situations for people new to Cantonese, each a deck of
 # essential words and short chunks, not whole sentences. The aim is getting the point
 # across with a few keywords ("洗手間喺邊？" or just "洗手間？"), not perfect speech.
-# Each word: [Cantonese, English, optional tip]. Readings come from the dictionaries
+# Each word: [Cantonese, English, optional tip]. The English mirrors the Cantonese unit:
+# a single word gets a single word ("want" for 要, not "I want it"); a phrase gets a phrase. Readings come from the dictionaries
 # (`duk build`); never type Jyutping here. Card ids are `card:<situation>:<word>` and are
 # permanent: don't rename a situation id or change a word's characters once shipped
 # (add a new word instead).
@@ -19,11 +20,11 @@ situations:
       - [你好, "hello"]
       - [早晨, "good morning"]
       - [拜拜, "bye"]
-      - [係, "yes (it is)"]
-      - [唔係, "no (it isn't)"]
+      - [係, "is / yes"]
+      - [唔係, "isn't / no"]
       - [好, "OK / good"]
-      - [要, "I want it"]
-      - [唔要, "I don't want it"]
+      - [要, "want"]
+      - [唔要, "don't want"]
       - [冇問題, "no problem"]
       - [唔緊要, "never mind / it's OK"]
       - [我唔明, "I don't understand"]
@@ -63,7 +64,7 @@ situations:
     icon: bus
     description: "Ask where things are, take buses, taxis and the metro, and get off at the right place."
     words:
-      - [喺邊, "where is it?", "Put the place first: 洗手間喺邊？"]
+      - [喺邊, "where (is)", "Put the place first: 洗手間喺邊？"]
       - [洗手間, "toilet"]
       - [巴士站, "bus stop"]
       - [地鐵站, "metro station"]
@@ -80,7 +81,7 @@ situations:
       - [轉右, "turn right"]
       - [幾遠, "how far?"]
       - [增值, "top up (a card)"]
-      - [蕩失路, "lost (my way)"]
+      - [蕩失路, "get lost (lose your way)"]
 
   - id: sit-food
     title: Eating out
@@ -104,7 +105,7 @@ situations:
       - [飽, "full"]
       - [食素, "vegetarian"]
       - [敏感, "allergic", "花生敏感 = allergic to peanuts."]
-      - [打包, "pack it to go"]
+      - [打包, "pack to go"]
 
   - id: sit-cafe
     title: Cha chaan teng
@@ -149,8 +150,8 @@ situations:
     description: "Shops and markets: sizes, trying on, sold out and returns."
     words:
       - [有冇, "do you have…?", "有冇大啲？ = Do you have a bigger one?"]
-      - [冇, "don't have / there isn't"]
-      - [試吓, "try it"]
+      - [冇, "don't have / none"]
+      - [試吓, "try"]
       - [大啲, "bigger"]
       - [細啲, "smaller"]
       - [顏色, "colour"]
@@ -160,7 +161,7 @@ situations:
       - [超市, "supermarket"]
       - [街市, "wet market"]
       - [斤, "catty (about 600 g)", "Market prices are per catty."]
-      - [睇吓先, "just looking"]
+      - [睇吓先, "look first (just looking)"]
 
   - id: sit-people
     title: Meeting people
@@ -178,7 +179,7 @@ situations:
       - [飲嘢, "have a drink"]
       - [一齊, "together"]
       - [等陣, "in a moment / wait a bit"]
-      - [遲到, "late"]
+      - [遲到, "be late"]
       - [幾時, "when?"]
       - [邊個, "who?"]
       - [做咩, "what for? / what's up?"]
@@ -189,7 +190,7 @@ situations:
     description: "Calls, texts and the short replies people send."
     words:
       - [收到, "got it (message received)"]
-      - [喺度, "here / I'm here"]
+      - [喺度, "here (at this place)"]
       - [打俾我, "call me"]
       - [覆, "reply"]
       - [電話, "phone"]
@@ -255,7 +256,7 @@ situations:
       - [小心, "careful!"]
       - [受傷, "injured"]
       - [偷, "steal", "俾人偷咗 = it was stolen."]
-      - [唔見咗, "lost (can't find it)"]
+      - [唔見咗, "lost / missing"]
       - [差館, "police station"]
       - [急症室, "emergency room"]
 
@@ -270,7 +271,7 @@ situations:
       - [好熱, "very hot"]
       - [好凍, "very cold"]
       - [好焗, "stuffy / muggy"]
-      - [打風, "a typhoon is coming"]
+      - [打風, "typhoon hits"]
       - [八號風球, "typhoon signal No. 8", "Offices and schools close."]
       - [黑雨, "black rainstorm warning"]
 

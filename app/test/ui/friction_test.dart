@@ -64,7 +64,10 @@ void main() {
     // Home A: a new learner starts with the first topic on the path
     expect(find.byKey(const ValueKey('continue-topic')), findsOneWidget);
     expect(find.byKey(const ValueKey('cards-block')), findsOneWidget);
-    expect(find.byKey(const ValueKey('review-chip')), findsNothing); // nothing due
+    expect(
+      find.byKey(const ValueKey('review-chip')),
+      findsNothing,
+    ); // nothing due
     await t.tap(find.byKey(const ValueKey('start-daily')));
     await t.pumpAndSettle();
     expect(readerHasMore(), isTrue); // in the reader

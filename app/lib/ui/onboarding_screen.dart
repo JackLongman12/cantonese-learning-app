@@ -10,6 +10,7 @@ import '../app_services.dart';
 import '../platform/telemetry.dart' show setSharing;
 import '../data/content_db.dart';
 import 'goal_picker.dart';
+import 'intro_pages.dart';
 import 'situations.dart' show situationIcon;
 import 'logo.dart';
 
@@ -45,6 +46,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   bool get _newcomer => _level != null && _level != 'fluent';
 
+  /// The illustrated walkthrough comes first (intro_pages.dart).
+  bool _introDone = false;
+
   void _finish() {
     final s = widget.services;
     final p = s.prefs;
@@ -73,6 +77,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_introDone) {
+      return IntroPages(onDone: () => setState(() => _introDone = true));
+    }
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     Widget choice<T>(

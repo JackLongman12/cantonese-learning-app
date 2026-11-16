@@ -93,7 +93,20 @@ void main() {
       final s = await services(() => now);
       await t.pumpWidget(DukApp(services: s));
       await t.pumpAndSettle();
-      // first run: the setup screen
+      // first run: the walkthrough, then the setup screen
+      if (name == 'phone') {
+        for (var i = 1; i <= 6; i++) {
+          await expectLater(
+            find.byType(MaterialApp),
+            matchesGoldenFile('goldens/preview_intro_$i.png'),
+          );
+          await t.tap(find.byKey(const ValueKey('intro-next')));
+          await t.pumpAndSettle();
+        }
+      } else {
+        await t.tap(find.byKey(const ValueKey('intro-skip')));
+        await t.pumpAndSettle();
+      }
       await t.tap(find.byKey(const ValueKey('onboard-speaker')));
       await t.pumpAndSettle();
       await t.tap(find.byKey(const ValueKey('onboard-level-0')));
@@ -195,6 +208,8 @@ void main() {
       matchesGoldenFile('goldens/preview_newcomer_$what.png'),
     );
     await t.pumpWidget(DukApp(services: s));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('intro-skip')));
     await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('onboard-new')));
     await t.pumpAndSettle();
