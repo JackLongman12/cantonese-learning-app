@@ -45,6 +45,31 @@ situations:
       - [係咪, "right? / is it?", "Add it to check: 係咪呢個？"]
       - [好耐冇見, "long time no see"]
       - [晚安, "good night"]
+      - [唔好, "don't"]
+      - [冇所謂, "I don't mind"]
+      - [慢慢嚟, "take your time"]
+      - [小心啲, "be careful"]
+      - [一陣見, "see you soon"]
+      - [聽日見, "see you tomorrow"]
+      - [好呀, "sure / OK!"]
+      - [唔使喇, "no thanks (not needed)"]
+      - [係呀, "yes (that's right)"]
+
+  - id: sit-polite
+    title: Polite phrases
+    icon: polite
+    description: "The small courtesies that make people warm to you."
+    words:
+      - [請問, "excuse me, may I ask"]
+      - [麻煩你, "sorry to trouble you"]
+      - [辛苦晒, "thanks for your hard work"]
+      - [慢慢行, "take care (as someone leaves)"]
+      - [早啲休息, "get some rest"]
+      - [恭喜, "congratulations"]
+      - [唔使擔心, "don't worry"]
+      - [有心, "kind of you to ask"]
+      - [隨便坐, "sit anywhere"]
+      - [打擾晒, "sorry for the bother"]
 
   - id: sit-numbers
     title: Numbers and time
@@ -86,6 +111,19 @@ situations:
       - [年, "year"]
       - [幾多, "how many / how much"]
       - [個字, "five minutes (on the clock)", "三點一個字 = 3:05; 三點三 = 3:15."]
+      - [十一, "eleven"]
+      - [二十, "twenty"]
+      - [廿, "twenty (spoken, in numbers)", "廿五 = 25."]
+      - [第二, "second"]
+      - [最後, "last"]
+      - [每日, "every day"]
+      - [下個禮拜, "next week"]
+      - [上個月, "last month"]
+      - [今年, "this year"]
+      - [出年, "next year"]
+      - [舊年, "last year"]
+      - [禮拜, "week (spoken)", "禮拜一 = Monday."]
+      - [鐘頭, "hour"]
 
   - id: sit-questions
     title: Question words
@@ -106,6 +144,15 @@ situations:
       - [未, "yet?", "食咗飯未？ = Have you eaten yet?"]
       - [呢, "and…? / what about…?", "你呢？ = And you?"]
       - [係咪, "right? / is it?"]
+      - [做乜, "why / what for"]
+      - [點算, "what do I do?"]
+      - [定, "or (in questions)", "凍定熱？ = Cold or hot?"]
+      - [得唔得, "is that OK?"]
+      - [係唔係, "is it or not?"]
+      - [好唔好, "shall we? / OK?"]
+      - [要唔要, "do you want…?"]
+      - [識唔識, "do you know how…?"]
+      - [去唔去, "are you going?"]
 
   - id: sit-verbs
     title: Everyday verbs
@@ -148,6 +195,28 @@ situations:
       - [開, "open / turn on"]
       - [熄, "turn off"]
       - [閂, "close / shut"]
+      - [煮, "cook"]
+      - [洗, "wash"]
+      - [寫, "write"]
+      - [讀, "read / study"]
+      - [學, "learn"]
+      - [教, "teach"]
+      - [試, "try"]
+      - [換, "change / swap"]
+      - [借, "borrow / lend"]
+      - [送, "give (as a gift) / deliver"]
+      - [帶, "bring / take along"]
+      - [叫, "call / order"]
+      - [問, "ask"]
+      - [答, "answer"]
+      - [諗, "think"]
+      - [跑, "run"]
+      - [唱歌, "sing"]
+      - [跳舞, "dance"]
+      - [笑, "laugh / smile"]
+      - [喊, "cry"]
+      - [執, "tidy / pick up"]
+      - [掉, "throw away"]
 
   - id: sit-describe
     title: Describing things
@@ -185,6 +254,22 @@ situations:
       - [藍色, "blue"]
       - [綠色, "green"]
       - [黃色, "yellow"]
+      - [暖, "warm"]
+      - [涼, "cool"]
+      - [濕, "wet"]
+      - [乾, "dry"]
+      - [重, "heavy"]
+      - [好輕, "very light (weight)"]
+      - [靜, "quiet"]
+      - [安全, "safe"]
+      - [錯, "wrong"]
+      - [一樣, "the same"]
+      - [唔同, "different"]
+      - [粉紅色, "pink"]
+      - [灰色, "grey"]
+      - [橙色, "orange (colour)"]
+      - [啡色, "brown"]
+      - [紫色, "purple"]
 
   - id: sit-around
     title: Getting around
@@ -224,6 +309,18 @@ situations:
       - [塞車, "traffic jam"]
       - [行路, "walk"]
       - [地圖, "map"]
+      - [巴士, "bus"]
+      - [叮叮, "tram (Hong Kong)"]
+      - [站, "stop / station"]
+      - [轉車, "change (bus or train)"]
+      - [尾班車, "last bus / train"]
+      - [頭班車, "first bus / train"]
+      - [車費, "fare"]
+      - [司機, "driver"]
+      - [天橋, "footbridge"]
+      - [隧道, "tunnel"]
+      - [過海, "cross the harbour"]
+      - [停, "stop (a vehicle)", "前面停 = Stop up ahead."]
 
   - id: sit-places
     title: Places in town
@@ -248,6 +345,17 @@ situations:
       - [地下, "ground floor"]
       - [樓上, "upstairs"]
       - [樓下, "downstairs"]
+      - [銀行, "bank"]
+      - [洗衣舖, "laundry shop"]
+      - [髮型屋, "hair salon"]
+      - [舖頭, "shop"]
+      - [前地, "square (Macau)", "議事亭前地 = Senado Square."]
+      - [屋邨, "public housing estate"]
+      - [村, "village"]
+      - [海旁, "waterfront"]
+      - [山頂, "hilltop / the Peak"]
+      - [路, "road"]
+      - [巷, "lane"]
 
   - id: sit-food
     title: Eating out
@@ -289,6 +397,19 @@ situations:
       - [鹹, "salty"]
       - [再嚟一個, "one more"]
       - [唔夠, "not enough"]
+      - [叉燒, "char siu (roast pork)"]
+      - [燒鵝, "roast goose"]
+      - [飯盒, "lunch box"]
+      - [外賣, "takeaway / delivery"]
+      - [鹽, "salt"]
+      - [糖, "sugar"]
+      - [豉油, "soy sauce"]
+      - [酸, "sour"]
+      - [苦, "bitter"]
+      - [唔辣, "not spicy"]
+      - [碟, "plate"]
+      - [碗, "bowl"]
+      - [杯, "cup / glass"]
 
   - id: sit-cafe
     title: Cha chaan teng
@@ -314,6 +435,36 @@ situations:
       - [火腿, "ham"]
       - [通粉, "macaroni"]
       - [走甜, "no sugar"]
+      - [檸水, "lemon water"]
+      - [阿華田, "Ovaltine"]
+      - [公仔麵, "instant noodles"]
+      - [腸仔, "sausage"]
+      - [煎蛋, "fried egg"]
+      - [牛油, "butter"]
+      - [雞尾包, "cocktail bun"]
+      - [下午茶, "afternoon tea (set)"]
+
+  - id: sit-dimsum
+    title: Dim sum (yum cha)
+    icon: dimsum
+    description: "Order the classics, ask for tea and more hot water at a dim sum restaurant."
+    words:
+      - [飲茶, "yum cha (dim sum meal)"]
+      - [點心, "dim sum"]
+      - [蝦餃, "shrimp dumplings"]
+      - [燒賣, "siu mai"]
+      - [叉燒包, "char siu bun"]
+      - [腸粉, "rice noodle roll"]
+      - [鳳爪, "chicken feet"]
+      - [蘿蔔糕, "turnip cake"]
+      - [春卷, "spring roll"]
+      - [糯米雞, "sticky rice in lotus leaf"]
+      - [流沙包, "custard lava bun"]
+      - [普洱, "pu'er tea"]
+      - [鐵觀音, "Tieguanyin tea"]
+      - [茶, "tea"]
+      - [加水, "more hot water", "Or leave the teapot lid open."]
+      - [點心紙, "order sheet"]
 
   - id: sit-pay
     title: Paying
@@ -344,6 +495,14 @@ situations:
       - [夾錢, "chip in"]
       - [港紙, "Hong Kong dollars"]
       - [葡幣, "patacas (Macau money)"]
+      - [轉數, "transfer money"]
+      - [收唔收, "do you take…?", "收唔收八達通？ = Do you take Octopus?"]
+      - [找唔開, "can't break (a big note)"]
+      - [收銀, "cashier"]
+      - [會員, "member"]
+      - [優惠, "offer / deal"]
+      - [加一, "plus 10% service charge"]
+      - [貼士, "tip (money)"]
 
   - id: sit-shop
     title: Shopping
@@ -374,6 +533,34 @@ situations:
       - [禮物, "gift"]
       - [啱, "fits / right"]
       - [唔啱, "doesn't fit / wrong"]
+      - [退錢, "refund"]
+      - [有貨, "in stock"]
+      - [冇貨, "out of stock"]
+      - [試身室, "fitting room"]
+      - [收銀處, "checkout"]
+      - [價錢, "price"]
+      - [買一送一, "buy one, get one free"]
+
+  - id: sit-clothes
+    title: Clothes
+    icon: clothes
+    description: "What to wear and what to ask for when shopping for clothes."
+    words:
+      - [外套, "jacket"]
+      - [褸, "coat"]
+      - [裙, "skirt / dress"]
+      - [T恤, "T-shirt"]
+      - [恤衫, "shirt"]
+      - [短褲, "shorts"]
+      - [牛仔褲, "jeans"]
+      - [波鞋, "trainers"]
+      - [拖鞋, "slippers"]
+      - [帽, "hat"]
+      - [眼鏡, "glasses"]
+      - [手袋, "handbag"]
+      - [銀包, "wallet"]
+      - [手錶, "watch"]
+      - [頸巾, "scarf"]
 
   - id: sit-groceries
     title: Fruit, veg and the market
@@ -396,6 +583,20 @@ situations:
       - [麵包, "bread"]
       - [雞翼, "chicken wings"]
       - [蝦, "shrimp"]
+      - [生果, "fruit"]
+      - [菜, "vegetables"]
+      - [芒果, "mango"]
+      - [提子, "grapes"]
+      - [士多啤梨, "strawberry"]
+      - [檸檬, "lemon"]
+      - [紅蘿蔔, "carrot"]
+      - [粟米, "corn"]
+      - [菇, "mushroom"]
+      - [豬扒, "pork chop"]
+      - [牛扒, "steak"]
+      - [三文魚, "salmon"]
+      - [芝士, "cheese"]
+      - [乳酪, "yoghurt"]
 
   - id: sit-people
     title: Meeting people
@@ -425,6 +626,54 @@ situations:
       - [住, "live (somewhere)"]
       - [返屋企, "go home"]
       - [再見, "goodbye"]
+      - [外國人, "foreigner"]
+      - [本地人, "local"]
+      - [香港人, "Hong Konger"]
+      - [澳門人, "Macau person"]
+      - [內地, "mainland China"]
+      - [英國, "the UK"]
+      - [美國, "the US"]
+      - [菲律賓, "the Philippines"]
+      - [印尼, "Indonesia"]
+      - [日本, "Japan"]
+      - [韓國, "Korea"]
+
+  - id: sit-freetime
+    title: Free time
+    icon: freetime
+    description: "Weekends and evenings: films, karaoke, hikes, games and late-night snacks."
+    words:
+      - [睇戲, "watch a film"]
+      - [唱K, "karaoke"]
+      - [行街, "go out shopping / stroll"]
+      - [打機, "play video games"]
+      - [行山, "hiking"]
+      - [去旅行, "go travelling"]
+      - [約, "make plans (with someone)"]
+      - [週末, "weekend"]
+      - [聽歌, "listen to music"]
+      - [睇書, "read a book"]
+      - [飲酒, "drink (alcohol)"]
+      - [宵夜, "late-night snack"]
+      - [打邊爐, "hotpot"]
+
+  - id: sit-sport
+    title: Sport and exercise
+    icon: sport
+    description: "Running, swimming, football and the gym."
+    words:
+      - [運動, "exercise / sport"]
+      - [跑步, "running"]
+      - [游水, "swimming"]
+      - [踢波, "play football"]
+      - [打籃球, "play basketball"]
+      - [做gym, "go to the gym"]
+      - [單車, "bike"]
+      - [踩單車, "cycling"]
+      - [睇波, "watch a match"]
+      - [贏, "win"]
+      - [輸, "lose"]
+      - [球場, "sports ground"]
 
   - id: sit-family
     title: Family
@@ -451,6 +700,11 @@ situations:
       - [女朋友, "girlfriend"]
       - [叔叔, "uncle (polite for an older man)"]
       - [姨姨, "auntie (polite for an older woman)"]
+      - [親戚, "relatives"]
+      - [老豆, "dad (casual)"]
+      - [孫, "grandchild"]
+      - [舅父, "uncle (mum's brother)"]
+      - [姑媽, "aunt (dad's older sister)"]
 
   - id: sit-feelings
     title: Feelings and reactions
@@ -474,6 +728,14 @@ situations:
       - [好彩, "lucky"]
       - [慘, "that's awful"]
       - [頂唔順, "can't stand it"]
+      - [擔心, "worried"]
+      - [放心, "don't worry / relieved"]
+      - [興奮, "excited"]
+      - [尷尬, "awkward"]
+      - [失望, "disappointed"]
+      - [舒服, "comfortable"]
+      - [好煩, "annoying"]
+      - [感動, "touched (moved)"]
 
   - id: sit-phone
     title: Phone and messages
@@ -498,6 +760,14 @@ situations:
       - [打錯, "wrong number"]
       - [聽唔到, "can't hear"]
       - [再打過, "call again"]
+      - [手機, "mobile phone"]
+      - [叉電器, "charger"]
+      - [上網, "go online"]
+      - [數據, "mobile data"]
+      - [密碼, "password"]
+      - [截圖, "screenshot"]
+      - [群組, "group chat"]
+      - [已讀唔回, "read, no reply"]
 
   - id: sit-home
     title: Home and your building
@@ -527,6 +797,53 @@ situations:
       - [熱水爐, "water heater"]
       - [停電, "power cut"]
       - [冇水, "no water"]
+      - [客廳, "living room"]
+      - [沖涼房, "bathroom"]
+      - [梳化, "sofa"]
+      - [枱, "table"]
+      - [櫈, "chair / stool"]
+      - [雪櫃, "fridge"]
+      - [洗衣機, "washing machine"]
+      - [鎖, "lock"]
+      - [門鐘, "doorbell"]
+      - [交租, "pay the rent"]
+      - [搬屋, "move house"]
+
+  - id: sit-kitchen
+    title: Cooking at home
+    icon: kitchen
+    description: "Kitchen words for cooking at home or following someone's recipe."
+    words:
+      - [煮飯, "cook (a meal)"]
+      - [炒, "stir-fry"]
+      - [蒸, "steam"]
+      - [煲, "boil / pot"]
+      - [煎, "pan-fry"]
+      - [焗, "bake"]
+      - [鑊, "wok"]
+      - [刀, "knife"]
+      - [砧板, "chopping board"]
+      - [爐, "stove"]
+      - [微波爐, "microwave"]
+      - [洗碗, "wash the dishes"]
+      - [熟, "cooked"]
+      - [未熟, "not cooked (raw)"]
+
+  - id: sit-chores
+    title: Housework
+    icon: chores
+    description: "Laundry, cleaning and rubbish: the jobs at home."
+    words:
+      - [執屋, "tidy up"]
+      - [洗衫, "do the laundry"]
+      - [晾衫, "hang clothes out"]
+      - [收衫, "bring the laundry in"]
+      - [拖地, "mop the floor"]
+      - [抹枱, "wipe the table"]
+      - [倒垃圾, "take out the rubbish"]
+      - [掃地, "sweep the floor"]
+      - [摺衫, "fold clothes"]
+      - [工人, "domestic helper"]
 
   - id: sit-health
     title: Doctor and pharmacy
@@ -557,6 +874,16 @@ situations:
       - [打針, "injection"]
       - [牙醫, "dentist"]
       - [驗血, "blood test"]
+      - [藥膏, "ointment"]
+      - [膠布, "plaster (bandage)"]
+      - [口罩, "face mask"]
+      - [探熱, "take temperature"]
+      - [血壓, "blood pressure"]
+      - [覆診, "follow-up visit"]
+      - [痕, "itchy"]
+      - [腫, "swollen"]
+      - [扭親, "twisted (a joint)", "扭親腳 = twisted ankle."]
+      - [跌親, "fell and got hurt"]
 
   - id: sit-body
     title: Body
@@ -578,6 +905,14 @@ situations:
       - [腳, "leg / foot"]
       - [心口, "chest"]
       - [皮膚, "skin"]
+      - [頭髮, "hair"]
+      - [面, "face"]
+      - [喉嚨, "throat"]
+      - [腰, "waist / lower back"]
+      - [膝頭, "knee"]
+      - [腳趾, "toe"]
+      - [骨, "bone"]
+      - [血, "blood"]
 
   - id: sit-help
     title: Emergencies
@@ -600,6 +935,12 @@ situations:
       - [走火通道, "fire exit"]
       - [幫手, "help (lend a hand)"]
       - [有冇人識講英文, "does anyone speak English?"]
+      - [消防, "fire service"]
+      - [搶劫, "robbery"]
+      - [意外, "accident"]
+      - [撞車, "car crash"]
+      - [失物認領, "lost and found"]
+      - [翻譯, "interpreter / translate"]
 
   - id: sit-weather
     title: Weather and typhoons
@@ -621,6 +962,15 @@ situations:
       - [潮濕, "humid"]
       - [回南天, "damp season", "Spring days when walls and floors sweat."]
       - [度, "degrees", "三十度 = 30°C."]
+      - [雷暴, "thunderstorm"]
+      - [行雷, "thunder"]
+      - [閃電, "lightning"]
+      - [霧, "fog"]
+      - [太陽, "sun"]
+      - [暴雨, "heavy rain"]
+      - [颱風, "typhoon"]
+      - [天文台, "Hong Kong Observatory"]
+      - [氣象局, "Macau weather bureau"]
 
   - id: sit-work
     title: Work and study
@@ -646,6 +996,16 @@ situations:
       - [老師, "teacher"]
       - [學校, "school"]
       - [大學, "university"]
+      - [返學, "go to school"]
+      - [放學, "finish school"]
+      - [見工, "job interview"]
+      - [搵工, "look for a job"]
+      - [辭職, "quit (a job)"]
+      - [出糧, "payday"]
+      - [經理, "manager"]
+      - [客人, "customer / client"]
+      - [兼職, "part-time job"]
+      - [全職, "full-time"]
 
   - id: sit-errands
     title: Bank, post and forms
@@ -670,6 +1030,28 @@ situations:
       - [地址證明, "proof of address"]
       - [預約, "appointment / booking"]
       - [手續費, "service fee"]
+      - [交費, "pay a bill / fee"]
+      - [戶口, "account"]
+      - [申請, "apply"]
+      - [續期, "renew"]
+      - [寄信, "send a letter"]
+      - [郵票, "stamp"]
+      - [打印, "print"]
+
+  - id: sit-hair
+    title: Haircut
+    icon: hair
+    description: "Get the haircut you want at the barber or the salon."
+    words:
+      - [剪頭髮, "haircut"]
+      - [洗頭, "wash hair"]
+      - [剪短啲, "shorter"]
+      - [兩邊, "the sides"]
+      - [上面, "the top"]
+      - [後面, "the back"]
+      - [染髮, "dye hair"]
+      - [電髮, "perm"]
+      - [吹乾, "blow-dry"]
 
   - id: sit-travel
     title: Hotels and sightseeing
@@ -688,6 +1070,51 @@ situations:
       - [手信, "souvenir"]
       - [導遊, "tour guide"]
       - [過關, "cross the border"]
+      - [旅行, "travel / trip"]
+      - [機票, "plane ticket"]
+      - [船飛, "ferry ticket"]
+      - [簽證, "visa"]
+      - [訂枱, "book a table"]
+      - [開放時間, "opening hours"]
+      - [博物館, "museum"]
+      - [夜景, "night view"]
+
+  - id: sit-festivals
+    title: Festivals
+    icon: festivals
+    description: "Lunar New Year, Mid-Autumn, Christmas and what people say on the day."
+    words:
+      - [新年, "New Year"]
+      - [農曆新年, "Lunar New Year"]
+      - [恭喜發財, "Happy New Year (wishing you wealth)"]
+      - [利是, "red packet"]
+      - [拜年, "New Year visits"]
+      - [中秋節, "Mid-Autumn Festival"]
+      - [月餅, "mooncake"]
+      - [燈籠, "lantern"]
+      - [聖誕節, "Christmas"]
+      - [端午節, "Dragon Boat Festival"]
+      - [糭, "rice dumpling"]
+      - [生日快樂, "happy birthday"]
+      - [公眾假期, "public holiday"]
+
+  - id: sit-animals
+    title: Animals and pets
+    icon: animals
+    description: "Pets, pests and the animals you'll meet in the city."
+    words:
+      - [狗, "dog"]
+      - [貓, "cat"]
+      - [雀仔, "bird"]
+      - [蚊, "mosquito"]
+      - [曱甴, "cockroach"]
+      - [老鼠, "mouse / rat"]
+      - [牛, "cow"]
+      - [豬, "pig"]
+      - [蛇, "snake"]
+      - [寵物, "pet"]
+      - [狗仔, "puppy"]
+      - [貓仔, "kitten"]
 
   - id: sit-slang
     title: Everyday slang
@@ -708,3 +1135,12 @@ situations:
       - [型, "stylish / cool"]
       - [頂, "ugh / damn (mild)"]
       - [冇嘢, "nothing / it's fine"]
+      - [頹, "lazy / in a slump"]
+      - [勁, "awesome"]
+      - [麻麻, "so-so"]
+      - [一般般, "average"]
+      - [唔錯, "not bad"]
+      - [收皮, "give it a rest"]
+      - [黐線, "crazy"]
+      - [搞笑, "funny"]
+      - [扮嘢, "show off"]

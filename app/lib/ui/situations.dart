@@ -40,6 +40,16 @@ IconData situationIcon(String name) => switch (name) {
   'body' => Icons.accessibility_new_rounded,
   'travel' => Icons.hotel_outlined,
   'slang' => Icons.forum_outlined,
+  'dimsum' => Icons.ramen_dining_outlined,
+  'clothes' => Icons.checkroom_outlined,
+  'hair' => Icons.content_cut_rounded,
+  'freetime' => Icons.celebration_outlined,
+  'sport' => Icons.sports_soccer_outlined,
+  'kitchen' => Icons.soup_kitchen_outlined,
+  'chores' => Icons.cleaning_services_outlined,
+  'festivals' => Icons.festival_outlined,
+  'animals' => Icons.pets_outlined,
+  'polite' => Icons.volunteer_activism_outlined,
   _ => Icons.chat_bubble_outline,
 };
 

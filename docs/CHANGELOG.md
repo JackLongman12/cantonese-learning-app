@@ -3,6 +3,15 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2077): 927 newcomer words
+
+- Situations grow to 35 and words to 927. New: dim sum, clothes, haircut, free time,
+  sport, cooking at home, housework, festivals, animals and pets, polite phrases; every
+  older situation got more words (countries in Meeting people, colours, transport, money).
+- Spoken readings pinned: 手袋 sau2 doi2, 拖鞋 to1 haai2, 舅父 kau5 fu2, 慢慢行 maan6
+  maan2 haang4, 隨便坐 ceoi4 bin2 co5, 好輕 hou2 heng1 (cards use 好輕 and 未熟 where the
+  bare character's spoken reading can't be pinned without breaking other words).
+
 ## 2026-11-17 (b2076): much more newcomer content
 
 - Situations grow from 15 to 25 and words from 214 to 551. New: question words, everyday
