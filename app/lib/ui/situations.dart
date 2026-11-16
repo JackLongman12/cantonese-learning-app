@@ -30,6 +30,16 @@ IconData situationIcon(String name) => switch (name) {
   'weather' => Icons.thunderstorm_outlined,
   'work' => Icons.work_outline,
   'errands' => Icons.account_balance_outlined,
+  'questions' => Icons.help_outline_rounded,
+  'verbs' => Icons.directions_run_rounded,
+  'describe' => Icons.palette_outlined,
+  'family' => Icons.family_restroom_rounded,
+  'feelings' => Icons.mood_rounded,
+  'places' => Icons.location_city_rounded,
+  'groceries' => Icons.shopping_basket_outlined,
+  'body' => Icons.accessibility_new_rounded,
+  'travel' => Icons.hotel_outlined,
+  'slang' => Icons.forum_outlined,
   _ => Icons.chat_bubble_outline,
 };
 

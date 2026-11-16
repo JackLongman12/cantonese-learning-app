@@ -64,6 +64,8 @@ void main() {
       300,
       scrollable: find.byType(Scrollable).first,
     );
+    await t.ensureVisible(find.byKey(const ValueKey('onboard-share-no')));
+    await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('onboard-share-no')));
     await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('onboard-start')));

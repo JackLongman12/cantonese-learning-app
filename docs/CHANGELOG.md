@@ -3,6 +3,17 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2076): much more newcomer content
+
+- Situations grow from 15 to 25 and words from 214 to 551. New: question words, everyday
+  verbs, describing things (with colours), family, feelings and reactions, places in town,
+  fruit, veg and the market, body, hotels and sightseeing, everyday slang. Every older
+  situation got more words.
+- Spoken readings pinned where the dictionaries' first choice is the formal one: 公園
+  gung1 jyun2, 妹妹 mui4 mui2, 坐低 co5 dai1, 好驚 hou2 geng1.
+- Settings → Developer → Restore my original setup (b2075) puts back the answers saved
+  before the first Replay onboarding.
+
 ## 2026-11-17 (b2074): walkthrough, tones lesson, matching glosses
 
 - First-run walkthrough (intro_pages.dart, six illustrated pages, also on Replay

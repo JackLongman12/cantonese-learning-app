@@ -121,7 +121,9 @@ void main() {
         scrollable: find.byType(Scrollable).first,
       );
       await t.pumpAndSettle();
-      await t.tap(find.byKey(const ValueKey('onboard-share-no')));
+      await t.ensureVisible(find.byKey(const ValueKey('onboard-share-no')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('onboard-share-no')));
       await t.pumpAndSettle();
       await t.tap(find.byKey(const ValueKey('onboard-start')));
       await t.pumpAndSettle();
@@ -219,6 +221,8 @@ void main() {
       300,
       scrollable: find.byType(Scrollable).first,
     );
+    await t.ensureVisible(find.byKey(const ValueKey('onboard-share-no')));
+    await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('onboard-share-no')));
     await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('onboard-start')));
@@ -235,6 +239,12 @@ void main() {
     await t.tap(find.byKey(const ValueKey('tab-situations')));
     await t.pumpAndSettle();
     await shot('situations');
+    await t.scrollUntilVisible(
+      find.byKey(const ValueKey('situation-sit-food')),
+      300,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
+    await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('situation-sit-food')));
     await t.pumpAndSettle();
     await shot('situation');
