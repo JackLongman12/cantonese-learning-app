@@ -141,6 +141,42 @@ class Prefs {
       (_data['resume'] as Map?)?.cast<String, Object?>();
   set resume(Map<String, Object?>? v) => _set('resume', v);
 
+  // TEMPORARY developer tool (Settings → Developer, 2026-11-17): the setup saved before
+  // the first "Replay onboarding", so "Restore my original setup" can put it back.
+  static const _setupKeys = [
+    'level',
+    'speaker',
+    'help_shift',
+    'goal',
+    'situations',
+    'share_data',
+    'telemetry_id',
+    'shared_before',
+  ];
+
+  bool get hasSavedSetup => _data['saved_setup'] is Map;
+
+  /// Saves the setup once; later replays keep the first (the real original).
+  void saveSetupForReplay() {
+    if (hasSavedSetup) return;
+    _set('saved_setup', {for (final k in _setupKeys) k: _data[k]});
+  }
+
+  /// Puts the saved setup back and forgets it. Progress was never touched.
+  void restoreSavedSetup() {
+    final saved = (_data['saved_setup'] as Map?)?.cast<String, Object?>();
+    if (saved == null) return;
+    for (final k in _setupKeys) {
+      if (saved[k] == null) {
+        _data.remove(k);
+      } else {
+        _data[k] = saved[k];
+      }
+    }
+    _data.remove('saved_setup');
+    _set('onboarded', true);
+  }
+
   void _set(String key, Object? value) {
     _data[key] = value;
     final f = file;

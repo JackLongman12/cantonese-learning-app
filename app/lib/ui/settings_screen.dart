@@ -341,6 +341,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   onTap: () {
                     final nav = Navigator.of(context);
+                    p.saveSetupForReplay();
                     _s.logger.log('settings.change', {
                       'key': 'replay_onboarding',
                     });
@@ -361,6 +362,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     );
                   },
                 ),
+                if (p.hasSavedSetup)
+                  ListTile(
+                    key: const ValueKey('restore-setup'),
+                    leading: const Icon(Icons.settings_backup_restore_rounded),
+                    title: const Text('Restore my original setup'),
+                    subtitle: const Text(
+                      'Leave the test: your mode, goal and other answers from before '
+                      'the first replay come back.',
+                    ),
+                    onTap: () {
+                      final nav = Navigator.of(context);
+                      p.restoreSavedSetup();
+                      _s.logger.log('settings.change', {
+                        'key': 'restore_setup',
+                      });
+                      nav.pushAndRemoveUntil(
+                        MaterialPageRoute<void>(
+                          builder: (_) => HomeScreen(services: _s),
+                        ),
+                        (_) => false,
+                      );
+                    },
+                  ),
                 ListTile(
                   title: const Text('About DuckLearn'),
                   subtitle: Text(

@@ -156,6 +156,23 @@ void main() {
     expect(s.learner.known.length, before); // progress kept
     expect(prefs.telemetryId, 'tid'); // no new anonymous id
     expect(store.events.where((e) => e.type == 'review.applied'), hasLength(1));
+
+    // leave the test: the original setup comes back
+    await t.tap(find.byKey(const ValueKey('open-settings')));
+    await t.pumpAndSettle();
+    await t.scrollUntilVisible(
+      find.byKey(const ValueKey('restore-setup')),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await t.ensureVisible(find.byKey(const ValueKey('restore-setup')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('restore-setup')));
+    await t.pumpAndSettle();
+    expect(prefs.newcomerMode, isFalse);
+    expect(prefs.level, 'fluent');
+    expect(prefs.hasSavedSetup, isFalse);
+    expect(find.byKey(const ValueKey('continue-topic')), findsOneWidget);
   }, skip: !hasDb);
 
   test('installs from before the question keep the reading app', () {
