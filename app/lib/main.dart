@@ -54,11 +54,18 @@ Future<void> main() async {
     return false; // still reported the usual way
   };
   // send what is new now and whenever the app goes to the background
-  AppLifecycleListener(onPause: () => unawaited(telemetry.upload()));
-  Future<void>.delayed(
-    const Duration(seconds: 10),
-    telemetry.upload,
-  ).ignore();
+  final schedule = TelemetrySchedule(telemetry)..start();
+  AppLifecycleListener(
+    onPause: () {
+      schedule.stop();
+      unawaited(telemetry.upload());
+    },
+    onResume: () {
+      schedule.start();
+      unawaited(telemetry.upload());
+    },
+  );
+  Future<void>.delayed(const Duration(seconds: 10), telemetry.upload).ignore();
   runApp(DukApp(services: services));
 }
 

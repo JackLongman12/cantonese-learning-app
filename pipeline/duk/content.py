@@ -52,6 +52,7 @@ class Scenario:
     title: str
     region: str
     tags: list[str] = field(default_factory=list)
+    description: str = ""
 
 
 @dataclass
@@ -133,8 +134,19 @@ def load_content(root: Path) -> Content:
             continue
         need(sc.get("region") in REGIONS, f"{sc['id']}: region must be one of {sorted(REGIONS)}")
         need(bool(sc.get("title")), f"{sc['id']}: title required")
+        desc = str(sc.get("description") or "")
+        need(
+            0 < len(desc) <= 160,
+            f"{sc['id']}: description required (one line, at most 160 characters)",
+        )
         scenarios.append(
-            Scenario(sc["id"], sc.get("title", ""), sc.get("region", ""), sc.get("tags") or [])
+            Scenario(
+                sc["id"],
+                sc.get("title", ""),
+                sc.get("region", ""),
+                sc.get("tags") or [],
+                desc,
+            )
         )
         defaults = doc.get("defaults") or {}
         for raw in doc.get("sentences") or []:

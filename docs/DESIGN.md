@@ -230,6 +230,13 @@ If an event older than one already applied arrives (merged from another device),
 - **Google Drive `appDataFolder`** (`drive.appdata` scope). Each device writes only `events/<deviceId>/<yyyy-mm>.jsonl.gz`. Devices merge by event ID; no conflicts possible. Also holds `models/` and weekly `backups/`.
 - **Windows** has no `google_sign_in`: use the loopback OAuth flow. OAuth app must be published (not left in Testing) or refresh tokens expire weekly.
 - **Updates:** check GitHub Releases on launch, in the background. Channels `dev` (every push to main) and `stable` (tags). App binaries and content packs are versioned independently; content packs declare the minimum app version they need.
+- Downloads are untrusted (2026-11-17): app updates only from `github.com` /
+  `*.githubusercontent.com` over HTTPS, saved under a checked file name, and verified against
+  the SHA-256 digest GitHub publishes for the asset; the Android installer only accepts APKs in
+  `cache/ducklearn_updates` (FileProvider scoped to that folder). The speech model is pinned
+  to one HuggingFace commit and each file's SHA-256. Conversation pictures: HTTPS only, PNG or
+  JPEG only, at most 3 MB. Shared-in text is capped at 20,000 characters. CI runs with a
+  read-only token and actions pinned to commit SHAs.
 - Android builds must always be signed with the same keystore: `%USERPROFILE%\.ducklearn\` on the build PC, backed up to `D:\Backups\DuckLearn signing key` and the owner's OneDrive (2026-11-16). CI does not sign.
 - Location is opt-in and stored as region only (macau / hk / other).
 - Secrets live in `secrets.json` (git-ignored). No key is compiled into a released binary; the app asks for keys in Settings and stores them in the OS keystore.

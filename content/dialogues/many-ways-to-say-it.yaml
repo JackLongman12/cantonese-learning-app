@@ -1,4 +1,4 @@
-# Conversations for "Many ways to say it": two people use different words for the same
+# Conversations for "Same thing, different words": two people use different words for the same
 # thing (content/variants.yaml) and still understand each other.
 # Drafted by an LLM; the owner accepted LLM content as-is on 2026-11-16.
 scenario: scn-variants
@@ -29,7 +29,7 @@ dialogues:
     lines:
       - ["同事", "而家幾點呀？", "What time is it now?"]
       - ["你", "依家六點，可以放工喇。", "It's six now; time to finish work."]
-      - ["同事", "我仲未下班得，要開會。", "I can't knock off yet, I've got a meeting."]
+      - ["同事", "我仲未下得班，要開會。", "I can't knock off yet, I've got a meeting."]
       - ["你", "咁我返屋企先，聽日返工見。", "Then I'll head home. See you at work tomorrow."]
   - id: dlg-var-05
     title: "Paying the bill"

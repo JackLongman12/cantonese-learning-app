@@ -100,6 +100,10 @@ class Telemetry {
       await _sendCrashes();
       final cursor = _readCursor();
       for (final f in _eventFiles()) {
+        // cheap check first: a file that has not grown since the last upload is skipped
+        // without being read (frequent uploads cost almost nothing when idle)
+        final size = f.lengthSync();
+        if (cursor['${_name(f)}#bytes'] == size) continue;
         final lines = const LineSplitter().convert(f.readAsStringSync());
         var at = cursor[_name(f)] ?? 0;
         while (at < lines.length) {
@@ -126,6 +130,8 @@ class Telemetry {
           cursor[_name(f)] = at;
           _writeCursor(cursor);
         }
+        cursor['${_name(f)}#bytes'] = size;
+        _writeCursor(cursor);
       }
     } on Object {
       // offline or the Worker is down: the cursor kept what went out
@@ -136,12 +142,16 @@ class Telemetry {
   }
 
   /// Keeps a crash for the next upload (a crash may be the last thing the app does).
-  void recordCrash(Object error, StackTrace? stack, {String where = 'flutter'}) {
+  void recordCrash(
+    Object error,
+    StackTrace? stack, {
+    String where = 'flutter',
+  }) {
     try {
       _crashDir.createSync(recursive: true);
-      File('${_crashDir.path}/${Ulid()}.json').writeAsStringSync(
-        jsonEncode(crashReport(error, stack, where: where)),
-      );
+      File(
+        '${_crashDir.path}/${Ulid()}.json',
+      ).writeAsStringSync(jsonEncode(crashReport(error, stack, where: where)));
     } on Object {
       // nowhere to write: nothing more to do
     }
@@ -159,8 +169,8 @@ class Telemetry {
     'os_version': _cut(Platform.operatingSystemVersion, 120),
     'where': where,
     'error_type': error.runtimeType.toString(),
-    'message': _cut(error.toString(), 600),
-    'stack': _cut(stack?.toString() ?? '', 6000),
+    'message': _cut(redactCrashText(error.toString()), 600),
+    'stack': _cut(redactCrashText(stack?.toString() ?? ''), 6000),
   };
 
   Future<void> _sendCrashes() async {
@@ -212,4 +222,24 @@ void setSharing(AppServices s, bool on) {
   p.shareData = on;
   s.logger.log('settings.change', {'key': 'share_data', 'from': was, 'to': on});
   if (on) unawaited(s.telemetry?.upload());
+}
+
+/// While the app is open, sends what is new every [every]; stops in the background.
+/// No background jobs or wake-ups: a closed app costs no battery, and the last events
+/// go out when the app is put away (on pause). An idle check reads only file sizes.
+class TelemetrySchedule {
+  TelemetrySchedule(this.telemetry, {this.every = const Duration(minutes: 2)});
+  final Telemetry telemetry;
+  final Duration every;
+  Timer? _timer;
+
+  void start() {
+    _timer?.cancel();
+    _timer = Timer.periodic(every, (_) => unawaited(telemetry.upload()));
+  }
+
+  void stop() {
+    _timer?.cancel();
+    _timer = null;
+  }
 }

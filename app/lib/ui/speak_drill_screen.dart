@@ -18,6 +18,7 @@ import '../app_services.dart';
 import '../data/content_db.dart';
 import '../engine/pictures.dart';
 import '../engine/pronunciation.dart';
+import '../engine/coverage.dart' show itemValues;
 import '../engine/scaffold.dart';
 import '../platform/sfx.dart';
 import 'critters.dart';
@@ -61,6 +62,9 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
   bool _retried = false;
   int _right = 0;
   Map<int, CharScore> _marks = const {};
+
+  /// Characters tapped (heard or looked up) on this line: help, graded like a reveal.
+  final Set<int> _tapped = {};
   Map<String, ScaffoldLevel> _levels = const {};
   int _percent = 0;
 
@@ -120,6 +124,7 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
       _phase = _Phase.ready;
       _lineDone = false;
       _marks = const {};
+      _tapped.clear();
       _levels = {
         for (final id in _line.itemIds)
           id: _mode == SpeakMode.repeat
@@ -218,7 +223,7 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
     };
     final outcomes = _s.signals.outcomes(
       shown: _levels,
-      revealed: missed,
+      revealed: {...missed, for (final i in _tapped) ?_line.tokens[i].itemId},
       // speaking a line takes a few seconds per character: never "too fast"
       activeMs: 4000 * _levels.length,
     );
@@ -238,6 +243,20 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
     }
     if (marks.values.every((c) => !c.isMiss)) _right++;
     _s.logger.log('item.done', {'mode': 'speak', 'skipped': false});
+  }
+
+  /// Says the word around token [i] (as segmented in this line).
+  Future<void> _sayWord(int i) async {
+    if (_line.tokens[i].itemId == null) return;
+    setState(() => _tapped.add(i));
+    final (a, b) = _line.wordRange(i);
+    final word = [for (var k = a; k < b; k++) _line.tokens[k].surface].join();
+    _s.logger.log('item.audio', {
+      'scope': 'word',
+      'rate': 'normal',
+      'text': word,
+    });
+    await _s.sayWord(word, 'yue');
   }
 
   void _advance() {
@@ -379,6 +398,19 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                         lang: 'yue',
                         fontSize: 34 * _s.prefs.textScale,
                         wordOf: _line.wordOf,
+                        // tap: hear the word; long-press: its meaning. Either counts
+                        // as help for that character, like in reading.
+                        onSpeak: _sayWord,
+                        onLookup: (i) {
+                          setState(() => _tapped.add(i));
+                          showWordLookup(
+                            context,
+                            services: _s,
+                            lang: 'yue',
+                            sentence: _line,
+                            tokenIndex: i,
+                          );
+                        },
                         tokens: [
                           for (var i = 0; i < _line.tokens.length; i++)
                             RubyToken(
@@ -390,6 +422,7 @@ class _SpeakDrillScreenState extends State<SpeakDrillScreen> {
                                   ? ScaffoldLevel.full
                                   : _levels[_line.tokens[i].itemId] ??
                                         ScaffoldLevel.full,
+                              revealed: _tapped.contains(i),
                               mark: switch (_marks[i]?.verdict) {
                                 Verdict.ok || Verdict.tone => SpeechMark.ok,
                                 Verdict.wrong => SpeechMark.wrong,
@@ -539,7 +572,10 @@ List<SentenceRow> pickSpeakLines(
         l,
   ];
   final picks = s.planner.plan(
-    candidates: [for (final l in short) l.toCandidate()],
+    candidates: [
+      for (final l in short)
+        l.toCandidate(itemValues(l.itemIds, s.content.charShares())),
+    ],
     learner: s.learner,
     now: s.logger.now(),
     count: count,

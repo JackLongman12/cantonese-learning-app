@@ -120,6 +120,23 @@ class ToolChips extends StatelessWidget {
   );
 }
 
+/// Screens that have pushed something and are waiting for it to close.
+final _opening = <BuildContext>{};
+
+/// Opens [route] from the screen at [context], once: a second tap (a double tap on a
+/// tile) while the first screen is open is ignored, instead of opening it twice.
+Future<T?> pushOnce<T extends Object?>(
+  BuildContext context,
+  Route<T> route,
+) async {
+  if (!_opening.add(context)) return null;
+  try {
+    return await Navigator.of(context).push(route);
+  } finally {
+    _opening.remove(context);
+  }
+}
+
 /// Back to Home from however deep you are. What you did so far counts.
 void goHome(BuildContext context) =>
     Navigator.of(context).popUntil((r) => r.isFirst);

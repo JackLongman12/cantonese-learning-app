@@ -14,7 +14,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
 import '../data/content_db.dart';
-import '../engine/coverage.dart' show charOfItem;
+import '../engine/coverage.dart' show charOfItem, itemValues;
 import '../engine/scaffold.dart';
 import '../engine/signals.dart';
 import '../events/event_logger.dart';
@@ -159,7 +159,10 @@ class _ReaderScreenState extends State<ReaderScreen> {
         if (!seen.contains(s.id)) s,
     ];
     final picks = _s.planner.plan(
-      candidates: [for (final s in pool) s.toCandidate()],
+      candidates: [
+        for (final s in pool)
+          s.toCandidate(itemValues(s.itemIds, _s.content.charShares())),
+      ],
       learner: _s.learner,
       now: _s.logger.now(),
       count: widget.count ?? pool.length,
@@ -449,6 +452,19 @@ class _ReaderScreenState extends State<ReaderScreen> {
     });
   }
 
+  /// "Not quite": every tested character is marked as read wrong; tap the ones you
+  /// did get right to unmark them, then Next. Nothing left to mark: straight on.
+  void _notQuite() {
+    final all = {
+      for (var i = 0; i < _sentence.tokens.length; i++)
+        if (_tested(i)) i,
+    };
+    if (all.isEmpty) return _next();
+    HapticFeedback.selectionClick();
+    _s.logger.touch();
+    setState(() => _missedTokens.addAll(all));
+  }
+
   /// "Got it": the characters light up for a moment, then the next sentence.
   void _confirm() {
     if (_celebrate) return;
@@ -594,9 +610,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
   void _finishCurrent({required bool skipped}) {
     _s.logger.touch();
     final activeMs = _s.logger.activeMsSince(_mark);
-    final missed = {
-      for (final i in _missedTokens) ?_sentence.tokens[i].itemId,
-    };
+    final missed = {for (final i in _missedTokens) ?_sentence.tokens[i].itemId};
     final List<ItemOutcome> outcomes = skipped
         ? const []
         : _s.signals.outcomes(
@@ -831,7 +845,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
               : 'Tap again to undo. Those come back sooner.')
         : _needsCheck
         ? 'Read it first, in your head or out loud. Stuck? Tap the character. Then Check.'
-        : 'New characters have Jyutping on top. Read along, then tap Listen.';
+        : 'Tap Listen to hear it.';
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 760),
@@ -914,6 +928,19 @@ class _ReaderScreenState extends State<ReaderScreen> {
                       ),
                     ],
                     const SizedBox(height: 12),
+                    if (!_choosing)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          !_needsCheck
+                              ? 'New characters: read along with the Jyutping'
+                              : _checked
+                              ? 'Did you read it right?'
+                              : 'Read this sentence, then tap Check',
+                          key: const ValueKey('read-prompt'),
+                          style: theme.textTheme.titleMedium,
+                        ),
+                      ),
                     if (_choosing)
                       ChoicePanel(
                         key: const ValueKey('choices'),
@@ -990,12 +1017,12 @@ class _ReaderScreenState extends State<ReaderScreen> {
                                       : _celebrate && _tested(i)
                                       ? SpeechMark.ok
                                       : switch (_speech[i]?.verdict) {
-                                    Verdict.ok => SpeechMark.ok,
-                                    Verdict.tone => SpeechMark.tone,
-                                    Verdict.wrong => SpeechMark.wrong,
-                                    Verdict.missed => SpeechMark.missed,
-                                    null => null,
-                                  },
+                                          Verdict.ok => SpeechMark.ok,
+                                          Verdict.tone => SpeechMark.tone,
+                                          Verdict.wrong => SpeechMark.wrong,
+                                          Verdict.missed => SpeechMark.missed,
+                                          null => null,
+                                        },
                                 ),
                             ],
                           ),
@@ -1057,6 +1084,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
               missed: _missedTokens.length,
               onCheck: _check,
               onConfirm: _confirm,
+              onNotQuite: _notQuite,
               isLast: _index + 1 >= _queue.length,
               slowNext: _audioPlays.isOdd,
               onListen: () async {
@@ -1216,9 +1244,8 @@ class _OwnReadsCount extends StatelessWidget {
               child: Text(
                 '$count',
                 key: ValueKey(count),
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: scheme.onSurface,
-                ),
+                style: Theme.of(context).textTheme.labelLarge
+                    ?.copyWith(color: scheme.onSurface),
               ),
             ),
           ],
@@ -1234,6 +1261,7 @@ class _BottomBar extends StatelessWidget {
     required this.missed,
     required this.onCheck,
     required this.onConfirm,
+    required this.onNotQuite,
     required this.isLast,
     required this.onListen,
     required this.slowNext,
@@ -1248,6 +1276,7 @@ class _BottomBar extends StatelessWidget {
   final int missed;
   final VoidCallback onCheck;
   final VoidCallback onConfirm;
+  final VoidCallback onNotQuite;
   final bool isLast;
   final VoidCallback onListen;
 
@@ -1315,6 +1344,17 @@ class _BottomBar extends StatelessWidget {
                         ),
                 ],
                 const SizedBox(width: 8),
+                if (phase == _Phase.checked && missed == 0) ...[
+                  OutlinedButton(
+                    key: const ValueKey('not-quite'),
+                    onPressed: onNotQuite,
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(0, 48),
+                    ),
+                    child: const Text('Not quite'),
+                  ),
+                  const SizedBox(width: 8),
+                ],
                 // takes the remaining width, so the bar fits small phones
                 Expanded(
                   child: switch (phase) {

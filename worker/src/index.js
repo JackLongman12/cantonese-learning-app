@@ -15,13 +15,27 @@ const MAX_PAYLOAD = 4_000;
 const RETENTION_DAYS = 400;
 
 const ID = /^[0-9A-Za-z_-]{1,64}$/;
+
+// The event types the app shares (app/lib/events/telemetry_filter.dart, sharedTypes).
+// Anything else is dropped, so the table only ever holds what the privacy notice lists.
+const SHARED_TYPES = new Set([
+  "app.open", "session.start", "session.end", "session.more", "item.shown", "item.check",
+  "item.reveal", "item.audio", "item.done", "review.applied", "speech.attempt",
+  "conv.choice", "nav.screen", "plan.step", "settings.change", "reader.open",
+  "reader.lookup", "word.save", "word.remove", "word.flag", "word.practice",
+  "experiment.assigned", "onboarding.done", "app.crash",
+]);
 const TYPE = /^[a-z][a-z_.]{0,39}$/;
 const ISO = /^\d{4}-\d{2}-\d{2}T[\d:.]+Z?$/;
 
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { "content-type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+    },
   });
 
 const str = (v, max) => (typeof v === "string" ? v.slice(0, max) : null);
@@ -42,7 +56,8 @@ async function readJson(request) {
 export function cleanEvent(e) {
   if (!e || typeof e !== "object") return null;
   if (!ID.test(e.id ?? "") || !ID.test(e.install_id ?? "")) return null;
-  if (!TYPE.test(e.type ?? "") || !ISO.test(e.ts_utc ?? "")) return null;
+  if (!TYPE.test(e.type ?? "") || !SHARED_TYPES.has(e.type)) return null;
+  if (!ISO.test(e.ts_utc ?? "")) return null;
   const payload = JSON.stringify(
     e.payload && typeof e.payload === "object" ? e.payload : {},
   );
@@ -61,12 +76,24 @@ export function cleanEvent(e) {
   ];
 }
 
+/** Per-IP request limit (Cloudflare rate limiting binding). Missing binding: allowed. */
+async function allowed(limiter, request) {
+  if (!limiter) return true;
+  const ip = request.headers.get("cf-connecting-ip") || "unknown";
+  const { success } = await limiter.limit({ key: ip });
+  return success;
+}
+
 async function postEvents(request, env) {
+  if (!(await allowed(env.EVENTS_LIMIT, request))) return json({ error: "slow down" }, 429);
   const body = await readJson(request);
   const list = body?.events;
   if (!Array.isArray(list) || list.length === 0 || list.length > MAX_EVENTS) {
     return json({ error: "bad batch" }, 400);
   }
+  // one install per request: a single request can't invent many learners
+  const installs = new Set(list.map((e) => e?.install_id));
+  if (installs.size !== 1) return json({ error: "bad batch" }, 400);
   const rows = list.map(cleanEvent).filter(Boolean);
   if (rows.length) {
     const stmt = env.DB.prepare(
@@ -81,6 +108,7 @@ async function postEvents(request, env) {
 }
 
 async function postCrash(request, env) {
+  if (!(await allowed(env.SLOW_LIMIT, request))) return json({ error: "slow down" }, 429);
   const c = await readJson(request);
   if (!c || typeof c !== "object" || !ID.test(c.install_id ?? "")) {
     return json({ error: "bad crash" }, 400);
@@ -117,6 +145,7 @@ function sameToken(a, b) {
 }
 
 async function exportRows(request, env, url) {
+  if (!(await allowed(env.SLOW_LIMIT, request))) return json({ error: "slow down" }, 429);
   const auth = request.headers.get("authorization") || "";
   if (!env.ADMIN_TOKEN || !sameToken(auth, `Bearer ${env.ADMIN_TOKEN}`)) {
     return json({ error: "unauthorized" }, 401);

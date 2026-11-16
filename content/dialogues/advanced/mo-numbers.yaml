@@ -17,4 +17,4 @@ dialogues:
       - ["朋友", "仲有服務費呢？", "And the service charge?"]
       - ["你", "大家各自加一啦，咁最公平。", "Everyone adds ten percent to their own share; that's fairest."]
       - ["朋友", "你計數好快喎，不如你收錢啦。", "You're quick with numbers. Why don't you collect the money?"]
-      - ["你", "好，用轉數快俾我就得。", "OK, just pay me by FPS."]
+      - ["你", "好，用MPay俾我就得。", "OK, just pay me with MPay."]

@@ -103,7 +103,7 @@ def _tree(tmp_path, sentences: str, places: str = "places: []", overrides: str =
     (tmp_path / "places").mkdir()
     (tmp_path / "overrides").mkdir()
     (tmp_path / "scenarios" / "a.yaml").write_text(
-        "scenario: {id: scn-test-a, title: Test, region: macau}\nsentences:\n"
+        "scenario: {id: scn-test-a, title: Test, description: A test topic., region: macau}\nsentences:\n"
         + textwrap.indent(textwrap.dedent(sentences), "  "),
         "utf-8",
     )
@@ -152,7 +152,7 @@ def test_build_writes_aligned_tokens_and_items(tmp_path):
     assert toks[0] == ("唔", "m4", "cr:yue:唔:m4") and toks[2][1] is None
     assert db.execute("SELECT COUNT(*) FROM item WHERE kind='word' AND key='唔該'").fetchone()[0]
     assert db.execute("SELECT COUNT(*) FROM sentence WHERE lang!='yue'").fetchone()[0] == 0
-    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "12"
+    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "13"
 
 
 def test_flags_reach_review_queue_until_fixed(tmp_path):
@@ -166,7 +166,7 @@ def test_flags_reach_review_queue_until_fixed(tmp_path):
     assert r.flags and "腍" in (out.parent / "review_queue.md").read_text("utf-8")
 
     (root / "scenarios" / "a.yaml").write_text(
-        "scenario: {id: scn-test-a, title: Test, region: macau}\nsentences:\n"
+        "scenario: {id: scn-test-a, title: Test, description: A test topic., region: macau}\nsentences:\n"
         "  - {id: sent-test-001, yue: 鳳爪蒸得好腍, en: Soft, register: spoken, fix_yue: {腍: nam4}}\n",
         "utf-8",
     )
@@ -184,7 +184,7 @@ def test_reviewed_readings_are_locked_against_drift(tmp_path):
 
     # Removing the pin would silently change an approved reading: the build must refuse.
     (root / "scenarios" / "a.yaml").write_text(
-        "scenario: {id: scn-test-a, title: Test, region: macau}\nsentences:\n  " + line % "",
+        "scenario: {id: scn-test-a, title: Test, description: A test topic., region: macau}\nsentences:\n  " + line % "",
         "utf-8",
     )
     with pytest.raises(ContentError) as e:

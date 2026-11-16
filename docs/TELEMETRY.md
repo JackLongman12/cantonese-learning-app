@@ -35,9 +35,19 @@ same change. Never add free text.
 | Download and report | `duk telemetry pull` → `data/telemetry/` (git-ignored) · `duk telemetry report` → `build/telemetry_report.md` |
 | Admin token | `secrets.json` → `telemetry_admin_token`, and the Worker secret `ADMIN_TOKEN`. Never in the app or the repo. |
 
-Uploads happen 10 s after start and whenever the app goes to the background, 400 events per
-request. The Worker accepts at most 400 events and 600 KB per request, drops malformed events,
+Uploads happen 10 s after start, every 2 minutes while the app is open, when it is put in
+the background and when it comes back, 400 events per request; a crash is sent at once. There
+are no background jobs or wake-ups, so a closed app uses no battery, and an idle check only
+compares file sizes. The Worker accepts at most 400 events and 600 KB per request, drops malformed events,
 and ignores duplicates (event ids are ULIDs).
+
+Abuse protection (2026-11-17): per-IP rate limits (30 event requests and 10 crash or export
+requests a minute, Cloudflare rate-limiting bindings `EVENTS_LIMIT` / `SLOW_LIMIT`), only the
+event types in `sharedTypes` are stored (the Worker keeps its own copy of the list; keep both in
+sync), one install id per request, and `no-store` / `nosniff` on every response. The export
+needs the admin token (constant-time compare). Crash messages and stacks are scrubbed on the
+device first: Chinese text, long numbers and email addresses become placeholders
+(`redactCrashText`).
 
 Deploying the Worker (from `worker/`, PowerShell needs `npx.cmd`, not `npx`):
 

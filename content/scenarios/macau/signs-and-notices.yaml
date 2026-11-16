@@ -3,6 +3,7 @@
 scenario:
   id: scn-mo-signs
   title: Signs and notices
+  description: "Written Chinese on real signs: exits, notices, warnings and opening hours."
   region: macau
   tags: [signs, written]
 

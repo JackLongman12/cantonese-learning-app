@@ -3,6 +3,7 @@
 scenario:
   id: scn-mo-work
   title: Work and study
+  description: "The office, meetings, leave, school and classes."
   region: macau
   tags: [work, study]
 

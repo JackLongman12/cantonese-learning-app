@@ -46,6 +46,15 @@ void main() {
       expect(charOfItem('card:mtr:中環'), isNull);
     });
 
+    test('common characters are worth more to the planner', () {
+      expect(frequencyValue(0.05), closeTo(1.5, 0.01));
+      expect(frequencyValue(0.001), greaterThan(frequencyValue(0.00001)));
+      expect(frequencyValue(null), 0.5);
+      expect(itemValues(['cr:yue:的:dik1'], share), {
+        'cr:yue:的:dik1': closeTo(1.5, 0.01),
+      });
+    });
+
     test('suggests the most common characters not learned yet', () {
       expect(mostUsefulNext(share, {'的'}, count: 2), ['我', '係']);
     });
@@ -84,7 +93,10 @@ void main() {
       )!;
       expect(saved['payload'], {'lang': 'yue'});
       final spoken = shareable(
-        ev('speech.attempt', {'score': 0.8, 'per_token': ['...']}),
+        ev('speech.attempt', {
+          'score': 0.8,
+          'per_token': ['...'],
+        }),
         'tid',
       )!;
       expect(spoken['payload'], {'score': 0.8});
@@ -98,6 +110,13 @@ void main() {
         'tid',
       )!;
       expect(lesson['payload'], {'char': '銀', 'in_sentence': 'sent-1'});
+    });
+
+    test('crash text is scrubbed of what the learner typed', () {
+      expect(
+        redactCrashText('FormatException: 我老婆電話 98765432 a@b.com line 12'),
+        'FormatException: [zh] [number] [email] line 12',
+      );
     });
 
     test('unlisted event types never leave the device', () {

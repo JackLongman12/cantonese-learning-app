@@ -34,12 +34,23 @@ class CharacterPictures {
         final out = fileFor(role);
         if (out.existsSync()) continue;
         try {
+          final uri = Uri.tryParse(url);
+          if (uri == null || uri.scheme != 'https') continue;
           final r = await client
-              .get(Uri.parse(url))
+              .send(http.Request('GET', uri))
               .timeout(const Duration(seconds: 30));
-          if (r.statusCode != 200 || !_isImage(r.bodyBytes)) continue;
+          if (r.statusCode != 200) continue;
+          // read at most maxBytes: a bad response can't fill memory or storage
+          final bytes = <int>[];
+          await for (final chunk in r.stream.timeout(
+            const Duration(seconds: 30),
+          )) {
+            bytes.addAll(chunk);
+            if (bytes.length > maxBytes) break;
+          }
+          if (bytes.length > maxBytes || !_isImage(bytes)) continue;
           final part = File('${out.path}.part');
-          await part.writeAsBytes(r.bodyBytes, flush: true);
+          await part.writeAsBytes(bytes, flush: true);
           await part.rename(out.path);
           saved++;
         } on Object {
@@ -51,6 +62,9 @@ class CharacterPictures {
     }
     return saved;
   }
+
+  /// Largest picture accepted (the Irasutoya PNGs are well under 1 MB).
+  static const maxBytes = 3 * 1024 * 1024;
 
   /// PNG or JPEG only: downloads are untrusted data.
   static bool _isImage(List<int> b) =>

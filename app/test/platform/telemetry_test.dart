@@ -61,7 +61,10 @@ void main() {
     expect(await t.upload(), 2);
     final events = posts.single.$2['events']! as List;
     expect(posts.single.$1, '/v1/events');
-    expect([for (final e in events) (e as Map)['type']], ['app.open', 'word.save']);
+    expect(
+      [for (final e in events) (e as Map)['type']],
+      ['app.open', 'word.save'],
+    );
     expect(jsonEncode(events), isNot(contains('dev1')));
     expect(jsonEncode(events), isNot(contains('私人')));
     // nothing new: nothing sent
@@ -82,16 +85,22 @@ void main() {
     expect(await t.upload(), 1);
   });
 
-  test('turning sharing back on skips what happened while it was off', () async {
-    logger.log('app.open', {});
-    final t = make()..skipToEnd();
-    prefs
-      ..shareData = true
-      ..telemetryId = 'tid';
-    logger.log('session.start', {});
-    expect(await t.upload(), 1);
-    expect(((posts.single.$2['events']! as List).single as Map)['type'], 'session.start');
-  });
+  test(
+    'turning sharing back on skips what happened while it was off',
+    () async {
+      logger.log('app.open', {});
+      final t = make()..skipToEnd();
+      prefs
+        ..shareData = true
+        ..telemetryId = 'tid';
+      logger.log('session.start', {});
+      expect(await t.upload(), 1);
+      expect(
+        ((posts.single.$2['events']! as List).single as Map)['type'],
+        'session.start',
+      );
+    },
+  );
 
   test('a crash is kept and sent with the next upload', () async {
     final t = make();

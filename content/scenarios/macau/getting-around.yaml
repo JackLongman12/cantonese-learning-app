@@ -3,6 +3,7 @@
 scenario:
   id: scn-mo-getting-around
   title: Getting around Macau
+  description: "Buses, the LRT, taxis and asking the way in Macau."
   region: macau
   tags: [transport, directions]
 

@@ -2,6 +2,7 @@
 scenario:
   id: scn-mo-food-and-money
   title: Eating out and paying
+  description: "Ordering at restaurants and cha chaan tengs, splitting the bill, paying by phone."
   region: macau
   tags: [food, money]
 

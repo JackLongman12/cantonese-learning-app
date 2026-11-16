@@ -5,7 +5,7 @@ Content lives in `content/` as YAML. The pipeline validates it, fills in reading
 ## Rules for all content
 
 1. **IDs are permanent.** Format `<kind>-<region>-<topic>-<nnn>`. Never reuse or renumber. To remove something, set `retired: true`.
-2. **Sentences must be things people actually say or see** in Macau/HK. Prefer short, high-frequency, situation-bound lines.
+2. **Sentences must be things people actually say or see** in Macau/HK: real situations, not hypotheticals ("if I won the lottery…") or textbook filler. Prefer short, high-frequency, situation-bound lines built from the most common characters and word groups (HKCanCor share, `char_freq`); the planner introduces common characters first.
 3. **Region tag is required:** `macau`, `hk`, `both`, or `general`. Target mix: about 50% macau, 30% hk/both, 20% general.
 4. **Register tag is required:** `spoken` (written Cantonese: 佢哋、唔係、嘅) or `written` (standard written Chinese as on signs, forms, news).
 5. **Readings are never typed into sentences.** The pipeline computes them. To correct one, add `fix_yue: {字: reading}` (or `字#2` for the second occurrence) on the entry, or a word in `content/overrides/readings.yaml` when it holds everywhere. Approved readings of `reviewed: true` entries are frozen in `content/readings.lock.json` (machine-written, committed); a build that would change one fails.
@@ -13,6 +13,7 @@ Content lives in `content/` as YAML. The pipeline validates it, fills in reading
 7. **LLM-generated content** must also carry `source: llm` and is never auto-approved.
 8. **Macau facts** (bus routes, place names, Portuguese names, prices) must come from a source listed in `DATA_SOURCES.md` or from the owner. Do not invent them.
 9. Traditional text uses HK standard forms (OpenCC `s2hk`/`t2hk`). Simplified text is authored or converted then checked for many-to-one cases (發/髮→发).
+10. **Every topic has a `description:`** (one line, at most 160 characters) saying what it covers, shown on its tile and page. The title says the situation plainly; the pipeline refuses a topic without a description.
 
 ## Size and variation
 

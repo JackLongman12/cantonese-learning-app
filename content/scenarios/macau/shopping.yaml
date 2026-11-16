@@ -3,6 +3,7 @@
 scenario:
   id: scn-mo-shopping
   title: Shopping and markets
+  description: "Supermarkets, wet markets, sizes, discounts and returns."
   region: macau
   tags: [shopping, market]
 
@@ -81,7 +82,7 @@ sentences:
   - {id: sent-mo-shop-069, yue: 有冇叉電器賣？, en: "Do you sell chargers?", pattern: electronics, region: both}
   - {id: sent-mo-shop-070, yue: 呢部係咪行貨？, en: "Is this the local-warranty version?", pattern: electronics, region: both}
   - {id: sent-mo-shop-071, yue: 我部電話壞咗，可唔可以整？, en: "My phone is broken, can it be fixed?", pattern: electronics, region: both}
-  - {id: sent-mo-shop-072, yue: 整要幾耐？, en: "How long will the repair take?", pattern: electronics, region: both}
+  - {id: sent-mo-shop-072, yue: 整好要幾耐？, en: "How long will it take to fix?", pattern: electronics, region: both}
   - {id: sent-mo-shop-073, yue: 我想買張電話卡。, en: "I'd like to buy a SIM card.", pattern: electronics, region: both}
   - {id: sent-mo-shop-074, yue: 增值卡喺邊度買？, en: "Where can I buy a top-up card?", pattern: electronics, region: both}
   - {id: sent-mo-shop-075, yue: 我想睇下嗰對鞋。, en: "I'd like to look at that pair of shoes.", pattern: browse, region: both}

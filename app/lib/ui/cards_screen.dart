@@ -60,7 +60,8 @@ class DeckSection extends StatelessWidget {
               style: FilledButton.styleFrom(minimumSize: const Size(0, 52)),
               onPressed: () async {
                 services.sound(Sfx.tap);
-                await Navigator.of(context).push(
+                await pushOnce(
+                  context,
                   MaterialPageRoute<void>(
                     builder: (_) => CardSessionScreen(
                       services: services,
@@ -93,7 +94,8 @@ class DeckSection extends StatelessWidget {
                     'screen': 'deck',
                     'deck_id': d.id,
                   });
-                  await Navigator.of(context).push(
+                  await pushOnce(
+                    context,
                     MaterialPageRoute<void>(
                       builder: (_) =>
                           CardSessionScreen(services: services, deck: d),

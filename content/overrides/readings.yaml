@@ -261,3 +261,5 @@ yue:
   會員卡: [wui2, jyun4, kaat1]
   # 重 as "again, re-" is cung4 (重新 cung4 san1 in rime-cantonese)
   重設: [cung4, cit3]
+  # 長龍 "a long queue": coeng4 lung4 (long), never zoeng2 (grow); story lines cannot take fix_yue
+  長龍: [coeng4, lung4]

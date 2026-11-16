@@ -52,7 +52,11 @@ class MainActivity : FlutterActivity() {
             )
             return "needs_permission"
         }
-        val uri = FileProvider.getUriForFile(this, "$packageName.updates", File(path))
+        // only an APK the updater downloaded into its own cache folder
+        val file = File(path).canonicalFile
+        val updates = File(cacheDir, "ducklearn_updates").canonicalFile
+        if (file.parentFile != updates || !file.name.endsWith(".apk")) return "bad_path"
+        val uri = FileProvider.getUriForFile(this, "$packageName.updates", file)
         startActivity(
             Intent(Intent.ACTION_VIEW)
                 .setDataAndType(uri, "application/vnd.android.package-archive")
@@ -72,4 +76,6 @@ class MainActivity : FlutterActivity() {
         Intent.ACTION_PROCESS_TEXT -> intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString()
         else -> null
     }?.takeIf { it.isNotBlank() }
+        // any app can share in: cap the size so a huge text can't freeze the reader
+        ?.take(20000)
 }

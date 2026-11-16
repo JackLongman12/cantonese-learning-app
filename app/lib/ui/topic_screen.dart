@@ -4,6 +4,7 @@ library;
 import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
+import 'finish.dart' show pushOnce;
 import '../data/content_db.dart';
 import 'critters.dart';
 import 'reader_screen.dart';
@@ -31,8 +32,7 @@ class _TopicScreenState extends State<TopicScreen> {
 
   Future<void> _open(Widget screen, Map<String, Object?> log) async {
     _s.logger.log('nav.screen', log);
-    await Navigator.of(context)
-        .push(MaterialPageRoute<void>(builder: (_) => screen));
+    await pushOnce(context, MaterialPageRoute<void>(builder: (_) => screen));
     if (mounted) setState(() {});
   }
 
@@ -66,6 +66,14 @@ class _TopicScreenState extends State<TopicScreen> {
                                 style: theme.textTheme.titleLarge,
                               ),
                               const SizedBox(height: 4),
+                              if (sc.description.isNotEmpty) ...[
+                                Text(
+                                  sc.description,
+                                  key: const ValueKey('topic-description'),
+                                  style: theme.textTheme.bodyLarge,
+                                ),
+                                const SizedBox(height: 8),
+                              ],
                               Text(
                                 '${sc.sentenceCount} real-life lines. The app picks the '
                                 'ones that help you most right now.',

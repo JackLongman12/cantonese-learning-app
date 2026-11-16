@@ -5,6 +5,7 @@
 scenario:
   id: scn-hk-getting-around
   title: Getting around Hong Kong
+  description: "MTR, minibuses, trams, Octopus and asking the way in Hong Kong."
   region: hk
   tags: [transport, hk]
 
@@ -388,8 +389,8 @@ sentences:
     en: "People in Macau say 巴士, and so does Hong Kong."
     tags: [compare]
   - id: sent-hk-around-093
-    yue: 香港行路比澳門快。
-    en: "People walk faster in Hong Kong than in Macau."
+    yue: 香港人行路比澳門人快。
+    en: "People in Hong Kong walk faster than in Macau."
     tags: [compare]
   - id: sent-hk-around-094
     yue: 我喺澳門好少搭巴士上層。

@@ -6,6 +6,7 @@ library;
 import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
+import 'finish.dart' show pushOnce;
 import '../engine/word_book.dart';
 import '../platform/sfx.dart';
 import 'paste_reader_screen.dart';
@@ -94,8 +95,7 @@ class _WordsScreenState extends State<WordsScreen> {
 
   Future<void> _push(Widget screen) async {
     _s.sound(Sfx.tap);
-    await Navigator.of(context)
-        .push(MaterialPageRoute<void>(builder: (_) => screen));
+    await pushOnce(context, MaterialPageRoute<void>(builder: (_) => screen));
     if (mounted) setState(() {});
   }
 

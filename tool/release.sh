@@ -38,7 +38,7 @@ echo "== content"
 echo "== builds"
 cd app
 "$FLUTTER" build apk --release --split-per-abi --target-platform android-arm64 \
-  --build-name "$NAME" --build-number "$BUILD" | grep -E "Built|rror"
+  --build-name "$NAME" --build-number "$BUILD" --dart-define=APP_VERSION="$TAG"   | grep -E "Built|rror"
 # Windows releases are paused (owner, 2026-11-15).
 # "$FLUTTER" build windows --release --build-name "$NAME" --build-number "$BUILD" | grep -E "Built|rror"
 cd ..

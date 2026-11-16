@@ -7,6 +7,7 @@
 scenario:
   id: scn-swearing
   title: Swearing and rude Cantonese
+  description: "What the swear words mean, how strong they are, and the polite versions. 18+."
   region: both
   tags: [swearing, slang, culture]
 
@@ -550,7 +551,7 @@ sentences:
   - {id: sent-sw-152, yue: 契弟走得摩，快啲走！, en: "Run for it, now!", notes: "An old saying, literally 'the coward runs fast': get out quick.", tags: [medium]}
   - {id: sent-sw-153, yue: 佢正一搞屎棍。, en: "He's a real troublemaker.", notes: "搞屎棍: literally a stick that stirs shit.", tags: [insult, mild]}
   - {id: sent-sw-154, yue: 食屎啦你！, en: "Eat shit!", tags: [insult, medium]}
-  - {id: sent-sw-155, yue: 做成噉，一嚿屎噉。, en: "Done like that, it's a pile of crap.", tags: [medium]}
+  - {id: sent-sw-155, yue: 你做到一嚿屎噉。, en: "You've made a total mess of it.", tags: [medium]}
   - {id: sent-sw-156, yue: 你個豬頭！, en: "You pig-head!", tags: [insult, mild]}
   - {id: sent-sw-157, yue: 蠢過隻豬。, en: "Dumber than a pig.", tags: [insult, mild]}
   - {id: sent-sw-158, yue: 你好膠呀。, en: "You're so dumb.", notes: "膠: stupid, from online slang.", tags: [insult, mild, online]}

@@ -10,15 +10,25 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 
+import 'package:crypto/crypto.dart';
 import 'package:record/record.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as so;
 
 import '../engine/end_of_speech.dart';
 
+// Pinned to one commit of the model repo, and every file is checked against its SHA-256
+// after download (matches HuggingFace's X-Linked-ETag and data/models, 2026-11-17), so a
+// changed or tampered file is never loaded by the native recogniser.
 const _hf =
-    'https://huggingface.co/csukuangfj/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17/resolve/main';
+    'https://huggingface.co/csukuangfj/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17/resolve/2365baeacb507f821a0c8120fcee3d484dba7a07';
 const modelBytes = 239233841;
 const _files = {'model.int8.onnx': modelBytes, 'tokens.txt': 315894};
+const _sha256 = {
+  'model.int8.onnx':
+      'c71f0ce00bec95b07744e116345e33d8cbbe08cef896382cf907bf4b51a2cd51',
+  'tokens.txt':
+      'f449eb28dc567533d7fa59be34e2abca8784f771850c78a47fb731a31429a1dc',
+};
 
 class SpeechEngine {
   SpeechEngine(this.modelDir);
@@ -64,14 +74,20 @@ class SpeechEngine {
           throw HttpException('HTTP ${resp.statusCode} for ${e.key}');
         }
         final sink = part.openWrite();
+        final hashOut = _DigestSink();
+        final hasher = sha256.startChunkedConversion(hashOut);
         await for (final chunk in resp.stream) {
           sink.add(chunk);
+          hasher.add(chunk);
           done += chunk.length;
           progress?.call(done / total);
         }
         await sink.close();
-        if (part.lengthSync() != e.value) {
-          throw const HttpException('Incomplete download');
+        hasher.close();
+        if (part.lengthSync() != e.value ||
+            hashOut.value.toString() != _sha256[e.key]) {
+          part.deleteSync();
+          throw const HttpException('Download incomplete or corrupted');
         }
         part.renameSync(target.path);
       }
@@ -229,4 +245,13 @@ Float32List readWav16(Uint8List bytes) {
     off += 8 + size + (size.isOdd ? 1 : 0);
   }
   throw const FormatException('No data chunk in WAV');
+}
+
+/// Collects the digest from a chunked SHA-256 conversion.
+class _DigestSink implements Sink<Digest> {
+  late Digest value;
+  @override
+  void add(Digest data) => value = data;
+  @override
+  void close() {}
 }

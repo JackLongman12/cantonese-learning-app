@@ -3,6 +3,41 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (later): first usage data, fixes, content pass, security
+
+First telemetry pull (the owner's install, 3,805 events, Nov 14–16, no crashes). What it
+showed and what was done:
+
+- Every event said app version `0.1.0-dev`: release builds never set `APP_VERSION`.
+  `tool/release.sh` now passes the tag.
+- Pairs of sessions starting within a second: a double tap opened a screen twice.
+  `pushOnce` (ui/finish.dart) ignores a second open while the first is still showing.
+- 79 of 103 sessions ended before the end, many after one line; read-aloud was used on about
+  70% of sentences; the voice setting was changed 32 times (the TTS problem since fixed).
+- Hardest characters: 叉 燒 路 嚟 包 (readings checked, correct).
+- The owner: the reader didn't ask them to read and had no way to say "I got it wrong".
+  Now a prompt above every sentence ("Read this sentence, then tap Check" / "Did you read
+  it right?") and a **Not quite** button that marks every tested character (tap to unmark).
+- Speak drill: words can be tapped to hear them and long-pressed for the meaning (counts as
+  help).
+- Planner: new characters weighted by how common they are in everyday Hong Kong speech
+  (`frequencyValue`, 0.5–1.5), so 係 唔 我 come before rare characters.
+- Uploads every 2 minutes while the app is open, on pause and on resume; nothing in the
+  background.
+- Topics: one-line descriptions on every tile and page (pipeline requires one), clearer
+  names ("Many ways to say it" is now "Same thing, different words"; "Cantonese food" is
+  "Dishes and menus"), and groups in a beginner's order.
+- Content: all 2,794 lines read. Fixed missing words (呢碗麵, 整好要幾耐, 香港人行路比澳門人快),
+  a word-order error (下得班), Hong Kong things in Macau conversations (轉數快 → MPay,
+  地鐵 → 巴士); 55 bare fragments in Numbers and time ("上個月。") became full sentences;
+  長龍 reads coeng4 everywhere. Six new Gen Z stories (group chat, Shenzhen weekend,
+  concert tickets, café, part-time job, a first date).
+- Security: updates only from GitHub over HTTPS, checked file names, SHA-256 verified against
+  GitHub's digest; speech model pinned to a commit and SHA-256; picture downloads capped at
+  3 MB and HTTPS only; FileProvider limited to the update folder; shared text capped; crash
+  text scrubbed of Chinese text, long numbers and emails; Worker rate limits, an event-type
+  allowlist and one install per request; CI token read-only with actions pinned to SHAs.
+
 ## 2026-11-17: an app for beginners; read, then check; usage data
 
 The owner found the content too basic for their own use, so DuckLearn is now for beginners:

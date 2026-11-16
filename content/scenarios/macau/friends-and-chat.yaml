@@ -3,6 +3,7 @@
 scenario:
   id: scn-mo-chat
   title: Friends, small talk and slang
+  description: "Chatting with friends: plans, catching up, and the slang people really use."
   region: macau
   tags: [social, slang]
 

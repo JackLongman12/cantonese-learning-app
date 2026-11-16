@@ -3,6 +3,7 @@
 scenario:
   id: scn-mo-weather
   title: Weather and emergencies
+  description: "Typhoon signals, rainstorm warnings, heat, and getting help fast."
   region: macau
   tags: [weather, emergency]
 

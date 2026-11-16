@@ -3,7 +3,8 @@
 # Drafted by an LLM; reviewed: false until the owner confirms wording and readings.
 scenario:
   id: scn-cantonese-food
-  title: Cantonese food
+  title: Dishes and menus
+  description: "Names of real dishes (dim sum, siu mei, noodles, desserts) as they appear on menus."
   region: both
   tags: [food]
 
@@ -268,8 +269,8 @@ sentences:
     en: "Rice vermicelli or flat rice noodles?"
     tags: [noodles]
   - id: sent-food-062
-    yue: 碗麵好大碗。
-    en: "That bowl of noodles is huge."
+    yue: 呢碗麵好大碗。
+    en: "This bowl of noodles is huge."
     tags: [noodles]
 
   # --- home cooking and soup ---------------------------------------------------------

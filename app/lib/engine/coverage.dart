@@ -4,6 +4,8 @@
 /// The most common characters carry most text, so this rises fast at first.
 library;
 
+import 'dart:math' as math;
+
 import 'item_state.dart';
 
 /// [share]: character -> its share of all characters in the corpus (sums to about 1).
@@ -39,3 +41,19 @@ Set<String> learnedChars(Iterable<ItemState> states) => {
   for (final s in states)
     if (s.reps >= 2 && (s.stability ?? 0) >= 1) ?charOfItem(s.itemId),
 };
+
+/// How much learning a new character is worth to the planner (its `itemValue`): from
+/// 0.5 (not in everyday speech) to 1.5 (the most common characters), on a log scale of
+/// its share, so 係 唔 我 come before rare characters (owner, 2026-11-17). The range is
+/// kept near 1 so the planner's overload penalty still keeps sentences light.
+double frequencyValue(double? share) {
+  if (share == null || share <= 0) return 0.5;
+  final x = (math.log(share) / math.ln10 + 6) / 4.7;
+  return (0.5 + x).clamp(0.5, 1.5);
+}
+
+/// [frequencyValue] for each item id.
+Map<String, double> itemValues(
+  Iterable<String> itemIds,
+  Map<String, double> share,
+) => {for (final id in itemIds) id: frequencyValue(share[charOfItem(id)])};

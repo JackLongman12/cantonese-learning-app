@@ -1,0 +1,111 @@
+# Stories about how young people in Hong Kong and Macau actually spend their days: group
+# chats, weekends in Shenzhen, concert tickets, cafés, part-time jobs, dating apps. Real
+# situations with the words people use (已讀唔回, 北上, 搶飛, 黃牛飛, 打卡, 限動, chur, AA制).
+# level 1 = very easy, 2 = easy, 3 = more written-style characters.
+# Drafted by an LLM (2026-11-17); the owner accepted LLM content as-is on 2026-11-16.
+stories:
+  - id: sty-genz-groupchat-yue
+    lang: yue
+    level: 1
+    title: "Planning dinner in the group chat"
+    lines:
+      - ["星期五夜晚，我哋個group好熱鬧。", "On Friday night our group chat is buzzing."]
+      - ["阿詩問：「聽晚食咩好？」", "Ah Sze asks: \"What shall we eat tomorrow night?\""]
+      - ["阿明話想食日本嘢，阿欣話想打邊爐。", "Ah Ming wants Japanese food; Ah Yan wants hotpot."]
+      - ["我開咗個投票，等大家揀。", "I start a poll so everyone can choose."]
+      - ["過咗一個鐘，得三個人投咗票。", "An hour later, only three people have voted."]
+      - ["阿傑又係已讀唔回。", "Ah Kit has read it and not replied, again."]
+      - ["我tag咗佢：「喂，你去唔去呀？」", "I tag him: \"Hey, are you coming or not?\""]
+      - ["佢終於覆：「去！食咩都得。」", "He finally replies: \"Coming! Anything's fine.\""]
+      - ["最後打邊爐贏咗，我即刻訂枱。", "In the end hotpot wins, and I book a table right away."]
+      - ["阿詩send咗個貼圖，大家都笑死。", "Ah Sze sends a sticker and everyone dies laughing."]
+
+  - id: sty-genz-cafe-yue
+    lang: yue
+    level: 1
+    title: "The café for photos"
+    lines:
+      - ["阿欣喺IG見到一間新開嘅café。", "Ah Yan sees a newly opened café on Instagram."]
+      - ["佢話好靚，一定要去打卡。", "She says it's gorgeous and we have to go for photos."]
+      - ["我哋星期日去到，門口已經排長龍。", "We get there on Sunday and there's already a long queue."]
+      - ["排咗四十五分鐘，終於有位。", "After forty-five minutes we finally get a table."]
+      - ["入面啲燈好暗，每張枱都有花。", "Inside, the lights are dim and every table has flowers."]
+      - ["我哋叫咗兩杯咖啡同一件蛋糕。", "We order two coffees and a slice of cake."]
+      - ["啲嘢一嚟到，阿欣即刻影相。", "The moment it arrives, Ah Yan starts taking photos."]
+      - ["佢影咗十分鐘，咖啡都凍咗。", "She takes photos for ten minutes and the coffee goes cold."]
+      - ["我飲咗一啖，其實好普通。", "I take a sip; honestly, it's pretty ordinary."]
+      - ["不過阿欣出咗個限動，好多人like。", "But Ah Yan posts a story and lots of people like it."]
+      - ["佢話：「值得㗎！」我淨係笑咗一下。", "She says: \"Worth it!\" I just laugh."]
+
+  - id: sty-genz-north-yue
+    lang: yue
+    level: 2
+    title: "A weekend in Shenzhen"
+    lines:
+      - ["星期六一早，我同兩個朋友北上深圳。", "Early on Saturday, two friends and I head north to Shenzhen."]
+      - ["我哋喺羅湖過關，排咗二十分鐘。", "We cross at Lo Wu and queue for twenty minutes."]
+      - ["過到去，第一件事係開支付寶。", "Once across, the first thing is to open Alipay."]
+      - ["喺深圳，好少人用現金。", "In Shenzhen, hardly anyone uses cash."]
+      - ["我哋先去飲咗杯奶茶，平過香港好多。", "First we get milk tea; it's much cheaper than in Hong Kong."]
+      - ["跟住去做按摩，做咗一個半鐘，好舒服。", "Then we get a massage, an hour and a half, so relaxing."]
+      - ["晚飯食火鍋，啲服務員好有禮貌，仲送咗生果。", "Dinner is hotpot; the staff are very polite and even give us free fruit."]
+      - ["阿欣話：「香港邊度有咁抵？」", "Ah Yan says: \"Where in Hong Kong is it this good value?\""]
+      - ["食完我哋去超市，買咗一大袋零食。", "After eating we go to a supermarket and buy a big bag of snacks."]
+      - ["返香港嗰陣，關口好多人，人人都拎住大包細包。", "Going back, the border is packed, everyone carrying bags and bags."]
+      - ["返到屋企已經十二點，我對腳好攰。", "By the time I get home it's midnight and my feet are dead."]
+      - ["但係我已經諗緊下個禮拜再去邊度食。", "But I'm already thinking about where to eat next week."]
+
+  - id: sty-genz-tickets-yue
+    lang: yue
+    level: 2
+    title: "Concert tickets"
+    lines:
+      - ["我最鍾意嘅樂隊喺紅館開演唱會。", "My favorite band is playing a concert at the Coliseum."]
+      - ["朝早十點開始賣飛，我九點半已經坐喺電腦前面。", "Tickets go on sale at ten; I'm at my computer by half past nine."]
+      - ["十點一到，個網頁即刻卡死咗。", "At ten sharp, the website freezes."]
+      - ["我入到網上排隊，前面有三萬人。", "I get into the online queue: thirty thousand people ahead of me."]
+      - ["我等咗成個鐘，終於輪到我。", "I wait a whole hour and finally it's my turn."]
+      - ["點知一入去，所有位都賣晒。", "But the moment I get in, every seat is sold out."]
+      - ["網上即刻有人賣黃牛飛，貴三倍。", "Straight away scalpers are selling tickets online at three times the price."]
+      - ["我好嬲，但係唔想俾黃牛賺錢。", "I'm furious, but I don't want scalpers making money."]
+      - ["夜晚阿詩打俾我：「我搶到兩張！」", "That night Ah Sze calls: \"I got two!\""]
+      - ["我開心到喺床上面跳。", "I'm so happy I jump on the bed."]
+      - ["佢話：「你請我食飯就得喇。」", "She says: \"Just buy me dinner and we're even.\""]
+      - ["我即刻答應，仲話請佢食兩餐。", "I say yes immediately, and offer two dinners."]
+
+  - id: sty-genz-parttime-yue
+    lang: yue
+    level: 2
+    title: "My first part-time job"
+    lines:
+      - ["暑假我喺一間飲品舖做兼職。", "Over the summer I work part-time at a drinks shop."]
+      - ["第一日，同事教我點樣整珍珠奶茶。", "On day one, a coworker shows me how to make bubble milk tea."]
+      - ["每個客都有自己嘅要求。", "Every customer has their own requests."]
+      - ["「少甜走冰」、「半糖少冰」、「加珍珠」，我記到頭都暈。", "'Less sweet, no ice', 'half sugar, less ice', 'extra pearls': remembering them makes my head spin."]
+      - ["放學時間最多人，一次過嚟成班學生。", "After school is the busiest; whole groups of students come at once."]
+      - ["我整錯咗兩杯，要重新整過。", "I get two drinks wrong and have to remake them."]
+      - ["經理冇鬧我，淨係叫我慢慢嚟。", "The manager doesn't tell me off; she just says take it slowly."]
+      - ["做咗八個鐘，我對手好攰，真係好chur。", "After eight hours my hands are sore; it's really intense."]
+      - ["一個月之後出糧，我第一次自己賺錢。", "A month later payday comes; it's the first money I've ever earned."]
+      - ["我請咗阿媽食飯，佢好開心。", "I take Mom out for dinner, and she's really happy."]
+      - ["佢話：「我個仔大個仔喇。」", "She says: \"My boy's all grown up.\""]
+
+  - id: sty-genz-date-yue
+    lang: yue
+    level: 3
+    title: "A first date from an app"
+    lines:
+      - ["我喺交友app度識咗一個女仔，叫阿晴。", "I meet a girl called Ah Ching on a dating app."]
+      - ["我哋傾咗兩個禮拜，終於約出嚟見面。", "We chat for two weeks and finally arrange to meet."]
+      - ["地點喺尖沙咀海旁，夜晚七點。", "The place: the Tsim Sha Tsui waterfront, seven in the evening."]
+      - ["我提早二十分鐘到，好緊張，不停睇自己個樣。", "I arrive twenty minutes early, so nervous I keep checking how I look."]
+      - ["佢真人同相片差唔多，笑起嚟好甜。", "In person she looks like her photos, with a sweet smile."]
+      - ["我哋去咗附近一間餐廳食意大利菜。", "We go to an Italian restaurant nearby."]
+      - ["一開始有啲尷尬，大家都唔知講咩好。", "At first it's a bit awkward; neither of us knows what to say."]
+      - ["後來發現大家都鍾意行山同睇恐怖片。", "Then we find out we both like hiking and horror films."]
+      - ["越傾越開心，唔知唔覺已經十點。", "The more we talk the more fun it is; before we know it, it's ten."]
+      - ["埋單嗰陣，佢話要AA制。", "When the bill comes, she says we should split it."]
+      - ["我本來想請佢，不過佢好堅持。", "I wanted to treat her, but she insists."]
+      - ["我哋喺海旁行咗一陣，睇對面嘅夜景。", "We walk along the waterfront for a while, looking at the lights across the harbour."]
+      - ["散嘅時候，佢話：「下次到你揀地方。」", "When we say goodbye, she says: \"Next time you pick the place.\""]
+      - ["我喺巴士上面笑咗成程車。", "I smile the whole bus ride home."]

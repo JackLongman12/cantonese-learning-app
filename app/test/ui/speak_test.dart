@@ -12,6 +12,7 @@ import 'package:duk/ui/speak_drill_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'reader_steps.dart';
+
 import 'package:material_ui/material_ui.dart';
 
 void main() {
@@ -114,6 +115,7 @@ void main() {
 
     await readAll();
     expect(find.byKey(const ValueKey('keep-going')), findsOneWidget);
+    final firstBatch = store.events.where((e) => e.type == 'item.shown').length;
     await t.tap(find.byKey(const ValueKey('keep-going')));
     await t.pumpAndSettle();
     await readAll();
@@ -121,7 +123,7 @@ void main() {
         .where((e) => e.type == 'item.shown')
         .map((e) => e.payload['sentence_id'])
         .toList();
-    expect(shown.length, greaterThan(2)); // more than the first batch
+    expect(shown.length, greaterThan(firstBatch)); // more than the first batch
     expect(shown.toSet().length, shown.length); // no sentence twice
   }, skip: !hasDb);
 }

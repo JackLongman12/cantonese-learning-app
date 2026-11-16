@@ -38,7 +38,7 @@ void main() {
           'assets': [
             {
               'name': asset,
-              'browser_download_url': 'https://example.invalid/a',
+              'browser_download_url': 'https://github.com/o/r/releases/download/b9999/a',
               'size': 1000000,
             },
           ],

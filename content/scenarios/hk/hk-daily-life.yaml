@@ -6,6 +6,7 @@
 scenario:
   id: scn-hk-daily
   title: Hong Kong daily life
+  description: "A normal day in Hong Kong: the commute, the building, malls, errands, queues and evenings."
   region: hk
   tags: [daily, hk]
 
@@ -83,7 +84,7 @@ sentences:
   - {id: sent-hk-daily-063, yue: 剪短少少就得。, en: "Just a little shorter.", pattern: errand}
   - {id: sent-hk-daily-064, yue: 兩邊剪短啲，上面唔使郁。, en: "Shorter on the sides; leave the top.", pattern: errand}
   - {id: sent-hk-daily-065, yue: 我部手機個mon爆咗。, en: "My phone screen is cracked.", pattern: errand, notes: "mon: from English 'monitor', the everyday word for a screen."}
-  - {id: sent-hk-daily-066, yue: 整要幾耐？, en: "How long will the repair take?", pattern: errand}
+  - {id: sent-hk-daily-066, yue: 整好要幾耐？, en: "How long will it take to fix?", pattern: errand}
   - {id: sent-hk-daily-067, yue: 聽日嚟攞得唔得？, en: "Can I pick it up tomorrow?", pattern: errand}
   - {id: sent-hk-daily-068, yue: 我拎啲衫去洗衣舖。, en: "I'm taking some clothes to the laundry.", pattern: errand}
   - {id: sent-hk-daily-069, yue: 幾時可以攞？, en: "When can I collect it?", pattern: errand}

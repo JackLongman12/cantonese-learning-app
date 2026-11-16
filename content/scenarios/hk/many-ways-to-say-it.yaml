@@ -1,10 +1,11 @@
-# Many ways to say it: one thing, several everyday words (白車 / 救護車 / 救傷車). Each
+# Same thing, different words (was "Many ways to say it"): one thing, several everyday words (白車 / 救護車 / 救傷車). Each
 # group from content/variants.yaml gets lines using each of its words, so you learn to
 # read all of them. `pattern` is the group id, so the planner spreads a group's lines out.
 # Drafted by an LLM; reviewed: false until the owner confirms wording and notes.
 scenario:
   id: scn-variants
-  title: Many ways to say it
+  title: Same thing, different words
+  description: "One thing, several words: the everyday word, the formal one on signs, and the older one. 白車 and 救護車 are both ambulances."
   region: both
   tags: [vocabulary, variants, slang]
 

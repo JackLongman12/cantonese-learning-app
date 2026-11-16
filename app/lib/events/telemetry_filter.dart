@@ -39,7 +39,15 @@ const sharedTypes = {
 };
 
 /// Free text that could be the learner's own (pasted, typed or spoken).
-const _dropKeys = {'text', 'en', 'reading', 'per_token', 'heard', 'said', 'query'};
+const _dropKeys = {
+  'text',
+  'en',
+  'reading',
+  'per_token',
+  'heard',
+  'said',
+  'query',
+};
 
 /// The event as it is uploaded, or null when it is not shared.
 Map<String, Object?>? shareable(Event e, String telemetryId) {
@@ -66,3 +74,11 @@ Map<String, Object?>? shareable(Event e, String telemetryId) {
     'payload': payload,
   };
 }
+
+/// Crash messages and stacks can echo what the learner pasted or typed. Before a crash
+/// report is kept, Chinese text, long numbers (phone, card, ID) and email addresses are
+/// replaced with placeholders.
+String redactCrashText(String s) => s
+    .replaceAll(RegExp(r'[　-鿿豈-﫿＀-￯]+'), '[zh]')
+    .replaceAll(RegExp(r'[\w.+-]+@[\w-]+\.[\w.]+'), '[email]')
+    .replaceAll(RegExp(r'\d{6,}'), '[number]');

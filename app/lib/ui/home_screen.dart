@@ -55,12 +55,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   /// Topics grouped by kind of situation, in this order. A topic goes in the first
   /// group whose keyword is in its id; anything unmatched lands in "More".
   static const _topicGroups = <(String, List<String>)>[
-    ('The basics', ['numbers', 'signs', 'variants']),
+    // in the order a beginner needs them; within a group, the path order
+    ('Everyday basics', ['numbers', 'daily', 'home']),
     ('Getting around', ['getting-around', 'tourism']),
     ('Food and shopping', ['food', 'shopping']),
-    ('Home and health', ['home', 'daily', 'health', 'weather']),
-    ('Errands and work', ['gov', 'work']),
-    ('People and chat', ['chat', 'messaging', 'swearing']),
+    ('Talking with people', ['chat', 'messaging']),
+    ('Health and emergencies', ['health', 'weather']),
+    ('Errands, work and study', ['gov', 'work']),
+    ('Reading signs', ['signs']),
+    ('Words and slang', ['variants', 'swearing']),
   ];
   StreamSubscription<String>? _shareSub;
   UpdateInfo? _update;
@@ -163,7 +166,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   Future<void> _openReader(String? text, {required String source}) async {
     _s.logger.log('nav.screen', {'screen': 'free_reader', 'source': source});
-    await Navigator.of(context).push(
+    await pushOnce(
+      context,
       MaterialPageRoute<void>(
         builder: (_) => PasteReaderScreen(
           services: _s,
@@ -177,8 +181,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   Future<void> _push(Widget screen) async {
-    await Navigator.of(context)
-        .push(MaterialPageRoute<void>(builder: (_) => screen));
+    await pushOnce(context, MaterialPageRoute<void>(builder: (_) => screen));
     _insights = null;
     if (mounted) setState(() {});
     _offerUpdate();
@@ -238,7 +241,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       'screen': practice ? 'reader' : 'topic',
       'scenario_id': sc.id,
     });
-    await Navigator.of(context).push(
+    await pushOnce(
+      context,
       MaterialPageRoute<void>(
         builder: (_) => practice
             ? ReaderScreen(
@@ -417,7 +421,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       'mode': mode,
       'scenario_id': ?scenarioId,
     });
-    await Navigator.of(context).push(
+    await pushOnce(
+      context,
       MaterialPageRoute<void>(
         builder: (_) => ReaderScreen(
           services: _s,
@@ -756,7 +761,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   'screen': 'reader',
                   'mode': 'resume',
                 });
-                await Navigator.of(context).push(
+                await pushOnce(
+                  context,
                   MaterialPageRoute<void>(
                     builder: (_) => ReaderScreen(
                       services: _s,
@@ -849,9 +855,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
         if (_s.prefs.shareData == null && _s.prefs.onboarded) ...[
           const SizedBox(height: 8),
-          _ShareAsk(
-            onAnswer: (yes) => setState(() => setSharing(_s, yes)),
-          ),
+          _ShareAsk(onAnswer: (yes) => setState(() => setSharing(_s, yes))),
         ],
         const SizedBox(height: 8),
         for (final (i, step) in plan.indexed)
@@ -1294,6 +1298,18 @@ class _TopicTile extends StatelessWidget {
                   style: theme.textTheme.titleSmall,
                 ),
               ),
+              // what the topic is about, so a name like this one is never a puzzle
+              SizedBox(
+                height: 34,
+                child: Text(
+                  scenario.description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
               const SizedBox(height: 6),
               ClipRRect(
                 borderRadius: BorderRadius.circular(4),
@@ -1393,7 +1409,10 @@ class _CoverageCard extends StatelessWidget {
                           horizontal: 6,
                           vertical: 2,
                         ),
-                        child: Text(c, style: chineseStyle('yue', fontSize: 20)),
+                        child: Text(
+                          c,
+                          style: chineseStyle('yue', fontSize: 20),
+                        ),
                       ),
                     ),
                 ],

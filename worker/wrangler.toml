@@ -11,6 +11,24 @@ binding = "DB"
 database_name = "ducklearn-telemetry"
 database_id = "91864627-d21e-4ee5-acfb-72d1f94029ac"
 
+# Per-IP limits (per Cloudflare location). The app sends a batch at most every 2 minutes
+# plus on pause/resume, far below these.
+[[ratelimits]]
+name = "EVENTS_LIMIT"
+namespace_id = "1001"
+
+  [ratelimits.simple]
+  limit = 30
+  period = 60
+
+[[ratelimits]]
+name = "SLOW_LIMIT"
+namespace_id = "1002"
+
+  [ratelimits.simple]
+  limit = 10
+  period = 60
+
 [triggers]
 crons = ["17 3 * * *"]
 

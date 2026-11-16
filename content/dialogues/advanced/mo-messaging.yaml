@@ -11,7 +11,7 @@ dialogues:
       - ["朋友", "係呀，我以為你嬲咗我。", "Yes, I thought you were angry with me."]
       - ["你", "冇呀！我只係要加班咋。", "No! I just have to work late."]
       - ["朋友", "但係你又冇講原因，仲冇加表情。", "But you didn't say why, and there was no emoji either."]
-      - ["你", "我喺地鐵度打，趕住落車。", "I typed it on the MTR in a rush to get off."]
+      - ["你", "我喺巴士度打，趕住落車。", "I typed it on the bus in a rush to get off."]
       - ["朋友", "原來係咁，害我諗咗成個鐘。", "Oh, I see. I spent a whole hour worrying."]
       - ["你", "唔好意思呀，下次我講清楚啲。", "Sorry, I'll be clearer next time."]
       - ["朋友", "咁不如改聽晚？", "So how about tomorrow night instead?"]

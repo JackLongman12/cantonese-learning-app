@@ -3,6 +3,7 @@
 scenario:
   id: scn-mo-gov
   title: Banks, post and paperwork
+  description: "Bank counters, the post office, ID cards and government forms."
   region: macau
   tags: [paperwork, bank, post]
 

@@ -3,6 +3,7 @@
 scenario:
   id: scn-mo-tourism
   title: Hotels, sightseeing and casinos
+  description: "Checking in, tickets, sights, and the casino floor in Macau."
   region: macau
   tags: [hotel, tourism, casino]
 

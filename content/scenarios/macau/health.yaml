@@ -3,6 +3,7 @@
 scenario:
   id: scn-mo-health
   title: Health and the doctor
+  description: "Clinics, symptoms, pharmacies and appointments."
   region: macau
   tags: [health]
 

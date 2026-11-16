@@ -4,7 +4,7 @@ Work top to bottom. Do not start a phase until the previous phase's "Done when" 
 
 **Goals (2026-11-16):** first run asks what you want Cantonese for (get around, eat out and shop, daily life, work, make friends, a bit of everything); the path puts those topics first and Today's Learn/Speak draw from them; change it on Today (Goal · Change) or in Settings (engine/goals.dart). Grouped controls: one Listen button (hold for slow), no Skip; one 'Practise my words' in Words.
 
-**Status (2026-11-17, beginners + read-then-check + usage data):** DuckLearn is now for beginners (speakers who can't read, and learners); the reader is read first, then Check; opt-in anonymous usage and crash data go to a Cloudflare Worker and `duk telemetry report` says what to change (docs/TELEMETRY.md); two A/B tests run. Before that: Android arm64 is the release target. 18 topics (each ≥ 100 sentences, 5+ conversations), 18 stories, 1,077 flashcards, word variants, a voice picker in every exercise (phone voice by default). Audio ships as Opus; conversation pictures download on first launch. Content is LLM-drafted and accepted by the owner as-is (2026-11-16). Next open work: 1.3/1.4 planner polish, 1.6 placement test, 2.8 error drills. History: `docs/CHANGELOG.md`.
+**Status (2026-11-17, after the first usage data: fixes, topic descriptions, content pass, Gen Z stories, security hardening; see CHANGELOG):** DuckLearn is now for beginners (speakers who can't read, and learners); the reader is read first, then Check; opt-in anonymous usage and crash data go to a Cloudflare Worker and `duk telemetry report` says what to change (docs/TELEMETRY.md); two A/B tests run. Before that: Android arm64 is the release target. 18 topics (each ≥ 100 sentences, 5+ conversations), 18 stories, 1,077 flashcards, word variants, a voice picker in every exercise (phone voice by default). Audio ships as Opus; conversation pictures download on first launch. Content is LLM-drafted and accepted by the owner as-is (2026-11-16). Next open work: 1.3/1.4 planner polish, 1.6 placement test, 2.8 error drills. History: `docs/CHANGELOG.md`.
 
 ## Product principle: serve the unmet need, not a Duolingo copy
 
@@ -100,7 +100,7 @@ Goal: prove the three risky things (readings, audio, ruby rendering) on 20 sente
 
 - [x] 1.1 `events/`: envelope, logger, idle detection, JSONL export, replay → `item_state`. Replay test in CI.
 - [x] 1.2 `engine/learner_model`: FSRS per item, implicit signals → grades, scaffold level from state.
-- [ ] 1.3 `engine/planner`: scoring and greedy session builder done, reasons recorded in `item.shown`. Still to do: unlock value from frequency/family size, fatigue shaping, on-screen "why this?" overlay.
+- [ ] 1.3 `engine/planner`: scoring and greedy session builder done, reasons recorded in `item.shown`, unlock value from everyday frequency (HKCanCor, 2026-11-17). Still to do: family size, fatigue shaping, on-screen "why this?" overlay.
 - [ ] 1.4 Simulated learner + tests: coverage rises, due load stays bounded, no sentence starvation.
 - [x] 1.5 Reader UI: fading ruby, tap-to-reveal, sentence audio (normal/slow), meaning toggle; tapped characters and words speak; Review is cross-topic; Jyutping help setting.
 - [ ] 1.6 Placement test (yue first).
@@ -124,7 +124,7 @@ Goal: prove the three risky things (readings, audio, ruby rendering) on 20 sente
 | Casinos, hotels and tourism spots in Macau | `scenarios/macau/hotels-and-sightseeing.yaml` | 100 | |
 | Getting around Hong Kong (MTR, minibus, Octopus, tram, ferry, taxi, border) | `scenarios/hk/getting-around-hk.yaml` + 5 conversations | 100 | |
 | Hong Kong daily life (commute, 茶餐廳, buildings, malls, errands, weekends, queues) | `scenarios/hk/hk-daily-life.yaml` + 5 conversations + 1 advanced | 120 | |
-| Many ways to say it (word variants) | `scenarios/hk/many-ways-to-say-it.yaml` + 5 conversations | 103 | groups in `variants.yaml` |
+| Same thing, different words (word variants; was "Many ways to say it") | `scenarios/hk/many-ways-to-say-it.yaml` + 5 conversations | 103 | groups in `variants.yaml` |
 | Cantonese food (yum cha, siu mei, cha chaan teng, congee, tong sui, Macau snacks, tastes) | `scenarios/hk/cantonese-food.yaml` + 5 conversations | 100 | |
 | Numbers, time, dates and prices | `scenarios/macau/numbers-and-time.yaml` | 100 | |
 | Swearing and rude Cantonese (粗口: the big five, insults, euphemisms, DLLM/on9, when not to) — owner's request; no group slurs; 撚 = lan2 per CC-Canto | `scenarios/hk/swearing.yaml` + 8 conversations + 1 advanced | 200 | |

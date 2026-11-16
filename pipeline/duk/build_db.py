@@ -31,16 +31,18 @@ from .content import Content, ContentError, load_content
 from .reference import load_reference
 from .words import refine_words
 
-SCHEMA_VERSION = 12  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
+SCHEMA_VERSION = 13  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
 # 6: decks; 7: card image + credit, food deck; 8: slim dict_entry (Cantonese only);
 # 9: char_info.hint, skill / skill_entry; 10: variant (words for the same thing);
 # 11: character_pic (links the app downloads; the images are never bundled);
-# 12: char_freq (share of each character in HKCanCor: "% of everyday Cantonese")
+# 12: char_freq (share of each character in HKCanCor: "% of everyday Cantonese");
+# 13: scenario.description (what a topic is about, shown on its tile and page)
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE scenario(
-  id TEXT PRIMARY KEY, title TEXT NOT NULL, region TEXT NOT NULL, tags TEXT NOT NULL);
+  id TEXT PRIMARY KEY, title TEXT NOT NULL, region TEXT NOT NULL, tags TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '');
 CREATE TABLE sentence(
   id TEXT PRIMARY KEY,             -- '<pair_id>:<lang>'
   pair_id TEXT NOT NULL, lang TEXT NOT NULL, text TEXT NOT NULL, en TEXT NOT NULL,
@@ -186,8 +188,14 @@ def build(
 
     for sc in content.scenarios:
         db.execute(
-            "INSERT INTO scenario VALUES(?,?,?,?)",
-            (sc.id, sc.title, sc.region, json.dumps(sc.tags, ensure_ascii=False)),
+            "INSERT INTO scenario VALUES(?,?,?,?,?)",
+            (
+                sc.id,
+                sc.title,
+                sc.region,
+                json.dumps(sc.tags, ensure_ascii=False),
+                sc.description,
+            ),
         )
 
     for d in content.dialogues:

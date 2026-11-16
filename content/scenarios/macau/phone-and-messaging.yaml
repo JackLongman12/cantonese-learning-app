@@ -3,6 +3,7 @@
 scenario:
   id: scn-mo-messaging
   title: Phone and messaging
+  description: "WhatsApp-style messages, voice notes, calls and the short forms people type."
   region: macau
   tags: [phone, chat]
 

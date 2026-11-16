@@ -3,6 +3,7 @@
 scenario:
   id: scn-mo-home
   title: Home and renting
+  description: "Flats, rent, repairs, the building's management office and neighbours."
   region: macau
   tags: [home, renting]
 

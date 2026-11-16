@@ -85,8 +85,16 @@ class SentenceRow {
       if (t.itemId != null) t.itemId!,
   };
 
-  Candidate toCandidate() =>
-      Candidate(id: id, itemIds: itemIds, region: region, pattern: pattern);
+  /// [itemValue]: how much each new character is worth (engine/coverage.dart,
+  /// frequencyValue): common characters are introduced first.
+  Candidate toCandidate([Map<String, double> itemValue = const {}]) =>
+      Candidate(
+        id: id,
+        itemIds: itemIds,
+        region: region,
+        pattern: pattern,
+        itemValue: itemValue,
+      );
 }
 
 /// A phonetic component and the characters built on it.
@@ -115,11 +123,20 @@ class DialogueRow {
 }
 
 class ScenarioRow {
-  const ScenarioRow(this.id, this.title, this.region, this.sentenceCount);
+  const ScenarioRow(
+    this.id,
+    this.title,
+    this.region,
+    this.sentenceCount, [
+    this.description = '',
+  ]);
   final String id;
   final String title;
   final String region;
   final int sentenceCount;
+
+  /// What the topic is about, one line (empty for an older content.db).
+  final String description;
 }
 
 class DictEntry {
@@ -200,7 +217,7 @@ class ContentDb {
 
   List<ScenarioRow> scenarios(String lang) => [
     for (final r in _db.select(
-      'SELECT s.id, s.title, s.region, '
+      'SELECT s.id, s.title, s.region, s.description, '
       '(SELECT COUNT(*) FROM sentence x WHERE x.scenario_id = s.id AND x.lang = ? '
       'AND x.dialogue IS NULL) AS n '
       'FROM scenario s ORDER BY s.region = \'macau\' DESC, s.title',
@@ -211,6 +228,7 @@ class ContentDb {
         r['title'] as String,
         r['region'] as String,
         r['n'] as int,
+        r['description'] as String? ?? '',
       ),
   ];
 

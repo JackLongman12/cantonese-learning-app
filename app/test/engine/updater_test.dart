@@ -7,7 +7,12 @@ Map<String, Object?> release(String tag, List<String> assets) => {
   'body': 'notes',
   'assets': [
     for (final a in assets)
-      {'name': a, 'browser_download_url': 'https://x/$a', 'size': 100},
+      {
+        'name': a,
+        'browser_download_url':
+            'https://github.com/o/r/releases/download/b1/$a',
+        'size': 100,
+      },
   ],
 };
 
@@ -30,7 +35,7 @@ void main() {
     expect(parseRelease(r, currentBuild: 41, asset: apk)?.build, 42);
     expect(
       parseRelease(r, currentBuild: 41, asset: apk)?.assetUrl,
-      'https://x/$apk',
+      'https://github.com/o/r/releases/download/b1/$apk',
     );
     expect(parseRelease(r, currentBuild: 42, asset: apk), isNull); // same build
     expect(parseRelease(r, currentBuild: 50, asset: apk), isNull); // older
@@ -66,4 +71,51 @@ void main() {
       );
     },
   );
+
+  test('downloads only come from GitHub over HTTPS, with safe names', () {
+    expect(
+      trustedAssetUrl('https://github.com/o/r/releases/download/b1/a.apk'),
+      isTrue,
+    );
+    expect(trustedAssetUrl('https://objects.githubusercontent.com/x'), isTrue);
+    expect(trustedAssetUrl('http://github.com/a.apk'), isFalse);
+    expect(trustedAssetUrl('https://github.com.evil.example/a.apk'), isFalse);
+    expect(trustedAssetUrl('https://evil.example/a.apk'), isFalse);
+    expect(safeFileName('DuckLearn-android-arm64.apk'), isNotNull);
+    expect(safeFileName('..'), isNull);
+    expect(safeFileName('.hidden'), isNull);
+    expect(safeFileName('a/b.apk'), isNull);
+  });
+
+  test('a release from somewhere else is ignored; the digest is kept', () {
+    Map<String, Object?> rel(String url, [String? digest]) => {
+      'tag_name': 'b2100',
+      'assets': [
+        {
+          'name': 'DuckLearn-android-arm64.apk',
+          'browser_download_url': url,
+          'size': 1,
+          'digest': ?digest,
+        },
+      ],
+    };
+    const asset = 'DuckLearn-android-arm64.apk';
+    expect(
+      parseRelease(
+        rel('https://evil.example/$asset'),
+        currentBuild: 1,
+        asset: asset,
+      ),
+      isNull,
+    );
+    final ok = parseRelease(
+      rel(
+        'https://github.com/o/r/releases/download/b2100/$asset',
+        'sha256:ABC',
+      ),
+      currentBuild: 1,
+      asset: asset,
+    )!;
+    expect(ok.sha256, 'abc');
+  });
 }

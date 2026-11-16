@@ -11,6 +11,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
@@ -25,13 +26,31 @@ class UpdateInfo {
     required this.assetUrl,
     required this.assetSize,
     required this.notes,
+    this.sha256,
   });
   final int build;
   final String version;
   final String assetUrl;
   final int assetSize;
   final String notes;
+
+  /// The asset's SHA-256 from GitHub (`digest: "sha256:..."`), checked after download.
+  final String? sha256;
 }
+
+/// Release downloads only come from GitHub over HTTPS (the API's own links), so a bad
+/// API answer can never point the updater somewhere else.
+bool trustedAssetUrl(String url) {
+  final u = Uri.tryParse(url);
+  if (u == null || u.scheme != 'https') return false;
+  return u.host == 'github.com' ||
+      u.host.endsWith('.githubusercontent.com');
+}
+
+/// A safe file name for a download: letters, digits, dot, dash, underscore; never a
+/// path or a hidden file.
+String? safeFileName(String name) =>
+    RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,120}$').hasMatch(name) ? name : null;
 
 /// Android split builds report 2000 + build (arm64); plain build numbers are shifted to match.
 int normaliseBuild(int n) => n >= 1000 ? n : 2000 + n;
@@ -55,10 +74,16 @@ UpdateInfo? parseRelease(
   for (final a
       in (json['assets'] as List? ?? const []).cast<Map<String, Object?>>()) {
     if (a['name'] == asset) {
+      final url = a['browser_download_url'] as String? ?? '';
+      if (!trustedAssetUrl(url)) return null;
+      final digest = a['digest'] as String? ?? '';
       return UpdateInfo(
+        sha256: digest.startsWith('sha256:')
+            ? digest.substring(7).toLowerCase()
+            : null,
         build: build,
         version: json['name'] as String? ?? tag,
-        assetUrl: a['browser_download_url'] as String,
+        assetUrl: url,
         assetSize: (a['size'] as num?)?.toInt() ?? 0,
         notes: json['body'] as String? ?? '',
       );
@@ -160,24 +185,37 @@ class Updater {
     Directory dir, {
     void Function(double)? progress,
   }) async {
+    if (!trustedAssetUrl(u.assetUrl)) {
+      throw const HttpException('Untrusted download link');
+    }
+    final name = safeFileName(Uri.parse(u.assetUrl).pathSegments.last);
+    if (name == null) throw const HttpException('Unexpected file name');
     dir.createSync(recursive: true);
-    final target = File(
-      p.join(dir.path, Uri.parse(u.assetUrl).pathSegments.last),
-    );
+    final target = File(p.join(dir.path, name));
     final part = File('${target.path}.part');
     final resp = await _client.send(http.Request('GET', Uri.parse(u.assetUrl)));
     if (resp.statusCode != 200) throw HttpException('HTTP ${resp.statusCode}');
     final total = resp.contentLength ?? u.assetSize;
     var done = 0;
     final sink = part.openWrite();
+    final hashOut = _DigestSink();
+    final hasher = sha256.startChunkedConversion(hashOut);
     await for (final chunk in resp.stream) {
       sink.add(chunk);
+      hasher.add(chunk);
       done += chunk.length;
       if (total > 0) progress?.call(done / total);
     }
     await sink.close();
+    hasher.close();
     if (total > 0 && part.lengthSync() != total) {
+      part.deleteSync();
       throw const HttpException('Incomplete download');
+    }
+    // the file must be exactly the one GitHub published
+    if (u.sha256 != null && hashOut.value.toString() != u.sha256) {
+      part.deleteSync();
+      throw const HttpException('Download does not match its checksum');
     }
     if (target.existsSync()) target.deleteSync();
     part.renameSync(target.path);
@@ -229,3 +267,12 @@ Remove-Item $tmp -Recurse -Force
 Remove-Item $Zip -Force -ErrorAction SilentlyContinue
 Start-Process -FilePath $Exe
 ''';
+
+/// Collects the digest from a chunked SHA-256 conversion.
+class _DigestSink implements Sink<Digest> {
+  late Digest value;
+  @override
+  void add(Digest data) => value = data;
+  @override
+  void close() {}
+}

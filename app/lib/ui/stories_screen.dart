@@ -5,6 +5,7 @@ library;
 import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
+import 'finish.dart' show pushOnce;
 import '../data/content_db.dart';
 import '../engine/scaffold.dart';
 import 'reader_screen.dart';
@@ -41,7 +42,8 @@ class _StoriesScreenState extends State<StoriesScreen> {
       'mode': 'story',
       'dialogue_id': story.id,
     });
-    await Navigator.of(context).push(
+    await pushOnce(
+      context,
       MaterialPageRoute<void>(
         builder: (_) => ReaderScreen(
           services: _s,

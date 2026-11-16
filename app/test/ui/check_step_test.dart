@@ -96,9 +96,9 @@ void main() {
     };
     expect(grades[s.tokens[first].itemId], 'missed');
     expect(
-      grades.entries.where((e) => e.key != s.tokens[first].itemId).map(
-        (e) => e.value,
-      ),
+      grades.entries
+          .where((e) => e.key != s.tokens[first].itemId)
+          .map((e) => e.value),
       everyElement(anyOf('noReveal', 'slow')),
     );
     // the session ends on the summary, which counts what was read on your own
@@ -119,5 +119,39 @@ void main() {
     await t.pump(const Duration(milliseconds: 500));
     await t.pumpAndSettle();
     expect(find.byKey(const ValueKey('done')), findsOneWidget);
+  }, skip: !hasDb);
+
+  testWidgets('Not quite marks every tested character; tap to unmark', (
+    t,
+  ) async {
+    await t.binding.setSurfaceSize(const Size(500, 900));
+    addTearDown(() => t.binding.setSurfaceSize(null));
+    final (services, store, _) = await open(t, speaker: false);
+    expect(find.text('Read this sentence, then tap Check'), findsOneWidget);
+    await t.tap(find.byKey(const ValueKey('check')));
+    await t.pumpAndSettle();
+    expect(find.text('Did you read it right?'), findsOneWidget);
+    await t.tap(find.byKey(const ValueKey('not-quite')));
+    await t.pumpAndSettle();
+    final s = services.content.sentencesByIds(['sent-var-001:yue']).single;
+    final tested = [
+      for (var i = 0; i < s.tokens.length; i++)
+        if (s.tokens[i].itemId != null) i,
+    ];
+    expect(find.textContaining('${tested.length} to practice'), findsOneWidget);
+    // the first one was read right after all
+    await t.tap(find.byKey(ValueKey('cell-${tested.first}')));
+    await t.pumpAndSettle();
+    expect(
+      find.textContaining('${tested.length - 1} to practice'),
+      findsOneWidget,
+    );
+    await t.tap(find.byKey(const ValueKey('next')));
+    await t.pumpAndSettle();
+    final signals = [
+      for (final e in store.events.where((e) => e.type == 'review.applied'))
+        e.payload['signal'],
+    ];
+    expect(signals.where((x) => x == 'missed'), hasLength(tested.length - 1));
   }, skip: !hasDb);
 }
