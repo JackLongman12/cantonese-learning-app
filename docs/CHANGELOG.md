@@ -3,7 +3,7 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
-## 2026-11-17 (b2086): first public launch; online voice by default
+## 2026-11-17 (b2087): first public launch; online voice by default
 
 - **"Phone voice 2 (online)" is the default** (owner): when you haven't picked a voice,
   sentences and tapped words use the second voice in the picker's list (online voices
