@@ -3,6 +3,11 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2089): final launch release
+
+- The owner signed off on the app as ready. Same app as b2087 with the docs brought up to
+  date; 149 app tests and 33 pipeline tests pass.
+
 ## 2026-11-17 (b2087): first public launch; online voice by default
 
 - **"Phone voice 2 (online)" is the default** (owner): when you haven't picked a voice,
