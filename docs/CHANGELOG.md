@@ -3,7 +3,7 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
-## 2026-11-17 (b2084): five new situations, docs brought up to date
+## 2026-11-17 (b2085): five new situations, docs brought up to date
 
 - **New situations** (gaps from the launch check): Taking a taxi, Allergies and diet,
   Finding a flat, Kids and school, Settling in (102 words, 40 situations in all), each with
