@@ -3,6 +3,16 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2091): launch decisions settled, credits complete
+
+- **Settings → About credits everything that ships or is shown:** added Wikipedia (dish
+  names), Irasutoya (conversation pictures), the recorded voice (Microsoft Edge's
+  read-aloud voice via edge-tts, not affiliated with Microsoft) and the LXGW WenKai font.
+- **Launch decisions (ROADMAP 3.7), owner:** developer tools stay; the open review-queue
+  readings are skipped; the recorded voice stays. Its terms were checked: Microsoft gives
+  no licence for the edge-tts endpoint or for sharing its audio, so this is an accepted
+  risk for a free app with no ads, with a way out (phone voice only, or Azure Speech).
+
 ## 2026-11-17 (b2089): final launch release
 
 - The owner signed off on the app as ready. Same app as b2087 with the docs brought up to

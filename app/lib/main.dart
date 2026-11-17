@@ -80,6 +80,32 @@ Future<void> main() async {
       'sherpa-onnx by csukuangfj. It is downloaded on first use and runs on the device.',
     );
     yield const LicenseEntryWithLineBreaks(
+      ['DuckLearn dish names'],
+      'Dish names in the food flashcards are from Cantonese Wikipedia '
+      '(https://zh-yue.wikipedia.org) and the English names from English Wikipedia, '
+      'CC BY-SA 4.0. The author and license of each dish photo (Wikimedia Commons) are '
+      'shown on its card.',
+    );
+    yield const LicenseEntryWithLineBreaks(
+      ['DuckLearn conversation pictures'],
+      'Conversation characters are illustrations by いらすとや (Irasutoya, '
+      'https://www.irasutoya.com), downloaded from irasutoya.com on first use and used '
+      'under its terms for non-commercial use. They are not part of DuckLearn.',
+    );
+    yield const LicenseEntryWithLineBreaks(
+      ['DuckLearn recorded voice'],
+      'The recorded voice clips were made with Microsoft Edge\'s read-aloud voice '
+      '(zh-HK-HiuMaanNeural) through the open-source edge-tts tool. DuckLearn is not '
+      'affiliated with or endorsed by Microsoft.',
+    );
+    yield const LicenseEntryWithLineBreaks(
+      ['LXGW WenKai TC'],
+      'LXGW WenKai TC, Copyright 2024 The LXGW WenKai Project Authors '
+      '(https://github.com/lxgw/LxgwWenkaiTC). Subset to '
+      'the characters DuckLearn uses. Licensed under the SIL Open Font License, '
+      'Version 1.1 (https://openfontlicense.org).',
+    );
+    yield const LicenseEntryWithLineBreaks(
       ['Noto Sans HK'],
       'Noto Sans HK, (c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font '
       'Name \'Source\'. Subset to the characters DuckLearn uses. Licensed under the SIL '
