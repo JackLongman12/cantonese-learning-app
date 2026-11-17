@@ -1,5 +1,6 @@
 /// TEMPORARY developer tool (owner, 2026-11-17): rate the word pictures the pipeline was
-/// not sure about (`doubt: true` in content/pictures.yaml), one tap each: Good or Bad.
+/// not sure about (`doubt: true` in content/pictures.yaml), one tap each: Bad, OK (fits,
+/// a better one would be welcome) or Good.
 /// Ratings are events (`picture.rate`); with usage sharing on they reach the developer,
 /// and `duk pictures ratings` applies them. A Bad picture stops showing on this device.
 library;
@@ -57,13 +58,16 @@ class _PictureRatingScreenState extends State<PictureRatingScreen> {
 
   String _key(int i) => PracticeLog.pictureKey(_all[i].$1.id, _all[i].$2.ref);
 
-  void _rate(bool good) {
+  /// [rating] is `good`, `ok` or `bad`; `good` stays in the payload (OK keeps the
+  /// picture too) so older readers of the event still work.
+  void _rate(String rating) {
     final (card, pic) = _all[_index];
     _s.logPractice('picture.rate', {
       'card_id': card.id,
       'kind': pic.kind,
       'ref': pic.ref,
-      'good': good,
+      'rating': rating,
+      'good': rating != 'bad',
     });
     setState(() => _index = _firstOpen(_index + 1));
     if (_index >= _all.length) unawaited(_s.telemetry?.upload());
@@ -180,7 +184,7 @@ class _PictureRatingScreenState extends State<PictureRatingScreen> {
                     Expanded(
                       child: FilledButton.icon(
                         key: const ValueKey('rate-bad'),
-                        onPressed: () => _rate(false),
+                        onPressed: () => _rate('bad'),
                         style: FilledButton.styleFrom(
                           backgroundColor: scheme.error,
                           foregroundColor: scheme.onError,
@@ -190,11 +194,22 @@ class _PictureRatingScreenState extends State<PictureRatingScreen> {
                         label: const Text('Bad'),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: FilledButton.tonal(
+                        key: const ValueKey('rate-ok'),
+                        onPressed: () => _rate('ok'),
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size(0, 72),
+                        ),
+                        child: const Text('OK'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: FilledButton.icon(
                         key: const ValueKey('rate-good'),
-                        onPressed: () => _rate(true),
+                        onPressed: () => _rate('good'),
                         style: FilledButton.styleFrom(
                           minimumSize: const Size(0, 72),
                         ),

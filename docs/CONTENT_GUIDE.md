@@ -140,7 +140,8 @@ dictionaries; a word the dictionaries read wrong gets a word-level override in
 Per card id: `photo` (a Commons file, with `credit`), `icon` (an OpenMoji hexcode) or
 `none`. `fixed: true` keeps `duk pictures match` from changing an entry. `doubt: true`
 puts it in the owner's Rate pictures list (Settings → Developer); `duk pictures ratings`
-pulls the ratings and turns Good into `fixed` and Bad into `none`.
+pulls the ratings and turns Good into `fixed`, OK into `fixed` + `ok: true` (fits, a
+better picture is welcome) and Bad into `none`.
 
 ## Practice (`content/practice.yaml`, newcomer mode)
 

@@ -281,10 +281,11 @@ def sheets() -> Path:
 
 
 def apply_ratings(current: dict, events: list[dict]) -> tuple[int, int]:
-    """The owner's Good/Bad from the app (`picture.rate`, Settings > Developer > Rate
-    pictures), newest rating per picture: Good keeps it (`fixed`, no longer in doubt), Bad
-    removes it (`none`, `fixed`). A rating of a picture that has since changed is ignored.
-    Returns (kept, removed)."""
+    """The owner's Bad/OK/Good from the app (`picture.rate`, Settings > Developer > Rate
+    pictures), newest rating per picture: Good keeps it (`fixed`, no longer in doubt), OK
+    keeps it too and adds `ok: true` (fits, a better one is welcome), Bad removes it
+    (`none`, `fixed`). Events without `rating` use `good`. A rating of a picture that has
+    since changed is ignored. Returns (kept, removed)."""
     latest: dict[str, dict] = {}
     for e in sorted(events, key=lambda e: e.get("ts_utc", "")):
         p = e.get("payload") or {}
@@ -295,12 +296,16 @@ def apply_ratings(current: dict, events: list[dict]) -> tuple[int, int]:
         pic = current.get(cid) or {}
         if p.get("ref") not in (pic.get("photo"), pic.get("icon")):
             continue
-        if p.get("good") is True:
+        rating = p.get("rating") or {True: "good", False: "bad"}.get(p.get("good"))
+        if rating in ("good", "ok"):
             pic.pop("doubt", None)
+            pic.pop("ok", None)
             pic["fixed"] = True
+            if rating == "ok":
+                pic["ok"] = True
             current[cid] = pic
             kept += 1
-        elif p.get("good") is False:
+        elif rating == "bad":
             current[cid] = {"none": True, "fixed": True}
             removed += 1
     return kept, removed

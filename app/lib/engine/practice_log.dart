@@ -23,7 +23,8 @@ class PracticeLog {
   /// Frame sentences said right at least once (`frame.say`, ok).
   final Set<String> framesSaid = {};
 
-  /// Owner's picture ratings (`picture.rate`, Settings → Developer): `card|ref` -> good.
+  /// Owner's picture ratings (`picture.rate`, Settings → Developer): `card|ref` -> kept
+  /// (Good or OK) or not (Bad).
   /// Keyed by the picture too, so a replaced picture is asked about again.
   final Map<String, bool> pictureRatings = {};
 

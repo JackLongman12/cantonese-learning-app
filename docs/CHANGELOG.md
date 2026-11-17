@@ -3,6 +3,13 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2080): OK rating for pictures
+
+- **Rate pictures has an OK button** between Bad and Good (owner's request): the picture
+  fits but a better one would be welcome. `duk pictures ratings` keeps it like Good and
+  marks it `ok: true` in content/pictures.yaml, so those are the first to replace. The
+  event gains `rating: good|ok|bad`; `good` stays (false only for Bad).
+
 ## 2026-11-17 (b2079): one app for both modes, half the audio, picture ratings
 
 - **Both modes share the same content** (owner's bug report: the speaker mode still looked

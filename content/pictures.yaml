@@ -3,7 +3,8 @@
 # icon: an OpenMoji hexcode (CC BY-SA 4.0); none: no picture fits.
 # Add `fixed: true` to an entry you checked or corrected so `match` leaves it.
 # doubt: true = not sure the picture fits; rated in the app (Settings > Developer >
-# Rate pictures), then `duk pictures ratings` applies the owner's Good/Bad.
+# Rate pictures), then `duk pictures ratings` applies the owner's Bad/OK/Good.
+# ok: true = rated OK: it fits, but a better picture is welcome.
 card:sit-around:洗手間:
   icon: 1F6BB
   fixed: true

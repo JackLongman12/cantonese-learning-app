@@ -136,7 +136,7 @@ void main() {
     expect(find.text('1 done'), findsOneWidget);
   }, skip: !hasDb);
 
-  testWidgets('Rate pictures: Good and Bad, one tap each, Back to change', (
+  testWidgets('Rate pictures: Bad, OK and Good, one tap each, Back to change', (
     t,
   ) async {
     final (s, store, db) = make();
@@ -146,15 +146,17 @@ void main() {
     await open(t, PictureRatingScreen(services: s));
     await t.tap(find.byKey(const ValueKey('rate-good')));
     await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('rate-ok')));
+    await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('rate-bad')));
     await t.pumpAndSettle();
-    expect(find.text('2 / $total'), findsOneWidget);
-    expect(picturesToRate(s), total - 2);
+    expect(find.text('3 / $total'), findsOneWidget);
+    expect(picturesToRate(s), total - 3);
     final rates = [
       for (final e in store.readAll())
-        if (e.type == 'picture.rate') e.payload['good'],
+        if (e.type == 'picture.rate') (e.payload['rating'], e.payload['good']),
     ];
-    expect(rates, [true, false]);
+    expect(rates, [('good', true), ('ok', true), ('bad', false)]);
     // Back, change the Bad to Good: the newest rating wins
     await t.tap(find.byKey(const ValueKey('rate-back')));
     await t.pumpAndSettle();

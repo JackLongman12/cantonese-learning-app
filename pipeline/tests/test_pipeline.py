@@ -275,6 +275,7 @@ def test_picture_ratings_apply_newest_and_skip_changed():
         "card:a:x": {"photo": "X.jpg", "credit": "c", "doubt": True},
         "card:a:y": {"icon": "1F600", "doubt": True},
         "card:a:z": {"photo": "New.jpg", "doubt": True},
+        "card:a:w": {"icon": "1F4A1", "doubt": True},
     }
 
     def ev(ts, cid, ref, good):
@@ -286,8 +287,11 @@ def test_picture_ratings_apply_newest_and_skip_changed():
         ev("2026-11-17T10:00:00Z", "card:a:x", "X.jpg", False),  # older: overridden
         ev("2026-11-17T10:00:02Z", "card:a:y", "1F600", False),
         ev("2026-11-17T10:00:03Z", "card:a:z", "Old.jpg", False),  # picture changed since
+        {"type": "picture.rate", "ts_utc": "2026-11-17T10:00:04Z",
+         "payload": {"card_id": "card:a:w", "ref": "1F4A1", "rating": "ok", "good": True}},
     ])  # fmt: skip
-    assert (kept, removed) == (1, 1)
+    assert (kept, removed) == (2, 1)
+    assert current["card:a:w"] == {"icon": "1F4A1", "fixed": True, "ok": True}
     assert current["card:a:x"] == {"photo": "X.jpg", "credit": "c", "fixed": True}
     assert current["card:a:y"] == {"none": True, "fixed": True}
     assert current["card:a:z"]["doubt"] is True

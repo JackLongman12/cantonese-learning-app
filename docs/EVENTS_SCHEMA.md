@@ -51,7 +51,7 @@ Stored one JSON object per line (`.jsonl`), gzip-compressed for sync.
 - `listen.answer` `{id, correct, slow}` — newcomer Listen drill: a reply (`rep:<situation>:<zh>`, content/practice.yaml) was heard and its meaning picked; `slow`: the slow play was used. Missed ones come first next time (`engine/practice_log.dart`)
 - `tone.answer` `{set, played, picked, correct, voice}` — tone ear training: which member of a tone set played and which was picked; `voice`: the round, which picks the speaker
 - `frame.say` `{id, ok, via: mic|self}` — Build a sentence: a frame sentence (`frame:<frame>:<word>`) said, graded by the learner (after the mic check, if any)
-- `picture.rate` `{card_id, kind: photo|icon, ref, good}` — Settings → Developer → Rate pictures (owner's tool): does the picture fit the word? A Bad picture stops showing on the device; `duk pictures ratings` applies them to content/pictures.yaml
+- `picture.rate` `{card_id, kind: photo|icon, ref, rating: good|ok|bad, good}` — Settings → Developer → Rate pictures (owner's tool): does the picture fit the word? `good` is false only for Bad (OK keeps the picture; events before b2080 have no `rating`). A Bad picture stops showing on the device; `duk pictures ratings` applies them to content/pictures.yaml
 - `challenge.done` `{id}` — "I did it" on a real-world challenge; done ones stop showing (no streaks)
 - `plan.step` `{step: review|learn|weak|words|cards, day}` — a step of Today's plan was finished
 - `conv.choice` `{exposure_id, sentence_id, correct, tries}` — the learner picked a line on their turn in a conversation (visual-novel mode); wrong options are lines from other conversations of the topic
