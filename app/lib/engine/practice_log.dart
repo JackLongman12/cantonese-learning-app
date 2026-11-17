@@ -23,13 +23,6 @@ class PracticeLog {
   /// Frame sentences said right at least once (`frame.say`, ok).
   final Set<String> framesSaid = {};
 
-  /// Owner's picture ratings (`picture.rate`, Settings → Developer): `card|ref` -> kept
-  /// (Good or OK) or not (Bad).
-  /// Keyed by the picture too, so a replaced picture is asked about again.
-  final Map<String, bool> pictureRatings = {};
-
-  static String pictureKey(String cardId, String ref) => '$cardId|$ref';
-
   static const window = 10;
 
   factory PracticeLog.replay(Iterable<Event> events) {
@@ -60,10 +53,7 @@ class PracticeLog {
           list.add(p['correct'] == true);
           if (list.length > window) list.removeAt(0);
         }
-      case 'picture.rate':
-        if ((p['card_id'], p['ref']) case (final String c, final String r)) {
-          pictureRatings[pictureKey(c, r)] = p['good'] == true;
-        }
+      // 'picture.rate' (b2079–b2080, retired): the owner chose to keep every picture
       case 'frame.say':
         if (p['id'] case final String id when p['ok'] == true) {
           framesSaid.add(id);

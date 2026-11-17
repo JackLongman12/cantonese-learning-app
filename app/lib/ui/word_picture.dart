@@ -8,7 +8,6 @@ import 'package:material_ui/material_ui.dart';
 
 import '../app_services.dart';
 import '../data/content_db.dart';
-import '../engine/practice_log.dart';
 import '../platform/word_photos.dart';
 
 /// Set at start-up (main.dart); null in tests, where photos are not downloaded.
@@ -21,7 +20,6 @@ class WordPicture extends StatelessWidget {
     required this.cardId,
     this.size = 56,
     this.showCredit = false,
-    this.evenIfRatedBad = false,
   });
   final AppServices services;
   final String cardId;
@@ -30,19 +28,10 @@ class WordPicture extends StatelessWidget {
   /// Photo credit under the picture (licence attribution): on the big drill card.
   final bool showCredit;
 
-  /// The rating screen shows it anyway (to change a rating).
-  final bool evenIfRatedBad;
-
   @override
   Widget build(BuildContext context) {
     final pic = services.content.wordPictures()[cardId];
     if (pic == null) return SizedBox.square(dimension: size);
-    final rated = services
-        .practiceLog
-        .pictureRatings[PracticeLog.pictureKey(cardId, pic.ref)];
-    if (rated == false && !evenIfRatedBad) {
-      return SizedBox.square(dimension: size);
-    }
     if (pic.kind == 'icon') {
       return Image.asset(
         'assets/icons/${pic.ref}.png',

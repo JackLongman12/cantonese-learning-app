@@ -9,7 +9,6 @@ import 'package:duk/engine/learner_model.dart';
 import 'package:duk/engine/memory.dart';
 import 'package:duk/events/event_logger.dart';
 import 'package:duk/events/event_store.dart';
-import 'package:duk/ui/picture_rating.dart';
 import 'package:duk/ui/practice_drills.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -134,35 +133,6 @@ void main() {
     await t.pumpAndSettle();
     expect(s.practiceLog.challengesDone, hasLength(1));
     expect(find.text('1 done'), findsOneWidget);
-  }, skip: !hasDb);
-
-  testWidgets('Rate pictures: Bad, OK and Good, one tap each, Back to change', (
-    t,
-  ) async {
-    final (s, store, db) = make();
-    addTearDown(db.close);
-    final total = doubtfulPictures(s).length;
-    expect(total, greaterThan(100));
-    await open(t, PictureRatingScreen(services: s));
-    await t.tap(find.byKey(const ValueKey('rate-good')));
-    await t.pumpAndSettle();
-    await t.tap(find.byKey(const ValueKey('rate-ok')));
-    await t.pumpAndSettle();
-    await t.tap(find.byKey(const ValueKey('rate-bad')));
-    await t.pumpAndSettle();
-    expect(find.text('3 / $total'), findsOneWidget);
-    expect(picturesToRate(s), total - 3);
-    final rates = [
-      for (final e in store.readAll())
-        if (e.type == 'picture.rate') (e.payload['rating'], e.payload['good']),
-    ];
-    expect(rates, [('good', true), ('ok', true), ('bad', false)]);
-    // Back, change the Bad to Good: the newest rating wins
-    await t.tap(find.byKey(const ValueKey('rate-back')));
-    await t.pumpAndSettle();
-    await t.tap(find.byKey(const ValueKey('rate-good')));
-    await t.pumpAndSettle();
-    expect(s.practiceLog.pictureRatings.values.where((g) => !g), isEmpty);
   }, skip: !hasDb);
 
   testWidgets('Jyutping guide shows letters and the six tones', (t) async {

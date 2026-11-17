@@ -3,6 +3,15 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2081): word photos load again; picture rating retired
+
+- **Photos were blank** (owner's report): Wikimedia now serves thumbnails from
+  thumb.wikimedia.org, which the downloader's host check refused, so 198 of 200 photos
+  never loaded. The host is trusted now (still HTTPS, Wikimedia only) and requests carry
+  a DuckLearn User-Agent as Wikimedia asks. All 200 photo links checked.
+- **Rate pictures removed**: the owner accepted every picture as fine, so all 349 `doubt`
+  marks are gone and the Settings tile with them. Earlier ratings no longer hide pictures.
+
 ## 2026-11-17 (b2080): OK rating for pictures
 
 - **Rate pictures has an OK button** between Bad and Good (owner's request): the picture

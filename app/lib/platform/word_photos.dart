@@ -1,6 +1,7 @@
 /// Photos for newcomer words (2026-11-17): downloaded from Wikimedia Commons on the phone
 /// when first shown, never bundled, kept in a cache folder. Downloads are untrusted: HTTPS
-/// only, Wikimedia hosts only (redirects included), at most [maxBytes], JPEG or PNG only.
+/// only, Wikimedia hosts only (redirects included; thumbnails come from
+/// thumb.wikimedia.org since 2026, before that upload.wikimedia.org), at most [maxBytes], JPEG or PNG only.
 library;
 
 import 'dart:async';
@@ -15,6 +16,9 @@ class WordPhotos {
   final Directory dir;
   final http.Client? _client;
   final _pending = <String, Future<File?>>{};
+
+  static const _userAgent =
+      'DuckLearn/1.0 (https://github.com/JackLongman12/cantonese-learning-app)';
 
   static const maxBytes = 400 * 1024;
   static const width = 320;
@@ -33,9 +37,13 @@ class WordPhotos {
     {'width': '$width'},
   );
 
-  static bool _trusted(Uri u) =>
-      u.scheme == 'https' &&
-      (u.host == 'commons.wikimedia.org' || u.host == 'upload.wikimedia.org');
+  static const _hosts = {
+    'commons.wikimedia.org',
+    'upload.wikimedia.org',
+    'thumb.wikimedia.org',
+  };
+
+  static bool _trusted(Uri u) => u.scheme == 'https' && _hosts.contains(u.host);
 
   /// The photo on disk, downloading it first if needed; null if it can't be had (offline:
   /// the next showing tries again).
@@ -56,7 +64,10 @@ class WordPhotos {
       // follow redirects by hand so every hop is checked
       for (var hop = 0; hop < 4; hop++) {
         if (!_trusted(uri)) return null;
-        final req = http.Request('GET', uri)..followRedirects = false;
+        final req = http.Request('GET', uri)
+          ..followRedirects = false
+          // Wikimedia asks apps to name themselves
+          ..headers['user-agent'] = _userAgent;
         r = await client.send(req).timeout(const Duration(seconds: 20));
         final loc = r.headers['location'];
         if (r.statusCode >= 300 && r.statusCode < 400 && loc != null) {

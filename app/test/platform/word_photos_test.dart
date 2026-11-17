@@ -36,6 +36,25 @@ void main() {
     expect(calls, 2);
   });
 
+  test('the real chain: FilePath, Redirect, then thumb.wikimedia.org', () async {
+    final photos = make((r) async {
+      expect(r.headers['user-agent'], startsWith('DuckLearn/'));
+      if (r.url.path.startsWith('/wiki/')) {
+        return http.Response('', 302, headers: {
+          'location':
+              'https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Bus.jpg',
+        });
+      }
+      if (r.url.host == 'commons.wikimedia.org') {
+        return http.Response('', 301, headers: {
+          'location': 'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b7/Bus.jpg',
+        });
+      }
+      return http.Response.bytes(_jpeg, 200);
+    });
+    expect(await photos.get('Bus.jpg'), isNotNull);
+  });
+
   test('a redirect away from Wikimedia is refused', () async {
     final photos = make(
       (r) async => http.Response(
