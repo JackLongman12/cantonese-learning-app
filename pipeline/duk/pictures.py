@@ -238,6 +238,9 @@ def match() -> str:
         "# photo: a Wikimedia Commons file (shown on the phone, never bundled, with credit);\n"
         "# icon: an OpenMoji hexcode (CC BY-SA 4.0); none: no picture fits.\n"
         "# Add `fixed: true` to an entry you checked or corrected so `match` leaves it.\n"
+        "# doubt: true = not sure the picture fits (the owner accepted all of them as fine on\n"
+        "# 2026-11-17; the in-app Rate pictures tool was retired). `duk pictures ratings` still\n"
+        "# applies picture.rate events if a rating tool comes back.\n"
         + yaml.safe_dump(current, allow_unicode=True, sort_keys=False, width=200),
         "utf-8",
     )

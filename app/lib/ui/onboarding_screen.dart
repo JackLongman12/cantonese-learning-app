@@ -291,8 +291,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Text('How it works', style: theme.textTheme.titleMedium),
                     const SizedBox(height: 10),
                     tip(
+                      Icons.place_outlined,
+                      'Pick the situations you\'ll be in (food, taxis, a flat, school, the doctor) and learn their words first.',
+                    ),
+                    tip(
                       Icons.style_rounded,
                       'Each day, a short drill: see the English, say it in Cantonese, then hear it.',
+                    ),
+                    tip(
+                      Icons.hearing_rounded,
+                      'Drill also trains your ear: what people say back, and the tones.',
                     ),
                     tip(
                       Icons.search_rounded,

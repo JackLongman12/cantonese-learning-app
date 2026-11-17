@@ -2379,3 +2379,309 @@ card:sit-slang:搞笑:
   icon: 1F602
 card:sit-slang:扮嘢:
   icon: 1F60F
+card:sit-taxi:截的士:
+  icon: 1F695
+  fixed: true
+card:sit-taxi:的士站:
+  icon: 1F696
+  fixed: true
+card:sit-taxi:叫車:
+  icon: 1F4F1
+  fixed: true
+card:sit-taxi:唔該去:
+  icon: 1F4CD
+  fixed: true
+card:sit-taxi:呢個地址:
+  icon: 1F4CD
+  fixed: true
+card:sit-taxi:呢度:
+  none: true
+  fixed: true
+card:sit-taxi:喺度停:
+  icon: 1F6D1
+  fixed: true
+card:sit-taxi:前面停:
+  icon: 1F6D1
+  fixed: true
+card:sit-taxi:門口:
+  icon: 1F6AA
+  fixed: true
+card:sit-taxi:路口:
+  icon: 1F6A6
+  fixed: true
+card:sit-taxi:掉頭:
+  icon: 21A9
+  fixed: true
+card:sit-taxi:兜路:
+  none: true
+  fixed: true
+card:sit-taxi:大約幾錢:
+  icon: 1F4B0
+  fixed: true
+card:sit-taxi:幾耐到:
+  icon: 23F1
+  fixed: true
+card:sit-taxi:揸慢啲:
+  icon: 1F422
+  fixed: true
+card:sit-taxi:車尾箱:
+  icon: 1F9F3
+  fixed: true
+card:sit-taxi:安全帶:
+  none: true
+  fixed: true
+card:sit-taxi:要收據:
+  icon: 1F9FE
+  fixed: true
+card:sit-diet:我對花生敏感:
+  icon: 1F95C
+  fixed: true
+card:sit-diet:過敏:
+  none: true
+  fixed: true
+card:sit-diet:花生:
+  icon: 1F95C
+  fixed: true
+card:sit-diet:果仁:
+  icon: 1F330
+  fixed: true
+card:sit-diet:蟹:
+  icon: 1F980
+  fixed: true
+card:sit-diet:牛奶:
+  icon: 1F95B
+  fixed: true
+card:sit-diet:麩質:
+  none: true
+  fixed: true
+card:sit-diet:全素:
+  icon: 1F96C
+  fixed: true
+card:sit-diet:素食:
+  icon: 1F966
+  fixed: true
+card:sit-diet:唔食牛:
+  none: true
+  fixed: true
+card:sit-diet:唔食豬:
+  none: true
+  fixed: true
+card:sit-diet:清真:
+  none: true
+  fixed: true
+card:sit-diet:入面有乜嘢:
+  none: true
+  fixed: true
+card:sit-diet:有冇肉:
+  icon: 1F969
+  fixed: true
+card:sit-diet:會唔會辣:
+  icon: 1F336
+  fixed: true
+card:sit-diet:走:
+  none: true
+  fixed: true
+card:sit-diet:少油:
+  none: true
+  fixed: true
+card:sit-diet:少鹽:
+  icon: 1F9C2
+  fixed: true
+card:sit-diet:唔要味精:
+  none: true
+  fixed: true
+card:sit-diet:糖尿病:
+  none: true
+  fixed: true
+card:sit-flat:租屋:
+  icon: 1F3E0
+  fixed: true
+card:sit-flat:地產:
+  none: true
+  fixed: true
+card:sit-flat:經紀:
+  none: true
+  fixed: true
+card:sit-flat:睇樓:
+  none: true
+  fixed: true
+card:sit-flat:單位:
+  none: true
+  fixed: true
+card:sit-flat:月租:
+  none: true
+  fixed: true
+card:sit-flat:佣金:
+  none: true
+  fixed: true
+card:sit-flat:租約:
+  icon: 1F4DD
+  fixed: true
+card:sit-flat:簽約:
+  icon: 270D
+  fixed: true
+card:sit-flat:死約:
+  none: true
+  fixed: true
+card:sit-flat:生約:
+  none: true
+  fixed: true
+card:sit-flat:管理費:
+  none: true
+  fixed: true
+card:sit-flat:水電煤:
+  none: true
+  fixed: true
+card:sit-flat:包水電:
+  none: true
+  fixed: true
+card:sit-flat:連傢俬:
+  icon: 1F6CB
+  fixed: true
+card:sit-flat:幾多呎:
+  none: true
+  fixed: true
+card:sit-flat:實用面積:
+  none: true
+  fixed: true
+card:sit-flat:一房一廳:
+  none: true
+  fixed: true
+card:sit-flat:高層:
+  none: true
+  fixed: true
+card:sit-flat:低層:
+  none: true
+  fixed: true
+card:sit-flat:有冇𨋢:
+  icon: 1F6D7
+  fixed: true
+card:sit-flat:唐樓:
+  none: true
+  fixed: true
+card:sit-flat:屋苑:
+  none: true
+  fixed: true
+card:sit-flat:搬入:
+  icon: 1F4E6
+  fixed: true
+card:sit-school:小朋友:
+  icon: 1F9D2
+  fixed: true
+card:sit-school:幼稚園:
+  none: true
+  fixed: true
+card:sit-school:小學:
+  icon: 1F3EB
+  fixed: true
+card:sit-school:中學:
+  none: true
+  fixed: true
+card:sit-school:幾年級:
+  none: true
+  fixed: true
+card:sit-school:一年級:
+  none: true
+  fixed: true
+card:sit-school:班主任:
+  none: true
+  fixed: true
+card:sit-school:接放學:
+  none: true
+  fixed: true
+card:sit-school:家長會:
+  none: true
+  fixed: true
+card:sit-school:校服:
+  none: true
+  fixed: true
+card:sit-school:書包:
+  icon: 1F392
+  fixed: true
+card:sit-school:校車:
+  icon: 1F68C
+  fixed: true
+card:sit-school:學費:
+  none: true
+  fixed: true
+card:sit-school:報名:
+  none: true
+  fixed: true
+card:sit-school:測驗:
+  icon: 1F4DD
+  fixed: true
+card:sit-school:成績表:
+  none: true
+  fixed: true
+card:sit-school:補習:
+  icon: 1F4DA
+  fixed: true
+card:sit-school:興趣班:
+  none: true
+  fixed: true
+card:sit-school:請病假:
+  icon: 1F912
+  fixed: true
+card:sit-school:帶飯:
+  icon: 1F371
+  fixed: true
+card:sit-settle:啱啱搬嚟:
+  none: true
+  fixed: true
+card:sit-settle:新嚟:
+  none: true
+  fixed: true
+card:sit-settle:住咗幾耐:
+  none: true
+  fixed: true
+card:sit-settle:習唔習慣:
+  none: true
+  fixed: true
+card:sit-settle:習慣:
+  none: true
+  fixed: true
+card:sit-settle:電話卡:
+  icon: 1F4F1
+  fixed: true
+card:sit-settle:儲值卡:
+  none: true
+  fixed: true
+card:sit-settle:月費計劃:
+  none: true
+  fixed: true
+card:sit-settle:寬頻:
+  icon: 1F4F6
+  fixed: true
+card:sit-settle:賬單:
+  icon: 1F9FE
+  fixed: true
+card:sit-settle:水費:
+  icon: 1F4A7
+  fixed: true
+card:sit-settle:電費:
+  icon: 26A1
+  fixed: true
+card:sit-settle:煤氣:
+  icon: 1F525
+  fixed: true
+card:sit-settle:保險:
+  none: true
+  fixed: true
+card:sit-settle:登記:
+  none: true
+  fixed: true
+card:sit-settle:工作簽證:
+  icon: 1F6C2
+  fixed: true
+card:sit-settle:續簽:
+  icon: 1F6C2
+  fixed: true
+card:sit-settle:有冇推介:
+  icon: 1F44D
+  fixed: true
+card:sit-settle:介紹:
+  none: true
+  fixed: true
+card:sit-settle:識路:
+  icon: 1F5FA
+  fixed: true

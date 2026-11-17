@@ -6,14 +6,30 @@ Working title: **Duk6** (讀, "to read"). Rename freely.
 
 ## 1. Who it is for and what it must do
 
-One user (the owner). Personal, non-commercial.
+> Rewritten 2026-11-17 (launch check). It started as the owner's personal app; the text
+> below is current. Historical detail is in `docs/CHANGELOG.md`.
 
-- Speaks and understands Cantonese natively. **Cannot reliably read** Traditional Chinese or written Cantonese: cannot get from a character to its sound without looking it up.
-- Also wants Mandarin with Simplified characters (weaker; needs sound *and* some vocabulary).
-- Lives/moves in **Macau first, Hong Kong second**. Content must be real-life sentences for those places, not isolated words.
-- Platforms: Android, Windows, macOS.
+Public, non-commercial, free. Released on GitHub only (Android arm64; Windows and macOS
+later). Two kinds of learner, picked by the level question in onboarding (`prefs.level`):
 
-**Goal:** go from needing Jyutping over every character to reading real Macau/HK text with none.
+- **Newcomers to Macau and Hong Kong (the main audience).** They don't speak Cantonese
+  and need essential words to get their point across: ordering, taxis, a flat, school,
+  the doctor. **Newcomer mode:** situations (`content/situations.yaml`), each a deck of
+  key words and short chunks, drilled English first (see the English, say it, hear it);
+  search "What do you want to say?"; practice beyond words (`content/practice.yaml`):
+  understanding replies, hearing tones, building sentences from frames, real-world
+  challenges; a Jyutping guide and particles; a picture for each word where one fits.
+  Home B (`ui/situations.dart`).
+- **Speakers who can't read** (and learners who also want to read). **The reading app:**
+  real Macau/HK sentences with Jyutping that fades per character as it is learned; each
+  sentence is read first, then checked by ear. Home A.
+
+Both modes share all content and the same five tabs (Home, Topics, Situations, Drill,
+Progress); only Home and the tab order differ.
+
+**Goal (reading app):** go from needing Jyutping over every character to reading real
+Macau/HK text with none. **Goal (newcomer mode):** say and understand the essential words
+of the situations a newcomer meets in the first months.
 
 **Headline metric:** *unaided coverage* = share of characters in a reference corpus (Macau signs, menus, news, chat) whose predicted recall is at least 0.9.
 
@@ -22,7 +38,7 @@ One user (the owner). Personal, non-commercial.
 - Not an Anki clone. No isolated-word-first decks. Anki `.apkg` export is a late, optional extra.
 - No handwriting teaching (stroke order is shown for reference only).
 - No multi-user accounts, no server we operate.
-- No commercial distribution. Licences are therefore not a constraint, but every source is still recorded in `DATA_SOURCES.md`.
+- No commercial distribution. Licences still matter (the app is public): every source is recorded in `DATA_SOURCES.md`, and those that ask for credit are credited on Settings → About.
 
 ## 2. Core mechanics
 
@@ -131,11 +147,12 @@ score = w_due   × Σ urgency(due items covered)
 | F10 | Paste reader + live TTS | 4 |
 | F11 | OCR reader (camera / image / screenshot) | 4 |
 | F12 | Read-aloud check (ASR) | 4 |
-| F13 | Cantonese ⇄ Mandarin parallel view with differences highlighted | 2–4 |
+| F13 | ~~Cantonese ⇄ Mandarin parallel view~~ (dropped with Mandarin, 2026-11-15) | — |
 | F14 | Recall model + bandit | 5 |
 | F15 | Dashboard: coverage, efficiency, forecast, best study times | 3–5 |
 | F16 | Claude "explain this" and roleplay; local LLM weekly report | 6 |
 | F17 | Desktop clipboard hotkey reader; Android widget; `.srt` import; Jyutping typing practice; browser extension; Anki export | 6+ |
+| F18 | Newcomer mode: situations, English-first drill, replies, tones, frames, challenges | built 2026-11-17 |
 
 ## 4. Architecture
 

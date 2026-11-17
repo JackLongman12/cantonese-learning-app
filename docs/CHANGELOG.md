@@ -3,6 +3,19 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2084): five new situations, docs brought up to date
+
+- **New situations** (gaps from the launch check): Taking a taxi, Allergies and diet,
+  Finding a flat, Kids and school, Settling in (102 words, 40 situations in all), each with
+  replies for Understand replies and a real-world challenge. Placed next to the situation
+  they build on, with icons for 49 of the new words (OpenMoji, hand-picked; `match` only
+  searches photos for some situations). Readings from the dictionaries; one reply with an unsure reading
+  (一按一上) was replaced rather than guessed.
+- **Onboarding's newcomer "How it works"** now mentions situations and the ear training.
+- **README, DESIGN §1 and the ROADMAP status** describe the app as it is now: public on
+  GitHub, two modes sharing all content, newcomers first. DESIGN §1 still described the
+  owner alone and Mandarin.
+
 ## 2026-11-17 (b2083): second security pass
 
 - **Shared text is capped at 5,000 characters**: readings are worked out on the UI thread,

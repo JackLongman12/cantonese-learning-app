@@ -322,6 +322,30 @@ situations:
       - [過海, "cross the harbour"]
       - [停, "stop (a vehicle)", "前面停 = Stop up ahead."]
 
+  - id: sit-taxi
+    title: Taking a taxi
+    icon: taxi
+    description: "Hail one, say where to, and get dropped at the right door."
+    words:
+      - [截的士, "hail a taxi"]
+      - [的士站, "taxi stand"]
+      - [叫車, "book a ride"]
+      - [唔該去, "please go to", "Then the place: 唔該去機場。"]
+      - [呢個地址, "this address", "Show it on your phone: 唔該去呢個地址。"]
+      - [呢度, "here"]
+      - [喺度停, "stop here"]
+      - [前面停, "stop up ahead"]
+      - [門口, "entrance / door", "喺門口停 = stop at the door."]
+      - [路口, "corner / junction"]
+      - [掉頭, "U-turn"]
+      - [兜路, "the long way round"]
+      - [大約幾錢, "about how much?"]
+      - [幾耐到, "how long to get there?"]
+      - [揸慢啲, "drive slower"]
+      - [車尾箱, "trunk (of a car)"]
+      - [安全帶, "seatbelt"]
+      - [要收據, "I need a receipt"]
+
   - id: sit-places
     title: Places in town
     icon: places
@@ -443,6 +467,32 @@ situations:
       - [牛油, "butter"]
       - [雞尾包, "cocktail bun"]
       - [下午茶, "afternoon tea (set)"]
+
+  - id: sit-diet
+    title: Allergies and diet
+    icon: diet
+    description: "Say what you can't eat and check what's in a dish."
+    words:
+      - [我對花生敏感, "I'm allergic to peanuts", "Swap in the food: 我對海鮮敏感。"]
+      - [過敏, "allergy"]
+      - [花生, "peanuts"]
+      - [果仁, "nuts"]
+      - [蟹, "crab"]
+      - [牛奶, "milk"]
+      - [麩質, "gluten"]
+      - [全素, "vegan"]
+      - [素食, "vegetarian food"]
+      - [唔食牛, "don't eat beef"]
+      - [唔食豬, "don't eat pork"]
+      - [清真, "halal"]
+      - [入面有乜嘢, "what's in it?"]
+      - [有冇肉, "is there meat in it?"]
+      - [會唔會辣, "is it spicy?"]
+      - [走, "leave out (none)", "走蔥 = no spring onion; 走辣 = not spicy."]
+      - [少油, "less oil"]
+      - [少鹽, "less salt"]
+      - [唔要味精, "no MSG"]
+      - [糖尿病, "diabetes"]
 
   - id: sit-dimsum
     title: Dim sum (yum cha)
@@ -809,6 +859,36 @@ situations:
       - [交租, "pay the rent"]
       - [搬屋, "move house"]
 
+  - id: sit-flat
+    title: Finding a flat
+    icon: key
+    description: "Agents, viewings, rent and the lease: the words for renting a place."
+    words:
+      - [租屋, "rent a flat"]
+      - [地產, "estate agency"]
+      - [經紀, "agent"]
+      - [睇樓, "view a flat"]
+      - [單位, "flat (unit)"]
+      - [月租, "monthly rent"]
+      - [佣金, "agent's fee"]
+      - [租約, "lease"]
+      - [簽約, "sign the lease"]
+      - [死約, "fixed term (can't leave early)"]
+      - [生約, "flexible term"]
+      - [管理費, "management fee"]
+      - [水電煤, "water, power and gas"]
+      - [包水電, "bills included"]
+      - [連傢俬, "furnished"]
+      - [幾多呎, "how many square feet?"]
+      - [實用面積, "usable floor area"]
+      - [一房一廳, "one bedroom, one living room"]
+      - [高層, "high floor"]
+      - [低層, "low floor"]
+      - [有冇𨋢, "is there a lift?"]
+      - [唐樓, "old walk-up building"]
+      - [屋苑, "housing estate (private)"]
+      - [搬入, "move in"]
+
   - id: sit-kitchen
     title: Cooking at home
     icon: kitchen
@@ -1007,6 +1087,32 @@ situations:
       - [兼職, "part-time job"]
       - [全職, "full-time"]
 
+  - id: sit-school
+    title: Kids and school
+    icon: school
+    description: "Classes, teachers, pick-up and forms for parents."
+    words:
+      - [小朋友, "kids"]
+      - [幼稚園, "kindergarten"]
+      - [小學, "primary school"]
+      - [中學, "secondary school"]
+      - [幾年級, "which grade?"]
+      - [一年級, "first grade"]
+      - [班主任, "class teacher"]
+      - [接放學, "pick up from school"]
+      - [家長會, "parents' meeting"]
+      - [校服, "school uniform"]
+      - [書包, "school bag"]
+      - [校車, "school bus"]
+      - [學費, "school fees"]
+      - [報名, "sign up / enroll"]
+      - [測驗, "test"]
+      - [成績表, "report card"]
+      - [補習, "tutoring"]
+      - [興趣班, "after-school class"]
+      - [請病假, "call in sick"]
+      - [帶飯, "bring lunch"]
+
   - id: sit-errands
     title: Bank, post and forms
     icon: errands
@@ -1037,6 +1143,32 @@ situations:
       - [寄信, "send a letter"]
       - [郵票, "stamp"]
       - [打印, "print"]
+
+  - id: sit-settle
+    title: Settling in
+    icon: settle
+    description: "Phone plans, bills and the questions people ask when you're new."
+    words:
+      - [啱啱搬嚟, "just moved here"]
+      - [新嚟, "new here"]
+      - [住咗幾耐, "how long have you lived here?"]
+      - [習唔習慣, "are you used to it?"]
+      - [習慣, "used to it"]
+      - [電話卡, "SIM card"]
+      - [儲值卡, "prepaid card"]
+      - [月費計劃, "monthly plan"]
+      - [寬頻, "broadband"]
+      - [賬單, "bill"]
+      - [水費, "water bill"]
+      - [電費, "electricity bill"]
+      - [煤氣, "gas"]
+      - [保險, "insurance"]
+      - [登記, "register"]
+      - [工作簽證, "work visa"]
+      - [續簽, "renew a visa"]
+      - [有冇推介, "any recommendations?"]
+      - [介紹, "recommend / introduce"]
+      - [識路, "know the way"]
 
   - id: sit-hair
     title: Haircut

@@ -83,6 +83,39 @@ replies:
     - [填咗表未？, "Have you filled in the form?"]
     - [喺度簽名, "Sign here."]
     - [等叫你個號碼, "Wait until your number is called."]
+  sit-taxi:
+    - [去邊度？, "Where to?"]
+    - [呢度唔停得, "I can't stop here."]
+    - [前面先停得, "I can only stop up ahead."]
+    - [行邊條路？, "Which way do you want to go?"]
+    - [塞車喎, "There's traffic."]
+    - [到喇, "We're here."]
+  sit-diet:
+    - [有花生㗎, "It has peanuts in it."]
+    - [冇肉嘅, "There's no meat in it."]
+    - [可以走, "We can leave it out."]
+    - [走唔到, "We can't leave it out."]
+    - [有少少辣, "It's a little spicy."]
+    - [呢個係素嘅, "This one is vegetarian."]
+  sit-flat:
+    - [幾時想搬入？, "When do you want to move in?"]
+    - [按金要兩個月, "The deposit is two months' rent."]
+    - [要簽兩年, "You need to sign for two years."]
+    - [包管理費, "The management fee is included."]
+    - [今晚可以睇樓, "You can view it tonight."]
+    - [業主唔准養寵物, "The landlord doesn't allow pets."]
+  sit-school:
+    - [佢今日好乖, "They were very good today."]
+    - [記得簽手冊, "Remember to sign the handbook."]
+    - [聽日要帶功課, "Bring the homework tomorrow."]
+    - [佢唔舒服，你嚟接佢, "They don't feel well, please come and pick them up."]
+    - [下個禮拜開家長會, "There's a parents' meeting next week."]
+  sit-settle:
+    - [你住咗幾耐？, "How long have you lived here?"]
+    - [習唔習慣呀？, "Are you used to it yet?"]
+    - [你係邊度人？, "Where are you from?"]
+    - [要身份證先得, "You need your ID card for that."]
+    - [下個月先寄賬單俾你, "We'll send you the bill next month."]
 
 tone_sets:
   - id: tones-si
@@ -213,3 +246,8 @@ challenges:
   - {id: ch-weather, zh: 今日好熱, en: "Chat about the weather: 今日好熱呀 or 今日好凍.", sit: sit-weather}
   - {id: ch-bye, zh: 唔該晒, en: "Leave a shop with 唔該晒 or 拜拜.", sit: sit-basics}
   - {id: ch-repeat, zh: 再講一次, en: "Didn't catch it? Ask them to say it again.", sit: sit-basics}
+  - {id: ch-taxi-address, zh: 唔該去呢個地址, en: "In a taxi, say 唔該去 and the place, or 唔該去呢個地址 and show the address.", sit: sit-taxi}
+  - {id: ch-diet-allergy, zh: 我對花生敏感, en: "Ordering food, tell them what you can't eat: 我對…敏感 or 唔食牛.", sit: sit-diet}
+  - {id: ch-flat-view, zh: 幾多呎, en: "At a viewing or an agent's window, ask 幾多呎？ and 月租幾錢？", sit: sit-flat}
+  - {id: ch-school-teacher, zh: 唔該晒老師, en: "At pick-up, say 唔該晒老師 to the teacher.", sit: sit-school}
+  - {id: ch-settle-recommend, zh: 有冇推介, en: "Ask a neighbor or shopkeeper 附近有冇推介？ for a place to eat.", sit: sit-settle}

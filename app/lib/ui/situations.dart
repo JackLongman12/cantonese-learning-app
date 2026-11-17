@@ -52,6 +52,11 @@ IconData situationIcon(String name) => switch (name) {
   'festivals' => Icons.festival_outlined,
   'animals' => Icons.pets_outlined,
   'polite' => Icons.volunteer_activism_outlined,
+  'taxi' => Icons.local_taxi_outlined,
+  'diet' => Icons.no_food_outlined,
+  'key' => Icons.key_outlined,
+  'school' => Icons.school_outlined,
+  'settle' => Icons.assignment_ind_outlined,
   _ => Icons.chat_bubble_outline,
 };
 
