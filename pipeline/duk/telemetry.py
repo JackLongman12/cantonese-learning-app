@@ -316,6 +316,64 @@ def _pct(k: float, n: float) -> str:
     return f"{100 * k / n:.0f}%" if n else "–"
 
 
+def _newcomer_section(events: list[dict]) -> list[str]:
+    """Newcomer practice (content/practice.yaml): replies understood, tones heard,
+    sentences said, challenges done, and the weakest replies and tone sets."""
+    by: dict[str, list[bool]] = {"listen": [], "tone": [], "frame": []}
+    missed: Counter = Counter()
+    heard: Counter = Counter()
+    tone_ok: dict[str, list[bool]] = defaultdict(list)
+    challenges: Counter = Counter()
+    for e in events:
+        p = e.get("payload") or {}
+        typ = e.get("type")
+        if typ == "listen.answer" and isinstance(p.get("id"), str):
+            ok = p.get("correct") is True
+            by["listen"].append(ok)
+            heard[p["id"]] += 1
+            missed[p["id"]] += not ok
+        elif typ == "tone.answer" and isinstance(p.get("set"), str):
+            ok = p.get("correct") is True
+            by["tone"].append(ok)
+            tone_ok[p["set"]].append(ok)
+        elif typ == "frame.say":
+            by["frame"].append(p.get("ok") is True)
+        elif typ == "challenge.done" and isinstance(p.get("id"), str):
+            challenges[p["id"]] += 1
+    if not any(by.values()) and not challenges:
+        return []
+
+    def share(v: list[bool]) -> str:
+        return f"{len(v)} ({_pct(sum(v), len(v))} right)" if v else "0"
+
+    lines = [
+        "## Newcomer practice",
+        "",
+        "| | Answers |",
+        "|---|---|",
+        f"| Understand replies | {share(by['listen'])} |",
+        f"| Hear the tones | {share(by['tone'])} |",
+        f"| Build a sentence (said it) | {share(by['frame'])} |",
+        f"| Real-world challenges done | {sum(challenges.values())} |",
+        "",
+    ]
+    hard = [(r, missed[r], heard[r]) for r in heard if heard[r] >= 3 and missed[r]]
+    hard.sort(key=lambda t: -t[1] / t[2])
+    if hard:
+        lines += ["Replies most often misheard (at least 3 tries):", "",
+                  "| Reply | Missed | Tries |", "|---|---|---|"]  # fmt: skip
+        lines += [f"| {r} | {m} | {h} |" for r, m, h in hard[:10]]
+        lines.append("")
+    tones = [(s, v) for s, v in tone_ok.items() if len(v) >= 5]
+    tones.sort(key=lambda t: sum(t[1]) / len(t[1]))
+    if tones:
+        lines += ["Tone sets, weakest first (at least 5 tries):", "",
+                  "| Set | Heard right | Tries |", "|---|---|---|"]  # fmt: skip
+        lines += [f"| {s} | {_pct(sum(v), len(v))} | {len(v)} |" for s, v in tones[:10]]
+        lines.append("")
+    return lines
+
+
 def report(events: list[dict], crashes: list[dict]) -> str:
     a = analyse(events)
     inst = list(a["installs"].values())
@@ -440,6 +498,8 @@ def report(events: list[dict], crashes: list[dict]) -> str:
     if not srows:
         lines.append("| (not enough showings yet) | | | |")
     lines.append("")
+
+    lines += _newcomer_section(events)
 
     lines += ["## Where people go", "", "| Screen | Opens |", "|---|---|"]
     for s, c in a["screens"].most_common(15):

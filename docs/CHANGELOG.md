@@ -3,6 +3,20 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2082): launch check
+
+- **Licence credits** (launch check): Settings → About now credits the dictionary data
+  (CC-CEDICT, CC-Canto, rime-cantonese, Unihan, HKCanCor), OpenStreetMap place names
+  (ODbL), the SenseVoice speech model (FunASR model licence) and Noto Sans HK (OFL), as
+  those licences require. Before, only the icons and photos were credited.
+- **Usage report covers newcomers**: a "Newcomer practice" section (replies understood,
+  tones heard, sentences said, challenges, the hardest replies and tone sets). It had
+  only reading-app numbers, though newcomers are the main audience.
+- Security review found nothing to fix: no secrets in the git history, updates checked
+  by SHA-256 from HTTPS GitHub only and installed by Android's signature check, photo
+  and model downloads pinned to their hosts and size-limited, Worker inputs validated
+  and rate-limited. Open launch decisions are in ROADMAP 3.7.
+
 ## 2026-11-17 (b2081): word photos load again; picture rating retired
 
 - **Photos were blank** (owner's report): Wikimedia now serves thumbnails from

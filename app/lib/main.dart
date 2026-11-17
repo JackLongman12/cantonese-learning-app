@@ -56,6 +56,35 @@ Future<void> main() async {
       'Photos from Wikimedia Commons, downloaded when first shown. The author and license '
       'of each photo are shown under it in the drill.',
     );
+    // the data the content is built from (data/raw/SOURCES.lock.json); these licences
+    // ask for credit (2026-11-17 launch check)
+    yield const LicenseEntryWithLineBreaks(
+      ['DuckLearn dictionary data'],
+      'Meanings and readings from CC-CEDICT (https://cc-cedict.org, CC BY-SA 4.0) and '
+      'CC-Canto with its Jyutping for CC-CEDICT (https://cantonese.org, Pleco, '
+      'CC BY-SA 3.0); readings from rime-cantonese (CanCLID, CC BY 4.0) and the Unihan '
+      'database (Unicode License v3); how words are said and how common they are from '
+      'HKCanCor via PyCantonese (CC BY 4.0). The readings in DuckLearn are adapted from '
+      'these and shared under the same terms.',
+    );
+    yield const LicenseEntryWithLineBreaks(
+      ['DuckLearn place names'],
+      'Street and place names in Macau and Hong Kong: © OpenStreetMap contributors, '
+      'available under the Open Database License (https://www.openstreetmap.org/copyright).',
+    );
+    yield const LicenseEntryWithLineBreaks(
+      ['DuckLearn speech check'],
+      'The read-aloud check runs the SenseVoiceSmall model by Alibaba Group '
+      '(FunAudioLLM/SenseVoiceSmall, FunASR Model Open Source License 1.1, '
+      'https://github.com/modelscope/FunASR/blob/main/MODEL_LICENSE), converted for '
+      'sherpa-onnx by csukuangfj. It is downloaded on first use and runs on the device.',
+    );
+    yield const LicenseEntryWithLineBreaks(
+      ['Noto Sans HK'],
+      'Noto Sans HK, (c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font '
+      'Name \'Source\'. Subset to the characters DuckLearn uses. Licensed under the SIL '
+      'Open Font License, Version 1.1 (https://openfontlicense.org).',
+    );
   });
   // one fixed folder for the audio player's clip copies, reused across launches
   AudioCache.instance = AudioCache(prefix: 'assets/', cacheId: audioCacheId);

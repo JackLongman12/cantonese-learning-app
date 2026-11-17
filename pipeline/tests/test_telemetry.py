@@ -87,3 +87,18 @@ def test_small_samples_are_not_decided():
 
 def test_empty_report():
     assert "No data yet" in tm.report([], [])
+
+
+def test_newcomer_practice_section():
+    t = "2026-11-17T02:00:00.000Z"
+    events = [_ev("i1", t, "app.open")]
+    events += [_ev("i1", t, "listen.answer", id="rep:a", correct=i == 0) for i in range(4)]
+    events += [_ev("i1", t, "tone.answer", set="tones-si", correct=i < 2) for i in range(5)]
+    events += [_ev("i1", t, "frame.say", id="frame:x", ok=True)]
+    events += [_ev("i1", t, "challenge.done", id="ch-1")]
+    md = tm.report(events, [])
+    assert "## Newcomer practice" in md
+    assert "| Understand replies | 4 (25% right) |" in md
+    assert "| rep:a | 3 | 4 |" in md
+    assert "| tones-si | 40% | 5 |" in md
+    assert "| Real-world challenges done | 1 |" in md

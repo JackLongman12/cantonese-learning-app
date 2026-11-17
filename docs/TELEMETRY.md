@@ -100,6 +100,10 @@ in `docs/CHANGELOG.md`.
    feature work; a crash that recurs after a fix's version is not fixed.
 6. **Where people go.** A screen almost nobody opens is a candidate to remove or merge (fewer
    tools, clearer path).
+7. **Newcomer practice.** Answers in Understand replies, Hear the tones and Build a sentence,
+   challenges done, then the replies most often misheard (3+ tries) and the weakest tone
+   sets (5+ tries). A reply most people miss needs a slower clip, a clearer English line or
+   an earlier place in its situation; a weak tone set gets more pairs in `practice.yaml`.
 
 Write what was decided and why into `docs/CHANGELOG.md`, so the next reader of the report
 knows what has already been acted on.
