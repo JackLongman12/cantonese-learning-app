@@ -1,4 +1,5 @@
-/// Settings → Sentence voice: the phone's default Cantonese voice (the default), any
+/// Settings → Sentence voice: the best phone voice (the default: an online Cantonese
+/// voice when the phone has one, else its default voice; 2026-11-17), any
 /// other Cantonese voice the phone's engine has, or the recorded voice. Tapping one picks
 /// it and plays a sample line.
 library;
@@ -8,11 +9,11 @@ import 'package:material_ui/material_ui.dart';
 import '../app_services.dart';
 import '../platform/word_voice.dart';
 
-/// "Phone voice (default)", "Phone voice: yue-hk-x-jar-network", "Recorded voice".
+/// "Online voice (default)", "Phone voice: yue-hk-x-jar-network", "Recorded voice".
 String voiceLabel(AppServices s) {
   if (!s.prefs.phoneVoice) return 'Recorded voice (Microsoft)';
   final n = s.prefs.voiceName;
-  return n == null ? 'Phone voice (default)' : 'Phone voice: $n';
+  return n == null ? 'Online voice (default)' : 'Phone voice: $n';
 }
 
 /// A short line to try each voice on (one that has a recording too).
@@ -112,8 +113,15 @@ class _VoicePickerState extends State<_VoicePicker> {
             _tile(
               key: const ValueKey('voice-default'),
               selected: phone && name == null,
-              title: 'Phone voice (default)',
-              subtitle: 'Everyday tones, the same as before',
+              title: 'Online voice (default)',
+              subtitle: () {
+                final online = voices == null
+                    ? null
+                    : WordVoice.defaultVoice(voices);
+                return online != null
+                    ? "The phone's best Cantonese voice: ${online.name}"
+                    : "The phone's best Cantonese voice; online when it has one";
+              }(),
               onTap: () => _pick(phone: true),
             ),
             if (voices == null)

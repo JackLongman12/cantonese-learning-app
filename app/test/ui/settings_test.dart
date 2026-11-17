@@ -49,7 +49,7 @@ void main() {
     expect(prefs.soundEffects, isFalse);
     expect(const ScaffoldPolicy(shift: 1).shift, 1);
 
-    // sentence voice: the phone's default voice unless you pick another
+    // sentence voice: the phone's online voice (else its default) unless you pick another
     expect(prefs.phoneVoice, isTrue);
     expect(prefs.voiceName, isNull);
     await t.ensureVisible(find.byKey(const ValueKey('set-voice')));

@@ -76,7 +76,7 @@ nudge on days with no reading and never guilt-trip.
 | Item | Needed for | Blocking? |
 |---|---|---|
 | ~~GitHub repo name, and public or private~~ | done: public `cantonese-learning-app` (releases there) | — |
-| ~~Azure Speech key + region~~ | not needed: phone voice by default, edge-tts recorded fallback | — |
+| ~~Azure Speech key + region~~ | not needed: the phone's online voice by default, edge-tts recorded fallback | — |
 | Anthropic API key | sentence drafting | Phase 1 content (can start with owner-written + corpus sentences) |
 | Which Android phone/version; is a Mac available for testing | builds | Phase 2 |
 | Google Cloud TTS key (Chirp 3 HD) | an extra voice in the picker, only if wanted | optional |

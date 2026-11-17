@@ -3,6 +3,16 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2086): first public launch; online voice by default
+
+- **"Phone voice 2 (online)" is the default** (owner): when you haven't picked a voice,
+  sentences and tapped words use the second voice in the picker's list (online voices
+  first, then by name) if it is online, else the first online voice, else the phone's
+  default voice as before. Settings → Sentence voice calls it "Online
+  voice (default)" and names the voice. A voice you picked yourself is kept. Offline,
+  Google's engine falls back to its built-in voice.
+- First public launch on GitHub Releases.
+
 ## 2026-11-17 (b2085): five new situations, docs brought up to date
 
 - **New situations** (gaps from the launch check): Taking a taxi, Allergies and diet,

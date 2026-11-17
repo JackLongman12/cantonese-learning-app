@@ -1,6 +1,7 @@
 /// Says words and sentences with the device's own text-to-speech (Android: Google's
-/// "Cantonese (Hong Kong)" voice; Windows: a zh-HK voice if installed). Sentences use it
-/// unless the learner picks the recorded voice (Settings): the recorded voice reads some
+/// "Cantonese (Hong Kong)" voice, an online one by default; Windows: a zh-HK voice if
+/// installed). Sentences use it unless the learner picks the recorded voice (Settings):
+/// the recorded voice reads some
 /// words in their dictionary tone rather than the one people say.
 library;
 
@@ -99,10 +100,21 @@ class WordVoice {
     }
   }
 
+  /// The voice used when the learner hasn't picked one (owner, 2026-11-17): "Phone voice
+  /// 2 (online)" in the picker, i.e. the second voice of [voices] (online first, then by
+  /// name) when it is online; else the first online voice; else the engine's default.
+  /// Offline, Google's engine falls back to its built-in voice itself.
+  static PhoneVoice? defaultVoice(List<PhoneVoice> all) {
+    if (all.length > 1 && all[1].online) return all[1];
+    return all.where((v) => v.online).firstOrNull;
+  }
+
   Future<void> _apply() async {
     if (_applied == (wanted ?? '')) return;
-    final all = wanted == null ? const <PhoneVoice>[] : await voices();
-    final v = all.where((x) => x.name == wanted).firstOrNull;
+    final all = await voices();
+    final v = wanted == null
+        ? defaultVoice(all)
+        : all.where((x) => x.name == wanted).firstOrNull;
     if (v != null) {
       await _tts.setVoice({'name': v.name, 'locale': v.locale});
     } else if (_locale != null) {
