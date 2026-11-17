@@ -59,8 +59,16 @@ class _PasteReaderScreenState extends State<PasteReaderScreen> {
     super.dispose();
   }
 
+  /// Shared or pasted text is cut to this many characters (a long article): readings
+  /// are worked out on the UI thread, and a whole web page shared in would freeze it.
+  static const maxChars = 5000;
+
   void _read(String text, {required String source, bool initial = false}) {
-    final tokens = _s.content.annotator(widget.lang).annotate(text);
+    // by code point, so a rare character outside the BMP is never cut in half
+    final cut = text.runes.length > maxChars
+        ? String.fromCharCodes(text.runes.take(maxChars))
+        : text;
+    final tokens = _s.content.annotator(widget.lang).annotate(cut);
     final now = _s.logger.now();
     final levels = <String, ScaffoldLevel>{};
     for (final t in tokens) {

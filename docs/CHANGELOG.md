@@ -3,6 +3,15 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2083): second security pass
+
+- **Shared text is capped at 5,000 characters**: readings are worked out on the UI thread,
+  so a whole web page shared into DuckLearn froze it. Cut by code point.
+- Checked again and fine: SQL is parameterised everywhere, the Windows update only expands
+  a zip whose SHA-256 matched, CI runs with a read-only token and pinned actions, Dart
+  packages are current (patch releases only). GitHub's Dependabot alerts are off for the
+  repo; turning them on is the owner's call (a repo security setting).
+
 ## 2026-11-17 (b2082): launch check
 
 - **Licence credits** (launch check): Settings → About now credits the dictionary data
