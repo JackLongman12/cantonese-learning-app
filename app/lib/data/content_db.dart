@@ -835,31 +835,39 @@ extension SituationQueries on ContentDb {
 
 /// A newcomer word's picture: a bundled icon or a photo the phone downloads.
 class WordPictureRow {
-  const WordPictureRow(this.kind, this.ref, this.credit);
+  const WordPictureRow(this.kind, this.ref, this.credit, {this.doubt = false});
 
   /// 'icon' (OpenMoji hexcode, `assets/icons/<ref>.png`) or 'photo' (Commons file name).
   final String kind;
   final String ref;
   final String credit;
+
+  /// Not sure the picture fits the word: listed in Settings → Developer → Rate pictures.
+  final bool doubt;
 }
 
 extension WordPictureQueries on ContentDb {
   /// Card id -> picture. Read once and kept; empty for an older content.db.
   Map<String, WordPictureRow> wordPictures() => _pictures[this] ??= () {
-    try {
-      return {
-        for (final r in _db.select(
-          'SELECT card_id, kind, ref, credit FROM card_picture',
-        ))
-          r['card_id'] as String: WordPictureRow(
-            r['kind'] as String,
-            r['ref'] as String,
-            r['credit'] as String,
-          ),
-      };
-    } on SqliteException {
-      return <String, WordPictureRow>{};
+    for (final sql in [
+      'SELECT card_id, kind, ref, credit, doubt FROM card_picture',
+      'SELECT card_id, kind, ref, credit, 0 AS doubt FROM card_picture', // schema 15
+    ]) {
+      try {
+        return {
+          for (final r in _db.select(sql))
+            r['card_id'] as String: WordPictureRow(
+              r['kind'] as String,
+              r['ref'] as String,
+              r['credit'] as String,
+              doubt: (r['doubt'] as int) == 1,
+            ),
+        };
+      } on SqliteException {
+        continue;
+      }
     }
+    return <String, WordPictureRow>{};
   }();
 }
 

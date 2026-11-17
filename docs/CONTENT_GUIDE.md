@@ -135,6 +135,13 @@ rename a situation or change a shipped word's characters. Readings come from the
 dictionaries; a word the dictionaries read wrong gets a word-level override in
 `overrides/readings.yaml` (好平, 請假).
 
+## Word pictures (`content/pictures.yaml`)
+
+Per card id: `photo` (a Commons file, with `credit`), `icon` (an OpenMoji hexcode) or
+`none`. `fixed: true` keeps `duk pictures match` from changing an entry. `doubt: true`
+puts it in the owner's Rate pictures list (Settings → Developer); `duk pictures ratings`
+pulls the ratings and turns Good into `fixed` and Bad into `none`.
+
 ## Practice (`content/practice.yaml`, newcomer mode)
 
 Four lists, all `source: llm`, readings never typed:

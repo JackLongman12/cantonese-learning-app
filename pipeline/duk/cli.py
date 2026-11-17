@@ -32,7 +32,7 @@ def main(argv: list[str] | None = None) -> int:
         help="allow a build without audio (CI, which cannot synthesise speech)",
     )
     pic = sub.add_parser("pictures", help="photos and icons for newcomer words")
-    pic.add_argument("action", choices=["match", "sheets"])
+    pic.add_argument("action", choices=["match", "sheets", "ratings"])
     tel = sub.add_parser("telemetry", help="anonymous usage data from the app")
     tel.add_argument("action", choices=["pull", "report"])
     args = ap.parse_args(argv)
@@ -41,9 +41,12 @@ def main(argv: list[str] | None = None) -> int:
         if args.cmd == "pictures":
             from . import pictures
 
-            if args.action == "match":
-                print(pictures.match())
-            print(f"review sheet -> {pictures.sheets()}")
+            if args.action == "ratings":
+                print(pictures.ratings())
+            else:
+                if args.action == "match":
+                    print(pictures.match())
+                print(f"review sheet -> {pictures.sheets()}")
         elif args.cmd == "telemetry":
             from . import telemetry
 

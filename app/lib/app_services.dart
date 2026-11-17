@@ -92,7 +92,9 @@ class AppServices {
 
   /// Replies heard, tone sets, sentences said and challenges done (newcomer practice),
   /// rebuilt from the event log.
-  late final PracticeLog practiceLog = PracticeLog.replay(logger.store.readAll());
+  late final PracticeLog practiceLog = PracticeLog.replay(
+    logger.store.readAll(),
+  );
 
   /// Logs a practice event and applies it at once.
   void logPractice(String type, Map<String, Object?> payload) =>

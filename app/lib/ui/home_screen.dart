@@ -464,7 +464,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _s.logger.log('nav.screen', {'screen': 'tool-$id', 'source': 'tools'});
     switch (id) {
       case 'topics':
-        setState(() => _tab = 1);
+        _goto('topics');
       case 'stories':
         await _push(
           Scaffold(
@@ -475,7 +475,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
         );
       case 'cards':
-        setState(() => _tab = 2);
+        _goto('drill');
       case 'speak':
         await _push(
           SpeakDrillScreen(
@@ -871,7 +871,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           _s.sound(Sfx.tap);
           _openTopic(sc);
         },
-        onAll: () => setState(() => _tab = 1),
+        onAll: () => _goto('topics'),
       ),
       const SizedBox(height: 14),
       _CardsBlock(
@@ -879,7 +879,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         preview: [for (final c in cardPreview) c.zh],
         onDrill: () async {
           if (cardsDue.isEmpty) {
-            setState(() => _tab = 2);
+            _goto('drill');
             return;
           }
           await _push(
@@ -989,17 +989,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       const SizedBox(height: 24),
     ]);
 
-    final cardsPage = page([
-      Text('Flashcards', style: theme.textTheme.titleLarge),
-      const SizedBox(height: 2),
-      Text(
-        'Say each card out loud: the mic checks you. Cards come back just before you\'d forget them.',
-        style: theme.textTheme.bodySmall,
-      ),
-      const SizedBox(height: 12),
-      DeckSection(services: _s, onChanged: () => setState(() {})),
-    ]);
-
     final progressPage = page([
       ProgressView(
         met: met,
@@ -1017,14 +1006,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         onChar: (c) => sayOrExplain(context, _s, c, _lang),
         onReview: reviewStep?.start,
         onWords: () => _openTool('words'),
-        onCards: () => setState(() => _tab = 2),
+        onCards: () => _goto('drill'),
         onSpeak: () => _openTool('speak'),
       ),
     ]);
 
-    final pages = newcomer
-        ? <Widget>[
-            NewcomerToday(
+    // Both modes have the same content (2026-11-17): situations, the word drill and the
+    // listening drills, topics and flashcards. Only Home and the order of the tabs differ.
+    final byName = <String, Widget>{
+      'today': newcomer
+          ? NewcomerToday(
               services: _s,
               header: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1032,15 +1023,34 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ),
               onChanged: () => setState(() {}),
               openTab: (i) => setState(() => _tab = i),
-            ),
-            SituationsPage(services: _s, onChanged: () => setState(() {})),
-            DrillPage(services: _s, onChanged: () => setState(() {})),
-            NewcomerProgress(services: _s),
-          ]
-        : <Widget>[homeA, topicsPage, cardsPage, progressPage];
+            )
+          : homeA,
+      'topics': topicsPage,
+      'situations': SituationsPage(
+        services: _s,
+        onChanged: () => setState(() {}),
+      ),
+      'drill': DrillPage(
+        services: _s,
+        onChanged: () => setState(() {}),
+        extra: [
+          const SizedBox(height: 16),
+          Text('Flashcards', style: theme.textTheme.titleSmall),
+          const SizedBox(height: 2),
+          Text(
+            'Place names, signs and dishes. Say each card out loud: the mic checks you.',
+            style: theme.textTheme.bodySmall,
+          ),
+          const SizedBox(height: 8),
+          DeckSection(services: _s, onChanged: () => setState(() {})),
+        ],
+      ),
+      'progress': newcomer ? NewcomerProgress(services: _s) : progressPage,
+    };
     _tabNames = newcomer
-        ? const ['today', 'situations', 'drill', 'progress']
-        : const ['today', 'topics', 'cards', 'progress'];
+        ? const ['today', 'situations', 'drill', 'topics', 'progress']
+        : const ['today', 'topics', 'situations', 'drill', 'progress'];
+    final pages = [for (final n in _tabNames) byName[n]!];
 
     return Scaffold(
       body: SafeArea(
@@ -1059,59 +1069,41 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           });
           setState(() => _tab = i);
         },
-        destinations: newcomer
-            ? const [
-                NavigationDestination(
-                  key: ValueKey('tab-today'),
-                  icon: Icon(Icons.home_outlined),
-                  selectedIcon: Icon(Icons.home_rounded),
-                  label: 'Home',
-                ),
-                NavigationDestination(
-                  key: ValueKey('tab-situations'),
-                  icon: Icon(Icons.map_outlined),
-                  selectedIcon: Icon(Icons.map_rounded),
-                  label: 'Situations',
-                ),
-                NavigationDestination(
-                  key: ValueKey('tab-drill'),
-                  icon: Icon(Icons.style_outlined),
-                  selectedIcon: Icon(Icons.style_rounded),
-                  label: 'Drill',
-                ),
-                NavigationDestination(
-                  key: ValueKey('tab-progress'),
-                  icon: Icon(Icons.insert_chart_outlined_rounded),
-                  selectedIcon: Icon(Icons.insert_chart_rounded),
-                  label: 'Progress',
-                ),
-              ]
-            : const [
-                NavigationDestination(
-                  key: ValueKey('tab-today'),
-                  icon: Icon(Icons.home_outlined),
-                  selectedIcon: Icon(Icons.home_rounded),
-                  label: 'Home',
-                ),
-                NavigationDestination(
-                  key: ValueKey('tab-topics'),
-                  icon: Icon(Icons.map_outlined),
-                  selectedIcon: Icon(Icons.map_rounded),
-                  label: 'Topics',
-                ),
-                NavigationDestination(
-                  key: ValueKey('tab-cards'),
-                  icon: Icon(Icons.style_outlined),
-                  selectedIcon: Icon(Icons.style_rounded),
-                  label: 'Cards',
-                ),
-                NavigationDestination(
-                  key: ValueKey('tab-progress'),
-                  icon: Icon(Icons.insert_chart_outlined_rounded),
-                  selectedIcon: Icon(Icons.insert_chart_rounded),
-                  label: 'Progress',
-                ),
-              ],
+        destinations: [
+          for (final n in _tabNames)
+            switch (n) {
+              'today' => const NavigationDestination(
+                key: ValueKey('tab-today'),
+                icon: Icon(Icons.home_outlined),
+                selectedIcon: Icon(Icons.home_rounded),
+                label: 'Home',
+              ),
+              'topics' => const NavigationDestination(
+                key: ValueKey('tab-topics'),
+                icon: Icon(Icons.forum_outlined),
+                selectedIcon: Icon(Icons.forum_rounded),
+                label: 'Topics',
+              ),
+              'situations' => const NavigationDestination(
+                key: ValueKey('tab-situations'),
+                icon: Icon(Icons.map_outlined),
+                selectedIcon: Icon(Icons.map_rounded),
+                label: 'Situations',
+              ),
+              'drill' => const NavigationDestination(
+                key: ValueKey('tab-drill'),
+                icon: Icon(Icons.style_outlined),
+                selectedIcon: Icon(Icons.style_rounded),
+                label: 'Drill',
+              ),
+              _ => const NavigationDestination(
+                key: ValueKey('tab-progress'),
+                icon: Icon(Icons.insert_chart_outlined_rounded),
+                selectedIcon: Icon(Icons.insert_chart_rounded),
+                label: 'Progress',
+              ),
+            },
+        ],
       ),
     );
   }
@@ -1160,7 +1152,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     ];
   }
 
-  var _tabNames = const ['today', 'topics', 'cards', 'progress'];
+  var _tabNames = const ['today', 'topics', 'situations', 'drill', 'progress'];
+
+  /// Switches to a tab by name (the order differs between the two modes).
+  void _goto(String name) {
+    final i = _tabNames.indexOf(name);
+    if (i >= 0) setState(() => _tab = i);
+  }
 
   Widget _header(ThemeData theme) {
     return Row(

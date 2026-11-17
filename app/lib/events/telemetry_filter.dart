@@ -37,6 +37,7 @@ const sharedTypes = {
   'tone.answer',
   'frame.say',
   'challenge.done',
+  'picture.rate',
   'experiment.assigned',
   'onboarding.done',
   'app.crash',

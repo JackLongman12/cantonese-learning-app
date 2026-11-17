@@ -152,7 +152,7 @@ def test_build_writes_aligned_tokens_and_items(tmp_path):
     assert toks[0] == ("唔", "m4", "cr:yue:唔:m4") and toks[2][1] is None
     assert db.execute("SELECT COUNT(*) FROM item WHERE kind='word' AND key='唔該'").fetchone()[0]
     assert db.execute("SELECT COUNT(*) FROM sentence WHERE lang!='yue'").fetchone()[0] == 0
-    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "16"
+    assert db.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0] == "17"
 
 
 def test_flags_reach_review_queue_until_fixed(tmp_path):
@@ -266,3 +266,28 @@ def test_variants_become_groups_and_words(tmp_path):
     )
     with pytest.raises(ContentError):
         build(root, out, raw_root=tmp_path / "noraw", with_lexicon=False)
+
+
+def test_picture_ratings_apply_newest_and_skip_changed():
+    from duk.pictures import apply_ratings
+
+    current = {
+        "card:a:x": {"photo": "X.jpg", "credit": "c", "doubt": True},
+        "card:a:y": {"icon": "1F600", "doubt": True},
+        "card:a:z": {"photo": "New.jpg", "doubt": True},
+    }
+
+    def ev(ts, cid, ref, good):
+        return {"type": "picture.rate", "ts_utc": ts,
+                "payload": {"card_id": cid, "ref": ref, "good": good}}  # fmt: skip
+
+    kept, removed = apply_ratings(current, [
+        ev("2026-11-17T10:00:01Z", "card:a:x", "X.jpg", True),
+        ev("2026-11-17T10:00:00Z", "card:a:x", "X.jpg", False),  # older: overridden
+        ev("2026-11-17T10:00:02Z", "card:a:y", "1F600", False),
+        ev("2026-11-17T10:00:03Z", "card:a:z", "Old.jpg", False),  # picture changed since
+    ])  # fmt: skip
+    assert (kept, removed) == (1, 1)
+    assert current["card:a:x"] == {"photo": "X.jpg", "credit": "c", "fixed": True}
+    assert current["card:a:y"] == {"none": True, "fixed": True}
+    assert current["card:a:z"]["doubt"] is True

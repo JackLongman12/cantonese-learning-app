@@ -126,8 +126,15 @@ void main() {
         ev('tone.answer', {'set': 'tones-si', 'played': '詩', 'correct': true}),
         'tid',
       )!;
-      expect(tone['payload'], {'set': 'tones-si', 'played': '詩', 'correct': true});
-      expect(shareable(ev('challenge.done', {'id': 'ch-noice'}), 'tid'), isNotNull);
+      expect(tone['payload'], {
+        'set': 'tones-si',
+        'played': '詩',
+        'correct': true,
+      });
+      expect(
+        shareable(ev('challenge.done', {'id': 'ch-noice'}), 'tid'),
+        isNotNull,
+      );
       expect(shareable(ev('update.apply', {}), 'tid'), isNull);
     });
   });

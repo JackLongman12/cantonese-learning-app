@@ -17,6 +17,7 @@ import '../engine/goals.dart';
 import 'goal_picker.dart';
 import 'home_screen.dart' show HomeScreen;
 import 'onboarding_screen.dart';
+import 'picture_rating.dart';
 import 'reminder_sync.dart';
 import 'ruby_text.dart';
 import 'update_ui.dart';
@@ -332,6 +333,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 // TEMPORARY developer tool (owner, 2026-11-17): remove before a public
                 // launch. Replays the first-run screens; progress is untouched.
                 section('Developer'),
+                ListTile(
+                  key: const ValueKey('rate-pictures'),
+                  leading: const Icon(Icons.thumbs_up_down_outlined),
+                  title: const Text('Rate pictures'),
+                  subtitle: Text(
+                    '${picturesToRate(_s)} word pictures I was not sure about: Good or Bad.',
+                  ),
+                  onTap: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => PictureRatingScreen(services: _s),
+                      ),
+                    );
+                    if (mounted) setState(() {});
+                  },
+                ),
                 ListTile(
                   key: const ValueKey('replay-onboarding'),
                   leading: const Icon(Icons.restart_alt_rounded),

@@ -4,7 +4,8 @@ import 'dart:io';
 import 'dart:ui' show PlatformDispatcher;
 
 import 'package:material_ui/material_ui.dart';
-import 'package:flutter/foundation.dart' show LicenseEntryWithLineBreaks, LicenseRegistry;
+import 'package:flutter/foundation.dart'
+    show LicenseEntryWithLineBreaks, LicenseRegistry;
 import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:path/path.dart' as p;

@@ -26,14 +26,35 @@ from . import paths
 PICTURES = paths.CONTENT / "pictures.yaml"
 SHEETS = paths.BUILD / "pictures_review.html"
 # Wikimedia asks automated clients to say who they are (project page, no personal data)
-UA = {"User-Agent": "DuckLearnContentPipeline/1.0 (https://github.com/JackLongman12/cantonese-learning-app)"}
+UA = {
+    "User-Agent": "DuckLearnContentPipeline/1.0 (https://github.com/JackLongman12/cantonese-learning-app)"
+}
 
 # situations whose words are mostly things you can point at: photo first
 PHOTO_SITUATIONS = {
-    "sit-around", "sit-places", "sit-food", "sit-cafe", "sit-dimsum", "sit-groceries",
-    "sit-clothes", "sit-body", "sit-animals", "sit-home", "sit-kitchen", "sit-health",
-    "sit-help", "sit-weather", "sit-travel", "sit-errands", "sit-phone", "sit-work",
-    "sit-festivals", "sit-freetime", "sit-sport", "sit-pay", "sit-shop",
+    "sit-around",
+    "sit-places",
+    "sit-food",
+    "sit-cafe",
+    "sit-dimsum",
+    "sit-groceries",
+    "sit-clothes",
+    "sit-body",
+    "sit-animals",
+    "sit-home",
+    "sit-kitchen",
+    "sit-health",
+    "sit-help",
+    "sit-weather",
+    "sit-travel",
+    "sit-errands",
+    "sit-phone",
+    "sit-work",
+    "sit-festivals",
+    "sit-freetime",
+    "sit-sport",
+    "sit-pay",
+    "sit-shop",
 }
 # Wikidata items that are not the everyday thing
 BAD_DESC = re.compile(
@@ -76,8 +97,9 @@ def _get(session: requests.Session, url: str, params: dict) -> dict:
     raise requests.RequestException("rate limited")
 
 
-def _search(query: str, session: requests.Session, lang: str = "en",
-            exact: bool = False) -> list[str]:
+def _search(
+    query: str, session: requests.Session, lang: str = "en", exact: bool = False
+) -> list[str]:
     data = _get(session, "https://www.wikidata.org/w/api.php",
                 {"action": "wbsearchentities", "search": query, "language": lang,
                  "strictlanguage": 1 if exact else 0, "limit": 7, "format": "json",
@@ -94,9 +116,23 @@ def _search(query: str, session: requests.Session, lang: str = "en",
 
 # item types that are never the everyday thing (people, works, names, taxa...)
 BAD_TYPES = {
-    "Q5", "Q4167410", "Q13442814", "Q11424", "Q482994", "Q5398426", "Q7366", "Q571",
-    "Q7725634", "Q101352", "Q202444", "Q16521", "Q4830453", "Q215380", "Q3305213",
-    "Q15632617", "Q95074",
+    "Q5",
+    "Q4167410",
+    "Q13442814",
+    "Q11424",
+    "Q482994",
+    "Q5398426",
+    "Q7366",
+    "Q571",
+    "Q7725634",
+    "Q101352",
+    "Q202444",
+    "Q16521",
+    "Q4830453",
+    "Q215380",
+    "Q3305213",
+    "Q15632617",
+    "Q95074",
 }
 
 
@@ -215,8 +251,11 @@ def sheets() -> Path:
     for cid, _sid, zh, en in situation_words():
         p = pics.get(cid) or {}
         if "photo" in p:
-            src = ("https://commons.wikimedia.org/wiki/Special:FilePath/"
-                   + requests.utils.quote(p["photo"]) + "?width=160")
+            src = (
+                "https://commons.wikimedia.org/wiki/Special:FilePath/"
+                + requests.utils.quote(p["photo"])
+                + "?width=160"
+            )
             img = f'<img src="{src}" loading="lazy">'
         elif "icon" in p:
             img = f'<img src="https://cdn.jsdelivr.net/npm/openmoji@15.1.0/color/svg/{p["icon"]}.svg">'
@@ -224,7 +263,7 @@ def sheets() -> Path:
             img = '<div class="none">none</div>'
         rows.append(
             f'<div class="c"><div class="p">{img}</div><b>{html.escape(zh)}</b>'
-            f'<span>{html.escape(en)}</span><i>{html.escape(cid)}</i></div>'
+            f"<span>{html.escape(en)}</span><i>{html.escape(cid)}</i></div>"
         )
     SHEETS.parent.mkdir(parents=True, exist_ok=True)
     SHEETS.write_text(
@@ -234,7 +273,52 @@ def sheets() -> Path:
         "align-items:center;text-align:center}.p{height:80px;display:flex;align-items:center}"
         ".p img{max-height:80px;max-width:120px}b{font-size:18px}span{font-size:11px}"
         "i{font-size:9px;color:#999}.none{color:#c00}</style><div class=g>"
-        + "".join(rows) + "</div>",
+        + "".join(rows)
+        + "</div>",
         "utf-8",
     )
     return SHEETS
+
+
+def apply_ratings(current: dict, events: list[dict]) -> tuple[int, int]:
+    """The owner's Good/Bad from the app (`picture.rate`, Settings > Developer > Rate
+    pictures), newest rating per picture: Good keeps it (`fixed`, no longer in doubt), Bad
+    removes it (`none`, `fixed`). A rating of a picture that has since changed is ignored.
+    Returns (kept, removed)."""
+    latest: dict[str, dict] = {}
+    for e in sorted(events, key=lambda e: e.get("ts_utc", "")):
+        p = e.get("payload") or {}
+        if e.get("type") == "picture.rate" and isinstance(p.get("card_id"), str):
+            latest[p["card_id"]] = p
+    kept = removed = 0
+    for cid, p in latest.items():
+        pic = current.get(cid) or {}
+        if p.get("ref") not in (pic.get("photo"), pic.get("icon")):
+            continue
+        if p.get("good") is True:
+            pic.pop("doubt", None)
+            pic["fixed"] = True
+            current[cid] = pic
+            kept += 1
+        elif p.get("good") is False:
+            current[cid] = {"none": True, "fixed": True}
+            removed += 1
+    return kept, removed
+
+
+def ratings() -> str:
+    """Pull usage data, apply the owner's picture ratings to content/pictures.yaml."""
+    from . import telemetry
+
+    telemetry.pull()
+    events, _ = telemetry.load()
+    text = PICTURES.read_text("utf-8")
+    header = "".join(line + "\n" for line in text.splitlines() if line.startswith("#"))
+    current = yaml.safe_load(text) or {}
+    kept, removed = apply_ratings(current, events)
+    PICTURES.write_text(
+        header + yaml.safe_dump(current, allow_unicode=True, sort_keys=False, width=200),
+        "utf-8",
+    )
+    left = sum(1 for v in current.values() if (v or {}).get("doubt"))
+    return f"pictures: {kept} kept, {removed} removed, {left} still to rate"

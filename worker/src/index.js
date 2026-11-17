@@ -23,7 +23,7 @@ const SHARED_TYPES = new Set([
   "item.reveal", "item.audio", "item.done", "review.applied", "speech.attempt",
   "conv.choice", "nav.screen", "plan.step", "settings.change", "reader.open",
   "reader.lookup", "word.save", "word.remove", "word.flag", "word.practice",
-  "listen.answer", "tone.answer", "frame.say", "challenge.done",
+  "listen.answer", "tone.answer", "frame.say", "challenge.done", "picture.rate",
   "experiment.assigned", "onboarding.done", "app.crash",
 ]);
 const TYPE = /^[a-z][a-z_.]{0,39}$/;

@@ -12,7 +12,7 @@ is sent until they say yes; Settings → "Share anonymous usage and crash report
 - **Sent:** the learning events in `app/lib/events/telemetry_filter.dart` (`sharedTypes`):
   sessions, which sentences and characters were shown, checks, reveals, misses, grades, screens
   opened, settings changed, newcomer practice (replies heard, tone answers, sentences said,
-  challenges done: content ids only), experiment arms, app version, `android`/`windows`, time zone offset.
+  challenges done, the owner's picture ratings: content ids only), experiment arms, app version, `android`/`windows`, time zone offset.
   Crash reports: error type, message (600 characters), stack (6,000), app and OS version.
 - **Never sent:** anything typed, pasted or said (payload keys `text`, `en`, `reading`,
   `per_token`, `heard`, `said`, `query` are removed; characters looked up in pasted text are

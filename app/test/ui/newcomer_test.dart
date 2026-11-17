@@ -144,6 +144,8 @@ void main() {
       300,
       scrollable: find.byType(Scrollable).first,
     );
+    await t.ensureVisible(find.byKey(const ValueKey('replay-onboarding')));
+    await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('replay-onboarding')));
     await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('intro-skip')));

@@ -3,6 +3,22 @@
 What changed, newest first. Moved out of the ROADMAP Status line on 2026-11-16 so the
 roadmap stays short; `git log` has the per-commit detail.
 
+## 2026-11-17 (b2079): one app for both modes, half the audio, picture ratings
+
+- **Both modes share the same content** (owner's bug report: the speaker mode still looked
+  like the old build). Every learner now has the same five tabs: Home, Topics, Situations,
+  Drill (word drill, Understand replies, Hear the tones, Build a sentence, flashcard decks)
+  and Progress. Only Home and the tab order differ by mode; it was always one database.
+- **Audio halved** (27.2 MB → 14.9 MB for 4,998 clips): edge-tts pads clips with silence
+  (often 0.2 s before, 0.9 s after); it is trimmed to 0.05 s / 0.15 s, and Opus goes from 24
+  to 16 kbps (voip). Speech length checked unchanged on a sample. Playback also starts and
+  ends sooner. `duk bundle` now replaces clips whose encoding changed.
+- **Rate pictures** (Settings → Developer, temporary): the 349 word pictures I wasn't sure
+  of (all 202 photos, which were only checked by file name, and 147 icons for abstract
+  words), one at a time, Good or Bad, Back to change. A Bad picture stops showing on the
+  device; with usage sharing on, `duk pictures ratings` pulls the ratings and applies
+  them to content/pictures.yaml. Schema 17 adds `card_picture.doubt`.
+
 ## 2026-11-17 (b2078): understanding replies, tones, sentences, pictures
 
 Gaps from the language-learning review, all but non-native accents (no material for them:

@@ -9,7 +9,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class WordPhotos {
-  WordPhotos(this.dir, {http.Client? client}) : _client = client; // ignore: prefer_initializing_formals
+  WordPhotos(this.dir, {http.Client? client})
+    : _client = client; // ignore: prefer_initializing_formals
 
   final Directory dir;
   final http.Client? _client;
@@ -41,10 +42,7 @@ class WordPhotos {
   Future<File?> get(String commonsFile) {
     final f = fileFor(commonsFile);
     if (f.existsSync()) return Future.value(f);
-    return _pending[commonsFile] ??= _download(
-      commonsFile,
-      f,
-    ).whenComplete(() {
+    return _pending[commonsFile] ??= _download(commonsFile, f).whenComplete(() {
       // a block, not `=>`: remove() returns this very future, and waiting on it hangs
       _pending.remove(commonsFile);
     });

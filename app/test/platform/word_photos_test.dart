@@ -49,10 +49,10 @@ void main() {
 
   test('oversized files and non-images are refused', () async {
     final big = make(
-      (r) async => http.Response.bytes(
-        [..._jpeg, ...List.filled(WordPhotos.maxBytes, 0)],
-        200,
-      ),
+      (r) async => http.Response.bytes([
+        ..._jpeg,
+        ...List.filled(WordPhotos.maxBytes, 0),
+      ], 200),
     );
     expect(await big.get('Big.jpg'), isNull);
     final html = make((r) async => http.Response('<html>', 200));

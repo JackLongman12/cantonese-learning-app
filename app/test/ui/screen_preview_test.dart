@@ -122,8 +122,8 @@ void main() {
       );
       await t.pumpAndSettle();
       await t.ensureVisible(find.byKey(const ValueKey('onboard-share-no')));
-    await t.pumpAndSettle();
-    await t.tap(find.byKey(const ValueKey('onboard-share-no')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const ValueKey('onboard-share-no')));
       await t.pumpAndSettle();
       await t.tap(find.byKey(const ValueKey('onboard-start')));
       await t.pumpAndSettle();
@@ -143,7 +143,7 @@ void main() {
       await shot('topics');
       await t.tap(find.byKey(const ValueKey('tab-today')));
       await t.pumpAndSettle();
-      await t.tap(find.byKey(const ValueKey('tab-cards')));
+      await t.tap(find.byKey(const ValueKey('tab-drill')));
       await t.pumpAndSettle();
       await shot('cards');
       await t.tap(find.byKey(const ValueKey('tab-topics')));

@@ -31,7 +31,7 @@ from .content import Content, ContentError, load_content
 from .reference import load_reference
 from .words import refine_words
 
-SCHEMA_VERSION = 16  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
+SCHEMA_VERSION = 17  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_entry;
 # 6: decks; 7: card image + credit, food deck; 8: slim dict_entry (Cantonese only);
 # 9: char_info.hint, skill / skill_entry; 10: variant (words for the same thing);
 # 11: character_pic (links the app downloads; the images are never bundled);
@@ -40,6 +40,7 @@ SCHEMA_VERSION = 16  # 2: lex_char/lex_word; 3: dialogue; 4: stories; 5: dict_en
 # 14: situation (newcomer mode: decks of essential words, content/situations.yaml);
 # 15: card_picture (a photo or an icon per newcomer word, content/pictures.yaml)
 # 16: practice (replies, tone sets, frames, challenges: content/practice.yaml)
+# 17: card_picture.doubt (pictures to rate in Settings > Developer)
 
 SCHEMA = """
 CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -114,7 +115,7 @@ CREATE TABLE practice(id TEXT PRIMARY KEY, kind TEXT NOT NULL, grp TEXT NOT NULL
   card_id TEXT NOT NULL, en TEXT NOT NULL, extra TEXT NOT NULL, rank INTEGER NOT NULL)
   WITHOUT ROWID;
 CREATE TABLE card_picture(card_id TEXT PRIMARY KEY, kind TEXT NOT NULL, ref TEXT NOT NULL,
-  credit TEXT NOT NULL DEFAULT '') WITHOUT ROWID;
+  credit TEXT NOT NULL DEFAULT '', doubt INTEGER NOT NULL DEFAULT 0) WITHOUT ROWID;
 CREATE TABLE street_pattern(
   region TEXT NOT NULL, zh TEXT NOT NULL, word TEXT NOT NULL, n INTEGER NOT NULL,
   total INTEGER NOT NULL);
@@ -513,12 +514,14 @@ def build(
             continue
         if pic.get("photo"):
             db.execute(
-                "INSERT INTO card_picture VALUES(?,?,?,?)",
-                (cid, "photo", str(pic["photo"]), str(pic.get("credit", ""))),
+                "INSERT INTO card_picture VALUES(?,?,?,?,?)",
+                (cid, "photo", str(pic["photo"]), str(pic.get("credit", "")),
+                 int(bool(pic.get("doubt")))),
             )
         elif pic.get("icon"):
             db.execute(
-                "INSERT INTO card_picture VALUES(?,?,?,?)", (cid, "icon", str(pic["icon"]), "")
+                "INSERT INTO card_picture VALUES(?,?,?,?,?)",
+                (cid, "icon", str(pic["icon"]), "", int(bool(pic.get("doubt")))),
             )
 
     # Reading-skill lessons (content/skills/*.yaml): particles, measure words, ...

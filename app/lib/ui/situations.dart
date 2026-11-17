@@ -679,9 +679,17 @@ class _SituationScreenState extends State<SituationScreen> {
 // ---------------------------------------------------------------- Drill tab
 
 class DrillPage extends StatelessWidget {
-  const DrillPage({super.key, required this.services, required this.onChanged});
+  const DrillPage({
+    super.key,
+    required this.services,
+    required this.onChanged,
+    this.extra = const [],
+  });
   final AppServices services;
   final VoidCallback onChanged;
+
+  /// More below the situations (the flashcard decks).
+  final List<Widget> extra;
 
   @override
   Widget build(BuildContext context) {
@@ -773,6 +781,7 @@ class DrillPage extends StatelessWidget {
             ),
           ),
         ),
+        ...extra,
         const SizedBox(height: 16),
         Text('By situation', style: theme.textTheme.titleSmall),
         const SizedBox(height: 8),

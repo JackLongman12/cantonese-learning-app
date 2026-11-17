@@ -4,7 +4,7 @@ Work top to bottom. Do not start a phase until the previous phase's "Done when" 
 
 **Goals (2026-11-16):** first run asks what you want Cantonese for (get around, eat out and shop, daily life, work, make friends, a bit of everything); the path puts those topics first and Today's Learn/Speak draw from them; change it on Today (Goal · Change) or in Settings (engine/goals.dart). Grouped controls: one Listen button (hold for slow), no Skip; one 'Practise my words' in Words.
 
-**Status (2026-11-17, newcomer mode: situations of essential words, English-first drill, search, understanding replies, tone ear training, sentence frames, a Jyutping guide, real-world challenges, word pictures; Home A/B by level; see CHANGELOG):** DuckLearn is now for beginners (speakers who can't read, and learners); the reader is read first, then Check; opt-in anonymous usage and crash data go to a Cloudflare Worker and `duk telemetry report` says what to change (docs/TELEMETRY.md); two A/B tests run. Before that: Android arm64 is the release target. 18 topics (each ≥ 100 sentences, 5+ conversations), 18 stories, 1,077 flashcards, word variants, a voice picker in every exercise (phone voice by default). Audio ships as Opus; conversation pictures download on first launch. Content is LLM-drafted and accepted by the owner as-is (2026-11-16). Next open work: 1.3/1.4 planner polish, 1.6 placement test, 2.8 error drills. History: `docs/CHANGELOG.md`.
+**Status (2026-11-17, both modes share all content (five tabs; Home differs by level); newcomer mode: situations of essential words, English-first drill, search, understanding replies, tone ear training, sentence frames, a Jyutping guide, real-world challenges, word pictures; Home A/B by level; see CHANGELOG):** DuckLearn is now for beginners (speakers who can't read, and learners); the reader is read first, then Check; opt-in anonymous usage and crash data go to a Cloudflare Worker and `duk telemetry report` says what to change (docs/TELEMETRY.md); two A/B tests run. Before that: Android arm64 is the release target. 18 topics (each ≥ 100 sentences, 5+ conversations), 18 stories, 1,077 flashcards, word variants, a voice picker in every exercise (phone voice by default). Audio ships as Opus; conversation pictures download on first launch. Content is LLM-drafted and accepted by the owner as-is (2026-11-16). Next open work: 1.3/1.4 planner polish, 1.6 placement test, 2.8 error drills. History: `docs/CHANGELOG.md`.
 
 ## Product principle: serve the unmet need, not a Duolingo copy
 
@@ -164,7 +164,7 @@ readings by eye (pin wrong ones with `fix_yue`) → `duk tts` → `duk bundle`.
 
 - [ ] 3.1 Google Drive appData sync, per-device logs, merge, weekly backups; Windows loopback OAuth.
 - [ ] 3.2 Dashboard: coverage, retained items per minute, forecast, study-time heatmap.
-- [ ] 3.6 Remove the temporary Settings → Developer → Replay onboarding before a public launch (owner's test tool, 2026-11-17).
+- [ ] 3.6 Remove the temporary Settings → Developer tools (Replay onboarding, Restore setup, Rate pictures) before a public launch (owner's test tools, 2026-11-17).
 - [x] 3.4 Opt-in anonymous usage data and crash reports (Cloudflare Worker + D1), A/B experiments per install, `duk telemetry pull/report` (2026-11-17, docs/TELEMETRY.md).
 - [ ] 3.5 Act on the first report once 30+ installs share data: end or extend each experiment, fix the hardest characters and sentences, the top crash.
 - [x] ~~3.3 Crash/error log capture.~~ Dropped (owner, 2026-11-16): few users; they report problems directly.
